@@ -1,26 +1,191 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* RoboStore TH palette — deep navy + gold */
+  --color-navy-950: #070f2e;
+  --color-navy-900: #0a163d;
+  --color-navy: #0d1b4b;
+  --color-navy-800: #16276b;
+  --color-navy-700: #21358a;
+  --color-navy-300: #8d9ac9;
+  --color-navy-100: #e3e7f5;
+  --color-gold: #f5c842;
+  --color-gold-300: #ffe08a;
+  --color-gold-600: #d9a916;
+  --color-cloud: #f6f7fb;
+  --color-ink-muted: #5a648c;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-navy);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-navy-950);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ---------- utilities ---------- */
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sliding underline for nav links */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: var(--color-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 240ms ease-out;
+}
+.nav-underline:hover::after,
+.nav-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* ---------- keyframe animations ---------- */
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+/* Hero mower drives across the lawn */
+@keyframes mow {
+  from {
+    transform: translateX(-14rem);
+  }
+  to {
+    transform: translateX(calc(100vw + 6rem));
+  }
+}
+.animate-mow {
+  animation: mow 16s linear infinite;
+}
+
+/* Cut-lawn trail grows behind the mower */
+@keyframes trail {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+.animate-trail {
+  animation: trail 16s linear infinite;
+}
+
+/* Mower wheels */
+@keyframes wheel-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-wheel {
+  animation: wheel-spin 1.4s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Sensor light blink */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+.animate-blink {
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+/* Gold underglow pulse */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.animate-glow {
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+
+/* Firefly particles drifting upward */
+@keyframes firefly {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: var(--fly-opacity, 0.7);
+  }
+  85% {
+    opacity: var(--fly-opacity, 0.7);
+  }
+  100% {
+    transform: translateY(-46vh);
+    opacity: 0;
+  }
+}
+.animate-firefly {
+  animation: firefly var(--fly-duration, 12s) linear infinite;
+  animation-delay: var(--fly-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-mow,
+  .animate-trail,
+  .animate-wheel,
+  .animate-blink,
+  .animate-glow,
+  .animate-firefly {
+    animation: none;
+  }
+  .animate-trail {
+    width: 60%;
+  }
+  .animate-mow {
+    transform: translateX(55vw);
+  }
 }

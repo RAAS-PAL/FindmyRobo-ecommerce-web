@@ -1,0 +1,51 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Play } from "lucide-react";
+import { YouTubeIcon } from "@/components/ui/BrandIcons";
+
+export default function YouTubeCTA() {
+  return (
+    <section id="youtube" className="relative overflow-hidden bg-gradient-to-br from-navy-950 via-navy to-navy-900 py-20 text-white sm:py-28">
+      {/* ambient glows */}
+      <div
+        className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-gold/[0.06] blur-[90px]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -right-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-red-500/[0.08] blur-[90px]"
+        aria-hidden="true"
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="relative mx-auto flex max-w-3xl flex-col items-center px-4 text-center sm:px-6"
+      >
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+          <Play className="h-7 w-7 fill-gold text-gold" aria-hidden="true" />
+        </span>
+        <h2 className="mt-7 font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
+          Subscribe to RoboStore&nbsp;TV
+        </h2>
+        <p className="mt-5 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg">
+          The best place to learn about robots and watch in-depth reviews of the
+          latest products.
+        </p>
+        <motion.a
+          href="https://www.youtube.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
+          className="mt-9 flex min-h-[52px] items-center gap-2.5 rounded-full bg-[#FF0000] px-8 text-[15px] font-bold text-white transition-shadow duration-300 hover:shadow-[0_0_36px_-6px_rgba(255,0,0,0.7)]"
+        >
+          <YouTubeIcon className="h-5 w-5" />
+          Subscribe on YouTube
+        </motion.a>
+      </motion.div>
+    </section>
+  );
+}
