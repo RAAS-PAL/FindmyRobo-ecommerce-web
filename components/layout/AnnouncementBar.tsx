@@ -1,9 +1,8 @@
-const messages = [
-  "🤖 Mammotion LUBA 3 AWD Now Available in Thailand!",
-  "Book your free in-home demo now in Bangkok",
-];
+import { useTranslations } from "next-intl";
 
 export default function AnnouncementBar() {
+  const t = useTranslations("announcement");
+  const messages = [t("msg1"), t("msg2")];
   // Content duplicated once so the -50% marquee loop is seamless
   const strip = [...messages, ...messages, ...messages];
   return (

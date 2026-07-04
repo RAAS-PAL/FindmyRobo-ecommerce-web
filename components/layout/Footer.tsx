@@ -1,5 +1,6 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Bot } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import {
   FacebookIcon,
   InstagramIcon,
@@ -7,17 +8,6 @@ import {
   TikTokIcon,
   YouTubeIcon,
 } from "@/components/ui/BrandIcons";
-
-const policies = [
-  "Refunds and Returns",
-  "Privacy Policy",
-  "Terms and Conditions",
-  "Shipping",
-  "Payment and Finance Options",
-  "Warranty",
-];
-
-const about = ["About Us", "Contact", "Support", "Blog", "Find My Robot"];
 
 const payments = ["PromptPay", "Visa", "Mastercard", "Amex", "Bank Transfer"];
 
@@ -30,6 +20,10 @@ const socials = [
 ];
 
 export default function Footer() {
+  const t = useTranslations("footer");
+  const policies = t.raw("policies") as string[];
+  const about = t.raw("about") as string[];
+
   return (
     <footer id="contact" className="bg-navy-950 text-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -45,10 +39,10 @@ export default function Footer() {
               </span>
             </Link>
             <p className="mt-4 font-display text-sm font-semibold tracking-wide text-gold">
-              Time for Life™
+              {t("tagline")}
             </p>
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-white/50">
-              © 2026 RoboStore TH Thailand. All rights reserved.
+              {t("copyright")}
             </p>
             <ul className="mt-6 flex gap-2">
               {socials.map(({ label, Icon }) => (
@@ -58,7 +52,7 @@ export default function Footer() {
                     aria-label={label}
                     className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:border-gold hover:text-gold"
                   >
-                    <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+                    <Icon className="h-4.5 w-4.5" />
                   </a>
                 </li>
               ))}
@@ -66,9 +60,9 @@ export default function Footer() {
           </div>
 
           {/* policies */}
-          <nav aria-label="Policies">
+          <nav aria-label={t("policiesTitle")}>
             <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-              Policies
+              {t("policiesTitle")}
             </h3>
             <ul className="mt-5 space-y-3">
               {policies.map((item) => (
@@ -85,9 +79,9 @@ export default function Footer() {
           </nav>
 
           {/* about */}
-          <nav aria-label="About">
+          <nav aria-label={t("aboutTitle")}>
             <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-              About
+              {t("aboutTitle")}
             </h3>
             <ul className="mt-5 space-y-3">
               {about.map((item) => (
@@ -106,7 +100,7 @@ export default function Footer() {
 
         {/* payment row — visual placeholders only, Omise integration comes in Phase 2 */}
         <div className="mt-14 flex flex-col items-start justify-between gap-6 border-t border-white/10 pt-8 sm:flex-row sm:items-center">
-          <p className="text-xs text-white/40">Secure checkout — payment options at launch:</p>
+          <p className="text-xs text-white/40">{t("paymentNote")}</p>
           <ul className="flex flex-wrap gap-2.5">
             {payments.map((p) => (
               <li

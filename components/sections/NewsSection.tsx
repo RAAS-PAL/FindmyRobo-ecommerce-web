@@ -1,36 +1,29 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight, Bot } from "lucide-react";
 
-const articles = [
-  {
-    date: "March 26, 2026",
-    title: "Mammotion Partner Day 2026 — Three Years, One Remarkable Journey",
-    excerpt: "We are incredibly honoured to have received the Best Sales Performance award.",
-    banner: "from-navy to-navy-700",
-  },
-  {
-    date: "February 10, 2026",
-    title: "YouTuber Reviews the Mammotion Luba 2X",
-    excerpt: "The Luba 2X 3000 gets put through its paces in a full in-depth review.",
-    banner: "from-navy-800 to-navy",
-  },
-  {
-    date: "January 16, 2026",
-    title: "Mammotion is the World's No. 1 Wire-Free Robotics Lawn Mower Brand",
-    excerpt: "The future of lawn care just got a major endorsement.",
-    banner: "from-navy-950 to-navy-800",
-  },
-  {
-    date: "November 13, 2024",
-    title: "YUKA Series Wins 2024 Pro Tools Innovation Award",
-    excerpt: "Mammotion does it again — Pro Tool Innovation Award 2024.",
-    banner: "from-navy-700 to-navy-950",
-  },
+const banners = [
+  "from-navy to-navy-700",
+  "from-navy-800 to-navy",
+  "from-navy-950 to-navy-800",
+  "from-navy-700 to-navy-950",
 ];
 
+interface NewsItem {
+  date: string;
+  title: string;
+  excerpt: string;
+}
+
 export default function NewsSection() {
+  const t = useTranslations("news");
+  const articles = (t.raw("items") as NewsItem[]).map((item, i) => ({
+    ...item,
+    banner: banners[i % banners.length],
+  }));
+
   return (
     <section id="news" className="bg-cloud py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -43,20 +36,18 @@ export default function NewsSection() {
         >
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
-              Latest Updates
+              {t("eyebrow")}
             </p>
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-navy sm:text-5xl">
-              RoboStore TH News
+              {t("heading")}
             </h2>
-            <p className="mt-3 text-base text-ink-muted">
-              Check out what is going on in our world
-            </p>
+            <p className="mt-3 text-base text-ink-muted">{t("sub")}</p>
           </div>
           <a
             href="#"
             className="group flex min-h-[44px] items-center gap-2 font-semibold text-navy transition-colors hover:text-gold-600"
           >
-            View more
+            {t("viewMore")}
             <ArrowRight
               className="h-4.5 w-4.5 transition-transform duration-200 group-hover:translate-x-1"
               aria-hidden="true"

@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCard from "@/components/ui/ProductCard";
 import { products } from "@/data/products";
 
 export default function ProductGrid() {
+  const t = useTranslations("products");
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const scrollBy = (dir: 1 | -1) =>
@@ -23,10 +25,10 @@ export default function ProductGrid() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
-              The Lineup
+              {t("eyebrow")}
             </p>
             <h2 className="mt-3 max-w-xl font-display text-3xl font-extrabold tracking-tight text-navy sm:text-5xl">
-              The Most Capable Mowers for Thai Gardens
+              {t("heading")}
             </h2>
           </motion.div>
 
@@ -34,7 +36,7 @@ export default function ProductGrid() {
             <button
               type="button"
               onClick={() => scrollBy(-1)}
-              aria-label="Scroll products left"
+              aria-label={t("scrollLeft")}
               className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-navy-100 text-navy transition-colors hover:border-gold hover:bg-gold/10"
             >
               <ChevronLeft className="h-5 w-5" aria-hidden="true" />
@@ -42,7 +44,7 @@ export default function ProductGrid() {
             <button
               type="button"
               onClick={() => scrollBy(1)}
-              aria-label="Scroll products right"
+              aria-label={t("scrollRight")}
               className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-navy-100 text-navy transition-colors hover:border-gold hover:bg-gold/10"
             >
               <ChevronRight className="h-5 w-5" aria-hidden="true" />

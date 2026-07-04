@@ -15,9 +15,10 @@
   --color-cloud: #f6f7fb;
   --color-ink-muted: #5a648c;
 
-  --font-display: var(--font-archivo), system-ui, sans-serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), monospace;
+  /* Thai fallbacks: Archivo/Inter/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
+  --font-display: var(--font-archivo), var(--font-prompt), system-ui, sans-serif;
+  --font-sans: var(--font-inter), var(--font-noto-thai), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), var(--font-noto-thai), monospace;
 }
 
 body {

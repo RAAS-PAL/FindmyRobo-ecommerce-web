@@ -1,5 +1,62 @@
 # Hot Cache — Last Updated: 2026-07-04
 
+## Latest Change (part 3) — SHOP + PRODUCT DETAIL PAGES ✅
+- New routes (all SSG, 27 static pages, both locales):
+  /shop (all products, category filter pills)
+  /shop/[category] (4 categories; coming-soon ones get a
+  premium empty state with Book-a-Demo CTA)
+  /products/[id] (breadcrumb, navy gallery card, description,
+  price, demo/contact CTAs, features list, dark specs panel,
+  related products)
+- data/products.ts: added specs field — PLACEHOLDER values from
+  public Mammotion specs, replace when Chris/Pommy confirm
+- All detail copy (descriptions, features, spec labels) in
+  messages/{th,en}.json under productDetail + shop namespaces
+- categories.ts: href field removed → use categoryHref(slug)
+- ProductCard now links whole card to /products/[id]
+- Hero "Find Your Ideal Robot" + nav Shop → /shop
+- User has DEPLOYED to Vercel (before this change) — needs a
+  redeploy/push to pick these pages up
+- NEXT AGREED STEP: Book-a-Demo/contact flow (form + LINE OA
+  button) — the site's conversion path until payments exist
+- WINDOWS GOTCHA: TaskStop on `npm run start` leaves an orphaned
+  node child holding port 3000 serving STALE routes — always
+  kill by port before restarting (Get-NetTCPConnection -LocalPort 3000)
+
+## Latest Change (same day, part 2) — THAI LANGUAGE ✅
+- Full bilingual site via next-intl v4: THAI DEFAULT at "/",
+  English at "/en" (user's explicit choice)
+- localeDetection: false — "/" is always Thai regardless of
+  browser language; EN/ไทย switcher in navbar (desktop + drawer)
+- All copy in messages/th.json + messages/en.json (Claude-drafted
+  Thai — needs native review before launch)
+- App moved to app/[locale]/; middleware.ts handles routing;
+  both locales prerender as static (SSG)
+- Thai fonts: Prompt (display fallback) + Noto Sans Thai (body
+  fallback) — Archivo/Inter have no Thai glyphs
+- Product taglines + category names/descriptions now live in
+  messages files, NOT in data/*.ts (data has ids/prices/slugs only)
+- GOTCHA: HeroSection.tsx line ~138 contains a real NBSP (U+00A0)
+  inside "&& " "" — intentional (spaces collapse at end of
+  inline-block); exact-match edits on that line must use NBSP
+- Verified: build clean, screenshots of / (Thai), /en, mobile
+
+## Previous Change (same day)
+- MULTI-CATEGORY RESTRUCTURE ✅
+  - New data/categories.ts = single source of truth for store
+    structure (robot-mowers, pool-cleaners available;
+    cleaning-robots, delivery-robots marked coming-soon)
+  - products.ts: added `category: CategorySlug` field;
+    `variant` is now ONLY the illustration style
+  - Navbar: "Robot Mowers | Pool Cleaners" replaced by one
+    "Shop ▾" dropdown generated from categories data —
+    coming-soon categories show gold "SOON" badge, disabled
+  - Mobile drawer: accordion sub-menus (Shop expanded default)
+  - ProductCard: category label chip above product name
+  - Verified via screenshots (desktop dropdown + mobile drawer)
+- To add a category later: add one entry in data/categories.ts,
+  nav updates automatically
+
 ## Last Session Summary
 - HOME PAGE BUILT ✅ — all 8 sections complete and verified
   (hero, products, trust/stats, why-us, partners, news,

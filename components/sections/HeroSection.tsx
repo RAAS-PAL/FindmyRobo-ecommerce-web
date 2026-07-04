@@ -1,10 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
-
-const HEADLINE = ["The", "Ultimate", "Robot", "Mowers", "for", "Thai", "Gardens"];
-const GOLD_WORDS = new Set(["Thai", "Gardens"]);
+import { Link } from "@/i18n/navigation";
 
 /* Deterministic firefly positions — no Math.random, avoids hydration mismatch */
 const FIREFLIES = [
@@ -67,7 +66,23 @@ function MowerSvg() {
   );
 }
 
+const wordVariants = {
+  hidden: { opacity: 0, y: 28, filter: "blur(6px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
 export default function HeroSection() {
+  const t = useTranslations("hero");
+  // Thai separates phrases (not words) with spaces, so splitting on
+  // spaces gives natural stagger chunks in both languages
+  const mainWords = t("headlineMain").split(" ");
+  const accentWords = t("headlineAccent").split(" ");
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-navy-950 via-navy to-navy-950 text-white">
       {/* ambient gold radial glow behind headline */}
@@ -105,7 +120,7 @@ export default function HeroSection() {
           transition={{ duration: 0.5 }}
           className="mb-6 font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold sm:text-xs"
         >
-          Robot Mowers · Pool Cleaners · Thailand
+          {t("eyebrow")}
         </motion.p>
 
         <motion.h1
@@ -114,22 +129,14 @@ export default function HeroSection() {
           variants={{ visible: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } } }}
           className="font-display text-[42px] font-extrabold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
         >
-          {HEADLINE.map((word, i) => (
+          {[...mainWords, ...accentWords].map((word, i) => (
             <motion.span
               key={i}
-              variants={{
-                hidden: { opacity: 0, y: 28, filter: "blur(6px)" },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  filter: "blur(0px)",
-                  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
-                },
-              }}
-              className={`inline-block ${GOLD_WORDS.has(word) ? "text-gold" : ""}`}
+              variants={wordVariants}
+              className={`inline-block ${i >= mainWords.length ? "text-gold" : ""}`}
             >
               {word}
-              {i < HEADLINE.length - 1 && " "}
+              {i < mainWords.length + accentWords.length - 1 && " "}
             </motion.span>
           ))}
         </motion.h1>
@@ -140,8 +147,8 @@ export default function HeroSection() {
           transition={{ delay: 1.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="mt-7 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg"
         >
-          No matter the size or condition of your lawn, we have the perfect robot for
-          you — so you can enjoy more <span className="font-semibold text-white">Time for Life™</span>
+          {t("subBefore")}{" "}
+          <span className="font-semibold text-white">{t("subBrand")}</span>
         </motion.p>
 
         <motion.div
@@ -150,15 +157,13 @@ export default function HeroSection() {
           transition={{ delay: 1.35, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
         >
-          <motion.a
-            href="#products"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex min-h-[52px] items-center gap-2 rounded-full bg-gold px-8 text-[15px] font-bold text-navy-950 transition-shadow duration-300 hover:shadow-[0_0_36px_-6px_rgba(245,200,66,0.8)]"
+          <Link
+            href="/shop"
+            className="flex min-h-[52px] items-center gap-2 rounded-full bg-gold px-8 text-[15px] font-bold text-navy-950 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_36px_-6px_rgba(245,200,66,0.8)] active:scale-[0.97]"
           >
-            Find Your Ideal Robot
+            {t("ctaPrimary")}
             <ArrowRight className="h-4.5 w-4.5" aria-hidden="true" />
-          </motion.a>
+          </Link>
           <motion.a
             href="#contact"
             whileHover={{ scale: 1.05 }}
@@ -166,7 +171,7 @@ export default function HeroSection() {
             className="flex min-h-[52px] items-center gap-2 rounded-full border-2 border-white/30 px-8 text-[15px] font-semibold text-white transition-colors duration-300 hover:border-gold hover:text-gold"
           >
             <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
-            Book a Free Demo
+            {t("ctaSecondary")}
           </motion.a>
         </motion.div>
       </div>

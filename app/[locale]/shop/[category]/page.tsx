@@ -1,0 +1,103 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Bot, Calendar } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
+import CategoryTabs from "@/components/ui/CategoryTabs";
+import FadeIn from "@/components/ui/FadeIn";
+import ProductCard from "@/components/ui/ProductCard";
+import { categories, type CategorySlug } from "@/data/categories";
+import { getProductsByCategory } from "@/data/products";
+
+export function generateStaticParams() {
+  return routing.locales.flatMap((locale) =>
+    categories.map((c) => ({ locale, category: c.slug }))
+  );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; category: string }>;
+}): Promise<Metadata> {
+  const { locale, category } = await params;
+  if (!categories.some((c) => c.slug === category)) return {};
+  const tc = await getTranslations({ locale, namespace: "categories" });
+  return { title: `${tc(`${category}.name`)} — RoboStore TH` };
+}
+
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ locale: string; category: string }>;
+}) {
+  const { locale, category } = await params;
+  setRequestLocale(locale);
+
+  const cat = categories.find((c) => c.slug === category);
+  if (!cat) notFound();
+
+  const t = await getTranslations("shop");
+  const tc = await getTranslations("categories");
+  const tn = await getTranslations("nav");
+  const slug = cat.slug as CategorySlug;
+  const items = getProductsByCategory(slug);
+
+  return (
+    <main className="bg-cloud">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+        <FadeIn>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+            {t("eyebrow")}
+          </p>
+          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-navy sm:text-5xl">
+            {tc(`${slug}.name`)}
+          </h1>
+          <p className="mt-4 max-w-xl text-base text-ink-muted">{tc(`${slug}.description`)}</p>
+        </FadeIn>
+
+        <div className="mt-10">
+          <CategoryTabs active={slug} />
+        </div>
+
+        {cat.available && items.length > 0 ? (
+          <div className="mt-10 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {items.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
+            ))}
+          </div>
+        ) : (
+          <FadeIn className="mt-10">
+            <div className="flex flex-col items-center rounded-3xl border border-navy-100 bg-white px-6 py-20 text-center">
+              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-navy text-gold">
+                <Bot className="h-8 w-8" aria-hidden="true" />
+              </span>
+              <h2 className="mt-6 font-display text-2xl font-extrabold text-navy sm:text-3xl">
+                {t("comingSoonTitle")}
+              </h2>
+              <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
+                {t("comingSoonBody")}
+              </p>
+              <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
+                <a
+                  href="#contact"
+                  className="flex min-h-[48px] items-center gap-2 rounded-full bg-gold px-7 text-sm font-bold text-navy-950 transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+                >
+                  <Calendar className="h-4 w-4" aria-hidden="true" />
+                  {tn("bookDemo")}
+                </a>
+                <Link
+                  href="/shop"
+                  className="flex min-h-[48px] items-center rounded-full border border-navy-100 px-7 text-sm font-semibold text-navy transition-colors hover:border-gold"
+                >
+                  {t("backToShop")}
+                </Link>
+              </div>
+            </div>
+          </FadeIn>
+        )}
+      </div>
+    </main>
+  );
+}

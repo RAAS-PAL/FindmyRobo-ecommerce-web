@@ -1,5 +1,20 @@
 # Session History
 
+## 2026-07-04 — Session 2 (continued): multi-category + Thai i18n
+- Restructured for multi-category: data/categories.ts is source of
+  truth; nav "Shop ▾" dropdown generated from it (coming-soon
+  categories show SOON badge); products tagged with category
+- Added Thai language with next-intl v4: Thai default at "/",
+  English at "/en", localeDetection off, EN/ไทย navbar switcher
+- App moved to app/[locale]/ with middleware routing; all copy in
+  messages/{th,en}.json (th.json drafted by Claude — pending native
+  speaker review); Thai fonts Prompt + Noto Sans Thai as fallbacks
+- Verified both locales with real-browser screenshots; build clean
+- User deployed to Vercel, then step 2: built /shop, /shop/[category]
+  (coming-soon empty states), /products/[id] (specs placeholder from
+  public Mammotion data, features, related products) — 27 SSG pages;
+  wired hero CTA, nav, and product cards to the new routes
+
 ## 2026-07-04 — Session 2 (Home Page Build)
 - Studied robomate.com.au reference PDF (docs/) section by section
 - Built the complete home page: AnnouncementBar (gold marquee),

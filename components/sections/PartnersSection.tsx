@@ -1,25 +1,28 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 
-const partners = [
-  {
-    name: "MAMMOTION",
-    wordmarkClass: "font-display text-3xl font-black tracking-tight text-navy sm:text-4xl",
-    caption: "World's Number 1*",
-    detail: "Wire-free Robotic Lawn Mower Brand",
-    footnote: "*Source: Frost & Sullivan study released Dec 2025",
-  },
-  {
-    name: "LYMOW",
-    wordmarkClass: "font-display text-3xl font-black tracking-[0.35em] text-navy sm:text-4xl",
-    caption: "World's first robotic mulching mower with tracks",
-    detail: "Track-driven power for the toughest terrain",
-    footnote: null,
-  },
-];
-
 export default function PartnersSection() {
+  const t = useTranslations("partners");
+
+  const partners = [
+    {
+      name: "MAMMOTION",
+      wordmarkClass: "font-display text-3xl font-black tracking-tight text-navy sm:text-4xl",
+      caption: t("mammotionCaption"),
+      detail: t("mammotionDetail"),
+      footnote: t("mammotionFootnote"),
+    },
+    {
+      name: "LYMOW",
+      wordmarkClass: "font-display text-3xl font-black tracking-[0.35em] text-navy sm:text-4xl",
+      caption: t("lymowCaption"),
+      detail: t("lymowDetail"),
+      footnote: null,
+    },
+  ];
+
   return (
     <section className="bg-white py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -31,14 +34,12 @@ export default function PartnersSection() {
           className="mx-auto max-w-2xl text-center"
         >
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
-            Trusted Brands
+            {t("eyebrow")}
           </p>
           <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-navy sm:text-5xl">
-            Official Partners
+            {t("heading")}
           </h2>
-          <p className="mt-4 text-base text-ink-muted">
-            Providing famous service and support for the best household robots
-          </p>
+          <p className="mt-4 text-base text-ink-muted">{t("sub")}</p>
         </motion.div>
 
         <div className="mx-auto mt-14 grid max-w-4xl gap-6 sm:grid-cols-2">

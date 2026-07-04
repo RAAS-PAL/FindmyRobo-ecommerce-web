@@ -1,16 +1,17 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 
-const stats = [
-  { value: 500, suffix: "+", label: "Robots Deployed" },
-  { value: 4.9, decimals: 1, suffix: "★", label: "Customer Rating" },
-  { value: 10, suffix: "+", label: "Service Locations" },
-  { value: 30, suffix: "", label: "Day Returns" },
-];
-
 export default function TrustSection() {
+  const t = useTranslations("trust");
+  const stats = [
+    { value: 500, suffix: "+", label: t("stat1") },
+    { value: 4.9, decimals: 1, suffix: "★", label: t("stat2") },
+    { value: 10, suffix: "+", label: t("stat3") },
+    { value: 30, suffix: "", label: t("stat4") },
+  ];
   return (
     <section id="about" className="bg-cloud py-20 sm:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
@@ -22,15 +23,13 @@ export default function TrustSection() {
           transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         >
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
-            Who We Are
+            {t("eyebrow")}
           </p>
           <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-navy sm:text-5xl">
-            Thai Robot Experts That Care Like a True Friend
+            {t("heading")}
           </h2>
           <p className="mt-6 max-w-lg text-base leading-relaxed text-ink-muted sm:text-lg">
-            Since 2024, we have helped Thai homeowners discover the joy of robotic
-            lawn care. Our team of robot specialists are ready to help whenever you
-            need us.
+            {t("body")}
           </p>
           <div className="mt-8 h-1 w-24 rounded-full bg-gold" aria-hidden="true" />
         </motion.div>

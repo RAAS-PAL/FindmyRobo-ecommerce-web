@@ -1,0 +1,52 @@
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import CategoryTabs from "@/components/ui/CategoryTabs";
+import FadeIn from "@/components/ui/FadeIn";
+import ProductCard from "@/components/ui/ProductCard";
+import { products } from "@/data/products";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "shop" });
+  return { title: t("metaTitle") };
+}
+
+export default async function ShopPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("shop");
+
+  return (
+    <main className="bg-cloud">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+        <FadeIn>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+            {t("eyebrow")}
+          </p>
+          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-navy sm:text-5xl">
+            {t("heading")}
+          </h1>
+          <p className="mt-4 max-w-xl text-base text-ink-muted">{t("sub")}</p>
+        </FadeIn>
+
+        <div className="mt-10">
+          <CategoryTabs />
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {products.map((product, i) => (
+            <ProductCard key={product.id} product={product} index={i} />
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}

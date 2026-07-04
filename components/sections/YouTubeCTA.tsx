@@ -1,10 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
 import { YouTubeIcon } from "@/components/ui/BrandIcons";
 
 export default function YouTubeCTA() {
+  const t = useTranslations("youtube");
   return (
     <section id="youtube" className="relative overflow-hidden bg-gradient-to-br from-navy-950 via-navy to-navy-900 py-20 text-white sm:py-28">
       {/* ambient glows */}
@@ -28,11 +30,10 @@ export default function YouTubeCTA() {
           <Play className="h-7 w-7 fill-gold text-gold" aria-hidden="true" />
         </span>
         <h2 className="mt-7 font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
-          Subscribe to RoboStore&nbsp;TV
+          {t("heading")}
         </h2>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg">
-          The best place to learn about robots and watch in-depth reviews of the
-          latest products.
+          {t("sub")}
         </p>
         <motion.a
           href="https://www.youtube.com"
@@ -43,7 +44,7 @@ export default function YouTubeCTA() {
           className="mt-9 flex min-h-[52px] items-center gap-2.5 rounded-full bg-[#FF0000] px-8 text-[15px] font-bold text-white transition-shadow duration-300 hover:shadow-[0_0_36px_-6px_rgba(255,0,0,0.7)]"
         >
           <YouTubeIcon className="h-5 w-5" />
-          Subscribe on YouTube
+          {t("button")}
         </motion.a>
       </motion.div>
     </section>

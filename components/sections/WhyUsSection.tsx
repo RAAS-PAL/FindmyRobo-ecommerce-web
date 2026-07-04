@@ -1,27 +1,16 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Home, MessagesSquare, RefreshCcw } from "lucide-react";
 
-const features = [
-  {
-    Icon: RefreshCcw,
-    title: "30 Days to Play",
-    body: "Not satisfied? Return any robot within 30 days for a full refund. No questions asked.",
-  },
-  {
-    Icon: MessagesSquare,
-    title: "Thai Local Support",
-    body: "Talk to real robot experts based in Thailand who speak Thai and understand local conditions.",
-  },
-  {
-    Icon: Home,
-    title: "In-Home Support",
-    body: "Our technicians come to you anywhere in Bangkok and major provinces when you need us.",
-  },
-];
-
 export default function WhyUsSection() {
+  const t = useTranslations("whyUs");
+  const features = [
+    { Icon: RefreshCcw, title: t("f1Title"), body: t("f1Body") },
+    { Icon: MessagesSquare, title: t("f2Title"), body: t("f2Body") },
+    { Icon: Home, title: t("f3Title"), body: t("f3Body") },
+  ];
   return (
     <section id="support" className="relative overflow-hidden bg-navy-950 py-20 text-white sm:py-28">
       {/* ambient glow */}
@@ -39,10 +28,10 @@ export default function WhyUsSection() {
           className="mx-auto max-w-2xl text-center"
         >
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
-            Why Choose Us
+            {t("eyebrow")}
           </p>
           <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
-            Service That Goes Beyond the Sale
+            {t("heading")}
           </h2>
         </motion.div>
 
