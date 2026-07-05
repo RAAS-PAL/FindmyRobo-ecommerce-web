@@ -22,11 +22,25 @@
     "blog": "Blog",
     "searchPlaceholder": "What are you looking for?",
     "bookDemo": "Book a Free Demo",
-    "cartLabel": "Shopping cart, 0 items",
+    "cartLabel": "Shopping cart, {count} items",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "soon": "Soon",
     "switchLocale": "ไทย"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "close": "Close cart",
+    "empty": "Your cart is empty. Find the perfect robot for your home.",
+    "emptyCta": "Browse Robots",
+    "addToCart": "Add to Cart",
+    "added": "Added to Cart",
+    "qtyDecrease": "Decrease quantity",
+    "qtyIncrease": "Increase quantity",
+    "removeItem": "Remove {name} from cart",
+    "subtotal": "Subtotal",
+    "shippingNote": "Shipping and taxes calculated at checkout",
+    "checkout": "Checkout"
   },
   "categories": {
     "robot-mowers": {
