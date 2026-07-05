@@ -42,6 +42,47 @@
     "shippingNote": "Shipping and taxes calculated at checkout",
     "checkout": "Checkout"
   },
+  "checkout": {
+    "metaTitle": "Checkout — RoboStore TH",
+    "eyebrow": "Checkout",
+    "heading": "Almost There",
+    "sub": "Tell us where to deliver your robot and our team will take care of the rest",
+    "contactHeading": "Contact Details",
+    "shippingHeading": "Delivery Address",
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Phone number",
+    "address": "Address (house no., street, subdistrict)",
+    "district": "District",
+    "province": "Province",
+    "postalCode": "Postal code",
+    "note": "Delivery note",
+    "optional": "optional",
+    "notePlaceholder": "Gate codes, preferred delivery time, landmark…",
+    "summaryHeading": "Order Summary",
+    "qty": "Qty",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingTbd": "Confirmed by our team",
+    "total": "Total",
+    "placeOrder": "Place Order",
+    "paymentNote": "After you place your order, our team will contact you within 24 hours to arrange secure payment and schedule delivery.",
+    "errors": {
+      "required": "This field is required",
+      "email": "Please enter a valid email address",
+      "phone": "Please enter a valid Thai phone number",
+      "postalCode": "Please enter a valid 5-digit postal code"
+    },
+    "empty": "Your cart is empty — add a robot before checking out.",
+    "emptyCta": "Browse Robots",
+    "success": {
+      "heading": "Order Received!",
+      "body": "Thank you, {name}. Your order is confirmed as pending payment — our team will contact you at {phone} within 24 hours to arrange payment and delivery.",
+      "orderLabel": "Order number",
+      "itemsHeading": "Your items",
+      "continueShopping": "Continue Shopping"
+    }
+  },
   "categories": {
     "robot-mowers": {
       "name": "Robot Mowers",
