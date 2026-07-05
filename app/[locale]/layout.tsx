@@ -9,6 +9,8 @@ import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MotionProvider from "@/components/MotionProvider";
+import CartProvider from "@/components/cart/CartProvider";
+import CartDrawer from "@/components/cart/CartDrawer";
 
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -77,10 +79,13 @@ export default async function LocaleLayout({
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
-            <AnnouncementBar />
-            <Navbar />
-            {children}
-            <Footer />
+            <CartProvider>
+              <AnnouncementBar />
+              <Navbar />
+              {children}
+              <Footer />
+              <CartDrawer />
+            </CartProvider>
           </MotionProvider>
         </NextIntlClientProvider>
       </body>

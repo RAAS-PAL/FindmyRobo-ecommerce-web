@@ -22,11 +22,25 @@
     "blog": "บล็อก",
     "searchPlaceholder": "คุณกำลังมองหาอะไร?",
     "bookDemo": "จองเดโมฟรี",
-    "cartLabel": "ตะกร้าสินค้า มี 0 รายการ",
+    "cartLabel": "ตะกร้าสินค้า มี {count} รายการ",
     "openMenu": "เปิดเมนู",
     "closeMenu": "ปิดเมนู",
     "soon": "เร็วๆ นี้",
     "switchLocale": "EN"
+  },
+  "cart": {
+    "title": "ตะกร้าของคุณ",
+    "close": "ปิดตะกร้า",
+    "empty": "ตะกร้าของคุณว่างเปล่า มาค้นหาหุ่นยนต์ที่ใช่สำหรับบ้านคุณกันเถอะ",
+    "emptyCta": "เลือกซื้อหุ่นยนต์",
+    "addToCart": "เพิ่มลงตะกร้า",
+    "added": "เพิ่มลงตะกร้าแล้ว",
+    "qtyDecrease": "ลดจำนวน",
+    "qtyIncrease": "เพิ่มจำนวน",
+    "removeItem": "นำ {name} ออกจากตะกร้า",
+    "subtotal": "ยอดรวมสินค้า",
+    "shippingNote": "ค่าจัดส่งและภาษีจะคำนวณในขั้นตอนชำระเงิน",
+    "checkout": "ชำระเงิน"
   },
   "categories": {
     "robot-mowers": {
