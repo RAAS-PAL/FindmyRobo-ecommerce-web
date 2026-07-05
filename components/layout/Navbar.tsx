@@ -15,6 +15,7 @@ import {
 import { Link } from "@/i18n/navigation";
 import { categories, categoryHref } from "@/data/categories";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
+import { useCart } from "@/components/cart/CartProvider";
 
 interface NavChild {
   label: string;
@@ -79,6 +80,7 @@ function DropdownChild({
 export default function Navbar() {
   const t = useTranslations("nav");
   const tc = useTranslations("categories");
+  const { count, openDrawer } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   // index into navLinks; Shop (0) starts expanded in the drawer
@@ -203,13 +205,16 @@ export default function Navbar() {
 
           <button
             type="button"
-            aria-label={t("cartLabel")}
+            onClick={openDrawer}
+            aria-label={t("cartLabel", { count })}
             className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/10 hover:text-gold"
           >
             <ShoppingCart className="h-5 w-5" aria-hidden="true" />
-            <span className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-gold font-mono text-[10px] font-bold text-navy-950">
-              0
-            </span>
+            {count > 0 && (
+              <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-0.5 font-mono text-[10px] font-bold text-navy-950">
+                {count}
+              </span>
+            )}
           </button>
 
           <button

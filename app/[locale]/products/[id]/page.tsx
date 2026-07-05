@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Calendar, Check, ChevronRight, MessagesSquare } from "lucide-react";
+import { Calendar, Check, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import FadeIn from "@/components/ui/FadeIn";
+import AddToCartButton from "@/components/cart/AddToCartButton";
 import ProductCard from "@/components/ui/ProductCard";
 import RobotIllustration from "@/components/ui/RobotIllustration";
 import { formatBaht, getProduct, products, type SpecKey } from "@/data/products";
@@ -114,19 +115,13 @@ export default async function ProductPage({
             )}
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#contact"
-                className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full bg-gold px-7 text-[15px] font-bold text-navy-950 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
-              >
-                <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
-                {t("ctaDemo")}
-              </a>
+              <AddToCartButton productId={product.id} />
               <a
                 href="#contact"
                 className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-navy px-7 text-[15px] font-semibold text-navy transition-colors duration-300 hover:border-gold hover:text-gold-600"
               >
-                <MessagesSquare className="h-4.5 w-4.5" aria-hidden="true" />
-                {t("ctaContact")}
+                <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
+                {t("ctaDemo")}
               </a>
             </div>
             <p className="mt-4 text-center text-[12px] text-ink-muted sm:text-left">
