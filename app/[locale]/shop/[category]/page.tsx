@@ -8,7 +8,7 @@ import CategoryTabs from "@/components/ui/CategoryTabs";
 import FadeIn from "@/components/ui/FadeIn";
 import ProductCard from "@/components/ui/ProductCard";
 import { categories, type CategorySlug } from "@/data/categories";
-import { getProductsByCategory } from "@/data/products";
+import { getProductsByCategory } from "@/lib/productStore";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -42,7 +42,7 @@ export default async function CategoryPage({
   const tc = await getTranslations("categories");
   const tn = await getTranslations("nav");
   const slug = cat.slug as CategorySlug;
-  const items = getProductsByCategory(slug);
+  const items = await getProductsByCategory(slug);
 
   return (
     <main className="bg-cloud">

@@ -1,11 +1,11 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import RobotIllustration from "@/components/ui/RobotIllustration";
-import { formatBaht, type Product } from "@/data/products";
+import { formatBaht, type Locale, type Product } from "@/data/products";
 
 export default function ProductCard({
   product,
@@ -16,6 +16,7 @@ export default function ProductCard({
 }) {
   const t = useTranslations("products");
   const tc = useTranslations("categories");
+  const locale = useLocale() as Locale;
   return (
     <motion.article
       initial={{ opacity: 0, y: 36 }}
@@ -57,7 +58,7 @@ export default function ProductCard({
             {product.name}
           </span>
           <span className="text-[13px] leading-relaxed text-ink-muted">
-            {t(`taglines.${product.id}`)}
+            {product.tagline[locale]}
           </span>
           <span className="mt-auto pt-3 font-mono text-lg font-semibold tabular-nums text-navy">
             {formatBaht(product.price)}
