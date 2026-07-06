@@ -9,7 +9,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { getProduct, type Product } from "@/data/products";
+import type { Product } from "@/data/products";
+import { useProducts } from "@/components/ProductsProvider";
 
 const STORAGE_KEY = "raaspal-cart";
 
@@ -60,7 +61,7 @@ function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
 }
 
 /** Keep only entries that still match a real product — catalog may change between visits. */
-function sanitize(raw: unknown): CartItem[] {
+function sanitize(raw: unknown, getProduct: (id: string) => Product | undefined): CartItem[] {
   if (!Array.isArray(raw)) return [];
   return raw.filter(
     (item): item is CartItem =>
@@ -89,6 +90,7 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | null>(null);
 
 export default function CartProvider({ children }: { children: React.ReactNode }) {
+  const { getProduct } = useProducts();
   // Start empty on both server and client, then hydrate from localStorage
   // after mount so SSR markup never mismatches.
   const [rawItems, dispatch] = useReducer(cartReducer, []);
@@ -99,12 +101,14 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        dispatch({ type: "hydrate", items: sanitize(JSON.parse(stored)) });
+        dispatch({ type: "hydrate", items: sanitize(JSON.parse(stored), getProduct) });
       }
     } catch {
       // corrupt storage — start fresh
     }
     hydrated.current = true;
+    // hydration runs once; getProduct identity is stable per catalog load
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -135,7 +139,7 @@ export default function CartProvider({ children }: { children: React.ReactNode }
       openDrawer: () => setDrawerOpen(true),
       closeDrawer: () => setDrawerOpen(false),
     };
-  }, [rawItems, drawerOpen]);
+  }, [rawItems, drawerOpen, getProduct]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

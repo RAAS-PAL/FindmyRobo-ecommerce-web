@@ -9,8 +9,10 @@ import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MotionProvider from "@/components/MotionProvider";
+import ProductsProvider from "@/components/ProductsProvider";
 import CartProvider from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
+import { getAllProducts } from "@/lib/productStore";
 
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -70,6 +72,7 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
   const messages = await getMessages();
+  const products = await getAllProducts();
 
   return (
     <html
@@ -79,13 +82,15 @@ export default async function LocaleLayout({
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
-            <CartProvider>
-              <AnnouncementBar />
-              <Navbar />
-              {children}
-              <Footer />
-              <CartDrawer />
-            </CartProvider>
+            <ProductsProvider products={products}>
+              <CartProvider>
+                <AnnouncementBar />
+                <Navbar />
+                {children}
+                <Footer />
+                <CartDrawer />
+              </CartProvider>
+            </ProductsProvider>
           </MotionProvider>
         </NextIntlClientProvider>
       </body>

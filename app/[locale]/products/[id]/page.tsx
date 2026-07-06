@@ -8,9 +8,11 @@ import FadeIn from "@/components/ui/FadeIn";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import ProductCard from "@/components/ui/ProductCard";
 import RobotIllustration from "@/components/ui/RobotIllustration";
-import { formatBaht, getProduct, products, type SpecKey } from "@/data/products";
+import { formatBaht, type Locale, type SpecKey } from "@/data/products";
+import { getAllProducts, getProductById } from "@/lib/productStore";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const products = await getAllProducts();
   return routing.locales.flatMap((locale) =>
     products.map((p) => ({ locale, id: p.id }))
   );
@@ -22,7 +24,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const product = getProduct(id);
+  const product = await getProductById(id);
   if (!product) return {};
   return { title: `${product.name} — RoboStore TH` };
 }
@@ -35,7 +37,7 @@ export default async function ProductPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const product = getProduct(id);
+  const product = await getProductById(id);
   if (!product) notFound();
 
   const t = await getTranslations("productDetail");
@@ -43,8 +45,9 @@ export default async function ProductPage({
   const tc = await getTranslations("categories");
 
   const specEntries = Object.entries(product.specs) as [SpecKey, string][];
-  const features = t.raw(`features.${product.id}`) as string[];
-  const related = products
+  const features = product.features[locale as Locale] ?? product.features.en;
+  const allProducts = await getAllProducts();
+  const related = allProducts
     .filter((p) => p.id !== product.id)
     .sort((a, b) =>
       (b.category === product.category ? 1 : 0) - (a.category === product.category ? 1 : 0)
@@ -104,7 +107,7 @@ export default async function ProductPage({
               {product.name}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-ink-muted">
-              {t(`descriptions.${product.id}`)}
+              {product.description[locale as Locale] ?? product.description.en}
             </p>
 
             <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-navy">

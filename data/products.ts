@@ -17,6 +17,15 @@ export type SpecKey =
   | "connectivity"
   | "filtration";
 
+export type Locale = "en" | "th";
+
+export type LocalizedText = Record<Locale, string>;
+
+/**
+ * Product records live in data/products.json and are managed through the
+ * admin panel (lib/productStore.ts). Marketing copy is stored per-locale on
+ * the record itself so admin-added products need no message-file entries.
+ */
 export interface Product {
   id: string;
   name: string;
@@ -25,100 +34,20 @@ export interface Product {
   variant: RobotVariant;
   preorder?: boolean;
   specs: Partial<Record<SpecKey, string>>;
+  tagline: LocalizedText;
+  description: LocalizedText;
+  features: Record<Locale, string[]>;
 }
 
-export const products: Product[] = [
-  {
-    id: "luba-3-awd-5000",
-    name: "MAMMOTION LUBA 3 AWD 5000",
-    price: 185000,
-    category: "robot-mowers",
-    variant: "luba",
-    preorder: true,
-    specs: {
-      area: "5,000 m²",
-      slope: "80% (38°)",
-      cuttingWidth: "400 mm",
-      runtime: "180 min",
-      connectivity: "RTK + Vision, 4G, Wi-Fi",
-    },
-  },
-  {
-    id: "luba-3-awd-3000",
-    name: "MAMMOTION LUBA 3 AWD 3000",
-    price: 159000,
-    category: "robot-mowers",
-    variant: "luba",
-    specs: {
-      area: "3,000 m²",
-      slope: "80% (38°)",
-      cuttingWidth: "400 mm",
-      runtime: "180 min",
-      connectivity: "RTK + Vision, 4G, Wi-Fi",
-    },
-  },
-  {
-    id: "luba-3-awd-1500",
-    name: "MAMMOTION LUBA 3 AWD 1500",
-    price: 125000,
-    category: "robot-mowers",
-    variant: "luba",
-    preorder: true,
-    specs: {
-      area: "1,500 m²",
-      slope: "80% (38°)",
-      cuttingWidth: "400 mm",
-      runtime: "160 min",
-      connectivity: "RTK + Vision, Wi-Fi",
-    },
-  },
-  {
-    id: "luba-mini-awd-1500",
-    name: "LUBA Mini AWD 1500",
-    price: 99000,
-    category: "robot-mowers",
-    variant: "mini",
-    specs: {
-      area: "1,500 m²",
-      slope: "80% (38°)",
-      cuttingWidth: "210 mm",
-      runtime: "150 min",
-      connectivity: "RTK + Vision, Wi-Fi",
-    },
-  },
-  {
-    id: "luba-mini-awd-800",
-    name: "LUBA Mini AWD 800",
-    price: 79000,
-    category: "robot-mowers",
-    variant: "mini",
-    specs: {
-      area: "800 m²",
-      slope: "65% (33°)",
-      cuttingWidth: "210 mm",
-      runtime: "120 min",
-      connectivity: "RTK + Vision, Wi-Fi",
-    },
-  },
-  {
-    id: "spino-e1-pool",
-    name: "Spino E1 Pool Cleaner",
-    price: 45000,
-    category: "pool-cleaners",
-    variant: "pool",
-    specs: {
-      area: "80 m² pool",
-      runtime: "150 min",
-      filtration: "180 µm",
-      connectivity: "App control, Bluetooth",
-    },
-  },
+export const SPEC_KEYS: SpecKey[] = [
+  "area",
+  "slope",
+  "cuttingWidth",
+  "runtime",
+  "connectivity",
+  "filtration",
 ];
 
-export const getProduct = (id: string): Product | undefined =>
-  products.find((p) => p.id === id);
-
-export const getProductsByCategory = (category: CategorySlug): Product[] =>
-  products.filter((p) => p.category === category);
+export const ROBOT_VARIANTS: RobotVariant[] = ["luba", "mini", "pool"];
 
 export const formatBaht = (price: number) => `฿${price.toLocaleString("en-US")}`;
