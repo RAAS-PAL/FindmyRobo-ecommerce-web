@@ -27,11 +27,7 @@ export default function AnimatedCounter({
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    if (!inView) return;
-    if (reduceMotion) {
-      setValue(to);
-      return;
-    }
+    if (!inView || reduceMotion) return;
     const controls = animate(0, to, {
       duration,
       ease: [0.16, 1, 0.3, 1],
@@ -40,7 +36,9 @@ export default function AnimatedCounter({
     return () => controls.stop();
   }, [inView, to, duration, reduceMotion]);
 
-  const display = value.toLocaleString("en-US", {
+  // reduced motion: skip the count-up entirely and render the target value
+  const shown = inView && reduceMotion ? to : value;
+  const display = shown.toLocaleString("en-US", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
