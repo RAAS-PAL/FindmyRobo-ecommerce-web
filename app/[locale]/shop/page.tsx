@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import CategoryTabs from "@/components/ui/CategoryTabs";
 import FadeIn from "@/components/ui/FadeIn";
 import ProductCard from "@/components/ui/ProductCard";
-import { products } from "@/data/products";
+import { getAllProducts } from "@/lib/productStore";
 
 export async function generateMetadata({
   params,
@@ -23,6 +23,7 @@ export default async function ShopPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("shop");
+  const products = await getAllProducts();
 
   return (
     <main className="bg-cloud">

@@ -5,10 +5,11 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCard from "@/components/ui/ProductCard";
-import { products } from "@/data/products";
+import { useProducts } from "@/components/ProductsProvider";
 
 export default function ProductGrid() {
   const t = useTranslations("products");
+  const { products } = useProducts();
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const scrollBy = (dir: 1 | -1) =>
