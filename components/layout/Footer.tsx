@@ -25,13 +25,13 @@ export default function Footer() {
   const about = t.raw("about") as string[];
 
   return (
-    <footer id="contact" className="bg-navy-950 text-white">
+    <footer id="contact" className="bg-forest-950 text-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-3">
           {/* brand */}
           <div>
             <Link href="/" className="flex items-center gap-2.5" aria-label="RoboStore TH home">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold text-navy-950">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold text-forest-950">
                 <Bot className="h-5.5 w-5.5" aria-hidden="true" />
               </span>
               <span className="font-display text-xl font-extrabold tracking-tight">

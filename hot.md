@@ -1,4 +1,22 @@
-# Hot Cache — Last Updated: 2026-07-04
+# Hot Cache — Last Updated: 2026-07-08
+
+## Latest Change — CEO REBRAND: LIGHT GREEN + YELLOW ✅ (2026-07-08)
+- CEO decision: lighter look, green + yellow, premium. Supersedes navy+gold.
+- Token rename repo-wide: navy-* → forest-* (green values) in
+  app/globals.css @theme; gold kept (#F5C842); gold-600 darkened to
+  #8a6a00 for WCAG text contrast on white; cloud/ink-muted now green-tinted
+- Light surfaces: navbar (white glass), hero (daylight lawn scene:
+  sun, pollen, cream/green mower), WhyUs (white cards), YouTube CTA
+  (light gradient). Dark-forest anchors kept: footer, stat cards,
+  specs panel, news banners, cart drawer, admin header
+- HERO VIDEO SLOT: data/siteConfig.ts → heroVideoUrl (null now).
+  Set to "/hero.mp4" (file in /public) or CDN URL → hero plays video
+  full-bleed with dark overlay + white text; null → animated scene.
+  Verified both modes render. CEO's video pending.
+- RobotIllustration + hero MowerSvg restyled: cream shells, forest
+  chassis, gold accents
+- NBSP gotcha in HeroSection headline separator still applies (line
+  contains a literal U+00A0 — edits there must match it)
 
 ## Latest Change (part 3) — SHOP + PRODUCT DETAIL PAGES ✅
 - New routes (all SSG, 27 static pages, both locales):

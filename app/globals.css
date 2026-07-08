@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  /* RoboStore TH palette — deep navy + gold */
-  --color-navy-950: #070f2e;
-  --color-navy-900: #0a163d;
-  --color-navy: #0d1b4b;
-  --color-navy-800: #16276b;
-  --color-navy-700: #21358a;
-  --color-navy-300: #8d9ac9;
-  --color-navy-100: #e3e7f5;
+  /* RoboStore TH palette — fresh garden: light surfaces, forest green + yellow
+     (CEO rebrand 2026-07-08: lighter look, green + yellow, premium) */
+  --color-forest-950: #0b2e1f;
+  --color-forest-900: #10402b;
+  --color-forest: #123b28;
+  --color-forest-800: #1a5c3e;
+  --color-forest-700: #237a52;
+  --color-forest-300: #9ec9ae;
+  --color-forest-100: #dcebe0;
   --color-gold: #f5c842;
   --color-gold-300: #ffe08a;
-  --color-gold-600: #d9a916;
-  --color-cloud: #f6f7fb;
-  --color-ink-muted: #5a648c;
+  --color-gold-600: #8a6a00; /* darkened amber: 4.5:1+ on white for text accents */
+  --color-cloud: #f4f8f3;
+  --color-ink-muted: #55705f;
 
   /* Thai fallbacks: Archivo/Inter/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
   --font-display: var(--font-archivo), var(--font-prompt), system-ui, sans-serif;
@@ -23,13 +24,13 @@
 
 body {
   background: #ffffff;
-  color: var(--color-navy);
+  color: var(--color-forest);
   font-family: var(--font-sans);
 }
 
 ::selection {
   background: var(--color-gold);
-  color: var(--color-navy-950);
+  color: var(--color-forest-950);
 }
 
 :focus-visible {
