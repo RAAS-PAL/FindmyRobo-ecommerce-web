@@ -25,7 +25,7 @@ export default function TrustSection() {
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
             {t("eyebrow")}
           </p>
-          <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-navy sm:text-5xl">
+          <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-forest sm:text-5xl">
             {t("heading")}
           </h2>
           <p className="mt-6 max-w-lg text-base leading-relaxed text-ink-muted sm:text-lg">
@@ -43,7 +43,7 @@ export default function TrustSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.55, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-2xl bg-navy p-6 shadow-[0_16px_40px_-16px_rgba(13,27,75,0.4)] sm:p-8"
+              className="rounded-2xl bg-forest p-6 shadow-[0_16px_40px_-16px_rgba(10,46,31,0.4)] sm:p-8"
             >
               <AnimatedCounter
                 to={stat.value}

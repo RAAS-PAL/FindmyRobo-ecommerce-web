@@ -22,8 +22,8 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
         href="/shop"
         className={`${base} ${
           !active
-            ? "border-navy bg-navy text-white"
-            : "border-navy-100 bg-white text-navy hover:border-gold hover:bg-gold/10"
+            ? "border-forest bg-forest text-white"
+            : "border-forest-100 bg-white text-forest hover:border-gold hover:bg-gold/10"
         }`}
       >
         {t("all")}
@@ -35,8 +35,8 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
             href={`/shop/${c.slug}`}
             className={`${base} whitespace-nowrap ${
               active === c.slug
-                ? "border-navy bg-navy text-white"
-                : "border-navy-100 bg-white text-navy hover:border-gold hover:bg-gold/10"
+                ? "border-forest bg-forest text-white"
+                : "border-forest-100 bg-white text-forest hover:border-gold hover:bg-gold/10"
             }`}
           >
             {tc(`${c.slug}.name`)}
@@ -45,7 +45,7 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
           <span
             key={c.slug}
             aria-disabled="true"
-            className={`${base} whitespace-nowrap cursor-default border-navy-100 bg-cloud text-ink-muted/60`}
+            className={`${base} whitespace-nowrap cursor-default border-forest-100 bg-cloud text-ink-muted/60`}
           >
             {tc(`${c.slug}.name`)}
             <span className="rounded-full bg-gold/20 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-gold-600">

@@ -22,7 +22,7 @@ export default function CartDrawer() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={closeDrawer}
-            className="fixed inset-0 z-50 bg-navy-950/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-forest-950/60 backdrop-blur-sm"
             aria-hidden="true"
           />
           <motion.aside
@@ -30,14 +30,14 @@ export default function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 z-50 flex w-[92%] max-w-md flex-col bg-navy-950 shadow-2xl"
+            className="fixed inset-y-0 right-0 z-50 flex w-[92%] max-w-md flex-col bg-forest-950 shadow-2xl"
             role="dialog"
             aria-label={t("title")}
           >
             {/* header */}
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <span className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-navy-950">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-forest-950">
                   <ShoppingCart className="h-4.5 w-4.5" aria-hidden="true" />
                 </span>
                 <span className="font-display text-base font-extrabold text-white">
@@ -69,7 +69,7 @@ export default function CartDrawer() {
                 <Link
                   href="/shop"
                   onClick={closeDrawer}
-                  className="flex min-h-[48px] items-center justify-center gap-1.5 rounded-full bg-gold px-7 text-[14px] font-bold text-navy-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+                  className="flex min-h-[48px] items-center justify-center gap-1.5 rounded-full bg-gold px-7 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
                 >
                   {t("emptyCta")}
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -84,7 +84,7 @@ export default function CartDrawer() {
                       <Link
                         href={`/products/${item.id}`}
                         onClick={closeDrawer}
-                        className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-navy via-navy-800 to-navy-950 p-2"
+                        className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-2"
                       >
                         <RobotIllustration
                           variant={item.product.variant}
@@ -157,7 +157,7 @@ export default function CartDrawer() {
                   <Link
                     href="/checkout"
                     onClick={closeDrawer}
-                    className="mt-4 flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-navy-950 transition-all duration-300 hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
+                    className="mt-4 flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
                   >
                     {t("checkout")}
                     <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />

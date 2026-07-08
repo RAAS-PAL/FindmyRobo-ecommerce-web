@@ -32,7 +32,7 @@ interface NavItem {
 
 function SoonBadge({ label }: { label: string }) {
   return (
-    <span className="ml-2 shrink-0 rounded-full bg-gold/15 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-gold">
+    <span className="ml-2 shrink-0 rounded-full bg-gold/25 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-gold-600">
       {label}
     </span>
   );
@@ -51,12 +51,12 @@ function DropdownChild({
     return (
       <span
         aria-disabled="true"
-        className="flex items-center justify-between rounded-lg px-3 py-2.5 text-[13px] text-white/40"
+        className="flex items-center justify-between rounded-lg px-3 py-2.5 text-[13px] text-ink-muted/60"
       >
         <span>
           {item.label}
           {item.description && (
-            <span className="mt-0.5 block text-[11px] text-white/25">{item.description}</span>
+            <span className="mt-0.5 block text-[11px] text-ink-muted/50">{item.description}</span>
           )}
         </span>
         <SoonBadge label={soonLabel} />
@@ -67,11 +67,11 @@ function DropdownChild({
     <Link
       href={item.href}
       onClick={onNavigate}
-      className="block rounded-lg px-3 py-2.5 text-[13px] text-white/80 transition-colors hover:bg-white/10 hover:text-gold"
+      className="block rounded-lg px-3 py-2.5 text-[13px] text-forest/85 transition-colors hover:bg-cloud hover:text-gold-600"
     >
       {item.label}
       {item.description && (
-        <span className="mt-0.5 block text-[11px] text-white/40">{item.description}</span>
+        <span className="mt-0.5 block text-[11px] text-ink-muted/70">{item.description}</span>
       )}
     </Link>
   );
@@ -132,18 +132,18 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled
-          ? "border-white/10 bg-navy-950/85 shadow-[0_8px_32px_-12px_rgba(7,15,46,0.6)] backdrop-blur-xl"
-          : "border-transparent bg-navy-950"
+          ? "border-forest-100 bg-white/85 shadow-[0_8px_28px_-16px_rgba(10,46,31,0.25)] backdrop-blur-xl"
+          : "border-forest-100/70 bg-white"
       }`}
     >
       <nav className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="RoboStore TH home">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold text-navy-950">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold text-forest-950">
             <Bot className="h-5 w-5" aria-hidden="true" />
           </span>
-          <span className="font-display text-lg font-extrabold tracking-tight text-white">
-            RoboStore<span className="text-gold"> TH</span>
+          <span className="font-display text-lg font-extrabold tracking-tight text-forest-950">
+            RoboStore<span className="text-gold-600"> TH</span>
           </span>
         </Link>
 
@@ -153,19 +153,19 @@ export default function Navbar() {
             <li key={link.label} className="group relative">
               <Link
                 href={link.href}
-                className="nav-underline flex items-center gap-1 py-2 text-[13.5px] font-medium text-white/85 transition-colors hover:text-white"
+                className="nav-underline flex items-center gap-1 py-2 text-[13.5px] font-medium text-forest/80 transition-colors hover:text-forest-950"
               >
                 {link.label}
                 {link.children && (
                   <ChevronDown
-                    className="h-3.5 w-3.5 text-gold transition-transform duration-200 group-hover:rotate-180"
+                    className="h-3.5 w-3.5 text-gold-600 transition-transform duration-200 group-hover:rotate-180"
                     aria-hidden="true"
                   />
                 )}
               </Link>
               {link.children && (
                 <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                  <div className="w-64 overflow-hidden rounded-xl border border-white/10 bg-navy-950/95 p-2 shadow-2xl backdrop-blur-xl">
+                  <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-white/95 p-2 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
                     {link.children.map((item) => (
                       <DropdownChild key={item.label} item={item} soonLabel={t("soon")} />
                     ))}
@@ -181,13 +181,13 @@ export default function Navbar() {
           <label className="relative hidden lg:block">
             <span className="sr-only">{t("searchPlaceholder")}</span>
             <Search
-              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40"
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted/60"
               aria-hidden="true"
             />
             <input
               type="search"
               placeholder={t("searchPlaceholder")}
-              className="h-11 w-44 rounded-full border border-white/15 bg-white/10 pl-10 pr-4 text-[13px] text-white placeholder:text-white/40 transition-all focus:w-56 focus:border-gold/60 focus:bg-white/15 focus:outline-none"
+              className="h-11 w-44 rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-[13px] text-forest placeholder:text-ink-muted/70 transition-all focus:w-56 focus:border-gold-600/60 focus:bg-white focus:outline-none"
             />
           </label>
 
@@ -195,7 +195,7 @@ export default function Navbar() {
             href="#contact"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            className="hidden min-h-[44px] items-center gap-2 rounded-full bg-gold px-5 text-[13.5px] font-bold text-navy-950 shadow-[0_0_0_0_rgba(245,200,66,0)] transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] sm:flex"
+            className="hidden min-h-[44px] items-center gap-2 rounded-full bg-gold px-5 text-[13.5px] font-bold text-forest-950 shadow-[0_0_0_0_rgba(245,200,66,0)] transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] sm:flex"
           >
             <Calendar className="h-4 w-4" aria-hidden="true" />
             {t("bookDemo")}
@@ -207,11 +207,11 @@ export default function Navbar() {
             type="button"
             onClick={openDrawer}
             aria-label={t("cartLabel", { count })}
-            className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/10 hover:text-gold"
+            className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-forest transition-colors hover:bg-cloud hover:text-gold-600"
           >
             <ShoppingCart className="h-5 w-5" aria-hidden="true" />
             {count > 0 && (
-              <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-0.5 font-mono text-[10px] font-bold text-navy-950">
+              <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-0.5 font-mono text-[10px] font-bold text-forest-950">
                 {count}
               </span>
             )}
@@ -221,7 +221,7 @@ export default function Navbar() {
             type="button"
             onClick={() => setOpen(true)}
             aria-label={t("openMenu")}
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 xl:hidden"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-forest-950 transition-colors hover:bg-cloud xl:hidden"
           >
             <Menu className="h-6 w-6" aria-hidden="true" />
           </button>
@@ -238,7 +238,7 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-50 bg-navy-950/60 backdrop-blur-sm xl:hidden"
+              className="fixed inset-0 z-50 bg-forest-950/50 backdrop-blur-sm xl:hidden"
               aria-hidden="true"
             />
             <motion.aside
@@ -246,24 +246,24 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-y-0 right-0 z-50 flex w-[85%] max-w-sm flex-col bg-navy-950 shadow-2xl xl:hidden"
+              className="fixed inset-y-0 right-0 z-50 flex w-[85%] max-w-sm flex-col bg-white shadow-2xl xl:hidden"
               role="dialog"
               aria-label="Menu"
             >
-              <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+              <div className="flex items-center justify-between border-b border-forest-100 px-5 py-4">
                 <span className="flex items-center gap-2.5">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-navy-950">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-forest-950">
                     <Bot className="h-4.5 w-4.5" aria-hidden="true" />
                   </span>
-                  <span className="font-display text-base font-extrabold text-white">
-                    RoboStore<span className="text-gold"> TH</span>
+                  <span className="font-display text-base font-extrabold text-forest-950">
+                    RoboStore<span className="text-gold-600"> TH</span>
                   </span>
                 </span>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label={t("closeMenu")}
-                  className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white/80 hover:bg-white/10"
+                  className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-forest hover:bg-cloud"
                 >
                   <X className="h-6 w-6" aria-hidden="true" />
                 </button>
@@ -273,13 +273,13 @@ export default function Navbar() {
                 <label className="relative mb-6 block">
                   <span className="sr-only">{t("searchPlaceholder")}</span>
                   <Search
-                    className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40"
+                    className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted/60"
                     aria-hidden="true"
                   />
                   <input
                     type="search"
                     placeholder={t("searchPlaceholder")}
-                    className="h-12 w-full rounded-full border border-white/15 bg-white/10 pl-10 pr-4 text-sm text-white placeholder:text-white/40 focus:border-gold/60 focus:outline-none"
+                    className="h-12 w-full rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-sm text-forest placeholder:text-ink-muted/70 focus:border-gold-600/60 focus:bg-white focus:outline-none"
                   />
                 </label>
                 <ul className="space-y-1">
@@ -296,11 +296,11 @@ export default function Navbar() {
                             type="button"
                             onClick={() => setExpanded(expanded === i ? null : i)}
                             aria-expanded={expanded === i}
-                            className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-[15px] font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-gold"
+                            className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-[15px] font-medium text-forest transition-colors hover:bg-cloud hover:text-gold-600"
                           >
                             {link.label}
                             <ChevronDown
-                              className={`h-4 w-4 text-gold transition-transform duration-200 ${
+                              className={`h-4 w-4 text-gold-600 transition-transform duration-200 ${
                                 expanded === i ? "rotate-180" : ""
                               }`}
                               aria-hidden="true"
@@ -318,7 +318,7 @@ export default function Navbar() {
                                 {link.children.map((item) => (
                                   <li key={item.label}>
                                     {item.comingSoon ? (
-                                      <span className="flex min-h-[44px] items-center px-4 text-[14px] text-white/40">
+                                      <span className="flex min-h-[44px] items-center px-4 text-[14px] text-ink-muted/60">
                                         {item.label}
                                         <SoonBadge label={t("soon")} />
                                       </span>
@@ -326,7 +326,7 @@ export default function Navbar() {
                                       <Link
                                         href={item.href}
                                         onClick={() => setOpen(false)}
-                                        className="flex min-h-[44px] items-center rounded-lg px-4 text-[14px] text-white/75 transition-colors hover:bg-white/10 hover:text-gold"
+                                        className="flex min-h-[44px] items-center rounded-lg px-4 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-gold-600"
                                       >
                                         {item.label}
                                       </Link>
@@ -341,7 +341,7 @@ export default function Navbar() {
                         <Link
                           href={link.href}
                           onClick={() => setOpen(false)}
-                          className="flex min-h-[48px] items-center rounded-xl px-4 text-[15px] font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-gold"
+                          className="flex min-h-[48px] items-center rounded-xl px-4 text-[15px] font-medium text-forest transition-colors hover:bg-cloud hover:text-gold-600"
                         >
                           {link.label}
                         </Link>
@@ -350,16 +350,16 @@ export default function Navbar() {
                   ))}
                 </ul>
 
-                <div className="mt-6 border-t border-white/10 pt-6">
+                <div className="mt-6 border-t border-forest-100 pt-6">
                   <LanguageSwitcher className="w-fit" />
                 </div>
               </div>
 
-              <div className="border-t border-white/10 p-5">
+              <div className="border-t border-forest-100 p-5">
                 <a
                   href="#contact"
                   onClick={() => setOpen(false)}
-                  className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-navy-950"
+                  className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950"
                 >
                   <Calendar className="h-4 w-4" aria-hidden="true" />
                   {t("bookDemo")}

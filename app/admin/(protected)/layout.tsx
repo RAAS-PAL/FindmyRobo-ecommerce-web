@@ -11,10 +11,10 @@ export default async function AdminProtectedLayout({
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-navy-950">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-forest-950">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/admin" className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-navy-950">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-forest-950">
               <Bot className="h-4.5 w-4.5" aria-hidden="true" />
             </span>
             <span className="font-display text-base font-extrabold tracking-tight text-white">

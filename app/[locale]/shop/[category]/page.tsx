@@ -51,7 +51,7 @@ export default async function CategoryPage({
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
             {t("eyebrow")}
           </p>
-          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-navy sm:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-forest sm:text-5xl">
             {tc(`${slug}.name`)}
           </h1>
           <p className="mt-4 max-w-xl text-base text-ink-muted">{tc(`${slug}.description`)}</p>
@@ -69,11 +69,11 @@ export default async function CategoryPage({
           </div>
         ) : (
           <FadeIn className="mt-10">
-            <div className="flex flex-col items-center rounded-3xl border border-navy-100 bg-white px-6 py-20 text-center">
-              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-navy text-gold">
+            <div className="flex flex-col items-center rounded-3xl border border-forest-100 bg-white px-6 py-20 text-center">
+              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-forest text-gold">
                 <Bot className="h-8 w-8" aria-hidden="true" />
               </span>
-              <h2 className="mt-6 font-display text-2xl font-extrabold text-navy sm:text-3xl">
+              <h2 className="mt-6 font-display text-2xl font-extrabold text-forest sm:text-3xl">
                 {t("comingSoonTitle")}
               </h2>
               <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
@@ -82,14 +82,14 @@ export default async function CategoryPage({
               <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
                 <a
                   href="#contact"
-                  className="flex min-h-[48px] items-center gap-2 rounded-full bg-gold px-7 text-sm font-bold text-navy-950 transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+                  className="flex min-h-[48px] items-center gap-2 rounded-full bg-gold px-7 text-sm font-bold text-forest-950 transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
                 >
                   <Calendar className="h-4 w-4" aria-hidden="true" />
                   {tn("bookDemo")}
                 </a>
                 <Link
                   href="/shop"
-                  className="flex min-h-[48px] items-center rounded-full border border-navy-100 px-7 text-sm font-semibold text-navy transition-colors hover:border-gold"
+                  className="flex min-h-[48px] items-center rounded-full border border-forest-100 px-7 text-sm font-semibold text-forest transition-colors hover:border-gold"
                 >
                   {t("backToShop")}
                 </Link>

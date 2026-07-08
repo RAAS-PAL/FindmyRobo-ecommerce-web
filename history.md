@@ -1,5 +1,17 @@
 # Session History
 
+## 2026-07-08 — CEO rebrand: light green + yellow + hero video slot
+- CEO requested lighter premium look (green + yellow) and a hero video
+  with animation fallback when no video is configured
+- Renamed navy-* tokens → forest-* repo-wide (26 files) with new green
+  values; gold kept, gold-600 darkened for text contrast
+- Lightened navbar/hero/WhyUs/YouTube; kept footer/stat cards/specs
+  panel as dark forest anchors; redrew mower + product SVGs in
+  cream/forest/gold daylight style
+- Added data/siteConfig.ts heroVideoUrl — video hero (dark overlay,
+  white text) when set, animated lawn scene when null; both verified
+- Build clean; screenshots at 1440/375 both locales
+
 ## 2026-07-04 — Session 2 (continued): multi-category + Thai i18n
 - Restructured for multi-category: data/categories.ts is source of
   truth; nav "Shop ▾" dropdown generated from it (coming-soon

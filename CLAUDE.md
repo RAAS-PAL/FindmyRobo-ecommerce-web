@@ -32,7 +32,11 @@ explicitly told to.
 - Use ui-ux-pro-max skill for color/font/layout decisions
 - Use frontend-design skill for aesthetic direction
 - Ground design in real reference: Robomate Australia structure
-- Adapt colors to Thai identity (navy + gold theme decided earlier)
+- Colors: LIGHT theme, forest green + yellow (CEO decision 2026-07-08,
+  supersedes the earlier navy + gold theme). Tokens live in
+  app/globals.css @theme (forest-* scale + gold).
+- Hero: video slot in data/siteConfig.ts (heroVideoUrl); animated
+  lawn scene is the fallback while no video is configured
 
 ## Brand Name Status
 - Still deciding: Not sure yet, still finding and thinking

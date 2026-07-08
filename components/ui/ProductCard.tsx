@@ -27,12 +27,12 @@ export default function ProductCard({
     >
       <Link
         href={`/products/${product.id}`}
-        className="flex h-full flex-col overflow-hidden rounded-2xl border border-navy-100 bg-white transition-all duration-300 hover:-translate-y-2 hover:border-gold hover:shadow-[0_24px_48px_-16px_rgba(13,27,75,0.25)]"
+        className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-white transition-all duration-300 hover:-translate-y-2 hover:border-gold hover:shadow-[0_24px_48px_-16px_rgba(10,46,31,0.25)]"
       >
         {/* image area */}
-        <div className="relative overflow-hidden bg-gradient-to-b from-cloud to-navy-100/40 pb-4 pt-8">
+        <div className="relative overflow-hidden bg-gradient-to-b from-cloud to-forest-100/40 pb-4 pt-8">
           {product.preorder && (
-            <span className="absolute right-4 top-4 z-10 rounded-full bg-navy-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-gold">
+            <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-gold">
               {t("preorder")}
             </span>
           )}
@@ -42,7 +42,7 @@ export default function ProductCard({
           />
           {/* view product — slides up on hover / focus */}
           <span className="absolute inset-x-0 bottom-0 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-focus-within:translate-y-0">
-            <span className="flex min-h-[44px] w-full items-center justify-center gap-1.5 bg-navy py-3 text-sm font-semibold text-white">
+            <span className="flex min-h-[44px] w-full items-center justify-center gap-1.5 bg-forest py-3 text-sm font-semibold text-white">
               {t("viewProduct")}
               <ArrowUpRight className="h-4 w-4 text-gold" aria-hidden="true" />
             </span>
@@ -54,13 +54,13 @@ export default function ProductCard({
           <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-gold-600">
             {tc(`${product.category}.name`)}
           </span>
-          <span className="font-display text-[15px] font-bold leading-snug text-navy">
+          <span className="font-display text-[15px] font-bold leading-snug text-forest">
             {product.name}
           </span>
           <span className="text-[13px] leading-relaxed text-ink-muted">
             {product.tagline[locale]}
           </span>
-          <span className="mt-auto pt-3 font-mono text-lg font-semibold tabular-nums text-navy">
+          <span className="mt-auto pt-3 font-mono text-lg font-semibold tabular-nums text-forest">
             {formatBaht(product.price)}
           </span>
         </span>

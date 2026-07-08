@@ -8,14 +8,14 @@ import { YouTubeIcon } from "@/components/ui/BrandIcons";
 export default function YouTubeCTA() {
   const t = useTranslations("youtube");
   return (
-    <section id="youtube" className="relative overflow-hidden bg-gradient-to-br from-navy-950 via-navy to-navy-900 py-20 text-white sm:py-28">
+    <section id="youtube" className="relative overflow-hidden bg-gradient-to-br from-white via-cloud to-[#e9f4e4] py-20 sm:py-28">
       {/* ambient glows */}
       <div
-        className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-gold/[0.06] blur-[90px]"
+        className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-gold/[0.14] blur-[90px]"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -right-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-red-500/[0.08] blur-[90px]"
+        className="pointer-events-none absolute -right-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-red-500/[0.07] blur-[90px]"
         aria-hidden="true"
       />
 
@@ -26,13 +26,13 @@ export default function YouTubeCTA() {
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className="relative mx-auto flex max-w-3xl flex-col items-center px-4 text-center sm:px-6"
       >
-        <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-forest-950 shadow-[0_16px_32px_-16px_rgba(10,46,31,0.5)]">
           <Play className="h-7 w-7 fill-gold text-gold" aria-hidden="true" />
         </span>
-        <h2 className="mt-7 font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
+        <h2 className="mt-7 font-display text-3xl font-extrabold tracking-tight text-forest-950 sm:text-5xl">
           {t("heading")}
         </h2>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg">
+        <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-muted sm:text-lg">
           {t("sub")}
         </p>
         <motion.a

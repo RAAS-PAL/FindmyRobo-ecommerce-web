@@ -34,16 +34,16 @@ const slugify = (name: string) =>
     .slice(0, 60);
 
 const inputClass =
-  "min-h-[46px] w-full rounded-xl border border-navy-100 bg-white px-4 text-[14px] text-navy placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[46px] w-full rounded-xl border border-forest-100 bg-white px-4 text-[14px] text-forest placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
 const textareaClass =
-  "w-full rounded-xl border border-navy-100 bg-white px-4 py-3 text-[14px] leading-relaxed text-navy placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
-const labelClass = "mb-1.5 block text-[13px] font-semibold text-navy";
+  "w-full rounded-xl border border-forest-100 bg-white px-4 py-3 text-[14px] leading-relaxed text-forest placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+const labelClass = "mb-1.5 block text-[13px] font-semibold text-forest";
 const hintClass = "mt-1 text-[11.5px] text-ink-muted";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-navy-100 bg-white p-6 sm:p-8">
-      <h2 className="font-display text-lg font-bold text-navy">{title}</h2>
+    <section className="rounded-2xl border border-forest-100 bg-white p-6 sm:p-8">
+      <h2 className="font-display text-lg font-bold text-forest">{title}</h2>
       <div className="mt-5 grid gap-5 sm:grid-cols-2">{children}</div>
     </section>
   );
@@ -160,7 +160,7 @@ export default function NewProductForm() {
                 </option>
               ))}
             </select>
-            <span className="flex h-14 w-16 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-navy via-navy-800 to-navy-950 p-1.5">
+            <span className="flex h-14 w-16 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
               <RobotIllustration variant={variant} className="h-full w-auto" />
             </span>
           </div>
@@ -172,9 +172,9 @@ export default function NewProductForm() {
             name="preorder"
             type="checkbox"
             value="1"
-            className="h-4.5 w-4.5 rounded border-navy-100 accent-[#f5c842]"
+            className="h-4.5 w-4.5 rounded border-forest-100 accent-[#f5c842]"
           />
-          <label htmlFor="preorder" className="text-[13.5px] font-medium text-navy">
+          <label htmlFor="preorder" className="text-[13.5px] font-medium text-forest">
             Preorder (not in stock yet)
           </label>
         </div>
@@ -268,14 +268,14 @@ export default function NewProductForm() {
         <button
           type="button"
           onClick={() => router.push("/admin")}
-          className="flex min-h-[48px] cursor-pointer items-center rounded-full border border-navy-100 px-6 text-[13.5px] font-semibold text-navy transition-colors hover:border-gold"
+          className="flex min-h-[48px] cursor-pointer items-center rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-forest transition-colors hover:border-gold"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={busy}
-          className="flex min-h-[48px] cursor-pointer items-center gap-2 rounded-full bg-gold px-8 text-[14px] font-bold text-navy-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-h-[48px] cursor-pointer items-center gap-2 rounded-full bg-gold px-8 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {busy ? (
             <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />

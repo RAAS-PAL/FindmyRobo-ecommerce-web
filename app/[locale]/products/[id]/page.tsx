@@ -74,16 +74,16 @@ export default async function ProductPage({
             {tc(`${product.category}.name`)}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <span className="font-medium text-navy">{product.name}</span>
+          <span className="font-medium text-forest">{product.name}</span>
         </nav>
 
         {/* top: gallery + info */}
         <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16">
           {/* gallery placeholder */}
           <FadeIn>
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-navy-950 via-navy to-navy-800 p-10 sm:p-16">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-forest-950 via-forest to-forest-800 p-10 sm:p-16">
               {product.preorder && (
-                <span className="absolute right-5 top-5 rounded-full bg-gold px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-navy-950">
+                <span className="absolute right-5 top-5 rounded-full bg-gold px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-forest-950">
                   {tp("preorder")}
                 </span>
               )}
@@ -93,7 +93,7 @@ export default async function ProductPage({
               />
               <RobotIllustration
                 variant={product.variant}
-                className="relative mx-auto h-64 w-auto drop-shadow-[0_24px_40px_rgba(7,15,46,0.7)] sm:h-80"
+                className="relative mx-auto h-64 w-auto drop-shadow-[0_24px_40px_rgba(6,31,21,0.7)] sm:h-80"
               />
             </div>
           </FadeIn>
@@ -103,14 +103,14 @@ export default async function ProductPage({
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
               {tc(`${product.category}.name`)}
             </p>
-            <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-navy sm:text-4xl">
+            <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-forest sm:text-4xl">
               {product.name}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-ink-muted">
               {product.description[locale as Locale] ?? product.description.en}
             </p>
 
-            <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-navy">
+            <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-forest">
               {formatBaht(product.price)}
             </p>
             {product.preorder && (
@@ -121,7 +121,7 @@ export default async function ProductPage({
               <AddToCartButton productId={product.id} />
               <a
                 href="#contact"
-                className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-navy px-7 text-[15px] font-semibold text-navy transition-colors duration-300 hover:border-gold hover:text-gold-600"
+                className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-forest transition-colors duration-300 hover:border-gold hover:text-gold-600"
               >
                 <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
                 {t("ctaDemo")}
@@ -133,7 +133,7 @@ export default async function ProductPage({
 
             {/* features */}
             <div className="mt-10 rounded-2xl bg-cloud p-6 sm:p-8">
-              <h2 className="font-display text-lg font-bold text-navy">
+              <h2 className="font-display text-lg font-bold text-forest">
                 {t("featuresHeading")}
               </h2>
               <ul className="mt-4 space-y-3">
@@ -152,7 +152,7 @@ export default async function ProductPage({
 
         {/* specs */}
         <FadeIn className="mt-16 sm:mt-20">
-          <div className="rounded-3xl bg-navy-950 p-8 text-white sm:p-12">
+          <div className="rounded-3xl bg-forest-950 p-8 text-white sm:p-12">
             <div className="flex flex-wrap items-baseline justify-between gap-3">
               <h2 className="font-display text-2xl font-extrabold sm:text-3xl">
                 {t("specsHeading")}
@@ -177,7 +177,7 @@ export default async function ProductPage({
         {/* related */}
         <div className="mt-16 sm:mt-20">
           <FadeIn>
-            <h2 className="font-display text-2xl font-extrabold tracking-tight text-navy sm:text-3xl">
+            <h2 className="font-display text-2xl font-extrabold tracking-tight text-forest sm:text-3xl">
               {t("relatedHeading")}
             </h2>
           </FadeIn>

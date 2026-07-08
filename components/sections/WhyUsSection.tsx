@@ -12,10 +12,10 @@ export default function WhyUsSection() {
     { Icon: Home, title: t("f3Title"), body: t("f3Body") },
   ];
   return (
-    <section id="support" className="relative overflow-hidden bg-navy-950 py-20 text-white sm:py-28">
+    <section id="support" className="relative overflow-hidden bg-cloud py-20 sm:py-28">
       {/* ambient glow */}
       <div
-        className="pointer-events-none absolute left-1/2 top-0 h-72 w-[720px] -translate-x-1/2 rounded-full bg-gold/[0.05] blur-[100px]"
+        className="pointer-events-none absolute left-1/2 top-0 h-72 w-[720px] -translate-x-1/2 rounded-full bg-gold/[0.12] blur-[100px]"
         aria-hidden="true"
       />
 
@@ -27,10 +27,10 @@ export default function WhyUsSection() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto max-w-2xl text-center"
         >
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
             {t("eyebrow")}
           </p>
-          <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
+          <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-forest-950 sm:text-5xl">
             {t("heading")}
           </h2>
         </motion.div>
@@ -43,13 +43,13 @@ export default function WhyUsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="group rounded-2xl border border-navy-700/50 bg-navy-800/40 p-8 transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/40 hover:bg-navy-800/70 hover:shadow-[0_24px_48px_-20px_rgba(245,200,66,0.15)]"
+              className="group rounded-2xl border border-forest-100 bg-white p-8 shadow-[0_12px_32px_-20px_rgba(10,46,31,0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/70 hover:shadow-[0_24px_48px_-20px_rgba(10,46,31,0.25)]"
             >
-              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gold/10 text-gold transition-colors duration-300 group-hover:bg-gold group-hover:text-navy-950">
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-forest-950 text-gold transition-colors duration-300 group-hover:bg-gold group-hover:text-forest-950">
                 <Icon className="h-6.5 w-6.5" aria-hidden="true" />
               </span>
-              <h3 className="mt-6 font-display text-xl font-bold">{title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/65">{body}</p>
+              <h3 className="mt-6 font-display text-xl font-bold text-forest-950">{title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-ink-muted">{body}</p>
             </motion.div>
           ))}
         </div>
