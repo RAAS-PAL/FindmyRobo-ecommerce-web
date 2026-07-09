@@ -44,6 +44,17 @@ export async function addProduct(product: Product): Promise<void> {
   await writeAll([...products, product]);
 }
 
+/** Replace the product at `id`. The id itself is immutable. */
+export async function updateProduct(id: string, product: Product): Promise<boolean> {
+  const products = await readAll();
+  const index = products.findIndex((p) => p.id === id);
+  if (index === -1) return false;
+  const next = [...products];
+  next[index] = { ...product, id };
+  await writeAll(next);
+  return true;
+}
+
 export async function deleteProduct(id: string): Promise<boolean> {
   const products = await readAll();
   const next = products.filter((p) => p.id !== id);
