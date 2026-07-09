@@ -21,7 +21,7 @@ export default async function AdminLoginPage() {
           <LoginForm />
         </div>
         <p className="mt-6 text-center text-[12px] text-ink-muted">
-          Staff access only. Sessions expire after 8 hours.
+          Staff access only. Sign in with your admin account.
         </p>
       </div>
     </main>

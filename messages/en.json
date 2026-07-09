@@ -26,7 +26,47 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "soon": "Soon",
-    "switchLocale": "ไทย"
+    "switchLocale": "ไทย",
+    "account": "Account",
+    "signIn": "Sign in"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "sub": "Sign in to your RoboStore account",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "noAccount": "New to RoboStore?",
+      "signupLink": "Create an account",
+      "error": "Wrong email or password.",
+      "unconfirmed": "Please confirm your email first — check your inbox."
+    },
+    "signup": {
+      "title": "Create your account",
+      "sub": "Join RoboStore TH to track orders and check out faster",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "passwordHint": "At least 8 characters",
+      "submit": "Create Account",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "error": "Could not create your account. Try again.",
+      "checkEmailTitle": "Check your email",
+      "checkEmailBody": "We sent a confirmation link to {email}. Click it to activate your account, then sign in."
+    },
+    "account": {
+      "title": "My Account",
+      "greeting": "Hi, {name}",
+      "email": "Email",
+      "memberSince": "Member since",
+      "role": "Account type",
+      "roleUser": "Customer",
+      "roleAdmin": "Admin",
+      "adminLink": "Open admin panel",
+      "signOut": "Sign out"
+    }
   },
   "cart": {
     "title": "Your Cart",
