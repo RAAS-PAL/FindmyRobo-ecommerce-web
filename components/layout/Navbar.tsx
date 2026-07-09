@@ -10,12 +10,14 @@ import {
   Menu,
   Search,
   ShoppingCart,
+  User,
   X,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { categories, categoryHref } from "@/data/categories";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 import { useCart } from "@/components/cart/CartProvider";
+import { createClient } from "@/lib/supabase/client";
 
 interface NavChild {
   label: string;
@@ -83,6 +85,18 @@ export default function Navbar() {
   const { count, openDrawer } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setLoggedIn(!!data.user));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) =>
+      setLoggedIn(!!session?.user)
+    );
+    return () => subscription.unsubscribe();
+  }, []);
   // index into navLinks; Shop (0) starts expanded in the drawer
   const [expanded, setExpanded] = useState<number | null>(0);
 
@@ -202,6 +216,14 @@ export default function Navbar() {
           </motion.a>
 
           <LanguageSwitcher className="hidden md:flex" />
+
+          <Link
+            href={loggedIn ? "/account" : "/login"}
+            aria-label={loggedIn ? t("account") : t("signIn")}
+            className="flex h-11 w-11 items-center justify-center rounded-full text-forest transition-colors hover:bg-cloud hover:text-gold-600"
+          >
+            <User className="h-5 w-5" aria-hidden="true" />
+          </Link>
 
           <button
             type="button"
