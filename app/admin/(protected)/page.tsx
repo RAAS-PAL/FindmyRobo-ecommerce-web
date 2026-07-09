@@ -1,15 +1,33 @@
 import Link from "next/link";
-import { Package, Plus } from "lucide-react";
+import { Package, Plus, Users } from "lucide-react";
 import { getAllProducts } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
 import { categories } from "@/data/categories";
+import { createServiceClient } from "@/lib/supabase/service";
 import RobotIllustration from "@/components/ui/RobotIllustration";
 import DeleteProductButton from "@/components/admin/DeleteProductButton";
 
 export const dynamic = "force-dynamic";
 
+/** Count of registered customers. Returns null if Supabase isn't set up yet. */
+async function getCustomerCount(): Promise<number | null> {
+  try {
+    const supabase = createServiceClient();
+    const { count, error } = await supabase
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .eq("role", "user");
+    return error ? null : count ?? 0;
+  } catch {
+    return null;
+  }
+}
+
 export default async function AdminProductsPage() {
-  const products = await getAllProducts();
+  const [products, customerCount] = await Promise.all([
+    getAllProducts(),
+    getCustomerCount(),
+  ]);
   const categoryName = (slug: string) =>
     categories.find((c) => c.slug === slug)?.name ?? slug;
 
@@ -36,7 +54,38 @@ export default async function AdminProductsPage() {
         </Link>
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-2xl border border-forest-100 bg-white">
+      {/* stat cards */}
+      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        <div className="rounded-2xl border border-forest-100 bg-white p-5">
+          <div className="flex items-center gap-2 text-ink-muted">
+            <Users className="h-4 w-4 text-gold-600" aria-hidden="true" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider">
+              Registered customers
+            </span>
+          </div>
+          <p className="mt-2 font-mono text-3xl font-extrabold tabular-nums text-forest">
+            {customerCount ?? "—"}
+          </p>
+          {customerCount === null && (
+            <p className="mt-1 text-[11px] text-ink-muted">
+              Connect Supabase to see signups
+            </p>
+          )}
+        </div>
+        <div className="rounded-2xl border border-forest-100 bg-white p-5">
+          <div className="flex items-center gap-2 text-ink-muted">
+            <Package className="h-4 w-4 text-gold-600" aria-hidden="true" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider">
+              Products listed
+            </span>
+          </div>
+          <p className="mt-2 font-mono text-3xl font-extrabold tabular-nums text-forest">
+            {products.length}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-6 overflow-hidden rounded-2xl border border-forest-100 bg-white">
         {products.length === 0 ? (
           <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
             <Package className="h-8 w-8 text-forest-300" aria-hidden="true" />
