@@ -1,8 +1,20 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
+import { getProductById } from "@/lib/productStore";
 import ProductForm from "@/components/admin/ProductForm";
 
-export default function NewProductPage() {
+export const dynamic = "force-dynamic";
+
+export default async function EditProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const product = await getProductById(id);
+  if (!product) notFound();
+
   return (
     <>
       <Link
@@ -13,14 +25,13 @@ export default function NewProductPage() {
         Back to products
       </Link>
       <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-forest">
-        Add Product
+        Edit Product
       </h1>
       <p className="mt-2 text-sm text-ink-muted">
-        Fill in both English and Thai copy — the storefront shows whichever
-        language the customer is browsing in.
+        Changes go live on the storefront as soon as you save.
       </p>
       <div className="mt-8">
-        <ProductForm />
+        <ProductForm initial={product} />
       </div>
     </>
   );
