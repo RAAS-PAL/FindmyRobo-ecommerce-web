@@ -7,6 +7,7 @@ import { categories } from "@/data/categories";
 import {
   ROBOT_VARIANTS,
   SPEC_KEYS,
+  type Product,
   type SpecKey,
 } from "@/data/products";
 import RobotIllustration from "@/components/ui/RobotIllustration";
@@ -49,12 +50,20 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-export default function NewProductForm() {
+/**
+ * Create + edit form for products. Without `initial` it POSTs a new product;
+ * with `initial` it prefills every field and PUTs to the same id — the id is
+ * immutable so storefront URLs survive renames.
+ */
+export default function ProductForm({ initial }: { initial?: Product }) {
   const router = useRouter();
+  const isEdit = initial !== undefined;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [name, setName] = useState("");
-  const [variant, setVariant] = useState<(typeof ROBOT_VARIANTS)[number]>("luba");
+  const [name, setName] = useState(initial?.name ?? "");
+  const [variant, setVariant] = useState<(typeof ROBOT_VARIANTS)[number]>(
+    initial?.variant ?? "luba"
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,11 +72,14 @@ export default function NewProductForm() {
 
     const data = Object.fromEntries(new FormData(e.currentTarget).entries());
     try {
-      const res = await fetch("/api/admin/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        isEdit ? `/api/admin/products/${initial.id}` : "/api/admin/products",
+        {
+          method: isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
       if (res.ok) {
         router.push("/admin");
         router.refresh();
@@ -108,10 +120,17 @@ export default function NewProductForm() {
             placeholder="MAMMOTION LUBA 3 AWD 3000"
             className={inputClass}
           />
-          {name && (
+          {isEdit ? (
             <p className={hintClass}>
-              URL: /products/<span className="font-mono">{slugify(name)}</span>
+              URL: /products/<span className="font-mono">{initial.id}</span>{" "}
+              (fixed — links keep working after edits)
             </p>
+          ) : (
+            name && (
+              <p className={hintClass}>
+                URL: /products/<span className="font-mono">{slugify(name)}</span>
+              </p>
+            )
           )}
         </div>
         <div>
@@ -125,6 +144,7 @@ export default function NewProductForm() {
             required
             min={1}
             step={1}
+            defaultValue={initial?.price}
             placeholder="159000"
             className={inputClass}
           />
@@ -133,7 +153,12 @@ export default function NewProductForm() {
           <label htmlFor="category" className={labelClass}>
             Category
           </label>
-          <select id="category" name="category" className={inputClass}>
+          <select
+            id="category"
+            name="category"
+            defaultValue={initial?.category}
+            className={inputClass}
+          >
             {categories.map((c) => (
               <option key={c.slug} value={c.slug}>
                 {c.name}
@@ -172,6 +197,7 @@ export default function NewProductForm() {
             name="preorder"
             type="checkbox"
             value="1"
+            defaultChecked={!!initial?.preorder}
             className="h-4.5 w-4.5 rounded border-forest-100 accent-[#f5c842]"
           />
           <label htmlFor="preorder" className="text-[13.5px] font-medium text-forest">
@@ -189,6 +215,7 @@ export default function NewProductForm() {
             id="taglineEn"
             name="taglineEn"
             required
+            defaultValue={initial?.tagline.en}
             placeholder="All-wheel drive precision for large Thai gardens"
             className={inputClass}
           />
@@ -202,6 +229,7 @@ export default function NewProductForm() {
             name="descriptionEn"
             required
             rows={3}
+            defaultValue={initial?.description.en}
             className={textareaClass}
           />
         </div>
@@ -214,6 +242,7 @@ export default function NewProductForm() {
             name="featuresEn"
             required
             rows={4}
+            defaultValue={initial?.features.en.join("\n")}
             placeholder={"AWD climbs slopes up to 80%\nNo boundary wire needed"}
             className={textareaClass}
           />
@@ -225,7 +254,13 @@ export default function NewProductForm() {
           <label htmlFor="taglineTh" className={labelClass}>
             Tagline (ภาษาไทย)
           </label>
-          <input id="taglineTh" name="taglineTh" required className={inputClass} />
+          <input
+            id="taglineTh"
+            name="taglineTh"
+            required
+            defaultValue={initial?.tagline.th}
+            className={inputClass}
+          />
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="descriptionTh" className={labelClass}>
@@ -236,6 +271,7 @@ export default function NewProductForm() {
             name="descriptionTh"
             required
             rows={3}
+            defaultValue={initial?.description.th}
             className={textareaClass}
           />
         </div>
@@ -248,6 +284,7 @@ export default function NewProductForm() {
             name="featuresTh"
             required
             rows={4}
+            defaultValue={initial?.features.th.join("\n")}
             className={textareaClass}
           />
         </div>
@@ -259,7 +296,12 @@ export default function NewProductForm() {
             <label htmlFor={`spec_${key}`} className={labelClass}>
               {SPEC_LABELS[key]}
             </label>
-            <input id={`spec_${key}`} name={`spec_${key}`} className={inputClass} />
+            <input
+              id={`spec_${key}`}
+              name={`spec_${key}`}
+              defaultValue={initial?.specs[key] ?? ""}
+              className={inputClass}
+            />
           </div>
         ))}
       </Section>
@@ -282,7 +324,7 @@ export default function NewProductForm() {
           ) : (
             <Save className="h-4 w-4" aria-hidden="true" />
           )}
-          Save product
+          {isEdit ? "Save changes" : "Save product"}
         </button>
       </div>
     </form>

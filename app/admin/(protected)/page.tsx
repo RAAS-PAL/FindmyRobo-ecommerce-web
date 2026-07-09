@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Package, Plus, Users } from "lucide-react";
+import { Package, Pencil, Plus, Users } from "lucide-react";
 import { getAllProducts } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
 import { categories } from "@/data/categories";
@@ -143,7 +143,14 @@ export default async function AdminProductsPage() {
                     )}
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <div className="flex justify-end">
+                    <div className="flex items-center justify-end gap-1">
+                      <Link
+                        href={`/admin/products/${product.id}/edit`}
+                        aria-label={`Edit ${product.name}`}
+                        className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-gold/15 hover:text-gold-600"
+                      >
+                        <Pencil className="h-4 w-4" aria-hidden="true" />
+                      </Link>
                       <DeleteProductButton id={product.id} name={product.name} />
                     </div>
                   </td>
