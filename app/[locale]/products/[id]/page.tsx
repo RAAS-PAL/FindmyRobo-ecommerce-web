@@ -6,9 +6,15 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import FadeIn from "@/components/ui/FadeIn";
 import AddToCartButton from "@/components/cart/AddToCartButton";
+import ServicePurchasePanel from "@/components/cart/ServicePurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
 import RobotIllustration from "@/components/ui/RobotIllustration";
-import { formatBaht, type Locale, type SpecKey } from "@/data/products";
+import {
+  formatBaht,
+  SERVICE_CATEGORY,
+  type Locale,
+  type SpecKey,
+} from "@/data/products";
 import { getAllProducts, getProductById } from "@/lib/productStore";
 
 export async function generateStaticParams() {
@@ -47,6 +53,11 @@ export default async function ProductPage({
   const specEntries = Object.entries(product.specs) as [SpecKey, string][];
   const features = product.features[locale as Locale] ?? product.features.en;
   const allProducts = await getAllProducts();
+  const isService = product.category === SERVICE_CATEGORY;
+  // Robots a service can be attached to (everything that isn't itself a service).
+  const robotOptions = allProducts
+    .filter((p) => p.category !== SERVICE_CATEGORY)
+    .map((p) => ({ id: p.id, name: p.name }));
   const related = allProducts
     .filter((p) => p.id !== product.id)
     .sort((a, b) =>
@@ -117,15 +128,21 @@ export default async function ProductPage({
               <p className="mt-2 text-[13px] font-medium text-gold-600">{t("preorderNote")}</p>
             )}
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <AddToCartButton productId={product.id} />
-              <a
-                href="#contact"
-                className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-forest transition-colors duration-300 hover:border-gold hover:text-gold-600"
-              >
-                <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
-                {t("ctaDemo")}
-              </a>
+            <div className="mt-8">
+              {isService ? (
+                <ServicePurchasePanel serviceId={product.id} robots={robotOptions} />
+              ) : (
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <AddToCartButton productId={product.id} />
+                  <a
+                    href="#contact"
+                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-forest transition-colors duration-300 hover:border-gold hover:text-gold-600"
+                  >
+                    <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
+                    {t("ctaDemo")}
+                  </a>
+                </div>
+              )}
             </div>
             <p className="mt-4 text-center text-[12px] text-ink-muted sm:text-left">
               {t("returnsNote")}
@@ -151,6 +168,7 @@ export default async function ProductPage({
         </div>
 
         {/* specs */}
+        {specEntries.length > 0 && (
         <FadeIn className="mt-16 sm:mt-20">
           <div className="rounded-3xl bg-forest-950 p-8 text-white sm:p-12">
             <div className="flex flex-wrap items-baseline justify-between gap-3">
@@ -173,6 +191,7 @@ export default async function ProductPage({
             </dl>
           </div>
         </FadeIn>
+        )}
 
         {/* related */}
         <div className="mt-16 sm:mt-20">

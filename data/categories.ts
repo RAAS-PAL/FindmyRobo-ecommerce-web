@@ -12,7 +12,8 @@ export type CategorySlug =
   | "robot-mowers"
   | "pool-cleaners"
   | "cleaning-robots"
-  | "delivery-robots";
+  | "delivery-robots"
+  | "services";
 
 export interface Category {
   slug: CategorySlug;
@@ -46,6 +47,12 @@ export const categories: Category[] = [
     name: "Delivery Robots",
     description: "Autonomous delivery for business",
     available: false,
+  },
+  {
+    slug: "services",
+    name: "Services",
+    description: "Professional installation and in-home demos",
+    available: true,
   },
 ];
 

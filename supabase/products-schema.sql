@@ -10,7 +10,7 @@ create table if not exists public.products (
   name        text not null,
   price       integer not null check (price > 0),  -- whole Thai Baht (฿), no satang
   category    text not null,                        -- validated in-app vs data/categories.ts
-  variant     text not null check (variant in ('luba', 'mini', 'pool')),
+  variant     text not null check (variant in ('luba', 'mini', 'pool', 'install', 'demo')),
   preorder    boolean not null default false,
   specs       jsonb not null default '{}'::jsonb,   -- { area, slope, ... }
   tagline     jsonb not null,                       -- { en, th }
