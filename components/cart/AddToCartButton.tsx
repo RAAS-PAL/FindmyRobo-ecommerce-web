@@ -5,7 +5,16 @@ import { useTranslations } from "next-intl";
 import { Check, ShoppingCart } from "lucide-react";
 import { useCart } from "@/components/cart/CartProvider";
 
-export default function AddToCartButton({ productId }: { productId: string }) {
+export default function AddToCartButton({
+  productId,
+  forId,
+  disabled = false,
+}: {
+  productId: string;
+  /** For service products: the robot this service is attached to. */
+  forId?: string;
+  disabled?: boolean;
+}) {
   const t = useTranslations("cart");
   const { add, openDrawer } = useCart();
   const [added, setAdded] = useState(false);
@@ -19,7 +28,7 @@ export default function AddToCartButton({ productId }: { productId: string }) {
   );
 
   const handleClick = () => {
-    add(productId);
+    add(productId, 1, forId);
     openDrawer();
     setAdded(true);
     if (timer.current) clearTimeout(timer.current);
@@ -30,7 +39,8 @@ export default function AddToCartButton({ productId }: { productId: string }) {
     <button
       type="button"
       onClick={handleClick}
-      className="flex min-h-[52px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-7 text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
+      disabled={disabled}
+      className="flex min-h-[52px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-7 text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-none"
     >
       {added ? (
         <>

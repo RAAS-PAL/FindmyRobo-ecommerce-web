@@ -21,11 +21,13 @@ const SPEC_LABELS: Record<SpecKey, string> = {
   filtration: "Filtration (pool robots)",
 };
 
-const VARIANT_LABELS = {
+const VARIANT_LABELS: Record<(typeof ROBOT_VARIANTS)[number], string> = {
   luba: "Large mower",
   mini: "Compact mower",
   pool: "Pool robot",
-} as const;
+  install: "Installation service",
+  demo: "Demo booking",
+};
 
 const slugify = (name: string) =>
   name
