@@ -1,10 +1,36 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { siteConfig } from "@/data/siteConfig";
+
+/**
+ * Full-bleed hero background that plays the configured videos in sequence,
+ * looping back to the first when the last one ends. A single video simply
+ * loops. `key={src}` remounts the element so the next clip autoplays.
+ */
+function HeroVideoPlaylist({ urls, poster }: { urls: string[]; poster?: string }) {
+  const [index, setIndex] = useState(0);
+  const src = urls[index % urls.length];
+
+  return (
+    <video
+      key={src}
+      className="absolute inset-0 h-full w-full object-cover"
+      src={src}
+      poster={index === 0 ? poster : undefined}
+      autoPlay
+      muted
+      loop={urls.length === 1}
+      playsInline
+      onEnded={() => setIndex((i) => (i + 1) % urls.length)}
+      aria-hidden="true"
+    />
+  );
+}
 
 /* Deterministic pollen positions — no Math.random, avoids hydration mismatch */
 const POLLEN = [
@@ -91,7 +117,8 @@ export default function HeroSection() {
   const mainWords = t("headlineMain").split(" ");
   const accentWords = t("headlineAccent").split(" ");
 
-  const video = siteConfig.heroVideoUrl;
+  const videos = siteConfig.heroVideoUrls;
+  const video = videos.length > 0;
 
   return (
     <section
@@ -102,17 +129,11 @@ export default function HeroSection() {
       }`}
     >
       {video ? (
-        /* ---- video hero: plays when a video URL is set in data/siteConfig.ts ---- */
+        /* ---- video hero: cycles the playlist set in data/siteConfig.ts ---- */
         <>
-          <video
-            className="absolute inset-0 h-full w-full object-cover"
-            src={video}
+          <HeroVideoPlaylist
+            urls={videos}
             poster={siteConfig.heroVideoPoster ?? undefined}
-            autoPlay
-            muted
-            loop
-            playsInline
-            aria-hidden="true"
           />
           {/* legibility overlay */}
           <div

@@ -17,40 +17,56 @@ const STORAGE_KEY = "raaspal-cart";
 export interface CartItem {
   id: string;
   qty: number;
+  /** For service products: the robot product id this service is meant for. */
+  forId?: string;
 }
 
-/** Cart line enriched with the live product record — prices never go stale in storage. */
+/**
+ * Cart line enriched with the live product record — prices never go stale in
+ * storage. `key` uniquely identifies a line: the same service bought for two
+ * different robots is two separate lines, so operations key off it, not `id`.
+ */
 export interface CartLine extends CartItem {
+  key: string;
   product: Product;
+  /** The robot a service line is attached to, if still in the catalog. */
+  forProduct?: Product;
 }
+
+/** Stable identity for a cart line — a service+robot pair is distinct per robot. */
+const lineKey = (item: CartItem) =>
+  item.forId ? `${item.id}__for__${item.forId}` : item.id;
 
 type CartAction =
-  | { type: "add"; id: string; qty?: number }
-  | { type: "remove"; id: string }
-  | { type: "setQty"; id: string; qty: number }
+  | { type: "add"; id: string; qty: number; forId?: string }
+  | { type: "remove"; key: string }
+  | { type: "setQty"; key: string; qty: number }
   | { type: "clear" }
   | { type: "hydrate"; items: CartItem[] };
 
 function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
   switch (action.type) {
     case "add": {
-      const qty = action.qty ?? 1;
-      const existing = state.find((item) => item.id === action.id);
+      const existing = state.find(
+        (item) => item.id === action.id && item.forId === action.forId
+      );
       if (existing) {
         return state.map((item) =>
-          item.id === action.id ? { ...item, qty: item.qty + qty } : item
+          item === existing ? { ...item, qty: item.qty + action.qty } : item
         );
       }
-      return [...state, { id: action.id, qty }];
+      const next: CartItem = { id: action.id, qty: action.qty };
+      if (action.forId) next.forId = action.forId;
+      return [...state, next];
     }
     case "remove":
-      return state.filter((item) => item.id !== action.id);
+      return state.filter((item) => lineKey(item) !== action.key);
     case "setQty": {
       if (action.qty <= 0) {
-        return state.filter((item) => item.id !== action.id);
+        return state.filter((item) => lineKey(item) !== action.key);
       }
       return state.map((item) =>
-        item.id === action.id ? { ...item, qty: action.qty } : item
+        lineKey(item) === action.key ? { ...item, qty: action.qty } : item
       );
     }
     case "clear":
@@ -63,24 +79,33 @@ function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
 /** Keep only entries that still match a real product — catalog may change between visits. */
 function sanitize(raw: unknown, getProduct: (id: string) => Product | undefined): CartItem[] {
   if (!Array.isArray(raw)) return [];
-  return raw.filter(
-    (item): item is CartItem =>
-      typeof item === "object" &&
-      item !== null &&
-      typeof item.id === "string" &&
-      typeof item.qty === "number" &&
-      item.qty > 0 &&
-      getProduct(item.id) !== undefined
-  );
+  return raw.flatMap((item): CartItem[] => {
+    if (
+      typeof item !== "object" ||
+      item === null ||
+      typeof item.id !== "string" ||
+      typeof item.qty !== "number" ||
+      item.qty <= 0 ||
+      getProduct(item.id) === undefined
+    ) {
+      return [];
+    }
+    const clean: CartItem = { id: item.id, qty: item.qty };
+    // keep the robot association only if that robot still exists
+    if (typeof item.forId === "string" && getProduct(item.forId)) {
+      clean.forId = item.forId;
+    }
+    return [clean];
+  });
 }
 
 interface CartContextValue {
   items: CartLine[];
   count: number;
   subtotal: number;
-  add: (id: string, qty?: number) => void;
-  remove: (id: string) => void;
-  setQty: (id: string, qty: number) => void;
+  add: (id: string, qty?: number, forId?: string) => void;
+  remove: (key: string) => void;
+  setQty: (key: string, qty: number) => void;
   clear: () => void;
   drawerOpen: boolean;
   openDrawer: () => void;
@@ -123,17 +148,19 @@ export default function CartProvider({ children }: { children: React.ReactNode }
   const value = useMemo<CartContextValue>(() => {
     const items = rawItems.flatMap<CartLine>((item) => {
       const product = getProduct(item.id);
-      return product ? [{ ...item, product }] : [];
+      if (!product) return [];
+      const forProduct = item.forId ? getProduct(item.forId) : undefined;
+      return [{ ...item, key: lineKey(item), product, forProduct }];
     });
     return {
       items,
       count: items.reduce((sum, item) => sum + item.qty, 0),
       subtotal: items.reduce((sum, item) => sum + item.qty * item.product.price, 0),
-      add: (id, qty) => {
-        dispatch({ type: "add", id, qty });
+      add: (id, qty = 1, forId) => {
+        dispatch({ type: "add", id, qty, forId });
       },
-      remove: (id) => dispatch({ type: "remove", id }),
-      setQty: (id, qty) => dispatch({ type: "setQty", id, qty }),
+      remove: (key) => dispatch({ type: "remove", key }),
+      setQty: (key, qty) => dispatch({ type: "setQty", key, qty }),
       clear: () => dispatch({ type: "clear" }),
       drawerOpen,
       openDrawer: () => setDrawerOpen(true),
