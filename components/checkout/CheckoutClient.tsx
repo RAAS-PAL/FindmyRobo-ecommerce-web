@@ -2,21 +2,82 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
   CircleCheck,
   Info,
   MapPin,
   ShoppingCart,
+  Sparkles,
   UserRound,
+  X,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import FadeIn from "@/components/ui/FadeIn";
 import RobotIllustration from "@/components/ui/RobotIllustration";
 import { useCart, type CartLine } from "@/components/cart/CartProvider";
-import { formatBaht } from "@/data/products";
+import { useProducts } from "@/components/ProductsProvider";
+import { formatBaht, SERVICE_CATEGORY, type Product } from "@/data/products";
 
 const ORDERS_KEY = "raaspal-orders";
+
+/** One upsell suggestion: a service package attached to a robot in the cart. */
+interface UpsellOffer {
+  key: string;
+  service: Product;
+  robot: Product;
+  kind: "install" | "demo";
+}
+
+/** "5,000 m²" → 5000; NaN when the spec is missing/unparsable. */
+const parseArea = (spec?: string) =>
+  spec ? Number(spec.replace(/[^0-9]/g, "")) : NaN;
+
+/**
+ * PRD req 11: before payment, offer installation tiers matched to the robots
+ * in the cart (smallest tier that covers the robot's area spec), or a demo.
+ * Robots that already have that service attached in the cart are skipped.
+ */
+function buildOffers(items: CartLine[], catalog: Product[]): UpsellOffer[] {
+  const robots = items.filter((l) => l.product.category !== SERVICE_CATEGORY);
+  if (robots.length === 0) return [];
+
+  const tiers = catalog
+    .filter((p) => p.category === SERVICE_CATEGORY && p.variant === "install")
+    .sort((a, b) => parseArea(a.specs.area) - parseArea(b.specs.area));
+  const demo = catalog.find(
+    (p) => p.category === SERVICE_CATEGORY && p.variant === "demo"
+  );
+
+  const hasService = (serviceId: string, robotId: string) =>
+    items.some((l) => l.id === serviceId && l.forId === robotId);
+
+  const offers: UpsellOffer[] = [];
+  for (const line of robots) {
+    const area = parseArea(line.product.specs.area);
+    const tier =
+      tiers.find((s) => Number.isNaN(area) || parseArea(s.specs.area) >= area) ??
+      tiers[tiers.length - 1];
+    if (tier && !hasService(tier.id, line.id)) {
+      offers.push({
+        key: `${tier.id}__${line.id}`,
+        service: tier,
+        robot: line.product,
+        kind: "install",
+      });
+    }
+  }
+  if (demo && !items.some((l) => l.id === demo.id)) {
+    offers.push({
+      key: `${demo.id}__${robots[0].id}`,
+      service: demo,
+      robot: robots[0].product,
+      kind: "demo",
+    });
+  }
+  return offers.slice(0, 4);
+}
 
 interface ShippingInfo {
   fullName: string;
@@ -47,7 +108,14 @@ interface PlacedOrder {
   createdAt: string;
   status: "pending-payment";
   shipping: ShippingInfo;
-  items: { id: string; name: string; qty: number; unitPrice: number }[];
+  items: {
+    id: string;
+    name: string;
+    qty: number;
+    unitPrice: number;
+    /** For service lines: the robot this service was bought for. */
+    forName?: string;
+  }[];
   subtotal: number;
 }
 
@@ -124,7 +192,7 @@ const inputClass = (hasError: boolean) =>
       : "border-forest-100 focus:border-gold focus:ring-gold/25"
   }`;
 
-function SummaryLine({ item }: { item: CartLine }) {
+function SummaryLine({ item, forLabel }: { item: CartLine; forLabel?: string }) {
   return (
     <li className="flex items-center gap-4 py-4">
       <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
@@ -134,6 +202,11 @@ function SummaryLine({ item }: { item: CartLine }) {
         <span className="block truncate text-[13.5px] font-bold text-forest">
           {item.product.name}
         </span>
+        {forLabel && (
+          <span className="block truncate text-[11.5px] font-medium text-gold-600">
+            {forLabel}
+          </span>
+        )}
         <span className="block text-[12px] text-ink-muted">
           {formatBaht(item.product.price)} × {item.qty}
         </span>
@@ -147,11 +220,18 @@ function SummaryLine({ item }: { item: CartLine }) {
 
 export default function CheckoutClient() {
   const t = useTranslations("checkout");
-  const { items, subtotal, clear } = useCart();
+  const tc = useTranslations("cart");
+  const { items, subtotal, clear, add } = useCart();
+  const { products } = useProducts();
 
   const [form, setForm] = useState<ShippingInfo>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [placed, setPlaced] = useState<PlacedOrder | null>(null);
+  const [offers, setOffers] = useState<UpsellOffer[]>([]);
+  const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
+  const [upsellOpen, setUpsellOpen] = useState(false);
+  // the prompt appears at most once per checkout — dismissing must never block payment
+  const [upsellShown, setUpsellShown] = useState(false);
 
   const setField = (name: FieldName) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((f) => ({ ...f, [name]: e.target.value }));
@@ -164,29 +244,20 @@ export default function CheckoutClient() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const nextErrors = validate(form);
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
-      document
-        .querySelector('[role="alert"]')
-        ?.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
-
+  const placeOrder = (lines: CartLine[]) => {
     const order: PlacedOrder = {
       id: makeOrderId(),
       createdAt: new Date().toISOString(),
       status: "pending-payment",
       shipping: form,
-      items: items.map((item) => ({
+      items: lines.map((item) => ({
         id: item.id,
         name: item.product.name,
         qty: item.qty,
         unitPrice: item.product.price,
+        ...(item.forProduct ? { forName: item.forProduct.name } : {}),
       })),
-      subtotal,
+      subtotal: lines.reduce((sum, l) => sum + l.qty * l.product.price, 0),
     };
 
     // Local record until the orders backend lands; the Omise payment step
@@ -201,9 +272,57 @@ export default function CheckoutClient() {
       // storage unavailable — order still confirmed on screen
     }
 
+    setUpsellOpen(false);
     setPlaced(order);
     clear();
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const nextErrors = validate(form);
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      document
+        .querySelector('[role="alert"]')
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    // PRD req 11: one upsell prompt before payment when the cart has robots
+    // without a matching service. Dismissing proceeds normally.
+    if (!upsellShown) {
+      const nextOffers = buildOffers(items, products);
+      if (nextOffers.length > 0) {
+        setOffers(nextOffers);
+        setSelectedOffer(nextOffers[0].key);
+        setUpsellShown(true);
+        setUpsellOpen(true);
+        return;
+      }
+    }
+
+    placeOrder(items);
+  };
+
+  /** Upsell "Add & continue": include the chosen package in cart + order. */
+  const acceptOffer = () => {
+    const offer = offers.find((o) => o.key === selectedOffer);
+    if (!offer) {
+      placeOrder(items);
+      return;
+    }
+    // reflect it in the cart (for the record) and in this order's lines
+    add(offer.service.id, 1, offer.robot.id);
+    const extraLine: CartLine = {
+      id: offer.service.id,
+      qty: 1,
+      forId: offer.robot.id,
+      key: `${offer.service.id}__for__${offer.robot.id}`,
+      product: offer.service,
+      forProduct: offer.robot,
+    };
+    placeOrder([...items, extraLine]);
   };
 
   /* success screen */
@@ -240,11 +359,16 @@ export default function CheckoutClient() {
             <ul className="mt-3 space-y-2">
               {placed.items.map((item) => (
                 <li
-                  key={item.id}
+                  key={item.forName ? `${item.id}-${item.forName}` : item.id}
                   className="flex items-baseline justify-between gap-4 text-[13.5px]"
                 >
                   <span className="font-medium text-forest">
                     {item.name} <span className="text-ink-muted">× {item.qty}</span>
+                    {item.forName && (
+                      <span className="block text-[11.5px] font-normal text-gold-600">
+                        {tc("forRobot", { name: item.forName })}
+                      </span>
+                    )}
                   </span>
                   <span className="font-mono font-semibold tabular-nums text-forest">
                     {formatBaht(item.qty * item.unitPrice)}
@@ -423,7 +547,15 @@ export default function CheckoutClient() {
             </h2>
             <ul className="mt-2 divide-y divide-forest-100/70">
               {items.map((item) => (
-                <SummaryLine key={item.id} item={item} />
+                <SummaryLine
+                  key={item.key}
+                  item={item}
+                  forLabel={
+                    item.forProduct
+                      ? tc("forRobot", { name: item.forProduct.name })
+                      : undefined
+                  }
+                />
               ))}
             </ul>
 
@@ -463,6 +595,116 @@ export default function CheckoutClient() {
           </div>
         </aside>
       </FadeIn>
+
+      {/* upsell prompt — shown once before payment (PRD req 11) */}
+      <AnimatePresence>
+        {upsellOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => placeOrder(items)}
+              className="fixed inset-0 z-50 bg-forest-950/60 backdrop-blur-sm"
+              aria-hidden="true"
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 32, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 32, scale: 0.97 }}
+              transition={{ type: "spring", damping: 28, stiffness: 320 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label={t("upsell.heading")}
+              className="fixed inset-x-4 top-1/2 z-50 mx-auto max-w-lg -translate-y-1/2 rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/20">
+                  <Sparkles className="h-5 w-5 text-gold-600" aria-hidden="true" />
+                </span>
+                <button
+                  type="button"
+                  onClick={() => placeOrder(items)}
+                  aria-label={t("upsell.skip")}
+                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-forest/5 hover:text-forest"
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+              <h2 className="mt-4 font-display text-xl font-extrabold tracking-tight text-forest sm:text-2xl">
+                {t("upsell.heading")}
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                {t("upsell.subtext")}
+              </p>
+
+              <div className="mt-5 max-h-72 space-y-2.5 overflow-y-auto">
+                {offers.map((offer, i) => (
+                  <label
+                    key={offer.key}
+                    className={`flex cursor-pointer items-center gap-3.5 rounded-2xl border p-3.5 transition-colors ${
+                      selectedOffer === offer.key
+                        ? "border-gold bg-gold/10"
+                        : "border-forest-100 hover:border-gold/50"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="upsell-offer"
+                      checked={selectedOffer === offer.key}
+                      onChange={() => setSelectedOffer(offer.key)}
+                      className="sr-only"
+                    />
+                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
+                      <RobotIllustration
+                        variant={offer.service.variant}
+                        className="h-full w-auto"
+                      />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span className="text-[13.5px] font-bold leading-snug text-forest">
+                          {offer.service.name}
+                        </span>
+                        {i === 0 && (
+                          <span className="rounded-full bg-gold/20 px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-wider text-gold-600">
+                            {t("upsell.recommendedBadge")}
+                          </span>
+                        )}
+                      </span>
+                      <span className="mt-0.5 block text-[12px] text-ink-muted">
+                        {t(offer.kind === "install" ? "upsell.installFor" : "upsell.demoFor", {
+                          name: offer.robot.name,
+                        })}
+                      </span>
+                    </span>
+                    <span className="font-mono text-[14px] font-semibold tabular-nums text-forest">
+                      {formatBaht(offer.service.price)}
+                    </span>
+                  </label>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={acceptOffer}
+                className="mt-5 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
+              >
+                {t("upsell.addAndContinue")}
+                <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => placeOrder(items)}
+                className="mt-3 w-full cursor-pointer text-center text-[13px] font-medium text-ink-muted transition-colors hover:text-forest"
+              >
+                {t("upsell.skip")}
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </form>
   );
 }

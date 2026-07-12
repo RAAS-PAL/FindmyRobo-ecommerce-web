@@ -1,7 +1,11 @@
 import type { CategorySlug } from "@/data/categories";
 
-/** Visual style for the placeholder SVG illustration only — not the category. */
-export type RobotVariant = "luba" | "mini" | "pool";
+/**
+ * Visual style for the placeholder SVG illustration only — not the category.
+ * "install" and "demo" are used by service products (see the "services"
+ * category), which are sold alongside robots.
+ */
+export type RobotVariant = "luba" | "mini" | "pool" | "install" | "demo";
 
 /**
  * Spec keys map to translated labels in messages (productDetail.specLabels.*).
@@ -48,6 +52,15 @@ export const SPEC_KEYS: SpecKey[] = [
   "filtration",
 ];
 
-export const ROBOT_VARIANTS: RobotVariant[] = ["luba", "mini", "pool"];
+export const ROBOT_VARIANTS: RobotVariant[] = [
+  "luba",
+  "mini",
+  "pool",
+  "install",
+  "demo",
+];
+
+/** Category whose products are services (installation, demos) rather than robots. */
+export const SERVICE_CATEGORY = "services" as const;
 
 export const formatBaht = (price: number) => `฿${price.toLocaleString("en-US")}`;

@@ -80,7 +80,7 @@ export default function CartDrawer() {
                 {/* line items */}
                 <ul className="flex-1 divide-y divide-white/10 overflow-y-auto px-5">
                   {items.map((item) => (
-                    <li key={item.id} className="flex gap-4 py-5">
+                    <li key={item.key} className="flex gap-4 py-5">
                       <Link
                         href={`/products/${item.id}`}
                         onClick={closeDrawer}
@@ -102,13 +102,18 @@ export default function CartDrawer() {
                           </Link>
                           <button
                             type="button"
-                            onClick={() => remove(item.id)}
+                            onClick={() => remove(item.key)}
                             aria-label={t("removeItem", { name: item.product.name })}
                             className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-white/40 transition-colors hover:bg-white/10 hover:text-white"
                           >
                             <Trash2 className="h-4 w-4" aria-hidden="true" />
                           </button>
                         </div>
+                        {item.forProduct && (
+                          <p className="mt-0.5 text-[11.5px] font-medium text-gold/90">
+                            {t("forRobot", { name: item.forProduct.name })}
+                          </p>
+                        )}
                         <p className="mt-0.5 text-[12px] text-white/50">
                           {formatBaht(item.product.price)}
                         </p>
@@ -116,7 +121,7 @@ export default function CartDrawer() {
                           <div className="flex items-center gap-1 rounded-full border border-white/15">
                             <button
                               type="button"
-                              onClick={() => setQty(item.id, item.qty - 1)}
+                              onClick={() => setQty(item.key, item.qty - 1)}
                               aria-label={t("qtyDecrease")}
                               className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-gold"
                             >
@@ -127,7 +132,7 @@ export default function CartDrawer() {
                             </span>
                             <button
                               type="button"
-                              onClick={() => setQty(item.id, item.qty + 1)}
+                              onClick={() => setQty(item.key, item.qty + 1)}
                               aria-label={t("qtyIncrease")}
                               className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-gold"
                             >

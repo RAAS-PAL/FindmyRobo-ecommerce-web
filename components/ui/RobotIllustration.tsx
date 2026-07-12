@@ -2,7 +2,8 @@ import type { RobotVariant } from "@/data/products";
 
 /**
  * Stylized product illustrations — pure SVG, no external assets.
- * Three body types: full-size LUBA mower, LUBA Mini, and pool cleaner.
+ * Robot body types (LUBA mower, LUBA Mini, pool cleaner) plus two service
+ * marks (installation, demo) used by the "services" category products.
  */
 export default function RobotIllustration({
   variant,
@@ -11,6 +12,53 @@ export default function RobotIllustration({
   variant: RobotVariant;
   className?: string;
 }) {
+  if (variant === "install") {
+    return (
+      <svg viewBox="0 0 200 140" className={className} role="img" aria-label="Installation service illustration">
+        <ellipse cx="100" cy="126" rx="58" ry="8" fill="#123b28" opacity="0.12" />
+        {/* rounded tool badge */}
+        <rect x="42" y="24" width="116" height="92" rx="22" fill="#123b28" />
+        <rect x="50" y="32" width="100" height="76" rx="16" fill="#fdfdf8" />
+        {/* wrench head + handle (diagonal) */}
+        <g transform="rotate(-38 100 70)">
+          <rect x="93" y="44" width="14" height="42" rx="5" fill="#1a5c3e" />
+          <path d="M100 36 a13 13 0 0 0 -12 18 l12 6 12 -6 a13 13 0 0 0 -12 -18 Z" fill="#1a5c3e" />
+          <circle cx="100" cy="46" r="5" fill="#fdfdf8" />
+          <rect x="94" y="82" width="12" height="8" rx="3" fill="#0b2e1f" />
+        </g>
+        {/* gold screwdriver crossing */}
+        <g transform="rotate(40 100 74)">
+          <rect x="96" y="42" width="8" height="34" rx="3" fill="#f5c842" />
+          <rect x="97.5" y="74" width="5" height="14" rx="2.5" fill="#0b2e1f" />
+        </g>
+        {/* gold bolt accents */}
+        <circle cx="66" cy="52" r="3.5" fill="#f5c842" />
+        <circle cx="134" cy="90" r="3.5" fill="#f5c842" />
+      </svg>
+    );
+  }
+
+  if (variant === "demo") {
+    return (
+      <svg viewBox="0 0 200 140" className={className} role="img" aria-label="Demo booking illustration">
+        <ellipse cx="100" cy="126" rx="58" ry="8" fill="#123b28" opacity="0.12" />
+        {/* screen */}
+        <rect x="40" y="26" width="120" height="82" rx="16" fill="#123b28" />
+        <rect x="48" y="34" width="104" height="66" rx="10" fill="#fdfdf8" />
+        {/* play button */}
+        <circle cx="100" cy="67" r="22" fill="#1a5c3e" />
+        <path d="M93 57 L114 67 L93 77 Z" fill="#fdfdf8" />
+        <circle cx="100" cy="67" r="22" fill="none" stroke="#f5c842" strokeWidth="3" />
+        {/* stand */}
+        <rect x="92" y="106" width="16" height="9" rx="2" fill="#123b28" />
+        <rect x="76" y="114" width="48" height="6" rx="3" fill="#1a5c3e" />
+        {/* live dot + signal */}
+        <circle cx="132" cy="44" r="4" fill="#f5c842" />
+        <path d="M60 44 h14" stroke="#f5c842" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
   if (variant === "pool") {
     return (
       <svg viewBox="0 0 200 140" className={className} role="img" aria-label="Robot pool cleaner illustration">

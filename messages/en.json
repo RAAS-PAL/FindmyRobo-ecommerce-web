@@ -78,9 +78,15 @@
     "qtyDecrease": "Decrease quantity",
     "qtyIncrease": "Increase quantity",
     "removeItem": "Remove {name} from cart",
+    "forRobot": "For {name}",
     "subtotal": "Subtotal",
     "shippingNote": "Shipping and taxes calculated at checkout",
     "checkout": "Checkout"
+  },
+  "service": {
+    "selectRobotLabel": "Which robot is this for?",
+    "selectRobotPlaceholder": "Select a robot…",
+    "selectRobotHint": "Choose the robot this service applies to before adding it to your cart."
   },
   "checkout": {
     "metaTitle": "Checkout — RoboStore TH",
@@ -115,6 +121,15 @@
     },
     "empty": "Your cart is empty — add a robot before checking out.",
     "emptyCta": "Browse Robots",
+    "upsell": {
+      "heading": "Get the most from your robot",
+      "subtext": "Add professional installation or an on-site demo before you check out.",
+      "recommendedBadge": "Recommended",
+      "installFor": "Installation for {name}",
+      "demoFor": "Demo for {name}",
+      "addAndContinue": "Add & continue",
+      "skip": "No thanks, continue to payment"
+    },
     "success": {
       "heading": "Order Received!",
       "body": "Thank you, {name}. Your order is confirmed as pending payment — our team will contact you at {phone} within 24 hours to arrange payment and delivery.",
@@ -139,6 +154,10 @@
     "delivery-robots": {
       "name": "Delivery Robots",
       "description": "Autonomous delivery for business"
+    },
+    "services": {
+      "name": "Services",
+      "description": "Professional installation and in-home demos"
     }
   },
   "hero": {

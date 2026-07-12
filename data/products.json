@@ -215,5 +215,131 @@
         "ระบบกรองละเอียด 180 µm เพื่อน้ำใสระดับคริสตัล"
       ]
     }
+  },
+  {
+    "id": "install-up-to-1000",
+    "name": "Installation Service — Up to 1,000 m²",
+    "price": 3500,
+    "category": "services",
+    "variant": "install",
+    "specs": {
+      "area": "Up to 1,000 m²"
+    },
+    "tagline": {
+      "en": "Professional on-site setup for gardens up to 1,000 m² (~2.5 hrs)",
+      "th": "บริการติดตั้งถึงบ้านสำหรับสวนไม่เกิน 1,000 ตร.ม. (~2.5 ชม.)"
+    },
+    "description": {
+      "en": "Our technicians install and calibrate your robot on site — mapping boundaries, setting no-go zones, and running a full test cycle. Sized for gardens up to 1,000 m² (about 2.5 hours).",
+      "th": "ทีมช่างของเราติดตั้งและปรับตั้งค่าหุ่นยนต์ให้ถึงบ้าน ทั้งกำหนดขอบเขต ตั้งพื้นที่ห้ามเข้า และทดสอบการทำงานเต็มรูปแบบ เหมาะสำหรับสวนไม่เกิน 1,000 ตร.ม. (ประมาณ 2.5 ชม.)"
+    },
+    "features": {
+      "en": [
+        "On-site boundary mapping and calibration",
+        "No-go zone and schedule setup",
+        "Full test run before handover",
+        "Covers gardens up to 1,000 m² (~2.5 hrs)"
+      ],
+      "th": [
+        "กำหนดขอบเขตและปรับตั้งค่าถึงบ้าน",
+        "ตั้งค่าพื้นที่ห้ามเข้าและตารางการทำงาน",
+        "ทดสอบการทำงานเต็มรูปแบบก่อนส่งมอบ",
+        "รองรับสวนไม่เกิน 1,000 ตร.ม. (~2.5 ชม.)"
+      ]
+    }
+  },
+  {
+    "id": "install-up-to-2000",
+    "name": "Installation Service — Up to 2,000 m²",
+    "price": 5500,
+    "category": "services",
+    "variant": "install",
+    "specs": {
+      "area": "Up to 2,000 m²"
+    },
+    "tagline": {
+      "en": "Professional on-site setup for gardens up to 2,000 m² (~3.5 hrs)",
+      "th": "บริการติดตั้งถึงบ้านสำหรับสวนไม่เกิน 2,000 ตร.ม. (~3.5 ชม.)"
+    },
+    "description": {
+      "en": "Full on-site installation for mid-size gardens — boundary mapping, no-go zones, multi-zone scheduling, and a complete test run. Sized for gardens up to 2,000 m² (about 3.5 hours).",
+      "th": "บริการติดตั้งถึงบ้านแบบครบวงจรสำหรับสวนขนาดกลาง ทั้งกำหนดขอบเขต พื้นที่ห้ามเข้า ตั้งตารางหลายโซน และทดสอบการทำงานเต็มรูปแบบ เหมาะสำหรับสวนไม่เกิน 2,000 ตร.ม. (ประมาณ 3.5 ชม.)"
+    },
+    "features": {
+      "en": [
+        "On-site boundary mapping and calibration",
+        "Multi-zone schedule and no-go setup",
+        "Full test run before handover",
+        "Covers gardens up to 2,000 m² (~3.5 hrs)"
+      ],
+      "th": [
+        "กำหนดขอบเขตและปรับตั้งค่าถึงบ้าน",
+        "ตั้งค่าหลายโซนและพื้นที่ห้ามเข้า",
+        "ทดสอบการทำงานเต็มรูปแบบก่อนส่งมอบ",
+        "รองรับสวนไม่เกิน 2,000 ตร.ม. (~3.5 ชม.)"
+      ]
+    }
+  },
+  {
+    "id": "install-up-to-10000",
+    "name": "Installation Service — Up to 10,000 m²",
+    "price": 12000,
+    "category": "services",
+    "variant": "install",
+    "specs": {
+      "area": "Up to 10,000 m²"
+    },
+    "tagline": {
+      "en": "Professional on-site setup for large estates up to 10,000 m² (~8 hrs)",
+      "th": "บริการติดตั้งถึงบ้านสำหรับพื้นที่ขนาดใหญ่ไม่เกิน 10,000 ตร.ม. (~8 ชม.)"
+    },
+    "description": {
+      "en": "Comprehensive installation for estate-sized grounds — precise boundary mapping, complex multi-zone scheduling, obstacle handling, and a full commissioning test. Sized for areas up to 10,000 m² (about 8 hours).",
+      "th": "บริการติดตั้งแบบครบวงจรสำหรับพื้นที่ขนาดใหญ่ระดับคฤหาสน์ ทั้งกำหนดขอบเขตอย่างแม่นยำ ตั้งตารางหลายโซนที่ซับซ้อน จัดการสิ่งกีดขวาง และทดสอบการใช้งานเต็มรูปแบบ เหมาะสำหรับพื้นที่ไม่เกิน 10,000 ตร.ม. (ประมาณ 8 ชม.)"
+    },
+    "features": {
+      "en": [
+        "Precise boundary mapping for large grounds",
+        "Complex multi-zone scheduling and no-go areas",
+        "Obstacle and terrain handling",
+        "Full commissioning test (~8 hrs)"
+      ],
+      "th": [
+        "กำหนดขอบเขตอย่างแม่นยำสำหรับพื้นที่ขนาดใหญ่",
+        "ตั้งตารางหลายโซนที่ซับซ้อนและพื้นที่ห้ามเข้า",
+        "จัดการสิ่งกีดขวางและสภาพพื้นที่",
+        "ทดสอบการใช้งานเต็มรูปแบบ (~8 ชม.)"
+      ]
+    }
+  },
+  {
+    "id": "request-a-demo",
+    "name": "Request a Demo",
+    "price": 990,
+    "category": "services",
+    "variant": "demo",
+    "specs": {},
+    "tagline": {
+      "en": "A hands-on demo of your chosen robot, at your home",
+      "th": "สาธิตการใช้งานหุ่นยนต์ที่คุณสนใจ ถึงบ้านคุณ"
+    },
+    "description": {
+      "en": "A specialist brings the robot to your property and runs a live demonstration on your own lawn or pool, answering questions and showing setup. The fee is credited toward your purchase.",
+      "th": "ผู้เชี่ยวชาญนำหุ่นยนต์ไปสาธิตการใช้งานจริงที่สนามหญ้าหรือสระของคุณ พร้อมตอบทุกคำถามและสาธิตการติดตั้ง ค่าบริการนี้นำไปเป็นส่วนลดเมื่อซื้อสินค้าได้"
+    },
+    "features": {
+      "en": [
+        "Live, on-site demonstration",
+        "See it work on your own lawn or pool",
+        "Ask a specialist anything",
+        "Fee credited toward your purchase"
+      ],
+      "th": [
+        "สาธิตการใช้งานจริงถึงบ้าน",
+        "ดูการทำงานบนสนามหรือสระของคุณเอง",
+        "ปรึกษาผู้เชี่ยวชาญได้ทุกเรื่อง",
+        "ค่าบริการใช้เป็นส่วนลดตอนซื้อได้"
+      ]
+    }
   }
 ]
