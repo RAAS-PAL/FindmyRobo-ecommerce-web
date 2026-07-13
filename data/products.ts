@@ -36,6 +36,12 @@ export interface Product {
   price: number;
   category: CategorySlug;
   variant: RobotVariant;
+  /**
+   * Optional product photo (absolute URL or /public path). When set it is
+   * shown everywhere instead of the stylized `variant` illustration, which
+   * remains the fallback.
+   */
+  imageUrl?: string;
   preorder?: boolean;
   specs: Partial<Record<SpecKey, string>>;
   tagline: LocalizedText;

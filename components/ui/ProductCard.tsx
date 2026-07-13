@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import RobotIllustration from "@/components/ui/RobotIllustration";
+import ProductVisual from "@/components/ui/ProductVisual";
 import { formatBaht, type Locale, type Product } from "@/data/products";
 
 export default function ProductCard({
@@ -36,8 +36,8 @@ export default function ProductCard({
               {t("preorder")}
             </span>
           )}
-          <RobotIllustration
-            variant={product.variant}
+          <ProductVisual
+            product={product}
             className="mx-auto h-40 w-auto transition-transform duration-500 ease-out group-hover:scale-105"
           />
           {/* view product — slides up on hover / focus */}

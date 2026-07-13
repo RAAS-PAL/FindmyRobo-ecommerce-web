@@ -8,7 +8,7 @@ import FadeIn from "@/components/ui/FadeIn";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import ServicePurchasePanel from "@/components/cart/ServicePurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
-import RobotIllustration from "@/components/ui/RobotIllustration";
+import ProductVisual from "@/components/ui/ProductVisual";
 import {
   formatBaht,
   SERVICE_CATEGORY,
@@ -102,8 +102,8 @@ export default async function ProductPage({
                 className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/10 blur-[80px]"
                 aria-hidden="true"
               />
-              <RobotIllustration
-                variant={product.variant}
+              <ProductVisual
+                product={product}
                 className="relative mx-auto h-64 w-auto drop-shadow-[0_24px_40px_rgba(6,31,21,0.7)] sm:h-80"
               />
             </div>

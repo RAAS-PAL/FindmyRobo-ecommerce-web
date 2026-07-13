@@ -63,12 +63,19 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   const id = asText(body.id) || slugify(name);
   if (!/^[a-z0-9][a-z0-9-]*$/.test(id)) return "Invalid product id";
 
+  // optional product photo: https URL or a /public path
+  const imageUrl = asText(body.imageUrl);
+  if (imageUrl && !/^(https?:\/\/|\/)[^\s]+$/i.test(imageUrl)) {
+    return "Image URL must start with https:// (or a /path inside the site)";
+  }
+
   return {
     id,
     name,
     price: Math.round(price),
     category: category as Product["category"],
     variant: variant as Product["variant"],
+    ...(imageUrl ? { imageUrl } : {}),
     ...(body.preorder ? { preorder: true } : {}),
     specs,
     tagline: { en: taglineEn, th: taglineTh },

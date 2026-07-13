@@ -133,6 +133,7 @@ export default function Navbar() {
       label: t("contact"),
       href: "/#contact",
       children: [
+        { label: t("contactSales"), href: "/contact-sales" },
         { label: t("contactTouch"), href: "/#contact" },
         { label: t("contactDemo"), href: "/#contact" },
         { label: t("contactLocations"), href: "/#contact" },

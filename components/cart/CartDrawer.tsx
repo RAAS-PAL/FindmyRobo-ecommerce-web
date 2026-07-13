@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import RobotIllustration from "@/components/ui/RobotIllustration";
+import ProductVisual from "@/components/ui/ProductVisual";
 import { useCart } from "@/components/cart/CartProvider";
 import { formatBaht } from "@/data/products";
 
@@ -86,8 +86,8 @@ export default function CartDrawer() {
                         onClick={closeDrawer}
                         className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-2"
                       >
-                        <RobotIllustration
-                          variant={item.product.variant}
+                        <ProductVisual
+                          product={item.product}
                           className="h-full w-auto"
                         />
                       </Link>

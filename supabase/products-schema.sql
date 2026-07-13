@@ -11,6 +11,7 @@ create table if not exists public.products (
   price       integer not null check (price > 0),  -- whole Thai Baht (฿), no satang
   category    text not null,                        -- validated in-app vs data/categories.ts
   variant     text not null check (variant in ('luba', 'mini', 'pool', 'install', 'demo')),
+  image_url   text,                                  -- optional product photo; variant art is the fallback
   preorder    boolean not null default false,
   specs       jsonb not null default '{}'::jsonb,   -- { area, slope, ... }
   tagline     jsonb not null,                       -- { en, th }
@@ -19,6 +20,9 @@ create table if not exists public.products (
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now()
 );
+
+-- 1b. For databases created before image_url existed (safe to re-run).
+alter table public.products add column if not exists image_url text;
 
 -- 2. Index the column we filter on (category pages call WHERE category = ...).
 create index if not exists products_category_idx on public.products (category);
