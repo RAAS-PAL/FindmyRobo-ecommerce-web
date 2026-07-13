@@ -15,6 +15,7 @@
     "aboutWhyUs": "Why Us",
     "aboutPartners": "Partners",
     "contact": "Contact",
+    "contactSales": "Contact Sales",
     "contactTouch": "Get in Touch",
     "contactDemo": "Book a Demo",
     "contactLocations": "Locations",
@@ -87,6 +88,21 @@
     "selectRobotLabel": "Which robot is this for?",
     "selectRobotPlaceholder": "Select a robot…",
     "selectRobotHint": "Choose the robot this service applies to before adding it to your cart."
+  },
+  "contactSales": {
+    "metaTitle": "Contact Sales — RoboStore TH",
+    "eyebrow": "Sales Team",
+    "heading": "Talk to Our Sales Team",
+    "sub": "Questions about which robot fits your garden, pool, or business? Our specialists reply fast — call, email, or chat with us on LINE.",
+    "phoneLabel": "Call us",
+    "phoneHint": "Mon–Sat, 9:00–18:00",
+    "emailLabel": "Email us",
+    "emailHint": "We reply within one business day",
+    "lineLabel": "Chat on LINE",
+    "lineHint": "Scan the QR with your phone, or add us by ID",
+    "qrComingSoon": "QR code coming soon — add us by LINE ID instead",
+    "demoNote": "Prefer to see a robot in action first?",
+    "demoCta": "Book a free in-home demo"
   },
   "checkout": {
     "metaTitle": "Checkout — RoboStore TH",

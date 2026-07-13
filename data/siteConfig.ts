@@ -14,4 +14,18 @@
 export const siteConfig = {
   heroVideoUrls: ["/videos/Banner_C40.mp4", "/videos/Banner_Luba 3.mp4", "/videos/Banner_SPINO-E1.mp4"] as string[],
   heroVideoPoster: null as string | null,
+
+  /**
+   * Sales team contacts, shown on /contact-sales (PRD req 13 + 19).
+   * REPLACE the placeholder phone/email/LINE id with the real ones.
+   * lineQrImage — drop the LINE official-account QR into /public
+   * (e.g. "/line-qr.png") and set the path; a "coming soon" frame
+   * shows while it is null.
+   */
+  salesContact: {
+    phone: "+66 2 000 0000",
+    email: "sales@raaspal.com",
+    lineId: "@raaspal",
+    lineQrImage: null as string | null,
+  },
 };

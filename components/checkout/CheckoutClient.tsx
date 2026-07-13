@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import FadeIn from "@/components/ui/FadeIn";
-import RobotIllustration from "@/components/ui/RobotIllustration";
+import ProductVisual from "@/components/ui/ProductVisual";
 import { useCart, type CartLine } from "@/components/cart/CartProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import { formatBaht, SERVICE_CATEGORY, type Product } from "@/data/products";
@@ -196,7 +196,7 @@ function SummaryLine({ item, forLabel }: { item: CartLine; forLabel?: string }) 
   return (
     <li className="flex items-center gap-4 py-4">
       <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
-        <RobotIllustration variant={item.product.variant} className="h-full w-auto" />
+        <ProductVisual product={item.product} className="h-full w-auto" />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate text-[13.5px] font-bold text-forest">
@@ -657,8 +657,8 @@ export default function CheckoutClient() {
                       className="sr-only"
                     />
                     <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
-                      <RobotIllustration
-                        variant={offer.service.variant}
+                      <ProductVisual
+                        product={offer.service}
                         className="h-full w-auto"
                       />
                     </span>

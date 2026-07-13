@@ -40,13 +40,13 @@ export const categories: Category[] = [
     slug: "cleaning-robots",
     name: "Cleaning Robots",
     description: "Floor and window robots for the home",
-    available: false,
+    available: true,
   },
   {
     slug: "delivery-robots",
     name: "Delivery Robots",
     description: "Autonomous delivery for business",
-    available: false,
+    available: true,
   },
   {
     slug: "services",

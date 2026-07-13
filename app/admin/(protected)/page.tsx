@@ -4,7 +4,7 @@ import { getAllProducts } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
 import { categories } from "@/data/categories";
 import { createServiceClient } from "@/lib/supabase/service";
-import RobotIllustration from "@/components/ui/RobotIllustration";
+import ProductVisual from "@/components/ui/ProductVisual";
 import DeleteProductButton from "@/components/admin/DeleteProductButton";
 
 export const dynamic = "force-dynamic";
@@ -112,8 +112,8 @@ export default async function AdminProductsPage() {
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3.5">
                       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1">
-                        <RobotIllustration
-                          variant={product.variant}
+                        <ProductVisual
+                          product={product}
                           className="h-full w-auto"
                         />
                       </span>

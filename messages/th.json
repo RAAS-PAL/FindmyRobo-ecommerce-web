@@ -15,6 +15,7 @@
     "aboutWhyUs": "ทำไมต้องเลือกเรา",
     "aboutPartners": "พาร์ทเนอร์",
     "contact": "ติดต่อเรา",
+    "contactSales": "ติดต่อฝ่ายขาย",
     "contactTouch": "ติดต่อทีมงาน",
     "contactDemo": "จองเดโม",
     "contactLocations": "สาขาและพื้นที่บริการ",
@@ -87,6 +88,21 @@
     "selectRobotLabel": "บริการนี้สำหรับหุ่นยนต์รุ่นไหน?",
     "selectRobotPlaceholder": "เลือกหุ่นยนต์…",
     "selectRobotHint": "เลือกหุ่นยนต์ที่ต้องการใช้บริการนี้ก่อนเพิ่มลงตะกร้า"
+  },
+  "contactSales": {
+    "metaTitle": "ติดต่อฝ่ายขาย — RoboStore TH",
+    "eyebrow": "ทีมขาย",
+    "heading": "คุยกับทีมขายของเรา",
+    "sub": "ไม่แน่ใจว่าหุ่นยนต์รุ่นไหนเหมาะกับสวน สระ หรือธุรกิจของคุณ? ผู้เชี่ยวชาญของเราตอบไว โทร อีเมล หรือแชทผ่าน LINE ได้เลย",
+    "phoneLabel": "โทรหาเรา",
+    "phoneHint": "จันทร์–เสาร์ 9:00–18:00 น.",
+    "emailLabel": "อีเมลหาเรา",
+    "emailHint": "ตอบกลับภายใน 1 วันทำการ",
+    "lineLabel": "แชทผ่าน LINE",
+    "lineHint": "สแกน QR ด้วยมือถือ หรือเพิ่มเพื่อนด้วยไอดี",
+    "qrComingSoon": "QR code เร็วๆ นี้ — เพิ่มเพื่อนด้วยไอดี LINE ได้เลย",
+    "demoNote": "อยากเห็นหุ่นยนต์ทำงานจริงก่อนไหม?",
+    "demoCta": "จองเดโมฟรีถึงบ้าน"
   },
   "checkout": {
     "metaTitle": "ชำระเงิน — RoboStore TH",

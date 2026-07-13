@@ -63,9 +63,13 @@ export default function ProductForm({ initial }: { initial?: Product }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState(initial?.name ?? "");
-  const [variant, setVariant] = useState<(typeof ROBOT_VARIANTS)[number]>(
-    initial?.variant ?? "luba"
+  // "image" is a UI-only choice: the real variant stays as the fallback art
+  const [artChoice, setArtChoice] = useState<(typeof ROBOT_VARIANTS)[number] | "image">(
+    initial?.imageUrl ? "image" : initial?.variant ?? "luba"
   );
+  const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? "");
+  const fallbackVariant =
+    artChoice === "image" ? initial?.variant ?? "luba" : artChoice;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -170,15 +174,17 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           </select>
         </div>
         <div>
-          <label htmlFor="variant" className={labelClass}>
-            Illustration style
+          <label htmlFor="artChoice" className={labelClass}>
+            Product visual
           </label>
+          {/* the submitted variant is always a real illustration (the fallback
+              when an image URL is set or later removed) */}
+          <input type="hidden" name="variant" value={fallbackVariant} />
           <div className="flex items-center gap-4">
             <select
-              id="variant"
-              name="variant"
-              value={variant}
-              onChange={(e) => setVariant(e.target.value as typeof variant)}
+              id="artChoice"
+              value={artChoice}
+              onChange={(e) => setArtChoice(e.target.value as typeof artChoice)}
               className={inputClass}
             >
               {ROBOT_VARIANTS.map((v) => (
@@ -186,12 +192,44 @@ export default function ProductForm({ initial }: { initial?: Product }) {
                   {VARIANT_LABELS[v]}
                 </option>
               ))}
+              <option value="image">Custom image (URL)</option>
             </select>
-            <span className="flex h-14 w-16 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
-              <RobotIllustration variant={variant} className="h-full w-auto" />
+            <span className="flex h-14 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
+              {artChoice === "image" && imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={imageUrl}
+                  alt="Product preview"
+                  className="h-full w-auto object-contain"
+                />
+              ) : (
+                <RobotIllustration variant={fallbackVariant} className="h-full w-auto" />
+              )}
             </span>
           </div>
-          <p className={hintClass}>Placeholder art until real product photos land.</p>
+          {artChoice === "image" ? (
+            <div className="mt-3">
+              <label htmlFor="imageUrl" className={labelClass}>
+                Image URL
+              </label>
+              <input
+                id="imageUrl"
+                name="imageUrl"
+                type="url"
+                required
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://example.com/robot.jpg"
+                className={inputClass}
+              />
+              <p className={hintClass}>
+                Paste a direct image link (https://…). The illustration stays as
+                the fallback if the image fails to load.
+              </p>
+            </div>
+          ) : (
+            <p className={hintClass}>Placeholder art until real product photos land.</p>
+          )}
         </div>
         <div className="flex items-center gap-2.5">
           <input
