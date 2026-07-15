@@ -32,7 +32,7 @@ export default async function ContactSalesPage({
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
             {t("eyebrow")}
           </p>
-          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-forest sm:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-content sm:text-5xl">
             {t("heading")}
           </h1>
           <p className="mt-4 max-w-xl text-base text-ink-muted">{t("sub")}</p>
@@ -44,7 +44,7 @@ export default async function ContactSalesPage({
             <div className="space-y-4">
               <a
                 href={`tel:${phone.replace(/\s/g, "")}`}
-                className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+                className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/20">
                   <Phone className="h-5 w-5 text-gold-600" aria-hidden="true" />
@@ -53,7 +53,7 @@ export default async function ContactSalesPage({
                   <span className="block text-[13px] font-semibold text-ink-muted">
                     {t("phoneLabel")}
                   </span>
-                  <span className="block font-mono text-lg font-semibold text-forest">
+                  <span className="block font-mono text-lg font-semibold text-content">
                     {phone}
                   </span>
                   <span className="block text-[12px] text-ink-muted">{t("phoneHint")}</span>
@@ -62,7 +62,7 @@ export default async function ContactSalesPage({
 
               <a
                 href={`mailto:${email}`}
-                className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+                className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/20">
                   <Mail className="h-5 w-5 text-gold-600" aria-hidden="true" />
@@ -71,14 +71,14 @@ export default async function ContactSalesPage({
                   <span className="block text-[13px] font-semibold text-ink-muted">
                     {t("emailLabel")}
                   </span>
-                  <span className="block truncate font-mono text-lg font-semibold text-forest">
+                  <span className="block truncate font-mono text-lg font-semibold text-content">
                     {email}
                   </span>
                   <span className="block text-[12px] text-ink-muted">{t("emailHint")}</span>
                 </span>
               </a>
 
-              <div className="rounded-2xl border border-forest-100 bg-white p-6">
+              <div className="rounded-2xl border border-forest-100 bg-surface p-6">
                 <div className="flex items-center gap-5">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#06C755]/15">
                     <MessageCircle className="h-5 w-5 text-[#06C755]" aria-hidden="true" />
@@ -87,7 +87,7 @@ export default async function ContactSalesPage({
                     <span className="block text-[13px] font-semibold text-ink-muted">
                       {t("lineLabel")}
                     </span>
-                    <span className="block font-mono text-lg font-semibold text-forest">
+                    <span className="block font-mono text-lg font-semibold text-content">
                       {lineId}
                     </span>
                     <span className="block text-[12px] text-ink-muted">{t("lineHint")}</span>
@@ -99,7 +99,7 @@ export default async function ContactSalesPage({
                 {t("demoNote")}
                 <Link
                   href="/#contact"
-                  className="inline-flex items-center gap-1.5 font-semibold text-gold-600 transition-colors hover:text-forest"
+                  className="inline-flex items-center gap-1.5 font-semibold text-gold-600 transition-colors hover:text-content"
                 >
                   <Calendar className="h-4 w-4" aria-hidden="true" />
                   {t("demoCta")}
@@ -114,7 +114,7 @@ export default async function ContactSalesPage({
               <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold">
                 LINE
               </p>
-              <div className="mt-6 flex h-56 w-56 items-center justify-center overflow-hidden rounded-2xl bg-white p-3">
+              <div className="mt-6 flex h-56 w-56 items-center justify-center overflow-hidden rounded-2xl bg-surface p-3">
                 {lineQrImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img

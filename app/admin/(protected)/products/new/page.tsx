@@ -12,7 +12,7 @@ export default function NewProductPage() {
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         Back to products
       </Link>
-      <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-forest">
+      <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-content">
         Add Product
       </h1>
       <p className="mt-2 text-sm text-ink-muted">

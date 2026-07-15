@@ -66,7 +66,7 @@ export default async function ProductPage({
     .slice(0, 3);
 
   return (
-    <main className="bg-white">
+    <main className="bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* breadcrumb */}
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-[13px] text-ink-muted">
@@ -85,7 +85,7 @@ export default async function ProductPage({
             {tc(`${product.category}.name`)}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <span className="font-medium text-forest">{product.name}</span>
+          <span className="font-medium text-content">{product.name}</span>
         </nav>
 
         {/* top: gallery + info */}
@@ -114,14 +114,14 @@ export default async function ProductPage({
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
               {tc(`${product.category}.name`)}
             </p>
-            <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-forest sm:text-4xl">
+            <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-4xl">
               {product.name}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-ink-muted">
               {product.description[locale as Locale] ?? product.description.en}
             </p>
 
-            <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-forest">
+            <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-content">
               {formatBaht(product.price)}
             </p>
             {product.preorder && (
@@ -136,7 +136,7 @@ export default async function ProductPage({
                   <AddToCartButton productId={product.id} />
                   <a
                     href="#contact"
-                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-forest transition-colors duration-300 hover:border-gold hover:text-gold-600"
+                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-gold hover:text-gold-600"
                   >
                     <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
                     {t("ctaDemo")}
@@ -150,7 +150,7 @@ export default async function ProductPage({
 
             {/* features */}
             <div className="mt-10 rounded-2xl bg-cloud p-6 sm:p-8">
-              <h2 className="font-display text-lg font-bold text-forest">
+              <h2 className="font-display text-lg font-bold text-content">
                 {t("featuresHeading")}
               </h2>
               <ul className="mt-4 space-y-3">
@@ -196,7 +196,7 @@ export default async function ProductPage({
         {/* related */}
         <div className="mt-16 sm:mt-20">
           <FadeIn>
-            <h2 className="font-display text-2xl font-extrabold tracking-tight text-forest sm:text-3xl">
+            <h2 className="font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
               {t("relatedHeading")}
             </h2>
           </FadeIn>

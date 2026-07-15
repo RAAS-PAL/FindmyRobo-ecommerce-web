@@ -23,7 +23,7 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
         className={`${base} ${
           !active
             ? "border-forest bg-forest text-white"
-            : "border-forest-100 bg-white text-forest hover:border-gold hover:bg-gold/10"
+            : "border-forest-100 bg-surface text-content hover:border-gold hover:bg-gold/10"
         }`}
       >
         {t("all")}
@@ -36,7 +36,7 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
             className={`${base} whitespace-nowrap ${
               active === c.slug
                 ? "border-forest bg-forest text-white"
-                : "border-forest-100 bg-white text-forest hover:border-gold hover:bg-gold/10"
+                : "border-forest-100 bg-surface text-content hover:border-gold hover:bg-gold/10"
             }`}
           >
             {tc(`${c.slug}.name`)}

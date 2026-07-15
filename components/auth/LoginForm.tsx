@@ -7,7 +7,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const inputClass =
-  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-white px-4 text-[14px] text-forest transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
 
 export default function LoginForm() {
   const t = useTranslations("auth.login");
@@ -43,7 +43,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="mb-1.5 block text-[13px] font-semibold text-forest">
+        <label htmlFor="email" className="mb-1.5 block text-[13px] font-semibold text-content">
           {t("email")}
         </label>
         <input
@@ -60,7 +60,7 @@ export default function LoginForm() {
         />
       </div>
       <div>
-        <label htmlFor="password" className="mb-1.5 block text-[13px] font-semibold text-forest">
+        <label htmlFor="password" className="mb-1.5 block text-[13px] font-semibold text-content">
           {t("password")}
         </label>
         <input

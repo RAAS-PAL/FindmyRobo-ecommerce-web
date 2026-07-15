@@ -51,7 +51,7 @@ export default async function CategoryPage({
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
             {t("eyebrow")}
           </p>
-          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-forest sm:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-content sm:text-5xl">
             {tc(`${slug}.name`)}
           </h1>
           <p className="mt-4 max-w-xl text-base text-ink-muted">{tc(`${slug}.description`)}</p>
@@ -69,11 +69,11 @@ export default async function CategoryPage({
           </div>
         ) : (
           <FadeIn className="mt-10">
-            <div className="flex flex-col items-center rounded-3xl border border-forest-100 bg-white px-6 py-20 text-center">
+            <div className="flex flex-col items-center rounded-3xl border border-forest-100 bg-surface px-6 py-20 text-center">
               <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-forest text-gold">
                 <Bot className="h-8 w-8" aria-hidden="true" />
               </span>
-              <h2 className="mt-6 font-display text-2xl font-extrabold text-forest sm:text-3xl">
+              <h2 className="mt-6 font-display text-2xl font-extrabold text-content sm:text-3xl">
                 {t("comingSoonTitle")}
               </h2>
               <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
@@ -89,7 +89,7 @@ export default async function CategoryPage({
                 </a>
                 <Link
                   href="/shop"
-                  className="flex min-h-[48px] items-center rounded-full border border-forest-100 px-7 text-sm font-semibold text-forest transition-colors hover:border-gold"
+                  className="flex min-h-[48px] items-center rounded-full border border-forest-100 px-7 text-sm font-semibold text-content transition-colors hover:border-gold"
                 >
                   {t("backToShop")}
                 </Link>

@@ -38,14 +38,14 @@ export default function NewsSection() {
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
               {t("eyebrow")}
             </p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-forest sm:text-5xl">
+            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
               {t("heading")}
             </h2>
             <p className="mt-3 text-base text-ink-muted">{t("sub")}</p>
           </div>
           <a
             href="#"
-            className="group flex min-h-[44px] items-center gap-2 font-semibold text-forest transition-colors hover:text-gold-600"
+            className="group flex min-h-[44px] items-center gap-2 font-semibold text-content transition-colors hover:text-gold-600"
           >
             {t("viewMore")}
             <ArrowRight
@@ -64,7 +64,7 @@ export default function NewsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.55, delay: i * 0.09, ease: [0.16, 1, 0.3, 1] }}
-            className="group w-[300px] shrink-0 cursor-pointer snap-start overflow-hidden rounded-2xl border border-forest-100 bg-white transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_44px_-18px_rgba(10,46,31,0.25)] sm:w-[320px]"
+            className="group w-[300px] shrink-0 cursor-pointer snap-start overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_44px_-18px_rgba(10,46,31,0.25)] sm:w-[320px]"
           >
             {/* banner placeholder */}
             <div
@@ -79,7 +79,7 @@ export default function NewsSection() {
               </span>
             </div>
             <div className="p-6">
-              <h3 className="font-display text-[17px] font-bold leading-snug text-forest transition-colors group-hover:text-forest-800">
+              <h3 className="font-display text-[17px] font-bold leading-snug text-content transition-colors group-hover:text-forest-800">
                 {article.title}
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-muted">{article.excerpt}</p>

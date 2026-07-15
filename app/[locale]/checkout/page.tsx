@@ -29,7 +29,7 @@ export default async function CheckoutPage({
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
             {t("eyebrow")}
           </p>
-          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-forest sm:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-content sm:text-5xl">
             {t("heading")}
           </h1>
           <p className="mt-4 max-w-xl text-base text-ink-muted">{t("sub")}</p>

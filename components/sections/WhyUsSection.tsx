@@ -30,7 +30,7 @@ export default function WhyUsSection() {
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
             {t("eyebrow")}
           </p>
-          <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-forest-950 sm:text-5xl">
+          <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
             {t("heading")}
           </h2>
         </motion.div>
@@ -43,12 +43,12 @@ export default function WhyUsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="group rounded-2xl border border-forest-100 bg-white p-8 shadow-[0_12px_32px_-20px_rgba(10,46,31,0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/70 hover:shadow-[0_24px_48px_-20px_rgba(10,46,31,0.25)]"
+              className="group rounded-2xl border border-forest-100 bg-surface p-8 shadow-[0_12px_32px_-20px_rgba(10,46,31,0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/70 hover:shadow-[0_24px_48px_-20px_rgba(10,46,31,0.25)]"
             >
               <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-forest-950 text-gold transition-colors duration-300 group-hover:bg-gold group-hover:text-forest-950">
                 <Icon className="h-6.5 w-6.5" aria-hidden="true" />
               </span>
-              <h3 className="mt-6 font-display text-xl font-bold text-forest-950">{title}</h3>
+              <h3 className="mt-6 font-display text-xl font-bold text-content">{title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-muted">{body}</p>
             </motion.div>
           ))}

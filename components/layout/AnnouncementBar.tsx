@@ -6,7 +6,7 @@ export default function AnnouncementBar() {
   // Content duplicated once so the -50% marquee loop is seamless
   const strip = [...messages, ...messages, ...messages];
   return (
-    <div className="overflow-hidden bg-gold text-forest" role="region" aria-label="Announcements">
+    <div className="overflow-hidden bg-gold text-content" role="region" aria-label="Announcements">
       <div className="animate-marquee flex w-max">
         {[0, 1].map((copy) => (
           <div key={copy} className="flex items-center" aria-hidden={copy === 1}>
