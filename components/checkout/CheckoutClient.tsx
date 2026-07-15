@@ -169,7 +169,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={name} className="text-[13px] font-semibold text-forest">
+      <label htmlFor={name} className="text-[13px] font-semibold text-content">
         {label}
         {optional && (
           <span className="ml-1.5 font-normal text-ink-muted">({optional})</span>
@@ -186,7 +186,7 @@ function Field({
 }
 
 const inputClass = (hasError: boolean) =>
-  `min-h-[48px] w-full rounded-xl border bg-white px-4 text-[14px] text-forest placeholder:text-ink-muted/60 transition-colors focus:outline-none focus:ring-2 ${
+  `min-h-[48px] w-full rounded-xl border bg-surface px-4 text-[14px] text-content placeholder:text-ink-muted/60 transition-colors focus:outline-none focus:ring-2 ${
     hasError
       ? "border-red-400 focus:ring-red-200"
       : "border-forest-100 focus:border-gold focus:ring-gold/25"
@@ -199,7 +199,7 @@ function SummaryLine({ item, forLabel }: { item: CartLine; forLabel?: string }) 
         <ProductVisual product={item.product} className="h-full w-auto" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[13.5px] font-bold text-forest">
+        <span className="block truncate text-[13.5px] font-bold text-content">
           {item.product.name}
         </span>
         {forLabel && (
@@ -211,7 +211,7 @@ function SummaryLine({ item, forLabel }: { item: CartLine; forLabel?: string }) 
           {formatBaht(item.product.price)} × {item.qty}
         </span>
       </span>
-      <span className="font-mono text-[14px] font-semibold tabular-nums text-forest">
+      <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
         {formatBaht(item.qty * item.product.price)}
       </span>
     </li>
@@ -329,11 +329,11 @@ export default function CheckoutClient() {
   if (placed) {
     return (
       <FadeIn className="mx-auto max-w-2xl">
-        <div className="rounded-3xl border border-forest-100 bg-white p-8 text-center sm:p-12">
+        <div className="rounded-3xl border border-forest-100 bg-surface p-8 text-center sm:p-12">
           <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold/20">
             <CircleCheck className="h-8 w-8 text-gold-600" aria-hidden="true" />
           </span>
-          <h1 className="mt-6 font-display text-3xl font-extrabold tracking-tight text-forest">
+          <h1 className="mt-6 font-display text-3xl font-extrabold tracking-tight text-content">
             {t("success.heading")}
           </h1>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-ink-muted">
@@ -347,7 +347,7 @@ export default function CheckoutClient() {
             <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-ink-muted">
               {t("success.orderLabel")}
             </p>
-            <p className="mt-1 font-mono text-xl font-semibold tracking-wide text-forest">
+            <p className="mt-1 font-mono text-xl font-semibold tracking-wide text-content">
               {placed.id}
             </p>
           </div>
@@ -362,7 +362,7 @@ export default function CheckoutClient() {
                   key={item.forName ? `${item.id}-${item.forName}` : item.id}
                   className="flex items-baseline justify-between gap-4 text-[13.5px]"
                 >
-                  <span className="font-medium text-forest">
+                  <span className="font-medium text-content">
                     {item.name} <span className="text-ink-muted">× {item.qty}</span>
                     {item.forName && (
                       <span className="block text-[11.5px] font-normal text-gold-600">
@@ -370,15 +370,15 @@ export default function CheckoutClient() {
                       </span>
                     )}
                   </span>
-                  <span className="font-mono font-semibold tabular-nums text-forest">
+                  <span className="font-mono font-semibold tabular-nums text-content">
                     {formatBaht(item.qty * item.unitPrice)}
                   </span>
                 </li>
               ))}
             </ul>
             <div className="mt-4 flex items-baseline justify-between border-t border-forest-100 pt-4">
-              <span className="text-[13px] font-semibold text-forest">{t("total")}</span>
-              <span className="font-mono text-lg font-semibold tabular-nums text-forest">
+              <span className="text-[13px] font-semibold text-content">{t("total")}</span>
+              <span className="font-mono text-lg font-semibold tabular-nums text-content">
                 {formatBaht(placed.subtotal)}
               </span>
             </div>
@@ -401,7 +401,7 @@ export default function CheckoutClient() {
     return (
       <FadeIn className="mx-auto flex max-w-md flex-col items-center gap-6 py-16 text-center">
         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-forest/5">
-          <ShoppingCart className="h-7 w-7 text-forest/30" aria-hidden="true" />
+          <ShoppingCart className="h-7 w-7 text-content/30" aria-hidden="true" />
         </span>
         <p className="text-sm leading-relaxed text-ink-muted">{t("empty")}</p>
         <Link
@@ -426,7 +426,7 @@ export default function CheckoutClient() {
           <section aria-labelledby="contact-heading">
             <h2
               id="contact-heading"
-              className="flex items-center gap-2.5 font-display text-lg font-bold text-forest"
+              className="flex items-center gap-2.5 font-display text-lg font-bold text-content"
             >
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/20">
                 <UserRound className="h-4 w-4 text-gold-600" aria-hidden="true" />
@@ -474,7 +474,7 @@ export default function CheckoutClient() {
           <section aria-labelledby="shipping-heading">
             <h2
               id="shipping-heading"
-              className="flex items-center gap-2.5 font-display text-lg font-bold text-forest"
+              className="flex items-center gap-2.5 font-display text-lg font-bold text-content"
             >
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/20">
                 <MapPin className="h-4 w-4 text-gold-600" aria-hidden="true" />
@@ -541,8 +541,8 @@ export default function CheckoutClient() {
       {/* right: summary */}
       <FadeIn delay={0.12}>
         <aside className="lg:sticky lg:top-24">
-          <div className="rounded-3xl border border-forest-100 bg-white p-6 sm:p-8">
-            <h2 className="font-display text-lg font-bold text-forest">
+          <div className="rounded-3xl border border-forest-100 bg-surface p-6 sm:p-8">
+            <h2 className="font-display text-lg font-bold text-content">
               {t("summaryHeading")}
             </h2>
             <ul className="mt-2 divide-y divide-forest-100/70">
@@ -562,7 +562,7 @@ export default function CheckoutClient() {
             <dl className="space-y-2.5 border-t border-forest-100 pt-4 text-[13.5px]">
               <div className="flex items-baseline justify-between">
                 <dt className="text-ink-muted">{t("subtotal")}</dt>
-                <dd className="font-mono font-semibold tabular-nums text-forest">
+                <dd className="font-mono font-semibold tabular-nums text-content">
                   {formatBaht(subtotal)}
                 </dd>
               </div>
@@ -573,8 +573,8 @@ export default function CheckoutClient() {
                 </dd>
               </div>
               <div className="flex items-baseline justify-between border-t border-forest-100 pt-3">
-                <dt className="font-semibold text-forest">{t("total")}</dt>
-                <dd className="font-mono text-xl font-semibold tabular-nums text-forest">
+                <dt className="font-semibold text-content">{t("total")}</dt>
+                <dd className="font-mono text-xl font-semibold tabular-nums text-content">
                   {formatBaht(subtotal)}
                 </dd>
               </div>
@@ -617,7 +617,7 @@ export default function CheckoutClient() {
               role="dialog"
               aria-modal="true"
               aria-label={t("upsell.heading")}
-              className="fixed inset-x-4 top-1/2 z-50 mx-auto max-w-lg -translate-y-1/2 rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
+              className="fixed inset-x-4 top-1/2 z-50 mx-auto max-w-lg -translate-y-1/2 rounded-3xl bg-surface p-6 shadow-2xl sm:p-8"
             >
               <div className="flex items-start justify-between gap-4">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/20">
@@ -627,12 +627,12 @@ export default function CheckoutClient() {
                   type="button"
                   onClick={() => placeOrder(items)}
                   aria-label={t("upsell.skip")}
-                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-forest/5 hover:text-forest"
+                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-forest/5 hover:text-content"
                 >
                   <X className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
-              <h2 className="mt-4 font-display text-xl font-extrabold tracking-tight text-forest sm:text-2xl">
+              <h2 className="mt-4 font-display text-xl font-extrabold tracking-tight text-content sm:text-2xl">
                 {t("upsell.heading")}
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-ink-muted">
@@ -664,7 +664,7 @@ export default function CheckoutClient() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="flex flex-wrap items-center gap-2">
-                        <span className="text-[13.5px] font-bold leading-snug text-forest">
+                        <span className="text-[13.5px] font-bold leading-snug text-content">
                           {offer.service.name}
                         </span>
                         {i === 0 && (
@@ -679,7 +679,7 @@ export default function CheckoutClient() {
                         })}
                       </span>
                     </span>
-                    <span className="font-mono text-[14px] font-semibold tabular-nums text-forest">
+                    <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
                       {formatBaht(offer.service.price)}
                     </span>
                   </label>
@@ -697,7 +697,7 @@ export default function CheckoutClient() {
               <button
                 type="button"
                 onClick={() => placeOrder(items)}
-                className="mt-3 w-full cursor-pointer text-center text-[13px] font-medium text-ink-muted transition-colors hover:text-forest"
+                className="mt-3 w-full cursor-pointer text-center text-[13px] font-medium text-ink-muted transition-colors hover:text-content"
               >
                 {t("upsell.skip")}
               </button>

@@ -37,16 +37,16 @@ const slugify = (name: string) =>
     .slice(0, 60);
 
 const inputClass =
-  "min-h-[46px] w-full rounded-xl border border-forest-100 bg-white px-4 text-[14px] text-forest placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[46px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
 const textareaClass =
-  "w-full rounded-xl border border-forest-100 bg-white px-4 py-3 text-[14px] leading-relaxed text-forest placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
-const labelClass = "mb-1.5 block text-[13px] font-semibold text-forest";
+  "w-full rounded-xl border border-forest-100 bg-surface px-4 py-3 text-[14px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+const labelClass = "mb-1.5 block text-[13px] font-semibold text-content";
 const hintClass = "mt-1 text-[11.5px] text-ink-muted";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-forest-100 bg-white p-6 sm:p-8">
-      <h2 className="font-display text-lg font-bold text-forest">{title}</h2>
+    <section className="rounded-2xl border border-forest-100 bg-surface p-6 sm:p-8">
+      <h2 className="font-display text-lg font-bold text-content">{title}</h2>
       <div className="mt-5 grid gap-5 sm:grid-cols-2">{children}</div>
     </section>
   );
@@ -240,7 +240,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             defaultChecked={!!initial?.preorder}
             className="h-4.5 w-4.5 rounded border-forest-100 accent-[#f5c842]"
           />
-          <label htmlFor="preorder" className="text-[13.5px] font-medium text-forest">
+          <label htmlFor="preorder" className="text-[13.5px] font-medium text-content">
             Preorder (not in stock yet)
           </label>
         </div>
@@ -350,7 +350,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         <button
           type="button"
           onClick={() => router.push("/admin")}
-          className="flex min-h-[48px] cursor-pointer items-center rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-forest transition-colors hover:border-gold"
+          className="flex min-h-[48px] cursor-pointer items-center rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-gold"
         >
           Cancel
         </button>

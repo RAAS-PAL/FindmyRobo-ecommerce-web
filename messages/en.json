@@ -24,6 +24,8 @@
     "searchPlaceholder": "What are you looking for?",
     "bookDemo": "Book a Free Demo",
     "cartLabel": "Shopping cart, {count} items",
+    "themeToDark": "Switch to dark mode",
+    "themeToLight": "Switch to light mode",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "soon": "Soon",

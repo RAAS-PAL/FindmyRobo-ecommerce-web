@@ -24,6 +24,8 @@
     "searchPlaceholder": "คุณกำลังมองหาอะไร?",
     "bookDemo": "จองเดโมฟรี",
     "cartLabel": "ตะกร้าสินค้า มี {count} รายการ",
+    "themeToDark": "เปลี่ยนเป็นโหมดมืด",
+    "themeToLight": "เปลี่ยนเป็นโหมดสว่าง",
     "openMenu": "เปิดเมนู",
     "closeMenu": "ปิดเมนู",
     "soon": "เร็วๆ นี้",

@@ -16,6 +16,7 @@ import {
 import { Link } from "@/i18n/navigation";
 import { categories, categoryHref } from "@/data/categories";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
+import ThemeToggle from "@/components/layout/ThemeToggle";
 import { useCart } from "@/components/cart/CartProvider";
 import { createClient } from "@/lib/supabase/client";
 
@@ -69,7 +70,7 @@ function DropdownChild({
     <Link
       href={item.href}
       onClick={onNavigate}
-      className="block rounded-lg px-3 py-2.5 text-[13px] text-forest/85 transition-colors hover:bg-cloud hover:text-gold-600"
+      className="block rounded-lg px-3 py-2.5 text-[13px] text-content/85 transition-colors hover:bg-cloud hover:text-gold-600"
     >
       {item.label}
       {item.description && (
@@ -147,8 +148,8 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled
-          ? "border-forest-100 bg-white/85 shadow-[0_8px_28px_-16px_rgba(10,46,31,0.25)] backdrop-blur-xl"
-          : "border-forest-100/70 bg-white"
+          ? "border-forest-100 bg-surface/85 shadow-[0_8px_28px_-16px_rgba(10,46,31,0.25)] backdrop-blur-xl"
+          : "border-forest-100/70 bg-surface"
       }`}
     >
       <nav className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
@@ -157,7 +158,7 @@ export default function Navbar() {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold text-forest-950">
             <Bot className="h-5 w-5" aria-hidden="true" />
           </span>
-          <span className="font-display text-lg font-extrabold tracking-tight text-forest-950">
+          <span className="font-display text-lg font-extrabold tracking-tight text-content">
             RoboStore<span className="text-gold-600"> TH</span>
           </span>
         </Link>
@@ -168,7 +169,7 @@ export default function Navbar() {
             <li key={link.label} className="group relative">
               <Link
                 href={link.href}
-                className="nav-underline flex items-center gap-1 py-2 text-[13.5px] font-medium text-forest/80 transition-colors hover:text-forest-950"
+                className="nav-underline flex items-center gap-1 py-2 text-[13.5px] font-medium text-content/80 transition-colors hover:text-content"
               >
                 {link.label}
                 {link.children && (
@@ -180,7 +181,7 @@ export default function Navbar() {
               </Link>
               {link.children && (
                 <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                  <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-white/95 p-2 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
+                  <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
                     {link.children.map((item) => (
                       <DropdownChild key={item.label} item={item} soonLabel={t("soon")} />
                     ))}
@@ -202,7 +203,7 @@ export default function Navbar() {
             <input
               type="search"
               placeholder={t("searchPlaceholder")}
-              className="h-11 w-44 rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-[13px] text-forest placeholder:text-ink-muted/70 transition-all focus:w-56 focus:border-gold-600/60 focus:bg-white focus:outline-none"
+              className="h-11 w-44 rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-[13px] text-content placeholder:text-ink-muted/70 transition-all focus:w-56 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
             />
           </label>
 
@@ -216,12 +217,13 @@ export default function Navbar() {
             {t("bookDemo")}
           </motion.a>
 
+          <ThemeToggle className="hidden md:flex" />
           <LanguageSwitcher className="hidden md:flex" />
 
           <Link
             href={loggedIn ? "/account" : "/login"}
             aria-label={loggedIn ? t("account") : t("signIn")}
-            className="flex h-11 w-11 items-center justify-center rounded-full text-forest transition-colors hover:bg-cloud hover:text-gold-600"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
           >
             <User className="h-5 w-5" aria-hidden="true" />
           </Link>
@@ -230,7 +232,7 @@ export default function Navbar() {
             type="button"
             onClick={openDrawer}
             aria-label={t("cartLabel", { count })}
-            className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-forest transition-colors hover:bg-cloud hover:text-gold-600"
+            className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
           >
             <ShoppingCart className="h-5 w-5" aria-hidden="true" />
             {count > 0 && (
@@ -244,7 +246,7 @@ export default function Navbar() {
             type="button"
             onClick={() => setOpen(true)}
             aria-label={t("openMenu")}
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-forest-950 transition-colors hover:bg-cloud xl:hidden"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud xl:hidden"
           >
             <Menu className="h-6 w-6" aria-hidden="true" />
           </button>
@@ -269,7 +271,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-y-0 right-0 z-50 flex w-[85%] max-w-sm flex-col bg-white shadow-2xl xl:hidden"
+              className="fixed inset-y-0 right-0 z-50 flex w-[85%] max-w-sm flex-col bg-surface shadow-2xl xl:hidden"
               role="dialog"
               aria-label="Menu"
             >
@@ -278,7 +280,7 @@ export default function Navbar() {
                   <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-forest-950">
                     <Bot className="h-4.5 w-4.5" aria-hidden="true" />
                   </span>
-                  <span className="font-display text-base font-extrabold text-forest-950">
+                  <span className="font-display text-base font-extrabold text-content">
                     RoboStore<span className="text-gold-600"> TH</span>
                   </span>
                 </span>
@@ -286,7 +288,7 @@ export default function Navbar() {
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label={t("closeMenu")}
-                  className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-forest hover:bg-cloud"
+                  className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content hover:bg-cloud"
                 >
                   <X className="h-6 w-6" aria-hidden="true" />
                 </button>
@@ -302,7 +304,7 @@ export default function Navbar() {
                   <input
                     type="search"
                     placeholder={t("searchPlaceholder")}
-                    className="h-12 w-full rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-sm text-forest placeholder:text-ink-muted/70 focus:border-gold-600/60 focus:bg-white focus:outline-none"
+                    className="h-12 w-full rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-sm text-content placeholder:text-ink-muted/70 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
                   />
                 </label>
                 <ul className="space-y-1">
@@ -319,7 +321,7 @@ export default function Navbar() {
                             type="button"
                             onClick={() => setExpanded(expanded === i ? null : i)}
                             aria-expanded={expanded === i}
-                            className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-[15px] font-medium text-forest transition-colors hover:bg-cloud hover:text-gold-600"
+                            className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-[15px] font-medium text-content transition-colors hover:bg-cloud hover:text-gold-600"
                           >
                             {link.label}
                             <ChevronDown
@@ -364,7 +366,7 @@ export default function Navbar() {
                         <Link
                           href={link.href}
                           onClick={() => setOpen(false)}
-                          className="flex min-h-[48px] items-center rounded-xl px-4 text-[15px] font-medium text-forest transition-colors hover:bg-cloud hover:text-gold-600"
+                          className="flex min-h-[48px] items-center rounded-xl px-4 text-[15px] font-medium text-content transition-colors hover:bg-cloud hover:text-gold-600"
                         >
                           {link.label}
                         </Link>
@@ -373,8 +375,9 @@ export default function Navbar() {
                   ))}
                 </ul>
 
-                <div className="mt-6 border-t border-forest-100 pt-6">
+                <div className="mt-6 flex items-center gap-3 border-t border-forest-100 pt-6">
                   <LanguageSwitcher className="w-fit" />
+                  <ThemeToggle />
                 </div>
               </div>
 

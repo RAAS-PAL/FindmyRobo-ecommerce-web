@@ -13,11 +13,11 @@ export default async function AdminLoginPage() {
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-forest-950 text-gold">
             <Bot className="h-5 w-5" aria-hidden="true" />
           </span>
-          <span className="font-display text-lg font-extrabold tracking-tight text-forest">
+          <span className="font-display text-lg font-extrabold tracking-tight text-content">
             RoboStore TH <span className="text-gold-600">Admin</span>
           </span>
         </div>
-        <div className="rounded-3xl border border-forest-100 bg-white p-8 shadow-[0_16px_40px_-20px_rgba(10,46,31,0.25)]">
+        <div className="rounded-3xl border border-forest-100 bg-surface p-8 shadow-[0_16px_40px_-20px_rgba(10,46,31,0.25)]">
           <LoginForm />
         </div>
         <p className="mt-6 text-center text-[12px] text-ink-muted">

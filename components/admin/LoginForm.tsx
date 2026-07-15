@@ -48,7 +48,7 @@ export default function LoginForm() {
   };
 
   const fieldClass = (invalid: boolean) =>
-    `min-h-[48px] w-full rounded-xl border bg-white px-4 text-[14px] text-forest transition-colors focus:outline-none focus:ring-2 ${
+    `min-h-[48px] w-full rounded-xl border bg-surface px-4 text-[14px] text-content transition-colors focus:outline-none focus:ring-2 ${
       invalid
         ? "border-red-400 focus:ring-red-200"
         : "border-forest-100 focus:border-gold focus:ring-gold/25"
@@ -57,7 +57,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="mb-1.5 block text-[13px] font-semibold text-forest">
+        <label htmlFor="email" className="mb-1.5 block text-[13px] font-semibold text-content">
           Email
         </label>
         <input
@@ -74,7 +74,7 @@ export default function LoginForm() {
         />
       </div>
       <div>
-        <label htmlFor="password" className="mb-1.5 block text-[13px] font-semibold text-forest">
+        <label htmlFor="password" className="mb-1.5 block text-[13px] font-semibold text-content">
           Password
         </label>
         <input

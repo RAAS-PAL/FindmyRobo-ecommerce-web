@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const inputClass =
-  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-white px-4 text-[14px] text-forest transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
 
 export default function SignupForm() {
   const t = useTranslations("auth.signup");
@@ -47,7 +47,7 @@ export default function SignupForm() {
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold/20">
           <MailCheck className="h-7 w-7 text-gold-600" aria-hidden="true" />
         </span>
-        <h2 className="font-display text-xl font-bold text-forest">
+        <h2 className="font-display text-xl font-bold text-content">
           {t("checkEmailTitle")}
         </h2>
         <p className="text-[13.5px] leading-relaxed text-ink-muted">
@@ -60,7 +60,7 @@ export default function SignupForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="fullName" className="mb-1.5 block text-[13px] font-semibold text-forest">
+        <label htmlFor="fullName" className="mb-1.5 block text-[13px] font-semibold text-content">
           {t("fullName")}
         </label>
         <input
@@ -73,7 +73,7 @@ export default function SignupForm() {
         />
       </div>
       <div>
-        <label htmlFor="email" className="mb-1.5 block text-[13px] font-semibold text-forest">
+        <label htmlFor="email" className="mb-1.5 block text-[13px] font-semibold text-content">
           {t("email")}
         </label>
         <input
@@ -90,7 +90,7 @@ export default function SignupForm() {
         />
       </div>
       <div>
-        <label htmlFor="password" className="mb-1.5 block text-[13px] font-semibold text-forest">
+        <label htmlFor="password" className="mb-1.5 block text-[13px] font-semibold text-content">
           {t("password")}
         </label>
         <input

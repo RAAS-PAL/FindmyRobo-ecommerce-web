@@ -9,6 +9,7 @@ import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MotionProvider from "@/components/MotionProvider";
+import { themeInitScript } from "@/components/ThemeProvider";
 import ProductsProvider from "@/components/ProductsProvider";
 import CartProvider from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
@@ -75,10 +76,16 @@ export default async function LocaleLayout({
   const products = await getAllProducts();
 
   return (
+    // suppressHydrationWarning: themeInitScript sets the .dark class on <html>
+    // before React hydrates, so the server/client class lists differ by design.
     <html
       lang={locale}
+      suppressHydrationWarning
       className={`${archivo.variable} ${inter.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
