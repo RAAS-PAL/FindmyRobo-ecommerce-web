@@ -180,11 +180,10 @@
   },
   "hero": {
     "eyebrow": "Mowing · Pool Cleaning · Cleaning · Delivery · Thailand",
-    "headlineMain": "Smart Robots for Every",
-    "headlineAccent": "Thai Home & Business",
-    "subBefore": "From mowing your lawn and cleaning your pool to cleaning robots and delivery robots — we have the perfect robot for you, so you can enjoy more",
-    "subBrand": "Time for Life™",
-    "ctaPrimary": "Find Your Ideal Robot",
+    "headlineMain": "Smart Robots. Smarter Operations.",
+    "headlineAccent": "Better Business.",
+    "sub": "Discover intelligent robotic solutions for cleaning, delivery, lawn care, pool maintenance, and more—designed to reduce workload, improve efficiency, and help your business operate smarter.",
+    "ctaPrimary": "Explore Our Robots",
     "ctaSecondary": "Book a Free Demo"
   },
   "products": {

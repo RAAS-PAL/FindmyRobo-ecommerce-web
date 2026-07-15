@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
@@ -224,21 +224,26 @@ export default function HeroSection() {
           }`}
         >
           {[...mainWords, ...accentWords].map((word, i) => (
-            <motion.span
-              key={i}
-              variants={wordVariants}
-              className={`inline-block ${
-                i >= mainWords.length
-                  ? video
-                    ? "text-gold"
-                    : "text-forest-700 dark:text-gold"
-                  : ""
-              }`}
-            >
+            <Fragment key={i}>
+              {/* The gold accent phrase always starts its own line, so the
+                  headline lands as the two lines the copy was written as
+                  rather than wherever the container happens to wrap. */}
+              {i === mainWords.length && <br />}
+              <motion.span
+                variants={wordVariants}
+                className={`inline-block ${
+                  i >= mainWords.length
+                    ? video
+                      ? "text-gold"
+                      : "text-forest-700 dark:text-gold"
+                    : ""
+                }`}
+              >
               {word}
               {/*  : plain spaces collapse at the end of inline-blocks */}
               {i < mainWords.length + accentWords.length - 1 && " "}
-            </motion.span>
+              </motion.span>
+            </Fragment>
           ))}
         </motion.h1>
 
@@ -250,10 +255,7 @@ export default function HeroSection() {
             video ? "hero-legible text-white/90" : "text-ink-muted"
           }`}
         >
-          {t("subBefore")}{" "}
-          <span className={`font-semibold ${video ? "text-white" : "text-content"}`}>
-            {t("subBrand")}
-          </span>
+          {t("sub")}
         </motion.p>
 
         <motion.div
