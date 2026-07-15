@@ -30,7 +30,7 @@ export default function ServicePurchasePanel({
       <div>
         <label
           htmlFor="service-robot"
-          className="mb-1.5 flex items-center gap-2 text-[13px] font-semibold text-forest"
+          className="mb-1.5 flex items-center gap-2 text-[13px] font-semibold text-content"
         >
           <Bot className="h-4 w-4 text-gold-600" aria-hidden="true" />
           {t("selectRobotLabel")}
@@ -39,7 +39,7 @@ export default function ServicePurchasePanel({
           id="service-robot"
           value={robotId}
           onChange={(e) => setRobotId(e.target.value)}
-          className="min-h-[48px] w-full rounded-xl border border-forest-100 bg-white px-4 text-[14px] text-forest transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25"
+          className="min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25"
         >
           <option value="" disabled>
             {t("selectRobotPlaceholder")}

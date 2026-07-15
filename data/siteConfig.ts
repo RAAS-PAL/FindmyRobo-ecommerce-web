@@ -2,16 +2,45 @@
  * Site-wide settings.
  *
  * heroVideoUrls — hero background videos, played one after another in a
- * loop (1, 2, 3, back to 1). To add yours:
- *   1. Drop the files in /public/videos, e.g. public/videos/hero-1.mp4
- *   2. List them here in play order:
- *        heroVideoUrls: ["/videos/hero-1.mp4", "/videos/hero-2.mp4", "/videos/hero-3.mp4"]
- *   (CDN URLs also work. MP4/H.264, ~1080p, a few MB each — keep them short.)
+ * loop (1, 2, 3, back to 1). While the list is empty, the hero shows the
+ * animated lawn scene instead. heroVideoPoster is the still shown until
+ * the first video has enough data to play.
  *
- * While the list is empty, the hero shows the animated lawn scene instead.
- * heroVideoPoster is an optional still shown while the first video loads.
+ * ADDING A NEW HERO VIDEO — the encoding matters more than the source:
+ * a raw export will stall on mobile no matter how fast the host is. Run it
+ * through ffmpeg first (keep the source file somewhere outside the repo):
+ *
+ *   ffmpeg -ss 0 -i source.mp4 -t 12 -vf "scale=1920:-2" -r 30 \
+ *     -c:v libx264 -profile:v main -pix_fmt yuv420p \
+ *     -crf 27 -maxrate 2000k -bufsize 4000k \
+ *     -movflags +faststart -an public/videos/hero-N.mp4
+ *
+ *   -movflags +faststart : index at the FRONT, so playback starts before the
+ *                          file finishes downloading. Without it iOS Safari
+ *                          refuses to autoplay and shows a play button.
+ *   -pix_fmt yuv420p     : Safari will not decode 4:2:2/4:4:4 at all.
+ *   -an                  : drop audio — the hero is muted anyway.
+ *   ~12s, ~2 Mbps        : keep each file 2-3 MB. Bandwidth is billed.
  */
 export const siteConfig = {
-  heroVideoUrls: ["/videos/Banner_C40.mp4", "/videos/Banner_Luba 3.mp4", "/videos/Banner_SPINO-E1.mp4"] as string[],
-  heroVideoPoster: null as string | null,
+  heroVideoUrls: [
+    "/videos/hero-1.mp4",
+    "/videos/hero-2.mp4",
+    "/videos/hero-3.mp4",
+  ] as string[],
+  heroVideoPoster: "/videos/hero-poster.jpg" as string | null,
+
+  /**
+   * Sales team contacts, shown on /contact-sales (PRD req 13 + 19).
+   * REPLACE the placeholder phone/email/LINE id with the real ones.
+   * lineQrImage — drop the LINE official-account QR into /public
+   * (e.g. "/line-qr.png") and set the path; a "coming soon" frame
+   * shows while it is null.
+   */
+  salesContact: {
+    phone: "+66 2 000 0000",
+    email: "sales@raaspal.com",
+    lineId: "@raaspal",
+    lineQrImage: null as string | null,
+  },
 };

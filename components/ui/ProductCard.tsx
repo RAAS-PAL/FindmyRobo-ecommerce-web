@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import RobotIllustration from "@/components/ui/RobotIllustration";
+import ProductVisual from "@/components/ui/ProductVisual";
 import { formatBaht, type Locale, type Product } from "@/data/products";
 
 export default function ProductCard({
@@ -27,7 +27,7 @@ export default function ProductCard({
     >
       <Link
         href={`/products/${product.id}`}
-        className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-white transition-all duration-300 hover:-translate-y-2 hover:border-gold hover:shadow-[0_24px_48px_-16px_rgba(10,46,31,0.25)]"
+        className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-gold hover:shadow-[0_24px_48px_-16px_rgba(10,46,31,0.25)]"
       >
         {/* image area */}
         <div className="relative overflow-hidden bg-gradient-to-b from-cloud to-forest-100/40 pb-4 pt-8">
@@ -36,8 +36,8 @@ export default function ProductCard({
               {t("preorder")}
             </span>
           )}
-          <RobotIllustration
-            variant={product.variant}
+          <ProductVisual
+            product={product}
             className="mx-auto h-40 w-auto transition-transform duration-500 ease-out group-hover:scale-105"
           />
           {/* view product — slides up on hover / focus */}
@@ -54,13 +54,13 @@ export default function ProductCard({
           <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-gold-600">
             {tc(`${product.category}.name`)}
           </span>
-          <span className="font-display text-[15px] font-bold leading-snug text-forest">
+          <span className="font-display text-[15px] font-bold leading-snug text-content">
             {product.name}
           </span>
           <span className="text-[13px] leading-relaxed text-ink-muted">
             {product.tagline[locale]}
           </span>
-          <span className="mt-auto pt-3 font-mono text-lg font-semibold tabular-nums text-forest">
+          <span className="mt-auto pt-3 font-mono text-lg font-semibold tabular-nums text-content">
             {formatBaht(product.price)}
           </span>
         </span>

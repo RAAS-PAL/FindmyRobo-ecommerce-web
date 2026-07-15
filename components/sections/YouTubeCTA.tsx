@@ -8,7 +8,10 @@ import { YouTubeIcon } from "@/components/ui/BrandIcons";
 export default function YouTubeCTA() {
   const t = useTranslations("youtube");
   return (
-    <section id="youtube" className="relative overflow-hidden bg-gradient-to-br from-white via-cloud to-[#e9f4e4] py-20 sm:py-28">
+    <section
+      id="youtube"
+      className="relative overflow-hidden bg-gradient-to-br from-surface via-cloud to-[#e9f4e4] py-20 sm:py-28 dark:to-forest-900"
+    >
       {/* ambient glows */}
       <div
         className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-gold/[0.14] blur-[90px]"
@@ -29,7 +32,7 @@ export default function YouTubeCTA() {
         <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-forest-950 shadow-[0_16px_32px_-16px_rgba(10,46,31,0.5)]">
           <Play className="h-7 w-7 fill-gold text-gold" aria-hidden="true" />
         </span>
-        <h2 className="mt-7 font-display text-3xl font-extrabold tracking-tight text-forest-950 sm:text-5xl">
+        <h2 className="mt-7 font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
           {t("heading")}
         </h2>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-muted sm:text-lg">

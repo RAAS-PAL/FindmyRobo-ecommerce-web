@@ -51,7 +51,7 @@ export default async function AccountPage({
               <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
                 {t("title")}
               </p>
-              <h1 className="mt-1 font-display text-2xl font-extrabold tracking-tight text-forest sm:text-3xl">
+              <h1 className="mt-1 font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
                 {t("greeting", { name: displayName })}
               </h1>
             </div>
@@ -59,20 +59,20 @@ export default async function AccountPage({
         </FadeIn>
 
         <FadeIn delay={0.08}>
-          <dl className="mt-8 divide-y divide-forest-100 overflow-hidden rounded-2xl border border-forest-100 bg-white">
+          <dl className="mt-8 divide-y divide-forest-100 overflow-hidden rounded-2xl border border-forest-100 bg-surface">
             <div className="flex items-center justify-between gap-4 px-6 py-4">
               <dt className="text-[13px] font-medium text-ink-muted">{t("email")}</dt>
-              <dd className="text-[14px] font-semibold text-forest">{profile.email}</dd>
+              <dd className="text-[14px] font-semibold text-content">{profile.email}</dd>
             </div>
             <div className="flex items-center justify-between gap-4 px-6 py-4">
               <dt className="text-[13px] font-medium text-ink-muted">{t("role")}</dt>
-              <dd className="text-[14px] font-semibold text-forest">
+              <dd className="text-[14px] font-semibold text-content">
                 {isAdmin ? t("roleAdmin") : t("roleUser")}
               </dd>
             </div>
             <div className="flex items-center justify-between gap-4 px-6 py-4">
               <dt className="text-[13px] font-medium text-ink-muted">{t("memberSince")}</dt>
-              <dd className="text-[14px] font-semibold text-forest">{memberSince}</dd>
+              <dd className="text-[14px] font-semibold text-content">{memberSince}</dd>
             </div>
           </dl>
         </FadeIn>
