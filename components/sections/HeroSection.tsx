@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
@@ -11,21 +11,38 @@ import { siteConfig } from "@/data/siteConfig";
  * Full-bleed hero background that plays the configured videos in sequence,
  * looping back to the first when the last one ends. A single video simply
  * loops. `key={src}` remounts the element so the next clip autoplays.
+ *
+ * iOS Safari will only autoplay a video that is muted AND inline. React sets
+ * `muted` as a DOM property but does not always emit the HTML attribute, and
+ * Safari checks at load time — so the ref below asserts it directly, and the
+ * play() promise is caught because iOS Low Power Mode refuses autoplay
+ * outright (the poster then stays up, which is the intended fallback).
  */
 function HeroVideoPlaylist({ urls, poster }: { urls: string[]; poster?: string }) {
   const [index, setIndex] = useState(0);
+  const ref = useRef<HTMLVideoElement>(null);
   const src = urls[index % urls.length];
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.muted = true; // must be set before play() for iOS to allow it
+    const attempt = el.play();
+    if (attempt) attempt.catch(() => undefined); // blocked (e.g. Low Power Mode) — poster remains
+  }, [src]);
 
   return (
     <video
       key={src}
+      ref={ref}
       className="absolute inset-0 h-full w-full object-cover"
       src={src}
-      poster={index === 0 ? poster : undefined}
+      poster={poster}
       autoPlay
       muted
       loop={urls.length === 1}
       playsInline
+      preload="auto"
       onEnded={() => setIndex((i) => (i + 1) % urls.length)}
       aria-hidden="true"
     />
