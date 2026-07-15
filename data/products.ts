@@ -26,9 +26,10 @@ export type Locale = "en" | "th";
 export type LocalizedText = Record<Locale, string>;
 
 /**
- * Product records live in data/products.json and are managed through the
- * admin panel (lib/productStore.ts). Marketing copy is stored per-locale on
- * the record itself so admin-added products need no message-file entries.
+ * Product records live in the Supabase `products` table (see
+ * supabase/products-schema.sql) and are managed through the admin panel via
+ * lib/productStore.ts. Marketing copy is stored per-locale on the record
+ * itself so admin-added products need no message-file entries.
  */
 export interface Product {
   id: string;
