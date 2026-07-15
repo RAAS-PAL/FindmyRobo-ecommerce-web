@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Bot, ExternalLink } from "lucide-react";
 import { isAdminAuthenticated } from "@/lib/adminAuth";
 import LogoutButton from "@/components/admin/LogoutButton";
+import { ThemeToggleButton } from "@/components/layout/ThemeToggle";
 
 export default async function AdminProtectedLayout({
   children,
@@ -31,6 +32,12 @@ export default async function AdminProtectedLayout({
               <ExternalLink className="h-4 w-4" aria-hidden="true" />
               View store
             </a>
+            {/* admin is English-only, so the labels are plain strings */}
+            <ThemeToggleButton
+              variant="onDark"
+              toDark="Switch to dark mode"
+              toLight="Switch to light mode"
+            />
             <LogoutButton />
           </div>
         </div>
