@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
@@ -11,21 +11,38 @@ import { siteConfig } from "@/data/siteConfig";
  * Full-bleed hero background that plays the configured videos in sequence,
  * looping back to the first when the last one ends. A single video simply
  * loops. `key={src}` remounts the element so the next clip autoplays.
+ *
+ * iOS Safari will only autoplay a video that is muted AND inline. React sets
+ * `muted` as a DOM property but does not always emit the HTML attribute, and
+ * Safari checks at load time — so the ref below asserts it directly, and the
+ * play() promise is caught because iOS Low Power Mode refuses autoplay
+ * outright (the poster then stays up, which is the intended fallback).
  */
 function HeroVideoPlaylist({ urls, poster }: { urls: string[]; poster?: string }) {
   const [index, setIndex] = useState(0);
+  const ref = useRef<HTMLVideoElement>(null);
   const src = urls[index % urls.length];
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.muted = true; // must be set before play() for iOS to allow it
+    const attempt = el.play();
+    if (attempt) attempt.catch(() => undefined); // blocked (e.g. Low Power Mode) — poster remains
+  }, [src]);
 
   return (
     <video
       key={src}
+      ref={ref}
       className="absolute inset-0 h-full w-full object-cover"
       src={src}
-      poster={index === 0 ? poster : undefined}
+      poster={poster}
       autoPlay
       muted
       loop={urls.length === 1}
       playsInline
+      preload="auto"
       onEnded={() => setIndex((i) => (i + 1) % urls.length)}
       aria-hidden="true"
     />
@@ -125,7 +142,7 @@ export default function HeroSection() {
       className={`relative overflow-hidden ${
         video
           ? "bg-forest-950 text-white"
-          : "bg-gradient-to-b from-white via-[#f1f8ee] to-[#e4f1e0] text-forest-950"
+          : "bg-gradient-to-b from-surface via-[#f1f8ee] to-[#e4f1e0] text-content dark:via-forest-900 dark:to-forest-800"
       }`}
     >
       {video ? (
@@ -135,9 +152,16 @@ export default function HeroSection() {
             urls={videos}
             poster={siteConfig.heroVideoPoster ?? undefined}
           />
-          {/* legibility overlay */}
+          {/* Legibility scrim. Deliberately strong: the clips are dark, and in
+              dark mode this tint is navy over them, so contrast can't come from
+              the overlay colour alone. Linear band + a radial pool behind the
+              copy; .hero-legible on the text is the third layer. */}
           <div
-            className="absolute inset-0 bg-gradient-to-b from-forest-950/75 via-forest-950/35 to-forest-950/75"
+            className="absolute inset-0 bg-gradient-to-b from-forest-950/85 via-forest-950/55 to-forest-950/85"
+            aria-hidden="true"
+          />
+          <div
+            className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_45%,rgba(3,8,24,0.55),transparent_75%)]"
             aria-hidden="true"
           />
         </>
@@ -185,7 +209,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className={`mb-6 font-mono text-[11px] font-semibold uppercase tracking-[0.3em] sm:text-xs ${
-            video ? "text-gold" : "text-gold-600"
+            video ? "hero-legible text-gold" : "text-gold-600"
           }`}
         >
           {t("eyebrow")}
@@ -195,14 +219,20 @@ export default function HeroSection() {
           initial="hidden"
           animate="visible"
           variants={{ visible: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } } }}
-          className="font-display text-[42px] font-extrabold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
+          className={`font-display text-[42px] font-extrabold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl ${
+            video ? "hero-legible" : ""
+          }`}
         >
           {[...mainWords, ...accentWords].map((word, i) => (
             <motion.span
               key={i}
               variants={wordVariants}
               className={`inline-block ${
-                i >= mainWords.length ? (video ? "text-gold" : "text-forest-700") : ""
+                i >= mainWords.length
+                  ? video
+                    ? "text-gold"
+                    : "text-forest-700 dark:text-gold"
+                  : ""
               }`}
             >
               {word}
@@ -217,11 +247,11 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className={`mt-7 max-w-2xl text-base leading-relaxed sm:text-lg ${
-            video ? "text-white/75" : "text-ink-muted"
+            video ? "hero-legible text-white/90" : "text-ink-muted"
           }`}
         >
           {t("subBefore")}{" "}
-          <span className={`font-semibold ${video ? "text-white" : "text-forest-950"}`}>
+          <span className={`font-semibold ${video ? "text-white" : "text-content"}`}>
             {t("subBrand")}
           </span>
         </motion.p>
@@ -246,7 +276,7 @@ export default function HeroSection() {
             className={`flex min-h-[52px] items-center gap-2 rounded-full border-2 px-8 text-[15px] font-semibold transition-colors duration-300 ${
               video
                 ? "border-white/40 text-white hover:border-gold hover:text-gold"
-                : "border-forest-950/25 text-forest-950 hover:border-gold-600 hover:text-gold-600"
+                : "border-content/25 text-content hover:border-gold-600 hover:text-gold-600"
             }`}
           >
             <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
@@ -260,8 +290,8 @@ export default function HeroSection() {
         <div className="absolute inset-x-0 bottom-0 h-48 sm:h-56" aria-hidden="true">
           {/* uncut lawn — daylight greens */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#4caf72] to-[#2e7d4f]" />
-          {/* blend lawn horizon into the pale sky */}
-          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#e4f1e0] to-transparent" />
+          {/* blend lawn horizon into the sky (navy sky in dark mode) */}
+          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#e4f1e0] to-transparent dark:from-forest-800" />
 
           {/* grass blade silhouettes along the horizon */}
           <svg className="absolute inset-x-0 -top-3 h-4 w-full" preserveAspectRatio="none">

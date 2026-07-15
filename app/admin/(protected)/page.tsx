@@ -4,7 +4,7 @@ import { getAllProducts } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
 import { categories } from "@/data/categories";
 import { createServiceClient } from "@/lib/supabase/service";
-import RobotIllustration from "@/components/ui/RobotIllustration";
+import ProductVisual from "@/components/ui/ProductVisual";
 import DeleteProductButton from "@/components/admin/DeleteProductButton";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +38,7 @@ export default async function AdminProductsPage() {
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
             Catalog
           </p>
-          <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-forest">
+          <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-content">
             Products
             <span className="ml-3 font-mono text-lg font-semibold text-ink-muted">
               {products.length}
@@ -56,14 +56,14 @@ export default async function AdminProductsPage() {
 
       {/* stat cards */}
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-forest-100 bg-white p-5">
+        <div className="rounded-2xl border border-forest-100 bg-surface p-5">
           <div className="flex items-center gap-2 text-ink-muted">
             <Users className="h-4 w-4 text-gold-600" aria-hidden="true" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">
               Registered customers
             </span>
           </div>
-          <p className="mt-2 font-mono text-3xl font-extrabold tabular-nums text-forest">
+          <p className="mt-2 font-mono text-3xl font-extrabold tabular-nums text-content">
             {customerCount ?? "—"}
           </p>
           {customerCount === null && (
@@ -72,20 +72,20 @@ export default async function AdminProductsPage() {
             </p>
           )}
         </div>
-        <div className="rounded-2xl border border-forest-100 bg-white p-5">
+        <div className="rounded-2xl border border-forest-100 bg-surface p-5">
           <div className="flex items-center gap-2 text-ink-muted">
             <Package className="h-4 w-4 text-gold-600" aria-hidden="true" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">
               Products listed
             </span>
           </div>
-          <p className="mt-2 font-mono text-3xl font-extrabold tabular-nums text-forest">
+          <p className="mt-2 font-mono text-3xl font-extrabold tabular-nums text-content">
             {products.length}
           </p>
         </div>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-forest-100 bg-white">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-forest-100 bg-surface">
         {products.length === 0 ? (
           <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
             <Package className="h-8 w-8 text-forest-300" aria-hidden="true" />
@@ -112,13 +112,13 @@ export default async function AdminProductsPage() {
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3.5">
                       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1">
-                        <RobotIllustration
-                          variant={product.variant}
+                        <ProductVisual
+                          product={product}
                           className="h-full w-auto"
                         />
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate font-semibold text-forest">{product.name}</p>
+                        <p className="truncate font-semibold text-content">{product.name}</p>
                         <p className="truncate font-mono text-[11px] text-ink-muted">
                           {product.id}
                         </p>
@@ -128,7 +128,7 @@ export default async function AdminProductsPage() {
                   <td className="hidden px-5 py-3.5 text-ink-muted md:table-cell">
                     {categoryName(product.category)}
                   </td>
-                  <td className="px-5 py-3.5 text-right font-mono font-semibold tabular-nums text-forest">
+                  <td className="px-5 py-3.5 text-right font-mono font-semibold tabular-nums text-content">
                     {formatBaht(product.price)}
                   </td>
                   <td className="hidden px-5 py-3.5 sm:table-cell">

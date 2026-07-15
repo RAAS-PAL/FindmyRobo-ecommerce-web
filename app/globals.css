@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: an inline script in the layout puts .dark on <html>
+   before paint, so there is no flash of the wrong theme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* RoboStore TH palette — fresh garden: light surfaces, forest green + yellow
-     (CEO rebrand 2026-07-08: lighter look, green + yellow, premium) */
+     (CEO rebrand 2026-07-08: lighter look, green + yellow, premium)
+
+     DARK MODE: the palette below is the LIGHT theme. The .dark block further
+     down re-points these same tokens at the brand's deep-navy scale, so most
+     components need no dark: variants — `bg-cloud`, `border-forest-100`,
+     `text-ink-muted` etc. all re-theme themselves.
+
+     Two meanings could not share a token and were split out as semantic ones:
+       --color-surface  (cards/panels)  — white in light, raised navy in dark
+       --color-content  (primary text)  — forest in light, near-white in dark
+     ...because `bg-forest` (a dark surface) and `text-forest` (dark text on a
+     light surface) need OPPOSITE treatment in dark mode. */
   --color-forest-950: #0b2e1f;
   --color-forest-900: #10402b;
   --color-forest: #123b28;
@@ -16,21 +31,53 @@
   --color-cloud: #f4f8f3;
   --color-ink-muted: #55705f;
 
+  /* semantic — see note above */
+  --color-surface: #ffffff;
+  --color-content: #123b28;
+
   /* Thai fallbacks: Archivo/Inter/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
   --font-display: var(--font-archivo), var(--font-prompt), system-ui, sans-serif;
   --font-sans: var(--font-inter), var(--font-noto-thai), system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), var(--font-noto-thai), monospace;
 }
 
-body {
-  background: #ffffff;
-  color: var(--color-forest);
-  font-family: var(--font-sans);
+/* ---------- dark theme: the brand's original deep navy + gold ----------
+   Contrast verified against WCAG AA (measured on #132247 surface):
+     content #e8edfb 13.3:1 · muted #8d9ac9 5.6:1 · gold accent #ffe08a 12.1:1
+     navy-950 text on gold button 11.8:1 · card lifts 1.21:1 off the canvas
+   gold-600 MUST flip: the light-theme #8a6a00 scores only 3.5:1 on navy. */
+.dark {
+  color-scheme: dark;
+
+  --color-forest-950: #070f2e; /* deepest surfaces: footer, drawer, hero scrim */
+  --color-forest-900: #0a163d;
+  --color-forest: #0d1b4b; /* mid brand surface (gradient tiles, badges) */
+  --color-forest-800: #16276b;
+  --color-forest-700: #21358a;
+  --color-forest-300: #8d9ac9;
+  --color-forest-100: #2a3f7d; /* borders — navy-800 was invisible at 1.3:1 */
+  --color-gold-600: #ffe08a; /* accent text, lightened for dark surfaces */
+  --color-cloud: #070f2e; /* page canvas */
+  --color-ink-muted: #8d9ac9;
+
+  --color-surface: #132247; /* cards, raised above the canvas */
+  --color-content: #e8edfb; /* tinted near-white avoids pure-white halation */
+}
+
+/* @layer base so a `bg-*` utility on <body> still wins — unlayered rules beat
+   Tailwind's layered utilities regardless of specificity, which silently
+   overrode the admin panel's `bg-cloud` and flattened its card elevation. */
+@layer base {
+  body {
+    background: var(--color-surface);
+    color: var(--color-content);
+    font-family: var(--font-sans);
+  }
 }
 
 ::selection {
   background: var(--color-gold);
-  color: var(--color-forest-950);
+  color: #0b2e1f;
 }
 
 :focus-visible {
@@ -39,6 +86,16 @@ body {
 }
 
 /* ---------- utilities ---------- */
+
+/* Hero copy sitting on the autoplaying video. The clips are dark and the dark
+   theme's scrim is navy, so the scrim alone can't be trusted for every frame —
+   this shadow keeps white/gold text readable over any of them, in both themes.
+   Purely a legibility aid; it disappears against the light hero (no video). */
+.hero-legible {
+  text-shadow:
+    0 2px 18px rgba(3, 8, 24, 0.7),
+    0 1px 4px rgba(3, 8, 24, 0.55);
+}
 
 .no-scrollbar {
   scrollbar-width: none;

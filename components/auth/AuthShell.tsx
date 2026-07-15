@@ -17,12 +17,12 @@ export default function AuthShell({
           <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-forest-950 text-gold">
             <Bot className="h-5.5 w-5.5" aria-hidden="true" />
           </span>
-          <h1 className="font-display text-2xl font-extrabold tracking-tight text-forest sm:text-3xl">
+          <h1 className="font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
             {title}
           </h1>
           <p className="mt-2 text-sm text-ink-muted">{sub}</p>
         </div>
-        <div className="rounded-3xl border border-forest-100 bg-white p-7 shadow-[0_16px_40px_-20px_rgba(10,46,31,0.25)] sm:p-8">
+        <div className="rounded-3xl border border-forest-100 bg-surface p-7 shadow-[0_16px_40px_-20px_rgba(10,46,31,0.25)] sm:p-8">
           {children}
         </div>
       </div>
