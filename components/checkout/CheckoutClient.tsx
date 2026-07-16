@@ -7,6 +7,7 @@ import {
   ArrowUpRight,
   CircleCheck,
   Info,
+  LoaderCircle,
   MapPin,
   ShoppingCart,
   Sparkles,
@@ -16,11 +17,17 @@ import {
 import { Link } from "@/i18n/navigation";
 import FadeIn from "@/components/ui/FadeIn";
 import ProductVisual from "@/components/ui/ProductVisual";
+import CardPaymentForm from "@/components/checkout/CardPaymentForm";
 import { useCart, type CartLine } from "@/components/cart/CartProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import { formatBaht, SERVICE_CATEGORY, type Product } from "@/data/products";
-
-const ORDERS_KEY = "raaspal-orders";
+import {
+  EMPTY_SHIPPING,
+  validateShipping,
+  type OrderLine,
+  type ShippingField,
+  type ShippingInfo,
+} from "@/lib/checkout";
 
 /** One upsell suggestion: a service package attached to a robot in the cart. */
 interface UpsellOffer {
@@ -79,79 +86,13 @@ function buildOffers(items: CartLine[], catalog: Product[]): UpsellOffer[] {
   return offers.slice(0, 4);
 }
 
-interface ShippingInfo {
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
-  district: string;
-  province: string;
-  postalCode: string;
-  note: string;
-}
+type FieldName = ShippingField;
 
-type FieldName = keyof ShippingInfo;
-
-const EMPTY_FORM: ShippingInfo = {
-  fullName: "",
-  email: "",
-  phone: "",
-  address: "",
-  district: "",
-  province: "",
-  postalCode: "",
-  note: "",
-};
-
+/** What the confirmation screen shows, as returned by the checkout API. */
 interface PlacedOrder {
   id: string;
-  createdAt: string;
-  status: "pending-payment";
-  shipping: ShippingInfo;
-  items: {
-    id: string;
-    name: string;
-    qty: number;
-    unitPrice: number;
-    /** For service lines: the robot this service was bought for. */
-    forName?: string;
-  }[];
-  subtotal: number;
-}
-
-/** Thai mobile/landline: 9–10 digits, optionally +66 with 8–9 digits after. */
-const PHONE_RE = /^(\+66[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?\d{4}|0\d{1,2}[\s-]?\d{3}[\s-]?\d{4})$/;
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const POSTAL_RE = /^\d{5}$/;
-
-function validate(form: ShippingInfo): Partial<Record<FieldName, string>> {
-  const errors: Partial<Record<FieldName, string>> = {};
-  const required: FieldName[] = [
-    "fullName",
-    "email",
-    "phone",
-    "address",
-    "district",
-    "province",
-    "postalCode",
-  ];
-  for (const field of required) {
-    if (!form[field].trim()) errors[field] = "required";
-  }
-  if (!errors.email && !EMAIL_RE.test(form.email.trim())) errors.email = "email";
-  if (!errors.phone && !PHONE_RE.test(form.phone.trim())) errors.phone = "phone";
-  if (!errors.postalCode && !POSTAL_RE.test(form.postalCode.trim()))
-    errors.postalCode = "postalCode";
-  return errors;
-}
-
-function makeOrderId(): string {
-  const now = new Date();
-  const date = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
-    now.getDate()
-  ).padStart(2, "0")}`;
-  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
-  return `RP-${date}-${rand}`;
+  items: OrderLine[];
+  total: number;
 }
 
 function Field({
@@ -221,12 +162,18 @@ function SummaryLine({ item, forLabel }: { item: CartLine; forLabel?: string }) 
 export default function CheckoutClient() {
   const t = useTranslations("checkout");
   const tc = useTranslations("cart");
+  const tp = useTranslations("payment");
   const { items, subtotal, clear, add } = useCart();
   const { products } = useProducts();
+  // Absent until the Omise keys are added; the order still gets created and the
+  // customer sees the previous "our team will contact you" confirmation.
+  const omisePublicKey = process.env.NEXT_PUBLIC_OMISE_PUBLIC_KEY;
 
-  const [form, setForm] = useState<ShippingInfo>(EMPTY_FORM);
+  const [form, setForm] = useState<ShippingInfo>(EMPTY_SHIPPING);
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [placed, setPlaced] = useState<PlacedOrder | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const [offers, setOffers] = useState<UpsellOffer[]>([]);
   const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
   const [upsellOpen, setUpsellOpen] = useState(false);
@@ -244,43 +191,52 @@ export default function CheckoutClient() {
     });
   };
 
-  const placeOrder = (lines: CartLine[]) => {
-    const order: PlacedOrder = {
-      id: makeOrderId(),
-      createdAt: new Date().toISOString(),
-      status: "pending-payment",
-      shipping: form,
-      items: lines.map((item) => ({
-        id: item.id,
-        name: item.product.name,
-        qty: item.qty,
-        unitPrice: item.product.price,
-        ...(item.forProduct ? { forName: item.forProduct.name } : {}),
-      })),
-      subtotal: lines.reduce((sum, l) => sum + l.qty * l.product.price, 0),
-    };
-
-    // Local record until the orders backend lands; the Omise payment step
-    // will slot in between validation and this confirmation.
+  /**
+   * Creates the order on the server. Only ids/quantities are sent — the API
+   * reprices every line from the catalog, so the totals shown on the
+   * confirmation are the server's, not the browser's.
+   */
+  const placeOrder = async (lines: CartLine[]) => {
+    setBusy(true);
+    setSubmitError(null);
     try {
-      const prev = JSON.parse(window.localStorage.getItem(ORDERS_KEY) ?? "[]");
-      window.localStorage.setItem(
-        ORDERS_KEY,
-        JSON.stringify([...(Array.isArray(prev) ? prev : []), order])
-      );
-    } catch {
-      // storage unavailable — order still confirmed on screen
-    }
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          shipping: form,
+          items: lines.map((l) => ({
+            id: l.id,
+            qty: l.qty,
+            ...(l.forId ? { forId: l.forId } : {}),
+          })),
+        }),
+      });
+      const body = await res.json().catch(() => null);
 
-    setUpsellOpen(false);
-    setPlaced(order);
-    clear();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+      if (!res.ok) {
+        if (body?.errors) setErrors(body.errors);
+        setSubmitError(body?.error ?? `Could not place the order (${res.status})`);
+        setUpsellOpen(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      setUpsellOpen(false);
+      setPlaced({ id: body.orderId, items: body.items, total: body.total });
+      clear();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      setSubmitError(t("errors.network"));
+      setUpsellOpen(false);
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const nextErrors = validate(form);
+    const nextErrors = validateShipping(form);
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
       document
@@ -325,23 +281,44 @@ export default function CheckoutClient() {
     placeOrder([...items, extraLine]);
   };
 
-  /* success screen */
+  /* order created — collect payment (or, until Omise keys exist, confirm and
+     tell the customer the team will arrange payment as before) */
   if (placed) {
     return (
       <FadeIn className="mx-auto max-w-2xl">
         <div className="rounded-3xl border border-forest-100 bg-surface p-8 text-center sm:p-12">
-          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold/20">
-            <CircleCheck className="h-8 w-8 text-gold-600" aria-hidden="true" />
-          </span>
-          <h1 className="mt-6 font-display text-3xl font-extrabold tracking-tight text-content">
-            {t("success.heading")}
-          </h1>
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-ink-muted">
-            {t("success.body", {
-              name: placed.shipping.fullName,
-              phone: placed.shipping.phone,
-            })}
-          </p>
+          {omisePublicKey ? (
+            <>
+              <h1 className="font-display text-3xl font-extrabold tracking-tight text-content">
+                {tp("heading")}
+              </h1>
+              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
+                {tp("sub", { orderId: placed.id })}
+              </p>
+              <div className="mt-8 text-left">
+                <CardPaymentForm
+                  orderId={placed.id}
+                  total={placed.total}
+                  publicKey={omisePublicKey}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold/20">
+                <CircleCheck className="h-8 w-8 text-gold-600" aria-hidden="true" />
+              </span>
+              <h1 className="mt-6 font-display text-3xl font-extrabold tracking-tight text-content">
+                {t("success.heading")}
+              </h1>
+              <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-ink-muted">
+                {t("success.body", {
+                  name: form.fullName,
+                  phone: form.phone,
+                })}
+              </p>
+            </>
+          )}
 
           <div className="mt-8 rounded-2xl bg-cloud px-6 py-5">
             <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-ink-muted">
@@ -379,7 +356,7 @@ export default function CheckoutClient() {
             <div className="mt-4 flex items-baseline justify-between border-t border-forest-100 pt-4">
               <span className="text-[13px] font-semibold text-content">{t("total")}</span>
               <span className="font-mono text-lg font-semibold tabular-nums text-content">
-                {formatBaht(placed.subtotal)}
+                {formatBaht(placed.total)}
               </span>
             </div>
           </div>
@@ -422,6 +399,14 @@ export default function CheckoutClient() {
     <form onSubmit={handleSubmit} noValidate className="grid gap-10 lg:grid-cols-[1fr_400px] lg:gap-14">
       {/* left: form */}
       <div className="space-y-10">
+        {submitError && (
+          <p
+            role="alert"
+            className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[13px] font-medium text-red-700"
+          >
+            {submitError}
+          </p>
+        )}
         <FadeIn>
           <section aria-labelledby="contact-heading">
             <h2
@@ -582,10 +567,17 @@ export default function CheckoutClient() {
 
             <button
               type="submit"
-              className="mt-6 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
+              disabled={busy}
+              className="mt-6 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
             >
-              {t("placeOrder")}
-              <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
+              {busy ? (
+                <LoaderCircle className="h-4.5 w-4.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <>
+                  {t("placeOrder")}
+                  <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
+                </>
+              )}
             </button>
 
             <p className="mt-4 flex gap-2 text-[12px] leading-relaxed text-ink-muted">
@@ -689,15 +681,23 @@ export default function CheckoutClient() {
               <button
                 type="button"
                 onClick={acceptOffer}
-                className="mt-5 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
+                disabled={busy}
+                className="mt-5 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
               >
-                {t("upsell.addAndContinue")}
-                <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
+                {busy ? (
+                  <LoaderCircle className="h-4.5 w-4.5 animate-spin" aria-hidden="true" />
+                ) : (
+                  <>
+                    {t("upsell.addAndContinue")}
+                    <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
+                  </>
+                )}
               </button>
               <button
                 type="button"
                 onClick={() => placeOrder(items)}
-                className="mt-3 w-full cursor-pointer text-center text-[13px] font-medium text-ink-muted transition-colors hover:text-content"
+                disabled={busy}
+                className="mt-3 w-full cursor-pointer text-center text-[13px] font-medium text-ink-muted transition-colors hover:text-content disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {t("upsell.skip")}
               </button>

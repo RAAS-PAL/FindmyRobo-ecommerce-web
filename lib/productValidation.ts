@@ -1,8 +1,13 @@
 import { categories } from "@/data/categories";
 import {
+  PAGE_BLOCK_TYPES,
   ROBOT_VARIANTS,
   SPEC_KEYS,
+  type LocalizedText,
+  type PageBlock,
   type Product,
+  type ProductPage,
+  type SpecGroup,
   type SpecKey,
 } from "@/data/products";
 
@@ -26,6 +31,112 @@ const asLines = (v: unknown) =>
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
+
+const URL_RE = /^(https?:\/\/|\/)[^\s]+$/i;
+
+/** Localized text from the page builder: EN required, TH falls back to EN. */
+function asLocalized(v: unknown): LocalizedText | null {
+  if (typeof v !== "object" || v === null) return null;
+  const en = asText((v as Record<string, unknown>).en);
+  const th = asText((v as Record<string, unknown>).th);
+  if (!en && !th) return null;
+  return { en: en || th, th: th || en };
+}
+
+/**
+ * Validate/sanitize the page-builder payload. Returns the cleaned page,
+ * undefined when there is no page content at all, or an error string.
+ * Incomplete entries (empty block, row without a label…) are dropped rather
+ * than rejected so an admin can save a half-built page without fighting it.
+ */
+export function parsePage(raw: unknown): ProductPage | undefined | string {
+  if (typeof raw !== "object" || raw === null) return undefined;
+  const input = raw as Record<string, unknown>;
+  const page: ProductPage = {};
+
+  const videoUrl = asText(input.videoUrl);
+  if (videoUrl) {
+    if (!URL_RE.test(videoUrl)) return "Detail page: video URL must start with https:// or /";
+    page.videoUrl = videoUrl;
+    const caption = asLocalized(input.videoCaption);
+    if (caption) page.videoCaption = caption;
+  }
+
+  if (Array.isArray(input.blocks)) {
+    const blocks: PageBlock[] = [];
+    for (const [i, item] of input.blocks.entries()) {
+      if (typeof item !== "object" || item === null) continue;
+      const b = item as Record<string, unknown>;
+      const type = asText(b.type) as PageBlock["type"];
+      if (!PAGE_BLOCK_TYPES.includes(type)) continue;
+      const image = asText(b.image);
+      if (image && !URL_RE.test(image)) {
+        return `Detail page: block ${i + 1} image URL must start with https:// or /`;
+      }
+      const heading = asLocalized(b.heading);
+      const body = asLocalized(b.body);
+
+      if (type === "banner" && image) {
+        blocks.push({ type, image });
+      } else if (type === "feature" && heading && body) {
+        blocks.push({ type, heading, body, ...(image ? { image } : {}) });
+      } else if (type === "imageText" && image && body) {
+        const imageSide = asText(b.imageSide) === "left" ? "left" : "right";
+        blocks.push({ type, image, body, imageSide });
+      } else if (type === "video") {
+        const url = asText(b.url);
+        if (!url) continue;
+        if (!URL_RE.test(url)) {
+          return `Detail page: block ${i + 1} video URL must start with https:// or /`;
+        }
+        const caption = asLocalized(b.caption);
+        blocks.push({
+          type,
+          url,
+          ...(heading ? { heading } : {}),
+          ...(caption ? { caption } : {}),
+        });
+      } else if (type === "cardGrid" && Array.isArray(b.cards)) {
+        const cards = [];
+        for (const c of b.cards) {
+          if (typeof c !== "object" || c === null) continue;
+          const cardImage = asText((c as Record<string, unknown>).image);
+          const caption = asLocalized((c as Record<string, unknown>).caption);
+          if (!cardImage || !caption) continue;
+          if (!URL_RE.test(cardImage)) {
+            return `Detail page: a card image URL in block ${i + 1} must start with https:// or /`;
+          }
+          cards.push({ image: cardImage, caption });
+        }
+        if (cards.length > 0) {
+          blocks.push({ type, cards, ...(heading ? { heading } : {}) });
+        }
+      }
+    }
+    if (blocks.length > 0) page.blocks = blocks;
+  }
+
+  if (Array.isArray(input.specGroups)) {
+    const groups: SpecGroup[] = [];
+    for (const item of input.specGroups) {
+      if (typeof item !== "object" || item === null) continue;
+      const g = item as Record<string, unknown>;
+      const title = asLocalized(g.title);
+      if (!title || !Array.isArray(g.rows)) continue;
+      const rows = [];
+      for (const r of g.rows) {
+        if (typeof r !== "object" || r === null) continue;
+        const label = asLocalized((r as Record<string, unknown>).label);
+        const value = asLocalized((r as Record<string, unknown>).value);
+        if (label && value) rows.push({ label, value });
+      }
+      if (rows.length > 0) groups.push({ title, rows });
+    }
+    if (groups.length > 0) page.specGroups = groups;
+  }
+
+  return Object.keys(page).length > 0 ? page : undefined;
+}
 
 export function parseProduct(body: Record<string, unknown>): Product | string {
   const name = asText(body.name);
@@ -69,6 +180,18 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
     return "Image URL must start with https:// (or a /path inside the site)";
   }
 
+  // optional extra gallery photos, one URL per line
+  const images = asLines(body.images).filter((url) => url !== imageUrl);
+  if (images.some((url) => !URL_RE.test(url))) {
+    return "Every gallery image must be an https:// URL (or a /path inside the site)";
+  }
+  if (images.length > 0 && !imageUrl) {
+    return "Set a main image URL before adding gallery photos";
+  }
+
+  const page = parsePage(body.page);
+  if (typeof page === "string") return page;
+
   return {
     id,
     name,
@@ -76,10 +199,12 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
     category: category as Product["category"],
     variant: variant as Product["variant"],
     ...(imageUrl ? { imageUrl } : {}),
+    ...(images.length > 0 ? { images } : {}),
     ...(body.preorder ? { preorder: true } : {}),
     specs,
     tagline: { en: taglineEn, th: taglineTh },
     description: { en: descriptionEn, th: descriptionTh },
     features: { en: featuresEn, th: featuresTh },
+    ...(page ? { page } : {}),
   };
 }

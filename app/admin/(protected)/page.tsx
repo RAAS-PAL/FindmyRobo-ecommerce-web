@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Package, Pencil, Plus, Users } from "lucide-react";
+import { GripVertical, Package, Pencil, Plus, Users } from "lucide-react";
 import { getAllProducts } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
 import { categories } from "@/data/categories";
@@ -45,13 +45,22 @@ export default async function AdminProductsPage() {
             </span>
           </h1>
         </div>
-        <Link
-          href="/admin/products/new"
-          className="flex min-h-[46px] items-center gap-2 rounded-full bg-gold px-6 text-[13.5px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
-        >
-          <Plus className="h-4 w-4" aria-hidden="true" />
-          Add product
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/admin/products/reorder"
+            className="flex min-h-[46px] items-center gap-2 rounded-full border border-forest-100 bg-surface px-5 text-[13.5px] font-semibold text-content transition-colors hover:border-gold hover:text-gold-600"
+          >
+            <GripVertical className="h-4 w-4" aria-hidden="true" />
+            Reorder products
+          </Link>
+          <Link
+            href="/admin/products/new"
+            className="flex min-h-[46px] items-center gap-2 rounded-full bg-gold px-6 text-[13.5px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+          >
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            Add product
+          </Link>
+        </div>
       </div>
 
       {/* stat cards */}

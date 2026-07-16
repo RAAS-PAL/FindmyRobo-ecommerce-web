@@ -8,7 +8,10 @@ import type { CategorySlug } from "@/data/categories";
 export type RobotVariant = "luba" | "mini" | "pool" | "install" | "demo";
 
 /**
- * Spec keys map to translated labels in messages (productDetail.specLabels.*).
+ * Quick specs. No longer rendered on the product page — that shows only the
+ * page-builder spec table — but `area` still drives which installation tier
+ * the checkout offers for a robot (see components/checkout/CheckoutClient.tsx),
+ * so it must stay filled in.
  * Values are display-ready strings (SI units, same in both locales).
  * PLACEHOLDER values based on public Mammotion/Spino specs — replace with
  * confirmed data from suppliers before launch.
@@ -25,13 +28,62 @@ export type Locale = "en" | "th";
 
 export type LocalizedText = Record<Locale, string>;
 
+/* ---------- per-product detail page (admin page builder) ---------- */
+
 /**
- * Product records live in data/products.json and are managed through the
- * admin panel (lib/productStore.ts). Marketing copy is stored per-locale on
- * the record itself so admin-added products need no message-file entries.
+ * One content section on a product detail page. Blocks are ordered, optional,
+ * and freely mixed per robot — a product with few photos simply uses fewer
+ * image-based blocks. All copy is bilingual; all images are URLs.
+ */
+export type PageBlock =
+  | { type: "banner"; image: string }
+  | { type: "feature"; heading: LocalizedText; body: LocalizedText; image?: string }
+  | {
+      type: "cardGrid";
+      heading?: LocalizedText;
+      cards: { image: string; caption: LocalizedText }[];
+    }
+  | { type: "imageText"; image: string; body: LocalizedText; imageSide: "left" | "right" }
+  | { type: "video"; heading?: LocalizedText; url: string; caption?: LocalizedText };
+
+export const PAGE_BLOCK_TYPES = [
+  "banner",
+  "feature",
+  "cardGrid",
+  "imageText",
+  "video",
+] as const;
+
+/** One group in the detailed specifications table (e.g. "Cutting System"). */
+export interface SpecGroup {
+  title: LocalizedText;
+  rows: { label: LocalizedText; value: LocalizedText }[];
+}
+
+/**
+ * Optional rich detail-page content. When absent the product page falls back
+ * to the compact layout (description + features + the small specs band).
+ */
+export interface ProductPage {
+  /** Review/demo video near the top (YouTube URL or /path or https mp4). */
+  videoUrl?: string;
+  videoCaption?: LocalizedText;
+  /** Ordered marketing sections rendered below the fold. */
+  blocks?: PageBlock[];
+  /** Grouped specification table; replaces the compact specs band when set. */
+  specGroups?: SpecGroup[];
+}
+
+/**
+ * Product records live in the Supabase `products` table (see
+ * supabase/products-schema.sql) and are managed through the admin panel via
+ * lib/productStore.ts. Marketing copy is stored per-locale on the record
+ * itself so admin-added products need no message-file entries.
  */
 export interface Product {
   id: string;
+  /** Admin-controlled storefront position; lower values appear first. */
+  displayOrder?: number;
   name: string;
   price: number;
   category: CategorySlug;
@@ -42,11 +94,19 @@ export interface Product {
    * remains the fallback.
    */
   imageUrl?: string;
+  /**
+   * Extra gallery photos (absolute URLs or /public paths), shown after
+   * `imageUrl` in the product-page gallery. `imageUrl` stays the single image
+   * used in cards, so this is only read by the detail page.
+   */
+  images?: string[];
   preorder?: boolean;
   specs: Partial<Record<SpecKey, string>>;
   tagline: LocalizedText;
   description: LocalizedText;
   features: Record<Locale, string[]>;
+  /** Optional rich detail page (admin page builder). */
+  page?: ProductPage;
 }
 
 export const SPEC_KEYS: SpecKey[] = [

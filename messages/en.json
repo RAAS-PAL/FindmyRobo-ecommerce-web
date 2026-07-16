@@ -106,6 +106,33 @@
     "demoNote": "Prefer to see a robot in action first?",
     "demoCta": "Book a free in-home demo"
   },
+  "payment": {
+    "heading": "Payment",
+    "sub": "Order {orderId} — pay securely to confirm.",
+    "cardHolder": "Name on card",
+    "cardNumber": "Card number",
+    "cardExpiry": "Expiry",
+    "cardCvc": "CVC",
+    "payAmount": "Pay {amount}",
+    "loading": "Loading secure payment…",
+    "securityNote": "Your card details go directly to our payment provider over an encrypted connection — they never touch our servers.",
+    "errors": {
+      "notReady": "Secure payment is still loading. Please try again in a moment.",
+      "cardRejected": "Please check your card details and try again.",
+      "declined": "The payment could not be completed. Please try another card."
+    },
+    "result": {
+      "paidHeading": "Payment received",
+      "paidBody": "Thank you. Order {orderId} is confirmed and our team will be in touch about delivery.",
+      "pendingHeading": "Waiting for payment",
+      "pendingBody": "We haven't received confirmation for order {orderId} yet. This page updates automatically.",
+      "failedHeading": "Payment not completed",
+      "failedBody": "Order {orderId} was not paid. Nothing has been charged — you can try again.",
+      "tryAgain": "Try again",
+      "viewOrders": "Continue shopping",
+      "notFound": "We couldn't find that order."
+    }
+  },
   "checkout": {
     "metaTitle": "Checkout — RoboStore TH",
     "eyebrow": "Checkout",
@@ -135,7 +162,8 @@
       "required": "This field is required",
       "email": "Please enter a valid email address",
       "phone": "Please enter a valid Thai phone number",
-      "postalCode": "Please enter a valid 5-digit postal code"
+      "postalCode": "Please enter a valid 5-digit postal code",
+      "network": "Could not reach the server. Please check your connection and try again."
     },
     "empty": "Your cart is empty — add a robot before checking out.",
     "emptyCta": "Browse Robots",
@@ -180,11 +208,10 @@
   },
   "hero": {
     "eyebrow": "Mowing · Pool Cleaning · Cleaning · Delivery · Thailand",
-    "headlineMain": "Smart Robots for Every",
-    "headlineAccent": "Thai Home & Business",
-    "subBefore": "From mowing your lawn and cleaning your pool to cleaning robots and delivery robots — we have the perfect robot for you, so you can enjoy more",
-    "subBrand": "Time for Life™",
-    "ctaPrimary": "Find Your Ideal Robot",
+    "headlineMain": "Smart Robots. Smarter Operations.",
+    "headlineAccent": "Better Business.",
+    "sub": "Discover intelligent robotic solutions for cleaning, delivery, lawn care, pool maintenance, and more—designed to reduce workload, improve efficiency, and help your business operate smarter.",
+    "ctaPrimary": "Explore Our Robots",
     "ctaSecondary": "Book a Free Demo"
   },
   "products": {
@@ -210,12 +237,16 @@
     "shop": "Shop",
     "specsHeading": "Technical Specs",
     "specsNote": "Preliminary specs — confirmed at delivery",
+    "specTableHeading": "Product Specifications",
     "featuresHeading": "Why you'll love it",
     "relatedHeading": "You may also like",
     "ctaDemo": "Book a Free Demo",
     "ctaContact": "Ask Us About This Robot",
     "preorderNote": "Preorder — contact us for delivery timing",
     "returnsNote": "30-day returns · Thai warranty · In-home support",
+    "galleryPrevious": "Previous photo",
+    "galleryNext": "Next photo",
+    "galleryThumbnail": "View photo",
     "specLabels": {
       "area": "Coverage Area",
       "slope": "Max Slope",

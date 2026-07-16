@@ -1,64 +1,179 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { createServiceClient } from "@/lib/supabase/service";
 import type { CategorySlug } from "@/data/categories";
-import type { Product } from "@/data/products";
+import type { Product, ProductPage } from "@/data/products";
 
 /**
- * File-backed product store — the single read/write path for product data.
+ * Supabase-backed product store — the single read/write path for product
+ * data (see supabase/products-schema.sql for the table). Every caller keeps
+ * the same async interface regardless of what's behind it, so this is the
+ * only module that knows about the database.
  *
- * NOTE: JSON-on-disk works for local dev and demos but does NOT persist on
- * Vercel serverless (read-only bundle). When the database lands (Supabase),
- * only this module changes; every caller keeps the same async interface.
+ * Uses the service-role client (bypasses RLS) since this only ever runs in
+ * trusted server contexts — server components and the admin API routes,
+ * which already gate writes behind isAdminAuthenticated().
  */
 
-const FILE = path.join(process.cwd(), "data", "products.json");
+const TABLE = "products";
 
-async function readAll(): Promise<Product[]> {
-  const raw = await fs.readFile(FILE, "utf8");
-  return JSON.parse(raw) as Product[];
+/** Row shape as stored in Postgres — snake_case, matches products-schema.sql. */
+interface ProductRow {
+  id: string;
+  sort_order?: number;
+  name: string;
+  price: number;
+  category: string;
+  variant: string;
+  image_url: string | null;
+  images: string[] | null;
+  preorder: boolean;
+  specs: Product["specs"];
+  tagline: Product["tagline"];
+  description: Product["description"];
+  features: Product["features"];
+  page: ProductPage | null;
 }
 
-async function writeAll(products: Product[]): Promise<void> {
-  await fs.writeFile(FILE, JSON.stringify(products, null, 2) + "\n", "utf8");
+function rowToProduct(row: ProductRow): Product {
+  return {
+    id: row.id,
+    ...(typeof row.sort_order === "number" ? { displayOrder: row.sort_order } : {}),
+    name: row.name,
+    price: row.price,
+    category: row.category as CategorySlug,
+    variant: row.variant as Product["variant"],
+    ...(row.image_url ? { imageUrl: row.image_url } : {}),
+    ...(row.images?.length ? { images: row.images } : {}),
+    preorder: row.preorder,
+    specs: row.specs ?? {},
+    tagline: row.tagline,
+    description: row.description,
+    features: row.features,
+    ...(row.page ? { page: row.page } : {}),
+  };
+}
+
+const isMissingSortOrder = (error: { code?: string; message?: string } | null) =>
+  error?.code === "42703" || error?.message?.includes("sort_order") === true;
+
+/** created_at/updated_at are DB-managed (default now() / the touch trigger) — never written from here. */
+function productFields(
+  product: Product
+): Omit<ProductRow, "id" | "sort_order"> {
+  return {
+    name: product.name,
+    price: product.price,
+    category: product.category,
+    variant: product.variant,
+    image_url: product.imageUrl ?? null,
+    images: product.images ?? [],
+    preorder: product.preorder ?? false,
+    specs: product.specs,
+    tagline: product.tagline,
+    description: product.description,
+    features: product.features,
+    page: product.page ?? null,
+  };
 }
 
 export async function getAllProducts(): Promise<Product[]> {
-  return readAll();
+  const supabase = createServiceClient();
+  let result = await supabase
+    .from(TABLE)
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+  // Keep the storefront available during deployment before the SQL migration
+  // is applied. Reordering itself still requires add-product-sort-order.sql.
+  if (isMissingSortOrder(result.error)) {
+    result = await supabase
+      .from(TABLE)
+      .select("*")
+      .order("created_at", { ascending: true });
+  }
+  const { data, error } = result;
+  if (error) throw new Error(`Failed to load products: ${error.message}`);
+  return (data ?? []).map(rowToProduct);
 }
 
 export async function getProductById(id: string): Promise<Product | undefined> {
-  return (await readAll()).find((p) => p.id === id);
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw new Error(`Failed to load product "${id}": ${error.message}`);
+  return data ? rowToProduct(data) : undefined;
 }
 
 export async function getProductsByCategory(
   category: CategorySlug
 ): Promise<Product[]> {
-  return (await readAll()).filter((p) => p.category === category);
+  const supabase = createServiceClient();
+  let result = await supabase
+    .from(TABLE)
+    .select("*")
+    .eq("category", category)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+  if (isMissingSortOrder(result.error)) {
+    result = await supabase
+      .from(TABLE)
+      .select("*")
+      .eq("category", category)
+      .order("created_at", { ascending: true });
+  }
+  const { data, error } = result;
+  if (error) throw new Error(`Failed to load ${category} products: ${error.message}`);
+  return (data ?? []).map(rowToProduct);
 }
 
 export async function addProduct(product: Product): Promise<void> {
-  const products = await readAll();
-  if (products.some((p) => p.id === product.id)) {
-    throw new Error(`Product id "${product.id}" already exists`);
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from(TABLE)
+    .insert({ id: product.id, ...productFields(product) });
+  if (error) {
+    if (error.code === "23505") {
+      throw new Error(`Product id "${product.id}" already exists`);
+    }
+    throw new Error(`Failed to create product: ${error.message}`);
   }
-  await writeAll([...products, product]);
 }
 
 /** Replace the product at `id`. The id itself is immutable. */
 export async function updateProduct(id: string, product: Product): Promise<boolean> {
-  const products = await readAll();
-  const index = products.findIndex((p) => p.id === id);
-  if (index === -1) return false;
-  const next = [...products];
-  next[index] = { ...product, id };
-  await writeAll(next);
-  return true;
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .update(productFields(product))
+    .eq("id", id)
+    .select("id");
+  if (error) throw new Error(`Failed to update product "${id}": ${error.message}`);
+  return (data?.length ?? 0) > 0;
 }
 
 export async function deleteProduct(id: string): Promise<boolean> {
-  const products = await readAll();
-  const next = products.filter((p) => p.id !== id);
-  if (next.length === products.length) return false;
-  await writeAll(next);
-  return true;
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .delete()
+    .eq("id", id)
+    .select("id");
+  if (error) throw new Error(`Failed to delete product "${id}": ${error.message}`);
+  return (data?.length ?? 0) > 0;
+}
+
+/** Persist the complete storefront order in one database transaction. */
+export async function reorderProducts(ids: string[]): Promise<void> {
+  const supabase = createServiceClient();
+  const { error } = await supabase.rpc("reorder_products", { product_ids: ids });
+  if (error) {
+    if (error.code === "PGRST202" || error.message.includes("reorder_products")) {
+      throw new Error(
+        "Product ordering is not installed yet. Run supabase/add-product-sort-order.sql first."
+      );
+    }
+    throw new Error(`Failed to reorder products: ${error.message}`);
+  }
 }
