@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LoaderCircle, Save } from "lucide-react";
+import { ImagePlus, LoaderCircle, Save } from "lucide-react";
 import { categories } from "@/data/categories";
 import {
   ROBOT_VARIANTS,
@@ -11,6 +11,11 @@ import {
   type SpecKey,
 } from "@/data/products";
 import RobotIllustration from "@/components/ui/RobotIllustration";
+import PageBuilder, {
+  draftToPage,
+  pageToDraft,
+  type DraftPage,
+} from "@/components/admin/PageBuilder";
 
 const SPEC_LABELS: Record<SpecKey, string> = {
   area: "Coverage area (e.g. 3,000 m²)",
@@ -42,11 +47,32 @@ const textareaClass =
   "w-full rounded-xl border border-forest-100 bg-surface px-4 py-3 text-[14px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
 const labelClass = "mb-1.5 block text-[13px] font-semibold text-content";
 const hintClass = "mt-1 text-[11.5px] text-ink-muted";
+const uploadButtonClass =
+  "mt-2 flex min-h-[42px] cursor-pointer items-center gap-2 rounded-full border border-forest-100 px-4 text-[13px] font-semibold text-content transition-colors hover:border-gold disabled:cursor-not-allowed disabled:opacity-50";
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+/** Send one photo to the admin uploader; resolves to its public URL. */
+async function uploadPhoto(file: File): Promise<string> {
+  const body = new FormData();
+  body.append("file", file);
+  const res = await fetch("/api/admin/upload", { method: "POST", body });
+  const json = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(json?.error ?? `Upload failed (${res.status})`);
+  return json.url as string;
+}
+
+function Section({
+  title,
+  note,
+  children,
+}: {
+  title: string;
+  note?: string;
+  children: React.ReactNode;
+}) {
   return (
     <section className="rounded-2xl border border-forest-100 bg-surface p-6 sm:p-8">
       <h2 className="font-display text-lg font-bold text-content">{title}</h2>
+      {note && <p className="mt-1 text-[12.5px] text-ink-muted">{note}</p>}
       <div className="mt-5 grid gap-5 sm:grid-cols-2">{children}</div>
     </section>
   );
@@ -68,15 +94,61 @@ export default function ProductForm({ initial }: { initial?: Product }) {
     initial?.imageUrl ? "image" : initial?.variant ?? "luba"
   );
   const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? "");
+  // gallery URLs stay raw text so typing/pasting behaves; uploads append lines
+  const [imagesText, setImagesText] = useState((initial?.images ?? []).join("\n"));
+  const [uploading, setUploading] = useState<"main" | "gallery" | null>(null);
+  const mainFileRef = useRef<HTMLInputElement>(null);
+  const galleryFileRef = useRef<HTMLInputElement>(null);
   const fallbackVariant =
     artChoice === "image" ? initial?.variant ?? "luba" : artChoice;
+  // rich detail page (video, content sections, spec table) — see PageBuilder
+  const [pageDraft, setPageDraft] = useState<DraftPage>(() => pageToDraft(initial?.page));
+
+  /** Upload the picked files, then hand their URLs to the matching field. */
+  const handleFiles = async (
+    target: "main" | "gallery",
+    input: HTMLInputElement
+  ) => {
+    const files = Array.from(input.files ?? []);
+    input.value = ""; // let the same file be re-picked after an error
+    if (files.length === 0) return;
+
+    setUploading(target);
+    setError(null);
+    try {
+      const urls = await Promise.all(files.map(uploadPhoto));
+      if (target === "main") {
+        setImageUrl(urls[0]);
+        // a multi-pick on the main field spills the rest into the gallery
+        if (urls.length > 1) appendGallery(urls.slice(1));
+      } else {
+        appendGallery(urls);
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Upload failed");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally {
+      setUploading(null);
+    }
+  };
+
+  const appendGallery = (urls: string[]) =>
+    setImagesText((prev) => [prev.trim(), ...urls].filter(Boolean).join("\n"));
+
+  const galleryUrls = imagesText
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setBusy(true);
     setError(null);
 
-    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    const data: Record<string, unknown> = Object.fromEntries(
+      new FormData(e.currentTarget).entries()
+    );
+    data.page = draftToPage(pageDraft);
     try {
       const res = await fetch(
         isEdit ? `/api/admin/products/${initial.id}` : "/api/admin/products",
@@ -222,10 +294,88 @@ export default function ProductForm({ initial }: { initial?: Product }) {
                 placeholder="https://example.com/robot.jpg"
                 className={inputClass}
               />
+              <input
+                ref={mainFileRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+                multiple
+                hidden
+                onChange={(e) => handleFiles("main", e.currentTarget)}
+              />
+              <button
+                type="button"
+                disabled={uploading !== null}
+                onClick={() => mainFileRef.current?.click()}
+                className={uploadButtonClass}
+              >
+                {uploading === "main" ? (
+                  <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+                ) : (
+                  <ImagePlus className="h-4 w-4" aria-hidden="true" />
+                )}
+                {uploading === "main" ? "Uploading…" : "Upload photo"}
+              </button>
               <p className={hintClass}>
-                Paste a direct image link (https://…). The illustration stays as
-                the fallback if the image fails to load.
+                Upload a photo, or paste a direct image link (https://…). The
+                illustration stays as the fallback if the image fails to load.
+                Pick several at once and the extras go to the gallery below.
               </p>
+              <label htmlFor="images" className={`${labelClass} mt-4`}>
+                Gallery photos — one URL per line (optional)
+              </label>
+              <textarea
+                id="images"
+                name="images"
+                rows={4}
+                value={imagesText}
+                onChange={(e) => setImagesText(e.target.value)}
+                placeholder={
+                  "https://example.com/robot-side.jpg\nhttps://example.com/robot-top.jpg"
+                }
+                className={textareaClass}
+              />
+              <input
+                ref={galleryFileRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+                multiple
+                hidden
+                onChange={(e) => handleFiles("gallery", e.currentTarget)}
+              />
+              <button
+                type="button"
+                disabled={uploading !== null}
+                onClick={() => galleryFileRef.current?.click()}
+                className={uploadButtonClass}
+              >
+                {uploading === "gallery" ? (
+                  <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+                ) : (
+                  <ImagePlus className="h-4 w-4" aria-hidden="true" />
+                )}
+                {uploading === "gallery" ? "Uploading…" : "Upload gallery photos"}
+              </button>
+              <p className={hintClass}>
+                Extra angles for the product page gallery, shown after the main
+                image, in this order. Leave empty for a single photo.
+              </p>
+              {galleryUrls.length > 0 && (
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {galleryUrls.map((url, i) => (
+                    <li
+                      key={`${url}-${i}`}
+                      className="flex h-14 w-16 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={url}
+                        alt={`Gallery photo ${i + 1}`}
+                        className="h-full w-auto object-contain"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ) : (
             <p className={hintClass}>Placeholder art until real product photos land.</p>
@@ -330,7 +480,10 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         </div>
       </Section>
 
-      <Section title="Technical specs (optional)">
+      <Section
+        title="Quick specs — not shown on the product page"
+        note="Specs shoppers see come from the Detailed specification table below. Coverage area is still used to pick which installation package is offered at checkout, so keep it filled in for robots."
+      >
         {SPEC_KEYS.map((key) => (
           <div key={key}>
             <label htmlFor={`spec_${key}`} className={labelClass}>
@@ -345,6 +498,19 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           </div>
         ))}
       </Section>
+
+      <section className="rounded-2xl border border-forest-100 bg-surface p-6 sm:p-8">
+        <h2 className="font-display text-lg font-bold text-content">
+          Detail page builder
+        </h2>
+        <p className="mt-1 text-[12.5px] text-ink-muted">
+          Everything below is optional and per-robot: an intro video, rich
+          content sections, and a detailed spec table shown on the product page.
+        </p>
+        <div className="mt-6">
+          <PageBuilder draft={pageDraft} onChange={setPageDraft} />
+        </div>
+      </section>
 
       <div className="flex items-center justify-end gap-3">
         <button

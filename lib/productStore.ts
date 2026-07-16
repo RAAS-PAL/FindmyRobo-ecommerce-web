@@ -1,6 +1,6 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import type { CategorySlug } from "@/data/categories";
-import type { Product } from "@/data/products";
+import type { Product, ProductPage } from "@/data/products";
 
 /**
  * Supabase-backed product store — the single read/write path for product
@@ -18,56 +18,79 @@ const TABLE = "products";
 /** Row shape as stored in Postgres — snake_case, matches products-schema.sql. */
 interface ProductRow {
   id: string;
+  sort_order?: number;
   name: string;
   price: number;
   category: string;
   variant: string;
   image_url: string | null;
+  images: string[] | null;
   preorder: boolean;
   specs: Product["specs"];
   tagline: Product["tagline"];
   description: Product["description"];
   features: Product["features"];
+  page: ProductPage | null;
 }
 
 function rowToProduct(row: ProductRow): Product {
   return {
     id: row.id,
+    ...(typeof row.sort_order === "number" ? { displayOrder: row.sort_order } : {}),
     name: row.name,
     price: row.price,
     category: row.category as CategorySlug,
     variant: row.variant as Product["variant"],
     ...(row.image_url ? { imageUrl: row.image_url } : {}),
+    ...(row.images?.length ? { images: row.images } : {}),
     preorder: row.preorder,
     specs: row.specs ?? {},
     tagline: row.tagline,
     description: row.description,
     features: row.features,
+    ...(row.page ? { page: row.page } : {}),
   };
 }
 
+const isMissingSortOrder = (error: { code?: string; message?: string } | null) =>
+  error?.code === "42703" || error?.message?.includes("sort_order") === true;
+
 /** created_at/updated_at are DB-managed (default now() / the touch trigger) — never written from here. */
-function productFields(product: Product): Omit<ProductRow, "id"> {
+function productFields(
+  product: Product
+): Omit<ProductRow, "id" | "sort_order"> {
   return {
     name: product.name,
     price: product.price,
     category: product.category,
     variant: product.variant,
     image_url: product.imageUrl ?? null,
+    images: product.images ?? [],
     preorder: product.preorder ?? false,
     specs: product.specs,
     tagline: product.tagline,
     description: product.description,
     features: product.features,
+    page: product.page ?? null,
   };
 }
 
 export async function getAllProducts(): Promise<Product[]> {
   const supabase = createServiceClient();
-  const { data, error } = await supabase
+  let result = await supabase
     .from(TABLE)
     .select("*")
+    .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
+  // Keep the storefront available during deployment before the SQL migration
+  // is applied. Reordering itself still requires add-product-sort-order.sql.
+  if (isMissingSortOrder(result.error)) {
+    result = await supabase
+      .from(TABLE)
+      .select("*")
+      .order("created_at", { ascending: true });
+  }
+  const { data, error } = result;
   if (error) throw new Error(`Failed to load products: ${error.message}`);
   return (data ?? []).map(rowToProduct);
 }
@@ -87,11 +110,20 @@ export async function getProductsByCategory(
   category: CategorySlug
 ): Promise<Product[]> {
   const supabase = createServiceClient();
-  const { data, error } = await supabase
+  let result = await supabase
     .from(TABLE)
     .select("*")
     .eq("category", category)
+    .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
+  if (isMissingSortOrder(result.error)) {
+    result = await supabase
+      .from(TABLE)
+      .select("*")
+      .eq("category", category)
+      .order("created_at", { ascending: true });
+  }
+  const { data, error } = result;
   if (error) throw new Error(`Failed to load ${category} products: ${error.message}`);
   return (data ?? []).map(rowToProduct);
 }
@@ -130,4 +162,18 @@ export async function deleteProduct(id: string): Promise<boolean> {
     .select("id");
   if (error) throw new Error(`Failed to delete product "${id}": ${error.message}`);
   return (data?.length ?? 0) > 0;
+}
+
+/** Persist the complete storefront order in one database transaction. */
+export async function reorderProducts(ids: string[]): Promise<void> {
+  const supabase = createServiceClient();
+  const { error } = await supabase.rpc("reorder_products", { product_ids: ids });
+  if (error) {
+    if (error.code === "PGRST202" || error.message.includes("reorder_products")) {
+      throw new Error(
+        "Product ordering is not installed yet. Run supabase/add-product-sort-order.sql first."
+      );
+    }
+    throw new Error(`Failed to reorder products: ${error.message}`);
+  }
 }

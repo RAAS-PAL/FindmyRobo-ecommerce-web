@@ -30,7 +30,7 @@ export default function ProductCard({
         className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-gold hover:shadow-[0_24px_48px_-16px_rgba(10,46,31,0.25)]"
       >
         {/* image area */}
-        <div className="relative overflow-hidden bg-gradient-to-b from-cloud to-forest-100/40 pb-4 pt-8">
+        <div className="relative flex min-h-60 items-center overflow-hidden bg-gradient-to-b from-cloud to-forest-100/40 px-3 pb-3 pt-7">
           {product.preorder && (
             <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-gold">
               {t("preorder")}
@@ -38,7 +38,7 @@ export default function ProductCard({
           )}
           <ProductVisual
             product={product}
-            className="mx-auto h-40 w-auto transition-transform duration-500 ease-out group-hover:scale-105"
+            className="mx-auto h-52 max-h-full w-full transition-transform duration-500 ease-out group-hover:scale-105"
           />
           {/* view product — slides up on hover / focus */}
           <span className="absolute inset-x-0 bottom-0 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-focus-within:translate-y-0">
