@@ -7,22 +7,33 @@
 --    object and are only ever read as whole blobs, never queried field-by-field.
 create table if not exists public.products (
   id          text primary key,                    -- slug, also the storefront URL
+  sort_order  integer not null default 1000,       -- admin-controlled storefront position
   name        text not null,
   price       integer not null check (price > 0),  -- whole Thai Baht (฿), no satang
   category    text not null,                        -- validated in-app vs data/categories.ts
   variant     text not null check (variant in ('luba', 'mini', 'pool', 'install', 'demo')),
-  image_url   text,                                  -- optional product photo; variant art is the fallback
+  image_url   text,                                  -- optional main product photo; variant art is the fallback
+  images      jsonb not null default '[]'::jsonb,   -- extra gallery photos (URLs) shown after image_url
   preorder    boolean not null default false,
   specs       jsonb not null default '{}'::jsonb,   -- { area, slope, ... }
   tagline     jsonb not null,                       -- { en, th }
   description jsonb not null,                        -- { en, th }
   features    jsonb not null,                        -- { en: [...], th: [...] }
+  page        jsonb,                                 -- rich detail page: { videoUrl, blocks[], specGroups[] }
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now()
 );
 
+-- Existing databases created before sort_order was introduced also receive it.
+alter table public.products
+  add column if not exists sort_order integer not null default 1000;
+
 -- 2. Index the column we filter on (category pages call WHERE category = ...).
 create index if not exists products_category_idx on public.products (category);
+create index if not exists products_sort_order_idx
+  on public.products (sort_order, created_at, id);
+create index if not exists products_category_sort_order_idx
+  on public.products (category, sort_order, created_at, id);
 
 -- 3. Keep updated_at fresh on every edit.
 create or replace function public.touch_updated_at()
@@ -39,6 +50,31 @@ drop trigger if exists products_touch_updated_at on public.products;
 create trigger products_touch_updated_at
   before update on public.products
   for each row execute function public.touch_updated_at();
+
+-- Replace the complete order atomically. The admin API calls this with every
+-- current product id, so duplicate/missing ids are rejected before any update.
+create or replace function public.reorder_products(product_ids text[])
+returns void
+language plpgsql
+set search_path = public
+as $$
+begin
+  if cardinality(product_ids) <> (select count(*) from public.products)
+     or cardinality(product_ids) <>
+       (select count(distinct item.id) from unnest(product_ids) as item(id))
+     or exists (
+       select 1 from unnest(product_ids) as requested(id)
+       where not exists (select 1 from public.products p where p.id = requested.id)
+     ) then
+    raise exception 'Product order must contain every product exactly once';
+  end if;
+
+  update public.products as p
+  set sort_order = ordered.position * 10
+  from unnest(product_ids) with ordinality as ordered(id, position)
+  where p.id = ordered.id;
+end;
+$$;
 
 -- 4. Row-level security: the catalog is PUBLIC to read (anon shoppers included),
 --    but writes only happen through the SECRET key from the admin API, which

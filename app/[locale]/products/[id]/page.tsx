@@ -8,12 +8,15 @@ import FadeIn from "@/components/ui/FadeIn";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import ServicePurchasePanel from "@/components/cart/ServicePurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
-import ProductVisual from "@/components/ui/ProductVisual";
+import ProductGallery from "@/components/product/ProductGallery";
+import ProductPageBlocks from "@/components/product/ProductPageBlocks";
+import ExpandOnScroll from "@/components/product/ExpandOnScroll";
+import SpecTable from "@/components/product/SpecTable";
+import VideoEmbed from "@/components/product/VideoEmbed";
 import {
   formatBaht,
   SERVICE_CATEGORY,
   type Locale,
-  type SpecKey,
 } from "@/data/products";
 import { getAllProducts, getProductById } from "@/lib/productStore";
 
@@ -47,11 +50,10 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const t = await getTranslations("productDetail");
-  const tp = await getTranslations("products");
   const tc = await getTranslations("categories");
 
-  const specEntries = Object.entries(product.specs) as [SpecKey, string][];
   const features = product.features[locale as Locale] ?? product.features.en;
+  const page = product.page;
   const allProducts = await getAllProducts();
   const isService = product.category === SERVICE_CATEGORY;
   // Robots a service can be attached to (everything that isn't itself a service).
@@ -66,7 +68,8 @@ export default async function ProductPage({
     .slice(0, 3);
 
   return (
-    <main className="bg-surface">
+    // overflow-x-clip contains ExpandOnScroll's full-bleed w-screen panel
+    <main className="overflow-x-clip bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* breadcrumb */}
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-[13px] text-ink-muted">
@@ -90,23 +93,16 @@ export default async function ProductPage({
 
         {/* top: gallery + info */}
         <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16">
-          {/* gallery placeholder */}
+          {/* gallery */}
           <FadeIn>
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-forest-950 via-forest to-forest-800 p-10 sm:p-16">
-              {product.preorder && (
-                <span className="absolute right-5 top-5 rounded-full bg-gold px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-forest-950">
-                  {tp("preorder")}
-                </span>
-              )}
-              <div
-                className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/10 blur-[80px]"
-                aria-hidden="true"
-              />
-              <ProductVisual
-                product={product}
-                className="relative mx-auto h-64 w-auto drop-shadow-[0_24px_40px_rgba(6,31,21,0.7)] sm:h-80"
-              />
-            </div>
+            <ProductGallery
+              product={product}
+              labels={{
+                previous: t("galleryPrevious"),
+                next: t("galleryNext"),
+                thumbnail: t("galleryThumbnail"),
+              }}
+            />
           </FadeIn>
 
           {/* info */}
@@ -167,30 +163,44 @@ export default async function ProductPage({
           </FadeIn>
         </div>
 
-        {/* specs */}
-        {specEntries.length > 0 && (
-        <FadeIn className="mt-16 sm:mt-20">
-          <div className="rounded-3xl bg-forest-950 p-8 text-white sm:p-12">
-            <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <h2 className="font-display text-2xl font-extrabold sm:text-3xl">
-                {t("specsHeading")}
-              </h2>
-              <p className="font-mono text-[11px] uppercase tracking-wider text-white/40">
-                {t("specsNote")}
-              </p>
+        {/* review/demo video (admin page builder) */}
+        {page?.videoUrl && (
+          <FadeIn className="mt-16 sm:mt-20">
+            <div className="mx-auto max-w-3xl">
+              <VideoEmbed url={page.videoUrl} title={product.name} />
+              {page.videoCaption && (
+                <p className="mt-3 text-center text-[12.5px] text-ink-muted">
+                  {page.videoCaption[locale as Locale] || page.videoCaption.en}
+                </p>
+              )}
             </div>
-            <dl className="mt-8 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-              {specEntries.map(([key, value]) => (
-                <div key={key} className="border-l-2 border-gold/60 pl-4">
-                  <dt className="text-[12px] font-medium uppercase tracking-wider text-white/50">
-                    {t(`specLabels.${key}`)}
-                  </dt>
-                  <dd className="mt-1 font-mono text-lg font-semibold text-gold">{value}</dd>
-                </div>
-              ))}
-            </dl>
+          </FadeIn>
+        )}
+
+        {/* content sections (admin page builder) */}
+        {page?.blocks && page.blocks.length > 0 && (
+          <div className="mt-16 sm:mt-20">
+            <ProductPageBlocks
+              blocks={page.blocks}
+              locale={locale as Locale}
+              productName={product.name}
+            />
           </div>
-        </FadeIn>
+        )}
+
+        {/* specs: the page-builder table only — the quick-spec fields are no
+            longer shown here, they feed the checkout install-tier match */}
+        {page?.specGroups && page.specGroups.length > 0 && (
+          <div className="mt-16 sm:mt-20">
+            <ExpandOnScroll>
+              <SpecTable
+                groups={page.specGroups}
+                heading={t("specTableHeading")}
+                productName={product.name}
+                locale={locale as Locale}
+              />
+            </ExpandOnScroll>
+          </div>
         )}
 
         {/* related */}
