@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bot,
@@ -18,7 +18,11 @@ import { categories, categoryHref } from "@/data/categories";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import { useCart } from "@/components/cart/CartProvider";
+import { useProducts } from "@/components/ProductsProvider";
+import ProductVisual from "@/components/ui/ProductVisual";
 import { createClient } from "@/lib/supabase/client";
+import type { CategorySlug } from "@/data/categories";
+import type { Locale } from "@/data/products";
 
 interface NavChild {
   label: string;
@@ -83,10 +87,15 @@ function DropdownChild({
 export default function Navbar() {
   const t = useTranslations("nav");
   const tc = useTranslations("categories");
+  const locale = useLocale() as Locale;
+  const { products } = useProducts();
   const { count, openDrawer } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [previewCategory, setPreviewCategory] = useState<CategorySlug>(
+    categories[0].slug
+  );
 
   useEffect(() => {
     const supabase = createClient();
@@ -165,7 +174,7 @@ export default function Navbar() {
 
         {/* desktop links */}
         <ul className="hidden items-center gap-6 xl:flex">
-          {navLinks.map((link) => (
+          {navLinks.map((link, linkIndex) => (
             <li key={link.label} className="group relative">
               <Link
                 href={link.href}
@@ -181,11 +190,92 @@ export default function Navbar() {
               </Link>
               {link.children && (
                 <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                  <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
-                    {link.children.map((item) => (
-                      <DropdownChild key={item.label} item={item} soonLabel={t("soon")} />
-                    ))}
-                  </div>
+                  {linkIndex === 0 ? (
+                    <div className="grid w-[720px] grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
+                      <div className="border-r border-forest-100 p-2.5">
+                        {categories.map((category) => (
+                          <Link
+                            key={category.slug}
+                            href={categoryHref(category.slug)}
+                            onMouseEnter={() => setPreviewCategory(category.slug)}
+                            onFocus={() => setPreviewCategory(category.slug)}
+                            className={`block rounded-xl px-3.5 py-3 transition-colors ${
+                              previewCategory === category.slug
+                                ? "bg-cloud text-gold-600"
+                                : "text-content/85 hover:bg-cloud hover:text-gold-600"
+                            }`}
+                          >
+                            <span className="block text-[13px] font-semibold">
+                              {tc(`${category.slug}.name`)}
+                            </span>
+                            <span className="mt-1 block text-[10.5px] leading-snug text-ink-muted/70">
+                              {tc(`${category.slug}.description`)}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+
+                      <div className="min-h-[330px] p-5">
+                        <div className="mb-4 flex items-end justify-between gap-4">
+                          <div>
+                            <p className="font-display text-lg font-bold text-content">
+                              {tc(`${previewCategory}.name`)}
+                            </p>
+                            <p className="mt-1 text-xs text-ink-muted">
+                              {tc(`${previewCategory}.description`)}
+                            </p>
+                          </div>
+                          <Link
+                            href={categoryHref(previewCategory)}
+                            className="shrink-0 text-xs font-semibold text-gold-600 hover:text-content"
+                          >
+                            {t("shop")} →
+                          </Link>
+                        </div>
+
+                        {products.some((product) => product.category === previewCategory) ? (
+                          <div className="grid grid-cols-3 gap-3">
+                            {products
+                              .filter((product) => product.category === previewCategory)
+                              .slice(0, 3)
+                              .map((product) => (
+                                <Link
+                                  key={product.id}
+                                  href={`/products/${product.id}`}
+                                  className="group/card overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3 transition hover:-translate-y-0.5 hover:border-gold-600/40 hover:shadow-md"
+                                >
+                                  <div className="flex h-28 items-center justify-center">
+                                    <ProductVisual product={product} className="h-full w-full" />
+                                  </div>
+                                  <p className="mt-2 line-clamp-2 text-xs font-bold leading-snug text-content">
+                                    {product.name}
+                                  </p>
+                                  <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-ink-muted">
+                                    {product.tagline[locale]}
+                                  </p>
+                                </Link>
+                              ))}
+                          </div>
+                        ) : (
+                          <div className="flex h-[230px] flex-col items-center justify-center rounded-xl border border-dashed border-forest-100 bg-cloud/50 px-8 text-center">
+                            <Bot className="h-16 w-16 text-gold-600/70" aria-hidden="true" />
+                            <p className="mt-4 max-w-xs text-sm font-semibold text-content">
+                              {tc(`${previewCategory}.name`)}
+                            </p>
+                            <p className="mt-1 max-w-xs text-xs leading-relaxed text-ink-muted">
+                              {tc(`${previewCategory}.description`)}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
+                      {link.children.map((item) => (
+                        <DropdownChild key={item.label} item={item} soonLabel={t("soon")} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </li>
