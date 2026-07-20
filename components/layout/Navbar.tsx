@@ -93,6 +93,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [desktopMenu, setDesktopMenu] = useState<number | null>(null);
   const [previewCategory, setPreviewCategory] = useState<CategorySlug>(
     categories[0].slug
   );
@@ -175,21 +176,57 @@ export default function Navbar() {
         {/* desktop links */}
         <ul className="hidden items-center gap-6 xl:flex">
           {navLinks.map((link, linkIndex) => (
-            <li key={link.label} className="group relative">
-              <Link
-                href={link.href}
-                className="nav-underline flex items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-medium text-content/80 transition-colors hover:text-content"
-              >
-                {link.label}
-                {link.children && (
+            <li
+              key={link.label}
+              className="relative"
+              onMouseEnter={() => link.children && setDesktopMenu(linkIndex)}
+              onMouseLeave={() => link.children && setDesktopMenu(null)}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  setDesktopMenu(null);
+                }
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setDesktopMenu(null);
+                  (event.currentTarget.querySelector("button") as HTMLButtonElement | null)?.focus();
+                }
+              }}
+            >
+              {link.children ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDesktopMenu((current) => current === linkIndex ? null : linkIndex)
+                  }
+                  aria-expanded={desktopMenu === linkIndex}
+                  aria-haspopup="menu"
+                  className="nav-underline flex cursor-pointer items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-medium text-content/80 transition-colors hover:text-content"
+                >
+                  {link.label}
                   <ChevronDown
-                    className="h-3.5 w-3.5 text-gold-600 transition-transform duration-200 group-hover:rotate-180"
+                    className={`h-3.5 w-3.5 text-gold-600 transition-transform duration-200 ${
+                      desktopMenu === linkIndex ? "rotate-180" : ""
+                    }`}
                     aria-hidden="true"
                   />
-                )}
-              </Link>
+                </button>
+              ) : (
+                <Link
+                  href={link.href}
+                  className="nav-underline flex items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-medium text-content/80 transition-colors hover:text-content"
+                >
+                  {link.label}
+                </Link>
+              )}
               {link.children && (
-                <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                <div
+                  className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 transition-all duration-200 ${
+                    desktopMenu === linkIndex
+                      ? "visible translate-y-0 opacity-100"
+                      : "invisible translate-y-2 opacity-0"
+                  }`}
+                >
                   {linkIndex === 0 ? (
                     <div className="grid w-[720px] grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
                       <div className="border-r border-forest-100 p-2.5">
@@ -197,6 +234,7 @@ export default function Navbar() {
                           <Link
                             key={category.slug}
                             href={categoryHref(category.slug)}
+                            onClick={() => setDesktopMenu(null)}
                             onMouseEnter={() => setPreviewCategory(category.slug)}
                             onFocus={() => setPreviewCategory(category.slug)}
                             className={`block rounded-xl px-3.5 py-3 transition-colors ${
@@ -227,6 +265,7 @@ export default function Navbar() {
                           </div>
                           <Link
                             href={categoryHref(previewCategory)}
+                            onClick={() => setDesktopMenu(null)}
                             className="shrink-0 text-xs font-semibold text-gold-600 hover:text-content"
                           >
                             {t("shop")} →
@@ -242,6 +281,7 @@ export default function Navbar() {
                                 <Link
                                   key={product.id}
                                   href={`/products/${product.id}`}
+                                  onClick={() => setDesktopMenu(null)}
                                   className="group/card overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3 transition hover:-translate-y-0.5 hover:border-gold-600/40 hover:shadow-md"
                                 >
                                   <div className="flex h-28 items-center justify-center">
@@ -272,7 +312,12 @@ export default function Navbar() {
                   ) : (
                     <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
                       {link.children.map((item) => (
-                        <DropdownChild key={item.label} item={item} soonLabel={t("soon")} />
+                        <DropdownChild
+                          key={item.label}
+                          item={item}
+                          soonLabel={t("soon")}
+                          onNavigate={() => setDesktopMenu(null)}
+                        />
                       ))}
                     </div>
                   )}
