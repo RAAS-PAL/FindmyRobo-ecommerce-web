@@ -3,9 +3,29 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar, Sparkles, Waves } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { DeliveryRobotIcon, GrassIcon } from "@/components/ui/BrandIcons";
 import { siteConfig } from "@/data/siteConfig";
+
+/** Robot categories surfaced as hero chips (order = how they read left to right). */
+const HERO_CATEGORIES = [
+  { slug: "robot-mowers", Icon: GrassIcon },
+  { slug: "pool-cleaners", Icon: Waves },
+  { slug: "cleaning-robots", Icon: Sparkles },
+  { slug: "delivery-robots", Icon: DeliveryRobotIcon },
+] as const;
+
+/** Spring pop-in for each chip, staggered by the parent. */
+const chipVariants = {
+  hidden: { opacity: 0, y: 14, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: "spring" as const, stiffness: 420, damping: 24 },
+  },
+};
 
 /**
  * Full-bleed hero background that plays the configured videos in sequence,
@@ -129,6 +149,7 @@ const wordVariants = {
 
 export default function HeroSection() {
   const t = useTranslations("hero");
+  const tCat = useTranslations("hero.cat");
   // Thai separates phrases (not words) with spaces, so splitting on
   // spaces gives natural stagger chunks in both languages
   const mainWords = t("headlineMain").split(" ");
@@ -204,16 +225,54 @@ export default function HeroSection() {
           video ? "pb-32 pt-24 sm:pb-40 sm:pt-36" : "pb-56 pt-20 sm:pb-64 sm:pt-28"
         }`}
       >
-        <motion.p
+        {/* Category chips: at a glance, what the store sells — and each one is a
+            direct link into that category's products. */}
+        <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className={`mb-6 font-mono text-[11px] font-semibold uppercase tracking-[0.3em] sm:text-xs ${
-            video ? "hero-legible text-gold" : "text-gold-600"
-          }`}
+          className="mb-8 flex flex-col items-center gap-3"
         >
-          {t("eyebrow")}
-        </motion.p>
+          <span
+            className={`font-mono text-[10px] font-semibold uppercase tracking-[0.35em] ${
+              video ? "hero-legible text-gold" : "text-gold-600"
+            }`}
+          >
+            {t("categoriesLabel")}
+          </span>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } } }}
+            className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5"
+          >
+            {HERO_CATEGORIES.map(({ slug, Icon }) => (
+              <motion.div
+                key={slug}
+                variants={chipVariants}
+                whileHover={{ y: -3, scale: 1.06 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  href={`/shop/${slug}`}
+                  className={`group flex items-center gap-2 rounded-full border px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.15em] transition-colors duration-300 sm:px-5 sm:text-xs ${
+                    video
+                      ? "hero-legible border-white/30 bg-white/10 text-white hover:border-gold hover:bg-gold hover:text-forest-950 hover:shadow-[0_10px_30px_-6px_rgba(245,200,66,0.55)]"
+                      : "border-forest-950/15 bg-forest-950/[0.03] text-forest-800 hover:border-gold hover:bg-gold hover:text-forest-950 hover:shadow-[0_10px_30px_-8px_rgba(245,200,66,0.5)] dark:border-white/20 dark:bg-white/5 dark:text-white/90 dark:hover:text-forest-950"
+                  }`}
+                >
+                  <Icon
+                    className={`h-3.5 w-3.5 shrink-0 transition-colors duration-300 group-hover:text-forest-950 ${
+                      video ? "text-gold" : "text-gold-600 dark:text-gold"
+                    }`}
+                    aria-hidden="true"
+                  />
+                  {tCat(slug)}
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
 
         <motion.h1
           initial="hidden"

@@ -178,7 +178,7 @@ export default function Navbar() {
             <li key={link.label} className="group relative">
               <Link
                 href={link.href}
-                className="nav-underline flex items-center gap-1 py-2 text-[13.5px] font-medium text-content/80 transition-colors hover:text-content"
+                className="nav-underline flex items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-medium text-content/80 transition-colors hover:text-content"
               >
                 {link.label}
                 {link.children && (

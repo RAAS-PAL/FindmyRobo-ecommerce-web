@@ -208,6 +208,13 @@
   },
   "hero": {
     "eyebrow": "Mowing · Pool Cleaning · Cleaning · Delivery · Thailand",
+    "categoriesLabel": "What we do",
+    "cat": {
+      "robot-mowers": "Mowing",
+      "pool-cleaners": "Pool Cleaning",
+      "cleaning-robots": "Cleaning",
+      "delivery-robots": "Delivery"
+    },
     "headlineMain": "Smart Robots. Smarter Operations.",
     "headlineAccent": "Better Business.",
     "sub": "Discover intelligent robotic solutions for cleaning, delivery, lawn care, pool maintenance, and more—designed to reduce workload, improve efficiency, and help your business operate smarter.",
