@@ -95,6 +95,18 @@ export async function listOrders(): Promise<Order[]> {
   return (data ?? []).map(rowToOrder);
 }
 
+/** Customer-facing order history, always scoped to the authenticated profile id. */
+export async function listOrdersByUser(userId: string): Promise<Order[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+  if (error) throw new Error(`Failed to load customer orders: ${error.message}`);
+  return (data ?? []).map(rowToOrder);
+}
+
 /**
  * Settle an order's payment state. Written to be safe under webhook retries:
  * the same event applied twice lands on the same row values, and an order that

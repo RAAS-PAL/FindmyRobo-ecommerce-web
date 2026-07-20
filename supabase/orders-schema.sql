@@ -26,6 +26,8 @@ create table if not exists public.orders (
 -- 2. Indexes for the two ways orders get listed.
 create index if not exists orders_user_id_idx on public.orders (user_id);
 create index if not exists orders_created_at_idx on public.orders (created_at desc);
+create index if not exists orders_user_created_at_idx
+  on public.orders (user_id, created_at desc);
 
 -- 3. Keep updated_at fresh (reuses the same trigger function as products; the
 --    products schema may not have been run yet, so define it here too).
@@ -55,4 +57,5 @@ alter table public.orders enable row level security;
 drop policy if exists "own orders read" on public.orders;
 create policy "own orders read"
   on public.orders for select
-  using (auth.uid() = user_id);
+  to authenticated
+  using ((select auth.uid()) = user_id);
