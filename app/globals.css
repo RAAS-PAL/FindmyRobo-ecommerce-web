@@ -146,7 +146,7 @@
   }
 }
 .animate-marquee {
-  animation: marquee 28s linear infinite;
+  animation: marquee 70s linear infinite;
 }
 
 /* Hero mower drives across the lawn */
