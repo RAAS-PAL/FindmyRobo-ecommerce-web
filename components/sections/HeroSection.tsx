@@ -255,7 +255,7 @@ export default function HeroSection() {
               >
                 <Link
                   href={`/shop/${slug}`}
-                  className={`group flex items-center gap-2.5 rounded-full border px-5 py-2.5 font-mono text-[14px] font-semibold uppercase tracking-[0.15em] transition-colors duration-300 sm:px-6 sm:text-[15px] ${
+                  className={`group flex items-center gap-2.5 rounded-full border px-5 py-2.5 font-mono text-[14px] font-bold uppercase tracking-[0.15em] transition-colors duration-300 sm:px-6 sm:text-[15px] ${
                     video
                       ? "hero-legible border-white/30 bg-white/10 text-white hover:border-gold hover:bg-gold hover:text-forest-950 hover:shadow-[0_10px_30px_-6px_rgba(245,200,66,0.55)]"
                       : "border-forest-950/15 bg-forest-950/[0.03] text-forest-800 hover:border-gold hover:bg-gold hover:text-forest-950 hover:shadow-[0_10px_30px_-8px_rgba(245,200,66,0.5)] dark:border-white/20 dark:bg-white/5 dark:text-white/90 dark:hover:text-forest-950"
