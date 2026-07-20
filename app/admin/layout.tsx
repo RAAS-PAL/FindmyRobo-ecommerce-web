@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
-import { Archivo, IBM_Plex_Mono, Inter } from "next/font/google";
+import { Barlow, IBM_Plex_Mono } from "next/font/google";
 import "../globals.css";
 import { themeInitScript } from "@/components/ThemeProvider";
 
-/* Same font variables as the storefront so theme font tokens resolve */
-const archivo = Archivo({
-  variable: "--font-archivo",
+/* Same font variables as the storefront so theme font tokens resolve. The admin
+   is English-only, so no Thai fallbacks are needed here. */
+const barlow = Barlow({
+  variable: "--font-barlow",
   subsets: ["latin"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -36,7 +33,7 @@ export default function AdminRootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${archivo.variable} ${inter.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${barlow.variable} ${plexMono.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
-import { Archivo, IBM_Plex_Mono, Inter, Noto_Sans_Thai, Prompt } from "next/font/google";
+import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google";
 import "../globals.css";
 import { routing } from "@/i18n/routing";
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
@@ -15,14 +15,12 @@ import CartProvider from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { getAllProducts } from "@/lib/productStore";
 
-const archivo = Archivo({
-  variable: "--font-archivo",
+// Barlow is not a variable font — list the weights the UI uses (body through
+// the extrabold headings). Powers both --font-sans and --font-display.
+const barlow = Barlow({
+  variable: "--font-barlow",
   subsets: ["latin"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -31,7 +29,7 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
 });
 
-/* Thai script fallbacks — Archivo/Inter have no Thai glyphs */
+/* Thai script fallbacks — Barlow has no Thai glyphs */
 const prompt = Prompt({
   variable: "--font-prompt",
   subsets: ["thai", "latin"],
@@ -81,7 +79,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${archivo.variable} ${inter.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
+      className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />

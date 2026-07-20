@@ -35,9 +35,9 @@
   --color-surface: #ffffff;
   --color-content: #123b28;
 
-  /* Thai fallbacks: Archivo/Inter/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
-  --font-display: var(--font-archivo), var(--font-prompt), system-ui, sans-serif;
-  --font-sans: var(--font-inter), var(--font-noto-thai), system-ui, sans-serif;
+  /* Thai fallbacks: Barlow/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
+  --font-display: var(--font-barlow), var(--font-prompt), system-ui, sans-serif;
+  --font-sans: var(--font-barlow), var(--font-noto-thai), system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), var(--font-noto-thai), monospace;
 
   /* Sharper layout language: reduce Tailwind's default corner radii globally.
