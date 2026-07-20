@@ -47,12 +47,16 @@ export default function ExpandOnScroll({
 
   return (
     <div ref={ref} className="relative h-[180vh]">
-      <div className="sticky top-0 flex h-screen items-center justify-center">
+      {/* Breaks out of the page's centered column to full viewport width.
+          Negative margins, not left/translate: `left` on a sticky element is a
+          sticky constraint rather than an offset, so it would not move this at
+          all. 50% resolves against the column, 50vw against the window. */}
+      <div className="sticky top-0 mx-[calc(50%-50vw)] flex h-screen w-screen items-center justify-center">
         <motion.div
           style={{ width, height, borderRadius }}
           // shrink-0: as a flex item it would otherwise be squeezed back to the
           // parent column's width and never reach full bleed
-          className="relative left-1/2 flex max-w-[100vw] shrink-0 -translate-x-1/2 items-center justify-center overflow-hidden bg-cloud"
+          className="flex shrink-0 items-center justify-center overflow-hidden bg-cloud"
         >
           {/* content scrolls inside if a long table outgrows the window */}
           <div className="max-h-full w-full overflow-y-auto px-4 py-10">

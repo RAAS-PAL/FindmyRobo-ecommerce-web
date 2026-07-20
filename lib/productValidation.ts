@@ -23,7 +23,22 @@ export const slugify = (name: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
 
-const asText = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+/**
+ * Mobile/symbol keyboards offer single-glyph unit characters like "㎡" (U+33A1,
+ * one codepoint) instead of "m²". Barlow has no glyph for them, so the browser
+ * falls back to another font for just that character and it looks out of place.
+ * Expand the CJK "squared/cubed unit" range (mm…m³) to plain letters via NFKC,
+ * then restore the superscript the ASCII form drops. Real text and URLs never
+ * contain these codepoints, so this is safe to run on every field.
+ */
+const UNIT_GLYPHS = /[㎜-㎥]/g; // ㎜ mm … ㎥ m³ (CJK compat units)
+const prettifyUnits = (s: string) =>
+  s.replace(UNIT_GLYPHS, (ch) =>
+    ch.normalize("NFKC").replace(/2$/, "²").replace(/3$/, "³")
+  );
+
+const asText = (v: unknown) =>
+  typeof v === "string" ? prettifyUnits(v.trim()) : "";
 
 /** Split textarea input into feature lines, dropping blanks. */
 const asLines = (v: unknown) =>
