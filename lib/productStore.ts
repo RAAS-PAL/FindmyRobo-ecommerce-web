@@ -27,6 +27,7 @@ interface ProductRow {
   images: string[] | null;
   preorder: boolean;
   visible?: boolean;
+  sku?: string | null;
   specs: Product["specs"];
   tagline: Product["tagline"];
   description: Product["description"];
@@ -48,6 +49,7 @@ function rowToProduct(row: ProductRow): Product {
     // absent column (pre-migration) reads as visible so the storefront never
     // blanks out before add-product-visibility.sql is applied
     visible: row.visible ?? true,
+    ...(row.sku ? { sku: row.sku } : {}),
     specs: row.specs ?? {},
     tagline: row.tagline,
     description: row.description,
@@ -59,12 +61,19 @@ function rowToProduct(row: ProductRow): Product {
 const isMissingSortOrder = (error: { code?: string; message?: string } | null) =>
   error?.code === "42703" || error?.message?.includes("sort_order") === true;
 
-// The `visible` column ships in add-product-visibility.sql. Until that runs,
-// Postgres reports 42703 (undefined column) and PostgREST reports PGRST204
-// (column not in the schema cache) — either way the message names the column.
-const isMissingVisibleColumn = (error: { code?: string; message?: string } | null) =>
-  (error?.code === "42703" || error?.code === "PGRST204") &&
-  error?.message?.includes("visible") === true;
+// Optional columns added by later migrations (add-product-visibility.sql,
+// add-product-sku.sql). Until a migration runs, Postgres reports 42703
+// (undefined column) and PostgREST reports PGRST204 (not in the schema cache) —
+// either way the message names the column. We strip the named column and retry
+// so a product save keeps working before its migration is applied.
+const DEGRADABLE_COLUMNS = ["visible", "sku"] as const;
+
+function missingOptionalColumn(
+  error: { code?: string; message?: string } | null
+): (typeof DEGRADABLE_COLUMNS)[number] | null {
+  if (!error || (error.code !== "42703" && error.code !== "PGRST204")) return null;
+  return DEGRADABLE_COLUMNS.find((c) => error.message?.includes(c)) ?? null;
+}
 
 /** created_at/updated_at are DB-managed (default now() / the touch trigger) — never written from here. */
 function productFields(
@@ -79,6 +88,7 @@ function productFields(
     images: product.images ?? [],
     preorder: product.preorder ?? false,
     visible: product.visible ?? true,
+    sku: product.sku ?? null,
     specs: product.specs,
     tagline: product.tagline,
     description: product.description,
@@ -161,16 +171,15 @@ export async function getProductsByCategory(
 
 export async function addProduct(product: Product): Promise<void> {
   const supabase = createServiceClient();
-  const fields = productFields(product);
-  let { error } = await supabase
-    .from(TABLE)
-    .insert({ id: product.id, ...fields });
-  // Pre-migration DB — save everything except visibility so basic product
-  // creation keeps working before add-product-visibility.sql is applied.
-  if (isMissingVisibleColumn(error)) {
-    const rest = { ...fields };
-    delete rest.visible;
-    ({ error } = await supabase.from(TABLE).insert({ id: product.id, ...rest }));
+  const fields: Record<string, unknown> = productFields(product);
+  // Retry once per degradable column: strip the one the DB doesn't have yet and
+  // insert again, so creation works before add-product-{visibility,sku}.sql run.
+  let error: { code?: string; message?: string } | null = null;
+  for (let attempt = 0; attempt <= DEGRADABLE_COLUMNS.length; attempt++) {
+    ({ error } = await supabase.from(TABLE).insert({ id: product.id, ...fields }));
+    const missing = missingOptionalColumn(error);
+    if (!missing) break;
+    delete fields[missing];
   }
   if (error) {
     if (error.code === "23505") {
@@ -183,14 +192,14 @@ export async function addProduct(product: Product): Promise<void> {
 /** Replace the product at `id`. The id itself is immutable. */
 export async function updateProduct(id: string, product: Product): Promise<boolean> {
   const supabase = createServiceClient();
-  const fields = productFields(product);
+  const fields: Record<string, unknown> = productFields(product);
+  // Same degradation as addProduct — persist everything the DB does have.
   let result = await supabase.from(TABLE).update(fields).eq("id", id).select("id");
-  // Pre-migration DB — persist everything except visibility so editing a
-  // product doesn't 500 before add-product-visibility.sql is applied.
-  if (isMissingVisibleColumn(result.error)) {
-    const rest = { ...fields };
-    delete rest.visible;
-    result = await supabase.from(TABLE).update(rest).eq("id", id).select("id");
+  for (let attempt = 0; attempt < DEGRADABLE_COLUMNS.length; attempt++) {
+    const missing = missingOptionalColumn(result.error);
+    if (!missing) break;
+    delete fields[missing];
+    result = await supabase.from(TABLE).update(fields).eq("id", id).select("id");
   }
   const { data, error } = result;
   if (error) throw new Error(`Failed to update product "${id}": ${error.message}`);
@@ -210,7 +219,7 @@ export async function setProductVisibility(
     .select("id");
   // This action is nothing *but* the visibility write — it can't degrade, so
   // surface a clear next step instead of a raw column error.
-  if (isMissingVisibleColumn(error)) {
+  if (missingOptionalColumn(error) === "visible") {
     throw new Error(
       "Product visibility is not installed yet. Run supabase/add-product-visibility.sql first."
     );

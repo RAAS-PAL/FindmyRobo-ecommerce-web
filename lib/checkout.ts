@@ -61,6 +61,26 @@ export interface OrderPayment {
   failureMessage?: string;
 }
 
+/** Sokochan carrier codes (see lib/sokochan.ts). */
+export type ShippingCarrier = "EMS" | "REG" | "KND" | "K2D" | "KSD";
+
+/**
+ * 3PL fulfilment state, kept separate from the payment `status` (which stays the
+ * money lifecycle). Populated when an order is pushed to Sokochan and updated by
+ * their shipping webhook. `status` tracks the physical progress of the shipment.
+ */
+export interface OrderFulfillment {
+  /** Sokochan's own order code, returned when we create the order. Its presence marks the order as sent. */
+  sokochanOrderCode?: string;
+  carrier?: ShippingCarrier | string;
+  status?: "created" | "picked" | "packed" | "shipped" | "cancelled";
+  trackingNumber?: string;
+  /** ISO timestamp of the last fulfilment update (from us or the webhook). */
+  updatedAt?: string;
+  /** Set if the last push to Sokochan failed. */
+  error?: string;
+}
+
 export interface Order {
   id: string;
   userId?: string;
@@ -71,6 +91,8 @@ export interface Order {
   total: number;
   currency: string;
   payment?: OrderPayment;
+  /** 3PL shipping state — set once the order is pushed to Sokochan. */
+  fulfillment?: OrderFulfillment;
   createdAt: string;
   /** Last mutation time (payment settled, status changed). Admin views only. */
   updatedAt?: string;
