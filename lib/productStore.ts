@@ -59,6 +59,13 @@ function rowToProduct(row: ProductRow): Product {
 const isMissingSortOrder = (error: { code?: string; message?: string } | null) =>
   error?.code === "42703" || error?.message?.includes("sort_order") === true;
 
+// The `visible` column ships in add-product-visibility.sql. Until that runs,
+// Postgres reports 42703 (undefined column) and PostgREST reports PGRST204
+// (column not in the schema cache) — either way the message names the column.
+const isMissingVisibleColumn = (error: { code?: string; message?: string } | null) =>
+  (error?.code === "42703" || error?.code === "PGRST204") &&
+  error?.message?.includes("visible") === true;
+
 /** created_at/updated_at are DB-managed (default now() / the touch trigger) — never written from here. */
 function productFields(
   product: Product
@@ -154,9 +161,17 @@ export async function getProductsByCategory(
 
 export async function addProduct(product: Product): Promise<void> {
   const supabase = createServiceClient();
-  const { error } = await supabase
+  const fields = productFields(product);
+  let { error } = await supabase
     .from(TABLE)
-    .insert({ id: product.id, ...productFields(product) });
+    .insert({ id: product.id, ...fields });
+  // Pre-migration DB — save everything except visibility so basic product
+  // creation keeps working before add-product-visibility.sql is applied.
+  if (isMissingVisibleColumn(error)) {
+    const rest = { ...fields };
+    delete rest.visible;
+    ({ error } = await supabase.from(TABLE).insert({ id: product.id, ...rest }));
+  }
   if (error) {
     if (error.code === "23505") {
       throw new Error(`Product id "${product.id}" already exists`);
@@ -168,11 +183,16 @@ export async function addProduct(product: Product): Promise<void> {
 /** Replace the product at `id`. The id itself is immutable. */
 export async function updateProduct(id: string, product: Product): Promise<boolean> {
   const supabase = createServiceClient();
-  const { data, error } = await supabase
-    .from(TABLE)
-    .update(productFields(product))
-    .eq("id", id)
-    .select("id");
+  const fields = productFields(product);
+  let result = await supabase.from(TABLE).update(fields).eq("id", id).select("id");
+  // Pre-migration DB — persist everything except visibility so editing a
+  // product doesn't 500 before add-product-visibility.sql is applied.
+  if (isMissingVisibleColumn(result.error)) {
+    const rest = { ...fields };
+    delete rest.visible;
+    result = await supabase.from(TABLE).update(rest).eq("id", id).select("id");
+  }
+  const { data, error } = result;
   if (error) throw new Error(`Failed to update product "${id}": ${error.message}`);
   return (data?.length ?? 0) > 0;
 }
@@ -188,6 +208,13 @@ export async function setProductVisibility(
     .update({ visible })
     .eq("id", id)
     .select("id");
+  // This action is nothing *but* the visibility write — it can't degrade, so
+  // surface a clear next step instead of a raw column error.
+  if (isMissingVisibleColumn(error)) {
+    throw new Error(
+      "Product visibility is not installed yet. Run supabase/add-product-visibility.sql first."
+    );
+  }
   if (error) throw new Error(`Failed to update visibility for "${id}": ${error.message}`);
   return (data?.length ?? 0) > 0;
 }
