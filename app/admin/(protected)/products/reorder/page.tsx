@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import ProductReorder from "@/components/admin/ProductReorder";
-import { getAllProducts } from "@/lib/productStore";
+import { getAllProductsForAdmin } from "@/lib/productStore";
 import { getAdminLocale } from "@/lib/adminLocale";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function ReorderProductsPage() {
   const locale = await getAdminLocale();
   const [products, t] = await Promise.all([
-    getAllProducts(),
+    getAllProductsForAdmin(),
     getTranslations({ locale, namespace: "admin.reorder" }),
   ]);
 

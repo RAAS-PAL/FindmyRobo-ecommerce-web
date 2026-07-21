@@ -101,6 +101,12 @@ export interface Product {
    */
   images?: string[];
   preorder?: boolean;
+  /**
+   * Whether the product appears on the storefront. false hides it from every
+   * customer-facing surface (shop, category, search, direct URL, checkout)
+   * while keeping the record in the database. Absent is treated as visible.
+   */
+  visible?: boolean;
   specs: Partial<Record<SpecKey, string>>;
   tagline: LocalizedText;
   description: LocalizedText;

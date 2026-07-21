@@ -15,6 +15,7 @@ create table if not exists public.products (
   image_url   text,                                  -- optional main product photo; variant art is the fallback
   images      jsonb not null default '[]'::jsonb,   -- extra gallery photos (URLs) shown after image_url
   preorder    boolean not null default false,
+  visible     boolean not null default true,        -- false = hidden from the storefront (kept in the DB)
   specs       jsonb not null default '{}'::jsonb,   -- { area, slope, ... }
   tagline     jsonb not null,                       -- { en, th }
   description jsonb not null,                        -- { en, th }
@@ -24,9 +25,11 @@ create table if not exists public.products (
   updated_at  timestamptz not null default now()
 );
 
--- Existing databases created before sort_order was introduced also receive it.
+-- Existing databases created before these columns were introduced also receive them.
 alter table public.products
   add column if not exists sort_order integer not null default 1000;
+alter table public.products
+  add column if not exists visible boolean not null default true;
 
 -- 2. Index the column we filter on (category pages call WHERE category = ...).
 create index if not exists products_category_idx on public.products (category);
