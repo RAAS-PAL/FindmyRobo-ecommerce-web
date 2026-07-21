@@ -22,6 +22,8 @@
     "support": "ศูนย์ช่วยเหลือ",
     "blog": "บล็อก",
     "searchPlaceholder": "คุณกำลังมองหาอะไร?",
+    "searchNoResults": "ไม่พบสินค้าสำหรับ “{query}”",
+    "searchViewAll": "ดูผลการค้นหาทั้งหมดสำหรับ “{query}”",
     "bookDemo": "จองเดโมฟรี",
     "cartLabel": "ตะกร้าสินค้า มี {count} รายการ",
     "themeToDark": "เปลี่ยนเป็นโหมดมืด",
@@ -291,6 +293,19 @@
     "backToShop": "ดูหุ่นยนต์ทั้งหมด",
     "metaTitle": "เลือกซื้อหุ่นยนต์ — RoboStore TH"
   },
+  "search": {
+    "eyebrow": "ค้นหาแคตตาล็อก",
+    "heading": "ค้นหาหุ่นยนต์ของเรา",
+    "resultsFor": "ผลการค้นหาสำหรับ “{query}”",
+    "resultCount": "พบสินค้า {count} รายการ",
+    "emptyTitle": "เริ่มค้นหาจากช่องด้านบน",
+    "emptyBody": "ค้นหาด้วยชื่อหุ่นยนต์ หมวดหมู่ คุณสมบัติ พื้นที่ครอบคลุม หรือหมายเลขรุ่น",
+    "noResultsTitle": "ไม่พบสินค้าที่ตรงกัน",
+    "noResultsBody": "เราไม่พบสินค้าที่ตรงกับ “{query}” ลองค้นหาด้วยชื่อรุ่น ประเภทหุ่นยนต์ หรือคำที่กว้างขึ้น",
+    "browseAll": "ดูสินค้าทั้งหมด",
+    "metaTitle": "ค้นหาสินค้า — RoboStore TH",
+    "metaTitleQuery": "ค้นหา: {query} — RoboStore TH"
+  },
   "productDetail": {
     "home": "หน้าแรก",
     "shop": "สินค้า",
@@ -306,6 +321,9 @@
     "galleryPrevious": "รูปก่อนหน้า",
     "galleryNext": "รูปถัดไป",
     "galleryThumbnail": "ดูรูปที่",
+    "galleryOpenFullscreen": "ดูแบบเต็มหน้าจอ",
+    "galleryCloseFullscreen": "ปิดรูปภาพเต็มหน้าจอ",
+    "galleryImageCount": "รูปที่ {current} จาก {total}",
     "specLabels": {
       "area": "พื้นที่ครอบคลุม",
       "slope": "ความชันสูงสุด",
