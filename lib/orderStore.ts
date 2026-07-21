@@ -1,6 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import type {
   Order,
+  OrderFulfillment,
   OrderLine,
   OrderPayment,
   OrderStatus,
@@ -29,6 +30,7 @@ interface OrderRow {
   total: number;
   currency: string;
   payment: OrderPayment | null;
+  fulfillment?: OrderFulfillment | null;
   created_at: string;
   updated_at?: string;
 }
@@ -44,6 +46,7 @@ function rowToOrder(row: OrderRow): Order {
     total: row.total,
     currency: row.currency,
     ...(row.payment ? { payment: row.payment } : {}),
+    ...(row.fulfillment ? { fulfillment: row.fulfillment } : {}),
     createdAt: row.created_at,
     ...(row.updated_at ? { updatedAt: row.updated_at } : {}),
   };
@@ -127,6 +130,37 @@ export async function setOrderStatus(
     .eq("id", id)
     .select("id");
   if (error) throw new Error(`Failed to update order "${id}": ${error.message}`);
+  return (data?.length ?? 0) > 0;
+}
+
+/**
+ * Merge fulfilment state into an order (never touches payment or `status`).
+ * Written by the "Send to warehouse" action and by the Sokochan webhook; the
+ * merge means a webhook update (tracking, shipped) preserves the sokochanOrderCode
+ * recorded at send time, and vice versa.
+ */
+export async function setOrderFulfillment(
+  id: string,
+  patch: OrderFulfillment
+): Promise<boolean> {
+  const supabase = createServiceClient();
+  const existing = await getOrderById(id);
+  if (!existing) return false;
+
+  const fulfillment: OrderFulfillment = {
+    ...existing.fulfillment,
+    ...patch,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const { data, error } = await supabase
+    .from(TABLE)
+    .update({ fulfillment })
+    .eq("id", id)
+    .select("id");
+  if (error) {
+    throw new Error(`Failed to update fulfilment for "${id}": ${error.message}`);
+  }
   return (data?.length ?? 0) > 0;
 }
 

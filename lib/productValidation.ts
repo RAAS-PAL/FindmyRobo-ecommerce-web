@@ -212,6 +212,10 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   // any other value (incl. a payload that omits it entirely) defaults to shown.
   const visible = body.visible !== "false" && body.visible !== false;
 
+  // Optional warehouse SKU (Sokochan fulfilment). Capped to the column length;
+  // blank stays undefined so services and un-mapped products carry no SKU.
+  const sku = asText(body.sku).slice(0, 60);
+
   return {
     id,
     name,
@@ -222,6 +226,7 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
     ...(images.length > 0 ? { images } : {}),
     ...(body.preorder ? { preorder: true } : {}),
     visible,
+    ...(sku ? { sku } : {}),
     specs,
     tagline: { en: taglineEn, th: taglineTh },
     description: { en: descriptionEn, th: descriptionTh },

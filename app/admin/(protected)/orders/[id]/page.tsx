@@ -12,8 +12,11 @@ import { getTranslations } from "next-intl/server";
 import { getOrderById } from "@/lib/orderStore";
 import { formatBaht } from "@/data/products";
 import { getAdminLocale } from "@/lib/adminLocale";
+import { sokochanConfigured } from "@/lib/sokochan";
 import OrderStatusBadge from "@/components/admin/OrderStatusBadge";
 import OrderStatusControl from "@/components/admin/OrderStatusControl";
+import OrderFulfillmentBadge from "@/components/admin/OrderFulfillmentBadge";
+import FulfillmentPanel from "@/components/admin/FulfillmentPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -39,10 +42,11 @@ export default async function AdminOrderDetailPage({
       minute: "2-digit",
     }).format(new Date(value));
 
-  const { shipping, payment } = order;
+  const { shipping, payment, fulfillment } = order;
   const hasPayment =
     payment &&
     (payment.method || payment.chargeId || payment.sourceId || payment.failureMessage);
+  const fulfillmentConfigured = sokochanConfigured();
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -84,6 +88,32 @@ export default async function AdminOrderDetailPage({
         </p>
         <div className="mt-4">
           <OrderStatusControl orderId={order.id} current={order.status} />
+        </div>
+      </section>
+
+      {/* fulfilment (Sokochan) */}
+      <section className="mt-6 rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-display text-base font-bold text-content">
+            {t("fulfillment.heading")}
+          </h2>
+          {fulfillment?.status && (
+            <OrderFulfillmentBadge
+              status={fulfillment.status}
+              label={t(`fulfillment.status.${fulfillment.status}`)}
+            />
+          )}
+        </div>
+        <p className="mt-1 text-[12.5px] leading-relaxed text-ink-muted">
+          {t("fulfillment.help")}
+        </p>
+        <div className="mt-4">
+          <FulfillmentPanel
+            orderId={order.id}
+            paid={order.status === "paid"}
+            configured={fulfillmentConfigured}
+            fulfillment={fulfillment}
+          />
         </div>
       </section>
 
