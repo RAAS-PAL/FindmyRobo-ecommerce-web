@@ -137,7 +137,12 @@
       "switchLanguage": "Switch admin language to Thai",
       "switchLocale": "ไทย",
       "switchError": "Could not change the admin language.",
-      "signOut": "Sign out"
+      "signOut": "Sign out",
+      "sections": "Admin sections",
+      "tabs": {
+        "products": "Products",
+        "orders": "Orders"
+      }
     },
     "login": {
       "adminLabel": "Admin",
@@ -173,6 +178,67 @@
       },
       "editProduct": "Edit {name}",
       "unavailableCategoryNote": "Products in unavailable categories stay hidden behind the “Coming Soon” page until the category is enabled in data/categories.ts."
+    },
+    "orders": {
+      "eyebrow": "Sales",
+      "title": "Orders",
+      "guest": "Guest checkout",
+      "empty": "No orders yet. They'll appear here as customers check out.",
+      "emptyFiltered": "No orders with this status.",
+      "stats": {
+        "revenue": "Paid revenue",
+        "revenueNote": "From {count, plural, one {# paid order} other {# paid orders}}",
+        "total": "Total orders",
+        "pending": "Awaiting payment",
+        "pendingNote": "Confirm these once payment arrives."
+      },
+      "filters": {
+        "all": "All"
+      },
+      "table": {
+        "order": "Order",
+        "date": "Date",
+        "items": "Items",
+        "total": "Total",
+        "status": "Status",
+        "view": "View",
+        "viewOrder": "View order {id}"
+      },
+      "status": {
+        "pending_payment": "Pending payment",
+        "paid": "Paid",
+        "failed": "Failed",
+        "expired": "Expired",
+        "cancelled": "Cancelled",
+        "refunded": "Refunded"
+      },
+      "control": {
+        "heading": "Order status",
+        "help": "Online card payments settle automatically. Use this to confirm a bank-transfer order or to cancel one — the customer is not notified automatically.",
+        "label": "Order status",
+        "apply": "Update status",
+        "confirm": "Change this order's status to \"{status}\"?",
+        "failed": "Could not update the order.",
+        "network": "Could not reach the server."
+      },
+      "detail": {
+        "back": "Back to orders",
+        "eyebrow": "Order",
+        "placedOn": "Placed {date}",
+        "itemsHeading": "Items",
+        "forProduct": "For {name}",
+        "subtotal": "Subtotal",
+        "total": "Total",
+        "customer": "Customer",
+        "shipping": "Shipping address",
+        "note": "Note",
+        "payment": "Payment",
+        "method": "Method",
+        "chargeId": "Charge ID",
+        "sourceId": "Source ID",
+        "noPayment": "No payment recorded yet.",
+        "updatedAt": "Last updated {date}"
+      }
     },
     "productPages": {
       "backToProducts": "Back to products",
