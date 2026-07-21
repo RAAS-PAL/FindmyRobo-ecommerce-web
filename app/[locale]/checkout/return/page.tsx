@@ -3,8 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import FadeIn from "@/components/ui/FadeIn";
 import PaymentResult from "@/components/checkout/PaymentResult";
 import { getOrderById, updateOrderPayment } from "@/lib/orderStore";
-import { getCharge, omiseConfigured } from "@/lib/omise";
-import { chargeToOrderStatus } from "@/app/api/checkout/pay/route";
+import { chargeToOrderStatus, getCharge, omiseConfigured } from "@/lib/omise";
 
 export const dynamic = "force-dynamic";
 

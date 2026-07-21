@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import FadeIn from "@/components/ui/FadeIn";
 import AddToCartButton from "@/components/cart/AddToCartButton";
+import FloatingAddToCart from "@/components/cart/FloatingAddToCart";
 import ServicePurchasePanel from "@/components/cart/ServicePurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
 import ProductGallery from "@/components/product/ProductGallery";
@@ -69,7 +70,8 @@ export default async function ProductPage({
     .slice(0, 3);
 
   return (
-    // overflow-x-clip contains ExpandOnScroll's full-bleed w-screen panel
+    <>
+    {/* overflow-x-clip contains ExpandOnScroll's full-bleed w-screen panel */}
     <main className="overflow-x-clip bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* breadcrumb */}
@@ -132,7 +134,7 @@ export default async function ProductPage({
               {isService ? (
                 <ServicePurchasePanel serviceId={product.id} robots={robotOptions} />
               ) : (
-                <div className="flex flex-col gap-3 sm:flex-row">
+                <div id="pdp-primary-cta" className="flex flex-col gap-3 sm:flex-row">
                   <AddToCartButton productId={product.id} />
                   <a
                     href="#contact"
@@ -222,5 +224,14 @@ export default async function ProductPage({
         </div>
       </div>
     </main>
+    {!isService && (
+      <FloatingAddToCart
+        productId={product.id}
+        name={product.name}
+        price={product.price}
+        anchorId="pdp-primary-cta"
+      />
+    )}
+    </>
   );
 }
