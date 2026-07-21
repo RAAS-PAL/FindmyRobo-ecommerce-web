@@ -6,9 +6,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
   CircleCheck,
+  CreditCard,
   Info,
   LoaderCircle,
   MapPin,
+  QrCode,
   ShoppingCart,
   Sparkles,
   UserRound,
@@ -18,6 +20,7 @@ import { Link } from "@/i18n/navigation";
 import FadeIn from "@/components/ui/FadeIn";
 import ProductVisual from "@/components/ui/ProductVisual";
 import CardPaymentForm from "@/components/checkout/CardPaymentForm";
+import PromptPayForm from "@/components/checkout/PromptPayForm";
 import { useCart, type CartLine } from "@/components/cart/CartProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import { formatBaht, SERVICE_CATEGORY, type Product } from "@/data/products";
@@ -179,6 +182,8 @@ export default function CheckoutClient() {
   const [upsellOpen, setUpsellOpen] = useState(false);
   // the prompt appears at most once per checkout — dismissing must never block payment
   const [upsellShown, setUpsellShown] = useState(false);
+  // which payment method the customer picked on the post-order payment screen
+  const [payMethod, setPayMethod] = useState<"card" | "promptpay">("card");
 
   const setField = (name: FieldName) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((f) => ({ ...f, [name]: e.target.value }));
@@ -295,12 +300,47 @@ export default function CheckoutClient() {
               <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
                 {tp("sub", { orderId: placed.id })}
               </p>
+
+              {/* method picker — PromptPay is the dominant method in Thailand,
+                  so it sits alongside card rather than behind it */}
+              <div
+                role="tablist"
+                aria-label={tp("methods.heading")}
+                className="mx-auto mt-8 grid max-w-sm grid-cols-2 gap-2 rounded-full bg-cloud p-1.5"
+              >
+                {(["card", "promptpay"] as const).map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    role="tab"
+                    aria-selected={payMethod === m}
+                    onClick={() => setPayMethod(m)}
+                    className={`flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-full text-[13.5px] font-semibold transition-colors ${
+                      payMethod === m
+                        ? "bg-gold text-forest-950"
+                        : "text-ink-muted hover:text-content"
+                    }`}
+                  >
+                    {m === "card" ? (
+                      <CreditCard className="h-4 w-4" aria-hidden="true" />
+                    ) : (
+                      <QrCode className="h-4 w-4" aria-hidden="true" />
+                    )}
+                    {tp(`methods.${m}`)}
+                  </button>
+                ))}
+              </div>
+
               <div className="mt-8 text-left">
-                <CardPaymentForm
-                  orderId={placed.id}
-                  total={placed.total}
-                  publicKey={omisePublicKey}
-                />
+                {payMethod === "card" ? (
+                  <CardPaymentForm
+                    orderId={placed.id}
+                    total={placed.total}
+                    publicKey={omisePublicKey}
+                  />
+                ) : (
+                  <PromptPayForm orderId={placed.id} total={placed.total} />
+                )}
               </div>
             </>
           ) : (
