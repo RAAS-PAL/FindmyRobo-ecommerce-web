@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Barlow, IBM_Plex_Mono } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, getTranslations } from "next-intl/server";
+import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google";
 import "../globals.css";
 import { themeInitScript } from "@/components/ThemeProvider";
+import { getAdminLocale } from "@/lib/adminLocale";
 
-/* Same font variables as the storefront so theme font tokens resolve. The admin
-   is English-only, so no Thai fallbacks are needed here. */
+/* Same font variables as the storefront so theme font tokens resolve. */
 const barlow = Barlow({
   variable: "--font-barlow",
   subsets: ["latin"],
@@ -17,28 +19,46 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
 });
 
-export const metadata: Metadata = {
-  title: "Admin — RoboStore TH",
-  robots: { index: false, follow: false },
-};
+const prompt = Prompt({
+  variable: "--font-prompt",
+  subsets: ["thai", "latin"],
+  weight: ["500", "600", "700", "800"],
+});
 
-export default function AdminRootLayout({
+const notoSansThai = Noto_Sans_Thai({
+  variable: "--font-noto-thai",
+  subsets: ["thai"],
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getAdminLocale();
+  const t = await getTranslations({ locale, namespace: "admin.meta" });
+  return {
+    title: t("title"),
+    robots: { index: false, follow: false },
+  };
+}
+
+export default async function AdminRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getAdminLocale();
+  const messages = await getMessages({ locale });
+
   return (
-    // The admin has its own html root (it sits outside [locale]), so it needs
-    // its own copy of the pre-paint theme script — without it the panel always
-    // rendered light even when the storefront was set to dark. The theme itself
-    // is shared: both roots read the same localStorage key.
     <html
-      lang="en"
+      lang={locale}
       suppressHydrationWarning
-      className={`${barlow.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="flex min-h-full flex-col bg-cloud">{children}</body>
+      <body className="flex min-h-full flex-col bg-cloud">
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

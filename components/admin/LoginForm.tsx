@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { KeyRound, LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginForm() {
   const router = useRouter();
+  const t = useTranslations("admin.login");
   const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +26,7 @@ export default function LoginForm() {
     });
 
     if (signInError || !data.user) {
-      setError("Wrong email or password.");
+      setError(t("errors.invalidCredentials"));
       setBusy(false);
       return;
     }
@@ -38,7 +40,7 @@ export default function LoginForm() {
 
     if (profile?.role !== "admin") {
       await supabase.auth.signOut();
-      setError("This account does not have admin access.");
+      setError(t("errors.noAccess"));
       setBusy(false);
       return;
     }
@@ -58,7 +60,7 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="email" className="mb-1.5 block text-[13px] font-semibold text-content">
-          Email
+          {t("email")}
         </label>
         <input
           id="email"
@@ -75,7 +77,7 @@ export default function LoginForm() {
       </div>
       <div>
         <label htmlFor="password" className="mb-1.5 block text-[13px] font-semibold text-content">
-          Password
+          {t("password")}
         </label>
         <input
           id="password"
@@ -104,7 +106,7 @@ export default function LoginForm() {
         ) : (
           <KeyRound className="h-4 w-4" aria-hidden="true" />
         )}
-        Sign In
+        {t("submit")}
       </button>
     </form>
   );

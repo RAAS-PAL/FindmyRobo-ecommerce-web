@@ -125,6 +125,220 @@
       }
     }
   },
+  "admin": {
+    "meta": {
+      "title": "แอดมิน — RoboStore TH"
+    },
+    "navigation": {
+      "adminLabel": "แอดมิน",
+      "viewStore": "ดูหน้าร้าน",
+      "themeToDark": "เปลี่ยนเป็นโหมดมืด",
+      "themeToLight": "เปลี่ยนเป็นโหมดสว่าง",
+      "switchLanguage": "เปลี่ยนภาษาแอดมินเป็นภาษาอังกฤษ",
+      "switchLocale": "EN",
+      "switchError": "ไม่สามารถเปลี่ยนภาษาแอดมินได้",
+      "signOut": "ออกจากระบบ"
+    },
+    "login": {
+      "adminLabel": "แอดมิน",
+      "staffOnly": "สำหรับพนักงานเท่านั้น กรุณาเข้าสู่ระบบด้วยบัญชีแอดมิน",
+      "email": "อีเมล",
+      "password": "รหัสผ่าน",
+      "submit": "เข้าสู่ระบบ",
+      "errors": {
+        "invalidCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+        "noAccess": "บัญชีนี้ไม่มีสิทธิ์เข้าถึงระบบแอดมิน"
+      }
+    },
+    "dashboard": {
+      "eyebrow": "แค็ตตาล็อก",
+      "title": "สินค้า",
+      "reorderProducts": "จัดลำดับสินค้า",
+      "addProduct": "เพิ่มสินค้า",
+      "registeredCustomers": "ลูกค้าที่ลงทะเบียน",
+      "connectSupabase": "เชื่อมต่อ Supabase เพื่อดูจำนวนผู้สมัคร",
+      "productsListed": "สินค้าที่แสดง",
+      "empty": "ยังไม่มีสินค้า เพิ่มหุ่นยนต์ตัวแรกของคุณได้เลย",
+      "table": {
+        "product": "สินค้า",
+        "category": "หมวดหมู่",
+        "price": "ราคา",
+        "status": "สถานะ",
+        "actions": "การดำเนินการ"
+      },
+      "status": {
+        "preorder": "พรีออเดอร์",
+        "inStock": "พร้อมจำหน่าย"
+      },
+      "editProduct": "แก้ไข {name}",
+      "unavailableCategoryNote": "สินค้าในหมวดหมู่ที่ยังไม่เปิดใช้งานจะถูกซ่อนไว้หลังหน้า “เร็ว ๆ นี้” จนกว่าจะเปิดหมวดหมู่นั้นใน data/categories.ts"
+    },
+    "productPages": {
+      "backToProducts": "กลับไปหน้าสินค้า",
+      "newTitle": "เพิ่มสินค้า",
+      "newDescription": "กรอกข้อความทั้งภาษาอังกฤษและภาษาไทย หน้าร้านจะแสดงภาษาตามที่ลูกค้ากำลังเลือกดู",
+      "editTitle": "แก้ไขสินค้า",
+      "editDescription": "การเปลี่ยนแปลงจะแสดงบนหน้าร้านทันทีหลังจากบันทึก"
+    },
+    "deleteProduct": {
+      "confirm": "ลบ \"{name}\" หรือไม่? การดำเนินการนี้ย้อนกลับไม่ได้",
+      "failed": "ไม่สามารถลบสินค้าได้",
+      "network": "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้",
+      "label": "ลบ {name}"
+    },
+    "reorder": {
+      "backToProducts": "กลับไปหน้าสินค้า",
+      "eyebrow": "แค็ตตาล็อก",
+      "title": "จัดลำดับสินค้า",
+      "description": "ลากสินค้าให้อยู่ในลำดับที่ต้องการบนหน้าร้านแล้วกดบันทึก หรือใช้ปุ่มลูกศรเพื่อปรับลำดับอย่างแม่นยำด้วยแป้นพิมพ์",
+      "listLabel": "ลำดับการแสดงสินค้า",
+      "moveUp": "เลื่อน {name} ขึ้น",
+      "moveDown": "เลื่อน {name} ลง",
+      "saved": "บันทึกลำดับแล้ว",
+      "saving": "กำลังบันทึก…",
+      "save": "บันทึกลำดับ",
+      "saveError": "ไม่สามารถบันทึกลำดับสินค้าได้"
+    },
+    "productForm": {
+      "errors": {
+        "uploadStatus": "อัปโหลดไม่สำเร็จ (สถานะ {status})",
+        "uploadFailed": "อัปโหลดไม่สำเร็จ",
+        "saveStatus": "บันทึกไม่สำเร็จ (สถานะ {status})",
+        "serverUnavailable": "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้"
+      },
+      "sections": {
+        "basics": "ข้อมูลพื้นฐาน",
+        "marketingEnglish": "ข้อความการตลาด — ภาษาอังกฤษ",
+        "marketingThai": "ข้อความการตลาด — ภาษาไทย",
+        "quickSpecs": "ข้อมูลจำเพาะแบบย่อ — ไม่แสดงบนหน้าสินค้า",
+        "quickSpecsNote": "ข้อมูลที่ลูกค้าเห็นจะมาจากตารางข้อมูลจำเพาะโดยละเอียดด้านล่าง ส่วนพื้นที่ครอบคลุมยังใช้เลือกแพ็กเกจติดตั้งในขั้นตอนชำระเงิน จึงควรกรอกข้อมูลนี้สำหรับหุ่นยนต์",
+        "detailBuilder": "ตัวสร้างหน้ารายละเอียด",
+        "detailBuilderDescription": "ข้อมูลด้านล่างเป็นตัวเลือกสำหรับหุ่นยนต์แต่ละรุ่น ได้แก่ วิดีโอแนะนำ ส่วนเนื้อหา และตารางข้อมูลจำเพาะโดยละเอียดบนหน้าสินค้า"
+      },
+      "fields": {
+        "productName": "ชื่อสินค้า",
+        "price": "ราคา (฿, บาท)",
+        "category": "หมวดหมู่",
+        "comingSoonSuffix": " (เร็ว ๆ นี้)",
+        "productVisual": "รูปภาพสินค้า",
+        "customImage": "รูปภาพกำหนดเอง (URL)",
+        "imageUrl": "URL รูปภาพ",
+        "galleryPhotos": "รูปภาพแกลเลอรี — หนึ่ง URL ต่อบรรทัด (ไม่บังคับ)",
+        "preorder": "พรีออเดอร์ (สินค้ายังไม่พร้อมจำหน่าย)",
+        "englishTagline": "ข้อความโปรย (ภาษาอังกฤษ)",
+        "englishDescription": "คำอธิบาย (ภาษาอังกฤษ)",
+        "englishFeatureBullets": "จุดเด่น (ภาษาอังกฤษ) — หนึ่งรายการต่อบรรทัด",
+        "thaiTagline": "ข้อความโปรย (ภาษาไทย)",
+        "thaiDescription": "คำอธิบาย (ภาษาไทย)",
+        "thaiFeatureBullets": "จุดเด่น (ภาษาไทย) — หนึ่งรายการต่อบรรทัด"
+      },
+      "variants": {
+        "luba": "เครื่องตัดหญ้าขนาดใหญ่",
+        "mini": "เครื่องตัดหญ้าขนาดกะทัดรัด",
+        "pool": "หุ่นยนต์ทำความสะอาดสระ",
+        "install": "บริการติดตั้ง",
+        "demo": "การจองสาธิต"
+      },
+      "specLabels": {
+        "area": "พื้นที่ครอบคลุม (เช่น 3,000 ตร.ม.)",
+        "slope": "ความลาดชันสูงสุด (เช่น 80% (38°))",
+        "cuttingWidth": "ความกว้างการตัด (เช่น 400 มม.)",
+        "runtime": "ระยะเวลาทำงาน (เช่น 180 นาที)",
+        "connectivity": "ระบบนำทางและการเชื่อมต่อ",
+        "filtration": "ระบบกรอง (หุ่นยนต์สระว่ายน้ำ)"
+      },
+      "hints": {
+        "editUrl": "URL: /products/{id} (คงที่ — ลิงก์จะยังใช้งานได้หลังแก้ไข)",
+        "createUrl": "URL: /products/{slug}",
+        "imageUpload": "อัปโหลดรูปภาพหรือวางลิงก์รูปภาพโดยตรง (https://…) ระบบจะใช้ภาพวาดเป็นภาพสำรองหากโหลดรูปไม่สำเร็จ หากเลือกหลายไฟล์ รูปที่เหลือจะถูกเพิ่มลงในแกลเลอรีด้านล่าง",
+        "gallery": "มุมเพิ่มเติมสำหรับแกลเลอรีหน้าสินค้า โดยจะแสดงต่อจากรูปหลักตามลำดับนี้ เว้นว่างไว้หากมีเพียงรูปเดียว",
+        "placeholderArt": "ใช้ภาพตัวอย่างไปก่อนจนกว่าจะมีรูปสินค้าจริง"
+      },
+      "actions": {
+        "uploading": "กำลังอัปโหลด…",
+        "uploadPhoto": "อัปโหลดรูปภาพ",
+        "uploadGalleryPhotos": "อัปโหลดรูปแกลเลอรี",
+        "cancel": "ยกเลิก",
+        "saveChanges": "บันทึกการเปลี่ยนแปลง",
+        "saveProduct": "บันทึกสินค้า"
+      },
+      "aria": {
+        "productPreview": "ตัวอย่างรูปสินค้า",
+        "galleryPhoto": "รูปแกลเลอรี {number}"
+      },
+      "placeholders": {
+        "productName": "MAMMOTION LUBA 3 AWD 3000",
+        "price": "159000",
+        "imageUrl": "https://example.com/robot.jpg",
+        "galleryUrls": "https://example.com/robot-side.jpg\nhttps://example.com/robot-top.jpg",
+        "englishTagline": "All-wheel drive precision for large Thai gardens",
+        "englishFeatureBullets": "AWD climbs slopes up to 80%\nNo boundary wire needed"
+      }
+    },
+    "pageBuilder": {
+      "blocks": {
+        "banner": "รูปภาพเต็มความกว้าง",
+        "feature": "จุดเด่น (หัวข้อ + ข้อความ พร้อมรูปภาพเสริม)",
+        "cardGrid": "ตารางการ์ดรูปภาพ",
+        "imageText": "แถวรูปภาพและข้อความ",
+        "video": "ส่วนวิดีโอ"
+      },
+      "fields": {
+        "imageUrl": "URL รูปภาพ",
+        "imageUrlOptional": "URL รูปภาพ (ไม่บังคับ)",
+        "imagePosition": "ตำแหน่งรูปภาพ",
+        "heading": "หัวข้อ",
+        "headingOptional": "หัวข้อ (ไม่บังคับ)",
+        "text": "ข้อความ",
+        "videoUrl": "URL วิดีโอ (ลิงก์ YouTube หรือไฟล์ .mp4)",
+        "caption": "คำบรรยาย",
+        "captionOptional": "คำบรรยาย (ไม่บังคับ)",
+        "cardImageUrl": "URL รูปภาพการ์ด {number}",
+        "groupTitle": "ชื่อกลุ่ม",
+        "rowLabel": "แถว {number} — ป้ายกำกับ",
+        "value": "ค่า"
+      },
+      "positions": {
+        "right": "รูปภาพอยู่ด้านขวา",
+        "left": "รูปภาพอยู่ด้านซ้าย"
+      },
+      "actions": {
+        "removeCard": "ลบการ์ด {number}",
+        "addCard": "เพิ่มการ์ด",
+        "moveSectionUp": "เลื่อนส่วน {number} ขึ้น",
+        "moveSectionDown": "เลื่อนส่วน {number} ลง",
+        "removeSection": "ลบส่วน {number}",
+        "moveGroupUp": "เลื่อนกลุ่ม {number} ขึ้น",
+        "moveGroupDown": "เลื่อนกลุ่ม {number} ลง",
+        "removeGroup": "ลบกลุ่ม {number}",
+        "removeRow": "ลบแถว {number}",
+        "addRow": "เพิ่มแถว",
+        "addSpecGroup": "เพิ่มกลุ่มข้อมูลจำเพาะ"
+      },
+      "intro": {
+        "title": "วิดีโอแนะนำ",
+        "note": "แสดงใต้ข้อมูลสินค้า (ไม่บังคับ)"
+      },
+      "content": {
+        "title": "ส่วนเนื้อหา",
+        "note": "เพิ่มและจัดลำดับได้อย่างอิสระ รุ่นที่มีรูปน้อยสามารถใช้จำนวนส่วนน้อยลงได้",
+        "sectionLabel": "{number}. {type}"
+      },
+      "specs": {
+        "title": "ตารางข้อมูลจำเพาะโดยละเอียด",
+        "note": "จัดข้อมูลเป็นกลุ่ม และจะแทนแถบข้อมูลจำเพาะแบบย่อเมื่อมีการกรอก",
+        "groupLabel": "กลุ่ม {number}"
+      },
+      "languages": {
+        "en": "อังกฤษ",
+        "th": "ไทย"
+      },
+      "placeholders": {
+        "url": "https://…",
+        "youtubeUrl": "https://www.youtube.com/watch?v=…"
+      }
+    }
+  },
   "cart": {
     "title": "ตะกร้าของคุณ",
     "close": "ปิดตะกร้า",

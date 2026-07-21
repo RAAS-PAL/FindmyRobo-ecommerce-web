@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 import type { LocalizedText, PageBlock, ProductPage } from "@/data/products";
 
@@ -187,11 +188,14 @@ function EnThPair({
   onTh: (v: string) => void;
   multiline?: boolean;
 }) {
+  const t = useTranslations("admin.pageBuilder");
   const Field = multiline ? "textarea" : "input";
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       <div>
-        <label className={miniLabel}>{label} (EN)</label>
+        <label className={miniLabel}>
+          {label} ({t("languages.en")})
+        </label>
         <Field
           value={en}
           rows={multiline ? 3 : undefined}
@@ -202,7 +206,9 @@ function EnThPair({
         />
       </div>
       <div>
-        <label className={miniLabel}>{label} (TH)</label>
+        <label className={miniLabel}>
+          {label} ({t("languages.th")})
+        </label>
         <Field
           value={th}
           rows={multiline ? 3 : undefined}
@@ -218,13 +224,13 @@ function EnThPair({
 
 /* ---------- block editor ---------- */
 
-const BLOCK_LABELS: Record<PageBlock["type"], string> = {
-  banner: "Full-width image",
-  feature: "Feature (heading + text, optional image)",
-  cardGrid: "Image card grid",
-  imageText: "Image + text row",
-  video: "Video section",
-};
+const BLOCK_LABEL_KEYS = {
+  banner: "blocks.banner",
+  feature: "blocks.feature",
+  cardGrid: "blocks.cardGrid",
+  imageText: "blocks.imageText",
+  video: "blocks.video",
+} as const satisfies Record<PageBlock["type"], string>;
 
 function BlockEditor({
   block,
@@ -233,6 +239,7 @@ function BlockEditor({
   block: DraftBlock;
   onChange: (next: DraftBlock) => void;
 }) {
+  const t = useTranslations("admin.pageBuilder");
   const set = (patch: Partial<DraftBlock>) => onChange({ ...block, ...patch });
 
   return (
@@ -242,12 +249,12 @@ function BlockEditor({
         block.type === "imageText") && (
         <div>
           <label className={miniLabel}>
-            Image URL{block.type === "feature" ? " (optional)" : ""}
+            {t(block.type === "feature" ? "fields.imageUrlOptional" : "fields.imageUrl")}
           </label>
           <input
             value={block.image}
             onChange={(e) => set({ image: e.target.value })}
-            placeholder="https://…"
+            placeholder={t("placeholders.url")}
             className={inputClass}
           />
         </div>
@@ -255,21 +262,21 @@ function BlockEditor({
 
       {block.type === "imageText" && (
         <div>
-          <label className={miniLabel}>Image position</label>
+          <label className={miniLabel}>{t("fields.imagePosition")}</label>
           <select
             value={block.imageSide}
             onChange={(e) => set({ imageSide: e.target.value as "left" | "right" })}
             className={inputClass}
           >
-            <option value="right">Image on the right</option>
-            <option value="left">Image on the left</option>
+            <option value="right">{t("positions.right")}</option>
+            <option value="left">{t("positions.left")}</option>
           </select>
         </div>
       )}
 
       {(block.type === "feature" || block.type === "cardGrid" || block.type === "video") && (
         <EnThPair
-          label={`Heading${block.type !== "feature" ? " (optional)" : ""}`}
+          label={t(block.type === "feature" ? "fields.heading" : "fields.headingOptional")}
           en={block.headingEn}
           th={block.headingTh}
           onEn={(v) => set({ headingEn: v })}
@@ -279,7 +286,7 @@ function BlockEditor({
 
       {(block.type === "feature" || block.type === "imageText") && (
         <EnThPair
-          label="Text"
+          label={t("fields.text")}
           multiline
           en={block.bodyEn}
           th={block.bodyTh}
@@ -291,16 +298,16 @@ function BlockEditor({
       {block.type === "video" && (
         <>
           <div>
-            <label className={miniLabel}>Video URL (YouTube link or .mp4)</label>
+            <label className={miniLabel}>{t("fields.videoUrl")}</label>
             <input
               value={block.url}
               onChange={(e) => set({ url: e.target.value })}
-              placeholder="https://www.youtube.com/watch?v=…"
+              placeholder={t("placeholders.youtubeUrl")}
               className={inputClass}
             />
           </div>
           <EnThPair
-            label="Caption (optional)"
+            label={t("fields.captionOptional")}
             en={block.captionEn}
             th={block.captionTh}
             onEn={(v) => set({ captionEn: v })}
@@ -319,7 +326,9 @@ function BlockEditor({
               <div className="flex items-start gap-2">
                 <div className="flex-1 space-y-3">
                   <div>
-                    <label className={miniLabel}>Card {i + 1} image URL</label>
+                    <label className={miniLabel}>
+                      {t("fields.cardImageUrl", { number: i + 1 })}
+                    </label>
                     <input
                       value={card.image}
                       onChange={(e) => {
@@ -327,12 +336,12 @@ function BlockEditor({
                         cards[i] = { ...card, image: e.target.value };
                         set({ cards });
                       }}
-                      placeholder="https://…"
+                      placeholder={t("placeholders.url")}
                       className={inputClass}
                     />
                   </div>
                   <EnThPair
-                    label="Caption"
+                    label={t("fields.caption")}
                     en={card.captionEn}
                     th={card.captionTh}
                     onEn={(v) => {
@@ -348,7 +357,7 @@ function BlockEditor({
                   />
                 </div>
                 <IconButton
-                  label={`Remove card ${i + 1}`}
+                  label={t("actions.removeCard", { number: i + 1 })}
                   onClick={() => set({ cards: block.cards.filter((_, j) => j !== i) })}
                 >
                   <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -364,7 +373,7 @@ function BlockEditor({
             className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-            Add card
+            {t("actions.addCard")}
           </button>
         </div>
       )}
@@ -381,6 +390,7 @@ export default function PageBuilder({
   draft: DraftPage;
   onChange: (next: DraftPage) => void;
 }) {
+  const t = useTranslations("admin.pageBuilder");
   const set = (patch: Partial<DraftPage>) => onChange({ ...draft, ...patch });
 
   const move = <T,>(arr: T[], from: number, dir: -1 | 1): T[] => {
@@ -396,23 +406,23 @@ export default function PageBuilder({
       {/* intro video */}
       <div className="space-y-3">
         <h3 className="text-[13.5px] font-bold text-content">
-          Intro video
+          {t("intro.title")}
           <span className="ml-2 font-normal text-ink-muted">
-            shown under the product info (optional)
+            {t("intro.note")}
           </span>
         </h3>
         <div>
-          <label className={miniLabel}>Video URL (YouTube link or .mp4)</label>
+          <label className={miniLabel}>{t("fields.videoUrl")}</label>
           <input
             value={draft.videoUrl}
             onChange={(e) => set({ videoUrl: e.target.value })}
-            placeholder="https://www.youtube.com/watch?v=…"
+            placeholder={t("placeholders.youtubeUrl")}
             className={inputClass}
           />
         </div>
         {draft.videoUrl.trim() && (
           <EnThPair
-            label="Caption (optional)"
+            label={t("fields.captionOptional")}
             en={draft.videoCaptionEn}
             th={draft.videoCaptionTh}
             onEn={(v) => set({ videoCaptionEn: v })}
@@ -424,34 +434,37 @@ export default function PageBuilder({
       {/* content blocks */}
       <div className="space-y-3">
         <h3 className="text-[13.5px] font-bold text-content">
-          Content sections
+          {t("content.title")}
           <span className="ml-2 font-normal text-ink-muted">
-            mix and reorder freely — robots with fewer photos just use fewer sections
+            {t("content.note")}
           </span>
         </h3>
         {draft.blocks.map((block, i) => (
           <div key={i} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
               <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
-                {i + 1}. {BLOCK_LABELS[block.type]}
+                {t("content.sectionLabel", {
+                  number: i + 1,
+                  type: t(BLOCK_LABEL_KEYS[block.type]),
+                })}
               </p>
               <div className="flex items-center">
                 <IconButton
-                  label={`Move section ${i + 1} up`}
+                  label={t("actions.moveSectionUp", { number: i + 1 })}
                   onClick={() => set({ blocks: move(draft.blocks, i, -1) })}
                   disabled={i === 0}
                 >
                   <ChevronUp className="h-4 w-4" aria-hidden="true" />
                 </IconButton>
                 <IconButton
-                  label={`Move section ${i + 1} down`}
+                  label={t("actions.moveSectionDown", { number: i + 1 })}
                   onClick={() => set({ blocks: move(draft.blocks, i, 1) })}
                   disabled={i === draft.blocks.length - 1}
                 >
                   <ChevronDown className="h-4 w-4" aria-hidden="true" />
                 </IconButton>
                 <IconButton
-                  label={`Remove section ${i + 1}`}
+                  label={t("actions.removeSection", { number: i + 1 })}
                   onClick={() => set({ blocks: draft.blocks.filter((_, j) => j !== i) })}
                 >
                   <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -469,7 +482,7 @@ export default function PageBuilder({
           </div>
         ))}
         <div className="flex flex-wrap gap-2">
-          {(Object.keys(BLOCK_LABELS) as PageBlock["type"][]).map((type) => (
+          {(Object.keys(BLOCK_LABEL_KEYS) as PageBlock["type"][]).map((type) => (
             <button
               key={type}
               type="button"
@@ -477,7 +490,7 @@ export default function PageBuilder({
               className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
             >
               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-              {BLOCK_LABELS[type]}
+              {t(BLOCK_LABEL_KEYS[type])}
             </button>
           ))}
         </div>
@@ -486,34 +499,34 @@ export default function PageBuilder({
       {/* spec table */}
       <div className="space-y-3">
         <h3 className="text-[13.5px] font-bold text-content">
-          Detailed specification table
+          {t("specs.title")}
           <span className="ml-2 font-normal text-ink-muted">
-            grouped rows; replaces the compact spec band when filled in
+            {t("specs.note")}
           </span>
         </h3>
         {draft.specGroups.map((group, gi) => (
           <div key={gi} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
               <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
-                Group {gi + 1}
+                {t("specs.groupLabel", { number: gi + 1 })}
               </p>
               <div className="flex items-center">
                 <IconButton
-                  label={`Move group ${gi + 1} up`}
+                  label={t("actions.moveGroupUp", { number: gi + 1 })}
                   onClick={() => set({ specGroups: move(draft.specGroups, gi, -1) })}
                   disabled={gi === 0}
                 >
                   <ChevronUp className="h-4 w-4" aria-hidden="true" />
                 </IconButton>
                 <IconButton
-                  label={`Move group ${gi + 1} down`}
+                  label={t("actions.moveGroupDown", { number: gi + 1 })}
                   onClick={() => set({ specGroups: move(draft.specGroups, gi, 1) })}
                   disabled={gi === draft.specGroups.length - 1}
                 >
                   <ChevronDown className="h-4 w-4" aria-hidden="true" />
                 </IconButton>
                 <IconButton
-                  label={`Remove group ${gi + 1}`}
+                  label={t("actions.removeGroup", { number: gi + 1 })}
                   onClick={() =>
                     set({ specGroups: draft.specGroups.filter((_, j) => j !== gi) })
                   }
@@ -523,7 +536,7 @@ export default function PageBuilder({
               </div>
             </div>
             <EnThPair
-              label="Group title"
+              label={t("fields.groupTitle")}
               en={group.titleEn}
               th={group.titleTh}
               onEn={(v) => {
@@ -545,7 +558,7 @@ export default function PageBuilder({
                 >
                   <div className="grid flex-1 gap-3 sm:grid-cols-2">
                     <EnThPair
-                      label={`Row ${ri + 1} — label`}
+                      label={t("fields.rowLabel", { number: ri + 1 })}
                       en={row.labelEn}
                       th={row.labelTh}
                       onEn={(v) => {
@@ -564,7 +577,7 @@ export default function PageBuilder({
                       }}
                     />
                     <EnThPair
-                      label="Value"
+                      label={t("fields.value")}
                       en={row.valueEn}
                       th={row.valueTh}
                       onEn={(v) => {
@@ -584,7 +597,7 @@ export default function PageBuilder({
                     />
                   </div>
                   <IconButton
-                    label={`Remove row ${ri + 1}`}
+                    label={t("actions.removeRow", { number: ri + 1 })}
                     onClick={() => {
                       const specGroups = [...draft.specGroups];
                       specGroups[gi] = {
@@ -608,7 +621,7 @@ export default function PageBuilder({
                 className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-                Add row
+                {t("actions.addRow")}
               </button>
             </div>
           </div>
@@ -626,7 +639,7 @@ export default function PageBuilder({
           className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-          Add spec group
+          {t("actions.addSpecGroup")}
         </button>
       </div>
     </div>

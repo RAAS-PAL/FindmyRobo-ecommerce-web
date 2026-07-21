@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoaderCircle, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function DeleteProductButton({
   id,
@@ -12,10 +13,11 @@ export default function DeleteProductButton({
   name: string;
 }) {
   const router = useRouter();
+  const t = useTranslations("admin.deleteProduct");
   const [busy, setBusy] = useState(false);
 
   const handleDelete = async () => {
-    if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    if (!window.confirm(t("confirm", { name }))) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
@@ -23,10 +25,9 @@ export default function DeleteProductButton({
         router.refresh();
         return;
       }
-      const data = await res.json().catch(() => null);
-      window.alert(data?.error ?? "Could not delete product.");
+      window.alert(t("failed"));
     } catch {
-      window.alert("Could not reach the server.");
+      window.alert(t("network"));
     } finally {
       setBusy(false);
     }
@@ -37,7 +38,7 @@ export default function DeleteProductButton({
       type="button"
       onClick={handleDelete}
       disabled={busy}
-      aria-label={`Delete ${name}`}
+      aria-label={t("label", { name })}
       className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
     >
       {busy ? (
