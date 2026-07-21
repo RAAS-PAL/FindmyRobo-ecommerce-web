@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Script from "next/script";
 import { CreditCard, Info, LoaderCircle, Lock } from "lucide-react";
+import { useRouter } from "@/i18n/navigation";
 import { formatBaht } from "@/data/products";
 
 /**
@@ -51,6 +52,8 @@ export default function CardPaymentForm({
   publicKey: string;
 }) {
   const t = useTranslations("payment");
+  const locale = useLocale();
+  const router = useRouter();
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,7 +102,9 @@ export default function CardPaymentForm({
       const res = await fetch("/api/checkout/pay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, token }),
+        // locale travels with the request so the 3-D Secure return URL Omise
+        // redirects to keeps the customer in the language they were shopping in
+        body: JSON.stringify({ orderId, token, locale }),
       });
       const body = await res.json().catch(() => null);
 
@@ -113,7 +118,9 @@ export default function CardPaymentForm({
         setBusy(false);
         return;
       }
-      window.location.href = `/checkout/return?order=${encodeURIComponent(orderId)}`;
+      // locale-aware router: the app uses `localePrefix: "as-needed"`, so a raw
+      // "/checkout/return" would drop an English shopper back into Thai
+      router.push(`/checkout/return?order=${encodeURIComponent(orderId)}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.declined"));
       setBusy(false);

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getOrderById, updateOrderPayment } from "@/lib/orderStore";
-import { getCharge, omiseConfigured } from "@/lib/omise";
-import { chargeToOrderStatus } from "@/app/api/checkout/pay/route";
+import { chargeToOrderStatus, getCharge, omiseConfigured, toSatang } from "@/lib/omise";
 
 /**
  * Omise webhook — the source of truth for payment state.
@@ -54,9 +53,9 @@ export async function POST(request: Request) {
     }
 
     // Guard against a charge whose amount doesn't match the order it claims.
-    if (charge.amount !== order.total * 100) {
+    if (charge.amount !== toSatang(order.total)) {
       console.error(
-        `Webhook amount mismatch for ${orderId}: charge ${charge.amount} vs order ${order.total * 100}`
+        `Webhook amount mismatch for ${orderId}: charge ${charge.amount} vs order ${toSatang(order.total)}`
       );
       return NextResponse.json({ ok: true, ignored: "amount mismatch" });
     }

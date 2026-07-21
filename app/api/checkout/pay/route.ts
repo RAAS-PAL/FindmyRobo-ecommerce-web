@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { getOrderById, updateOrderPayment } from "@/lib/orderStore";
 import {
+  chargeToOrderStatus,
   createCardCharge,
   omiseConfigured,
   toSatang,
   type OmiseCharge,
 } from "@/lib/omise";
-import type { OrderStatus } from "@/lib/checkout";
+import { paymentReturnUrl } from "@/lib/paymentReturn";
 
 /**
  * Pay an order with a card token.
@@ -15,18 +16,6 @@ import type { OrderStatus } from "@/lib/checkout";
  * card details never reach this server (PCI SAQ-A). The amount charged is read
  * from the stored order, so a tampered request can't change what is charged.
  */
-
-/** Omise charge status -> our order status. */
-export function chargeToOrderStatus(charge: OmiseCharge): OrderStatus {
-  if (charge.paid || charge.status === "successful") return "paid";
-  if (charge.status === "failed" || charge.status === "reversed") return "failed";
-  if (charge.status === "expired") return "expired";
-  return "pending_payment"; // includes 3-D Secure / redirect in progress
-}
-
-function siteOrigin(request: Request): string {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin;
-}
 
 export async function POST(request: Request) {
   if (!omiseConfigured()) {
@@ -45,6 +34,9 @@ export async function POST(request: Request) {
 
   const orderId = typeof body.orderId === "string" ? body.orderId : "";
   const token = typeof body.token === "string" ? body.token : "";
+  // Locale is only used to build the return URL; paymentReturnUrl falls back to
+  // the default locale if it is missing or not one we serve.
+  const locale = typeof body.locale === "string" ? body.locale : undefined;
   if (!orderId || !token) {
     return NextResponse.json({ error: "orderId and token are required" }, { status: 400 });
   }
@@ -71,7 +63,7 @@ export async function POST(request: Request) {
       amount: toSatang(order.total),
       token,
       orderId: order.id,
-      returnUri: `${siteOrigin(request)}/en/checkout/return?order=${encodeURIComponent(order.id)}`,
+      returnUri: paymentReturnUrl(request, order.id, locale),
       description: `RoboStore TH ${order.id}`,
     });
   } catch (e) {
