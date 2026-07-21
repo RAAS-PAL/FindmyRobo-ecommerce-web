@@ -162,7 +162,7 @@ export default function Navbar() {
           : "border-forest-100/70 bg-surface"
       }`}
     >
-      <nav className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <nav className="relative mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="RoboStore TH home">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold text-forest-950">
@@ -178,7 +178,7 @@ export default function Navbar() {
           {navLinks.map((link, linkIndex) => (
             <li
               key={link.label}
-              className="relative"
+              className={linkIndex === 0 ? "static" : "relative"}
               onMouseEnter={() => link.children && setDesktopMenu(linkIndex)}
               onMouseLeave={() => link.children && setDesktopMenu(null)}
               onBlur={(event) => {
@@ -221,14 +221,18 @@ export default function Navbar() {
               )}
               {link.children && (
                 <div
-                  className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 transition-all duration-200 ${
+                  className={`absolute top-full z-50 pt-3 transition-all duration-200 ${
+                    linkIndex === 0
+                      ? "left-4 right-4 mx-auto w-[720px] max-w-[calc(100%-2rem)]"
+                      : "left-1/2 -translate-x-1/2"
+                  } ${
                     desktopMenu === linkIndex
                       ? "visible translate-y-0 opacity-100"
                       : "invisible translate-y-2 opacity-0"
                   }`}
                 >
                   {linkIndex === 0 ? (
-                    <div className="grid w-[720px] grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
+                    <div className="grid w-full grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
                       <div className="border-r border-forest-100 p-2.5">
                         {categories.map((category) => (
                           <Link
