@@ -26,6 +26,7 @@ interface ProductRow {
   image_url: string | null;
   images: string[] | null;
   preorder: boolean;
+  visible?: boolean;
   specs: Product["specs"];
   tagline: Product["tagline"];
   description: Product["description"];
@@ -44,6 +45,9 @@ function rowToProduct(row: ProductRow): Product {
     ...(row.image_url ? { imageUrl: row.image_url } : {}),
     ...(row.images?.length ? { images: row.images } : {}),
     preorder: row.preorder,
+    // absent column (pre-migration) reads as visible so the storefront never
+    // blanks out before add-product-visibility.sql is applied
+    visible: row.visible ?? true,
     specs: row.specs ?? {},
     tagline: row.tagline,
     description: row.description,
@@ -67,6 +71,7 @@ function productFields(
     image_url: product.imageUrl ?? null,
     images: product.images ?? [],
     preorder: product.preorder ?? false,
+    visible: product.visible ?? true,
     specs: product.specs,
     tagline: product.tagline,
     description: product.description,
@@ -75,7 +80,8 @@ function productFields(
   };
 }
 
-export async function getAllProducts(): Promise<Product[]> {
+/** Every product in display order, hidden ones included. */
+async function fetchAllProducts(): Promise<Product[]> {
   const supabase = createServiceClient();
   let result = await supabase
     .from(TABLE)
@@ -93,6 +99,23 @@ export async function getAllProducts(): Promise<Product[]> {
   const { data, error } = result;
   if (error) throw new Error(`Failed to load products: ${error.message}`);
   return (data ?? []).map(rowToProduct);
+}
+
+/**
+ * Storefront catalog — hidden products excluded. Every customer-facing read
+ * (shop grid, home, search, checkout repricing) goes through here, so a hidden
+ * product is unbuyable and unlinkable, not merely unlisted.
+ *
+ * Filtering happens in code rather than in the query so this keeps working if
+ * the `visible` column doesn't exist yet (absent → treated as visible).
+ */
+export async function getAllProducts(): Promise<Product[]> {
+  return (await fetchAllProducts()).filter((p) => p.visible !== false);
+}
+
+/** Admin catalog — includes hidden products so staff can manage and reveal them. */
+export async function getAllProductsForAdmin(): Promise<Product[]> {
+  return fetchAllProducts();
 }
 
 export async function getProductById(id: string): Promise<Product | undefined> {
@@ -125,7 +148,8 @@ export async function getProductsByCategory(
   }
   const { data, error } = result;
   if (error) throw new Error(`Failed to load ${category} products: ${error.message}`);
-  return (data ?? []).map(rowToProduct);
+  // storefront read — hidden products are excluded
+  return (data ?? []).map(rowToProduct).filter((p) => p.visible !== false);
 }
 
 export async function addProduct(product: Product): Promise<void> {
@@ -150,6 +174,21 @@ export async function updateProduct(id: string, product: Product): Promise<boole
     .eq("id", id)
     .select("id");
   if (error) throw new Error(`Failed to update product "${id}": ${error.message}`);
+  return (data?.length ?? 0) > 0;
+}
+
+/** Show/hide a product on the storefront without touching the rest of its data. */
+export async function setProductVisibility(
+  id: string,
+  visible: boolean
+): Promise<boolean> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .update({ visible })
+    .eq("id", id)
+    .select("id");
+  if (error) throw new Error(`Failed to update visibility for "${id}": ${error.message}`);
   return (data?.length ?? 0) > 0;
 }
 

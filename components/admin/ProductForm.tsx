@@ -404,6 +404,24 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             {t("fields.preorder")}
           </label>
         </div>
+        <div className="sm:col-span-2">
+          {/* hidden 'false' pairs with the checkbox so an unchecked box submits
+              as false rather than being omitted (see parseProduct) */}
+          <input type="hidden" name="visible" value="false" />
+          <label className="flex items-center gap-2.5">
+            <input
+              name="visible"
+              type="checkbox"
+              value="true"
+              defaultChecked={initial?.visible ?? true}
+              className="h-4.5 w-4.5 rounded border-forest-100 accent-[#f5c842]"
+            />
+            <span className="text-[13.5px] font-medium text-content">
+              {t("fields.visible")}
+            </span>
+          </label>
+          <p className={hintClass}>{t("hints.visible")}</p>
+        </div>
       </Section>
 
       <Section title={t("sections.marketingEnglish")}>

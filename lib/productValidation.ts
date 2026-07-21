@@ -207,6 +207,11 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   const page = parsePage(body.page);
   if (typeof page === "string") return page;
 
+  // Visible unless explicitly turned off. The form pairs a hidden "false" input
+  // with the checkbox so an unchecked box arrives as "false" rather than absent;
+  // any other value (incl. a payload that omits it entirely) defaults to shown.
+  const visible = body.visible !== "false" && body.visible !== false;
+
   return {
     id,
     name,
@@ -216,6 +221,7 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
     ...(imageUrl ? { imageUrl } : {}),
     ...(images.length > 0 ? { images } : {}),
     ...(body.preorder ? { preorder: true } : {}),
+    visible,
     specs,
     tagline: { en: taglineEn, th: taglineTh },
     description: { en: descriptionEn, th: descriptionTh },

@@ -34,7 +34,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const product = await getProductById(id);
-  if (!product) return {};
+  if (!product || product.visible === false) return {};
   return { title: `${product.name} — RoboStore TH` };
 }
 
@@ -47,7 +47,8 @@ export default async function ProductPage({
   setRequestLocale(locale);
 
   const product = await getProductById(id);
-  if (!product) notFound();
+  // hidden products are unreachable by direct URL, not just unlisted
+  if (!product || product.visible === false) notFound();
 
   const t = await getTranslations("productDetail");
   const tc = await getTranslations("categories");
