@@ -72,6 +72,8 @@ export interface Order {
   currency: string;
   payment?: OrderPayment;
   createdAt: string;
+  /** Last mutation time (payment settled, status changed). Admin views only. */
+  updatedAt?: string;
 }
 
 /** Thai mobile/landline: 9–10 digits, optionally +66 with 8–9 digits after. */
