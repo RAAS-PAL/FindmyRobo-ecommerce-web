@@ -22,6 +22,8 @@
     "support": "Support",
     "blog": "Blog",
     "searchPlaceholder": "What are you looking for?",
+    "searchNoResults": "No products found for “{query}”",
+    "searchViewAll": "View all results for “{query}”",
     "bookDemo": "Book a Free Demo",
     "cartLabel": "Shopping cart, {count} items",
     "themeToDark": "Switch to dark mode",
@@ -291,6 +293,19 @@
     "backToShop": "Browse all robots",
     "metaTitle": "Shop Robots — RoboStore TH"
   },
+  "search": {
+    "eyebrow": "Catalog Search",
+    "heading": "Search Our Robots",
+    "resultsFor": "Results for “{query}”",
+    "resultCount": "{count, plural, one {# product found} other {# products found}}",
+    "emptyTitle": "Start with the search bar above",
+    "emptyBody": "Search by robot name, category, feature, coverage area, or model number.",
+    "noResultsTitle": "No matching products",
+    "noResultsBody": "We couldn’t find anything matching “{query}”. Try a model name, robot type, or a broader term.",
+    "browseAll": "Browse all products",
+    "metaTitle": "Search Products — RoboStore TH",
+    "metaTitleQuery": "Search: {query} — RoboStore TH"
+  },
   "productDetail": {
     "home": "Home",
     "shop": "Shop",
@@ -306,6 +321,9 @@
     "galleryPrevious": "Previous photo",
     "galleryNext": "Next photo",
     "galleryThumbnail": "View photo",
+    "galleryOpenFullscreen": "View full screen",
+    "galleryCloseFullscreen": "Close full-screen image",
+    "galleryImageCount": "Image {current} of {total}",
     "specLabels": {
       "area": "Coverage Area",
       "slope": "Max Slope",

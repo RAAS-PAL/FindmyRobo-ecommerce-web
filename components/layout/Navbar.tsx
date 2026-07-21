@@ -8,7 +8,6 @@ import {
   Calendar,
   ChevronDown,
   Menu,
-  Search,
   ShoppingCart,
   User,
   X,
@@ -20,6 +19,7 @@ import ThemeToggle from "@/components/layout/ThemeToggle";
 import { useCart } from "@/components/cart/CartProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
+import CatalogSearch from "@/components/layout/CatalogSearch";
 import { createClient } from "@/lib/supabase/client";
 import type { CategorySlug } from "@/data/categories";
 import type { Locale } from "@/data/products";
@@ -329,18 +329,11 @@ export default function Navbar() {
 
         {/* right cluster */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <label className="relative hidden lg:block">
-            <span className="sr-only">{t("searchPlaceholder")}</span>
-            <Search
-              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted/60"
-              aria-hidden="true"
-            />
-            <input
-              type="search"
-              placeholder={t("searchPlaceholder")}
-              className="h-11 w-44 rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-[13px] text-content placeholder:text-ink-muted/70 transition-all focus:w-56 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
-            />
-          </label>
+          <CatalogSearch
+            className="hidden lg:block"
+            inputClassName="h-11 w-44 rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-[13px] text-content placeholder:text-ink-muted/70 transition-all focus:w-56 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
+            dropdownClassName="right-0 w-[360px]"
+          />
 
           <motion.a
             href="#contact"
@@ -430,18 +423,12 @@ export default function Navbar() {
               </div>
 
               <div className="flex-1 overflow-y-auto px-5 py-6">
-                <label className="relative mb-6 block">
-                  <span className="sr-only">{t("searchPlaceholder")}</span>
-                  <Search
-                    className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted/60"
-                    aria-hidden="true"
-                  />
-                  <input
-                    type="search"
-                    placeholder={t("searchPlaceholder")}
-                    className="h-12 w-full rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-sm text-content placeholder:text-ink-muted/70 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
-                  />
-                </label>
+                <CatalogSearch
+                  className="mb-6 block"
+                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-sm text-content placeholder:text-ink-muted/70 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
+                  dropdownClassName="inset-x-0 w-full"
+                  onNavigate={() => setOpen(false)}
+                />
                 <ul className="space-y-1">
                   {navLinks.map((link, i) => (
                     <motion.li

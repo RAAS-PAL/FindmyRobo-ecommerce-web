@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
 import ProductVisual from "@/components/ui/ProductVisual";
 import type { Product } from "@/data/products";
 
@@ -21,13 +21,91 @@ export default function ProductGallery({
   labels,
 }: {
   product: Pick<Product, "name" | "variant" | "imageUrl" | "images">;
-  labels: { previous: string; next: string; thumbnail: string };
+  labels: {
+    previous: string;
+    next: string;
+    thumbnail: string;
+    openFullscreen: string;
+    closeFullscreen: string;
+    imageCount: string;
+  };
 }) {
   const [index, setIndex] = useState(0);
+  const openerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const images = [product.imageUrl, ...(product.images ?? [])].filter(
     (url): url is string => !!url
   );
+
+  const go = (next: number) => setIndex((next + images.length) % images.length);
+
+  const openFullscreen = () => dialogRef.current?.showModal();
+  const closeFullscreen = () => dialogRef.current?.close();
+
+  const lightbox = images[index] ? (
+        <dialog
+          ref={dialogRef}
+          role="dialog"
+          aria-label={product.name}
+          onClose={() => openerRef.current?.focus()}
+          onKeyDown={(event) => {
+            if (images.length > 1 && event.key === "ArrowLeft") {
+              event.preventDefault();
+              go(index - 1);
+            }
+            if (images.length > 1 && event.key === "ArrowRight") {
+              event.preventDefault();
+              go(index + 1);
+            }
+          }}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeFullscreen();
+          }}
+          className="fixed inset-0 z-[100] m-0 h-screen max-h-none w-screen max-w-none border-0 bg-black/92 p-4 backdrop:bg-black/70 backdrop:backdrop-blur-sm open:flex open:items-center open:justify-center sm:p-8"
+        >
+          <button
+            type="button"
+            autoFocus
+            onClick={closeFullscreen}
+            aria-label={labels.closeFullscreen}
+            className="absolute right-4 top-4 z-10 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:right-7 sm:top-7"
+          >
+            <X className="h-6 w-6" aria-hidden="true" />
+          </button>
+
+          {images.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={() => go(index - 1)}
+                aria-label={labels.previous}
+                className="absolute left-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:left-7"
+              >
+                <ChevronLeft className="h-6 w-6" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => go(index + 1)}
+                aria-label={labels.next}
+                className="absolute right-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:right-7"
+              >
+                <ChevronRight className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </>
+          )}
+
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={images[index]}
+            alt={index === 0 ? product.name : `${product.name} — ${index + 1}`}
+            className="max-h-[calc(100vh-7rem)] max-w-[calc(100vw-2rem)] select-none object-contain sm:max-w-[calc(100vw-8rem)]"
+          />
+          <p aria-live="polite" className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-xs text-white/70 sm:bottom-6">
+            {labels.imageCount.replace("#current#", String(index + 1)).replace("#total#", String(images.length))}
+          </p>
+        </dialog>
+      ) : null;
 
   const panelClass =
     "relative flex min-h-[430px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-forest-950 via-forest to-forest-800 p-5 sm:min-h-[520px] sm:p-8";
@@ -40,17 +118,38 @@ export default function ProductGallery({
 
   if (images.length < 2) {
     return (
-      <div className={`${panelClass} items-center justify-center`}>
-        {glow}
-        <ProductVisual
-          product={product}
-          className="relative mx-auto h-[360px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(6,31,21,0.7)] sm:h-[440px]"
-        />
-      </div>
+      <>
+        <div className={`${panelClass} items-center justify-center`}>
+          {glow}
+          {images.length === 1 ? (
+            <button
+              ref={openerRef}
+              type="button"
+              onClick={openFullscreen}
+              aria-label={labels.openFullscreen}
+              className="group/image relative flex h-full w-full cursor-zoom-in items-center justify-center"
+            >
+              <ProductVisual
+                product={product}
+                className="relative mx-auto h-[360px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(6,31,21,0.7)] transition-transform duration-300 group-hover/image:scale-[1.02] sm:h-[440px]"
+              />
+              <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-black/55 px-3 py-2 text-xs font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
+                <Maximize2 className="h-4 w-4" aria-hidden="true" />
+                {labels.openFullscreen}
+              </span>
+            </button>
+          ) : (
+            <ProductVisual
+              product={product}
+              className="relative mx-auto h-[360px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(6,31,21,0.7)] sm:h-[440px]"
+            />
+          )}
+        </div>
+        {lightbox}
+      </>
     );
   }
 
-  const go = (next: number) => setIndex((next + images.length) % images.length);
   // hidden at rest, revealed while the panel is hovered or holds focus
   const onReveal =
     "opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100";
@@ -60,7 +159,13 @@ export default function ProductGallery({
       {glow}
 
       {/* stage — every photo stays mounted so switching never re-fetches */}
-      <div className="relative flex-1">
+      <button
+        ref={openerRef}
+        type="button"
+        onClick={openFullscreen}
+        aria-label={labels.openFullscreen}
+        className="group/image relative flex-1 cursor-zoom-in"
+      >
         {images.map((src, i) => (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -74,7 +179,11 @@ export default function ProductGallery({
             }`}
           />
         ))}
-      </div>
+        <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-black/55 px-3 py-2 text-xs font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
+          <Maximize2 className="h-4 w-4" aria-hidden="true" />
+          {labels.openFullscreen}
+        </span>
+      </button>
 
       <button
         type="button"
@@ -136,6 +245,7 @@ export default function ProductGallery({
           ))}
         </div>
       </div>
+      {lightbox}
     </div>
   );
 }

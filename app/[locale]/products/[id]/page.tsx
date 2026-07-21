@@ -101,6 +101,9 @@ export default async function ProductPage({
                 previous: t("galleryPrevious"),
                 next: t("galleryNext"),
                 thumbnail: t("galleryThumbnail"),
+                openFullscreen: t("galleryOpenFullscreen"),
+                closeFullscreen: t("galleryCloseFullscreen"),
+                imageCount: t("galleryImageCount", { current: "#current#", total: "#total#" }),
               }}
             />
           </FadeIn>
