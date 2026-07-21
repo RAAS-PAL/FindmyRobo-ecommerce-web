@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ImagePlus, LoaderCircle, Save } from "lucide-react";
 import { categories } from "@/data/categories";
 import {
@@ -17,22 +18,22 @@ import PageBuilder, {
   type DraftPage,
 } from "@/components/admin/PageBuilder";
 
-const SPEC_LABELS: Record<SpecKey, string> = {
-  area: "Coverage area (e.g. 3,000 m²)",
-  slope: "Max slope (e.g. 80% (38°))",
-  cuttingWidth: "Cutting width (e.g. 400 mm)",
-  runtime: "Runtime (e.g. 180 min)",
-  connectivity: "Navigation & connectivity",
-  filtration: "Filtration (pool robots)",
-};
+const SPEC_LABEL_KEYS = {
+  area: "specLabels.area",
+  slope: "specLabels.slope",
+  cuttingWidth: "specLabels.cuttingWidth",
+  runtime: "specLabels.runtime",
+  connectivity: "specLabels.connectivity",
+  filtration: "specLabels.filtration",
+} as const satisfies Record<SpecKey, string>;
 
-const VARIANT_LABELS: Record<(typeof ROBOT_VARIANTS)[number], string> = {
-  luba: "Large mower",
-  mini: "Compact mower",
-  pool: "Pool robot",
-  install: "Installation service",
-  demo: "Demo booking",
-};
+const VARIANT_LABEL_KEYS = {
+  luba: "variants.luba",
+  mini: "variants.mini",
+  pool: "variants.pool",
+  install: "variants.install",
+  demo: "variants.demo",
+} as const satisfies Record<(typeof ROBOT_VARIANTS)[number], string>;
 
 const slugify = (name: string) =>
   name
@@ -50,13 +51,19 @@ const hintClass = "mt-1 text-[11.5px] text-ink-muted";
 const uploadButtonClass =
   "mt-2 flex min-h-[42px] cursor-pointer items-center gap-2 rounded-full border border-forest-100 px-4 text-[13px] font-semibold text-content transition-colors hover:border-gold disabled:cursor-not-allowed disabled:opacity-50";
 
+class UploadStatusError extends Error {
+  constructor(readonly status: number) {
+    super();
+  }
+}
+
 /** Send one photo to the admin uploader; resolves to its public URL. */
 async function uploadPhoto(file: File): Promise<string> {
   const body = new FormData();
   body.append("file", file);
   const res = await fetch("/api/admin/upload", { method: "POST", body });
-  const json = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(json?.error ?? `Upload failed (${res.status})`);
+  if (!res.ok) throw new UploadStatusError(res.status);
+  const json = await res.json();
   return json.url as string;
 }
 
@@ -84,6 +91,8 @@ function Section({
  * immutable so storefront URLs survive renames.
  */
 export default function ProductForm({ initial }: { initial?: Product }) {
+  const t = useTranslations("admin.productForm");
+  const tc = useTranslations("categories");
   const router = useRouter();
   const isEdit = initial !== undefined;
   const [busy, setBusy] = useState(false);
@@ -125,7 +134,11 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         appendGallery(urls);
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Upload failed");
+      setError(
+        e instanceof UploadStatusError
+          ? t("errors.uploadStatus", { status: e.status })
+          : t("errors.uploadFailed")
+      );
       window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
       setUploading(null);
@@ -163,11 +176,10 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         router.refresh();
         return;
       }
-      const body = await res.json().catch(() => null);
-      setError(body?.error ?? `Save failed (${res.status})`);
+      setError(t("errors.saveStatus", { status: res.status }));
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
-      setError("Could not reach the server.");
+      setError(t("errors.serverUnavailable"));
     } finally {
       setBusy(false);
     }
@@ -184,10 +196,10 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         </p>
       )}
 
-      <Section title="Basics">
+      <Section title={t("sections.basics")}>
         <div className="sm:col-span-2">
           <label htmlFor="name" className={labelClass}>
-            Product name
+            {t("fields.productName")}
           </label>
           <input
             id="name"
@@ -195,25 +207,24 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="MAMMOTION LUBA 3 AWD 3000"
+            placeholder={t("placeholders.productName")}
             className={inputClass}
           />
           {isEdit ? (
             <p className={hintClass}>
-              URL: /products/<span className="font-mono">{initial.id}</span>{" "}
-              (fixed — links keep working after edits)
+              {t("hints.editUrl", { id: initial.id })}
             </p>
           ) : (
             name && (
               <p className={hintClass}>
-                URL: /products/<span className="font-mono">{slugify(name)}</span>
+                {t("hints.createUrl", { slug: slugify(name) })}
               </p>
             )
           )}
         </div>
         <div>
           <label htmlFor="price" className={labelClass}>
-            Price (฿, THB)
+            {t("fields.price")}
           </label>
           <input
             id="price"
@@ -223,13 +234,13 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             min={1}
             step={1}
             defaultValue={initial?.price}
-            placeholder="159000"
+            placeholder={t("placeholders.price")}
             className={inputClass}
           />
         </div>
         <div>
           <label htmlFor="category" className={labelClass}>
-            Category
+            {t("fields.category")}
           </label>
           <select
             id="category"
@@ -239,15 +250,15 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           >
             {categories.map((c) => (
               <option key={c.slug} value={c.slug}>
-                {c.name}
-                {!c.available ? " (coming soon)" : ""}
+                {tc(`${c.slug}.name`)}
+                {!c.available ? t("fields.comingSoonSuffix") : ""}
               </option>
             ))}
           </select>
         </div>
         <div>
           <label htmlFor="artChoice" className={labelClass}>
-            Product visual
+            {t("fields.productVisual")}
           </label>
           {/* the submitted variant is always a real illustration (the fallback
               when an image URL is set or later removed) */}
@@ -261,17 +272,17 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             >
               {ROBOT_VARIANTS.map((v) => (
                 <option key={v} value={v}>
-                  {VARIANT_LABELS[v]}
+                  {t(VARIANT_LABEL_KEYS[v])}
                 </option>
               ))}
-              <option value="image">Custom image (URL)</option>
+              <option value="image">{t("fields.customImage")}</option>
             </select>
             <span className="flex h-14 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
               {artChoice === "image" && imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={imageUrl}
-                  alt="Product preview"
+                  alt={t("aria.productPreview")}
                   className="h-full w-auto object-contain"
                 />
               ) : (
@@ -282,7 +293,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           {artChoice === "image" ? (
             <div className="mt-3">
               <label htmlFor="imageUrl" className={labelClass}>
-                Image URL
+                {t("fields.imageUrl")}
               </label>
               <input
                 id="imageUrl"
@@ -291,7 +302,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
                 required
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://example.com/robot.jpg"
+                placeholder={t("placeholders.imageUrl")}
                 className={inputClass}
               />
               <input
@@ -313,15 +324,15 @@ export default function ProductForm({ initial }: { initial?: Product }) {
                 ) : (
                   <ImagePlus className="h-4 w-4" aria-hidden="true" />
                 )}
-                {uploading === "main" ? "Uploading…" : "Upload photo"}
+                {uploading === "main"
+                  ? t("actions.uploading")
+                  : t("actions.uploadPhoto")}
               </button>
               <p className={hintClass}>
-                Upload a photo, or paste a direct image link (https://…). The
-                illustration stays as the fallback if the image fails to load.
-                Pick several at once and the extras go to the gallery below.
+                {t("hints.imageUpload")}
               </p>
               <label htmlFor="images" className={`${labelClass} mt-4`}>
-                Gallery photos — one URL per line (optional)
+                {t("fields.galleryPhotos")}
               </label>
               <textarea
                 id="images"
@@ -329,9 +340,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
                 rows={4}
                 value={imagesText}
                 onChange={(e) => setImagesText(e.target.value)}
-                placeholder={
-                  "https://example.com/robot-side.jpg\nhttps://example.com/robot-top.jpg"
-                }
+                placeholder={t("placeholders.galleryUrls")}
                 className={textareaClass}
               />
               <input
@@ -353,11 +362,12 @@ export default function ProductForm({ initial }: { initial?: Product }) {
                 ) : (
                   <ImagePlus className="h-4 w-4" aria-hidden="true" />
                 )}
-                {uploading === "gallery" ? "Uploading…" : "Upload gallery photos"}
+                {uploading === "gallery"
+                  ? t("actions.uploading")
+                  : t("actions.uploadGalleryPhotos")}
               </button>
               <p className={hintClass}>
-                Extra angles for the product page gallery, shown after the main
-                image, in this order. Leave empty for a single photo.
+                {t("hints.gallery")}
               </p>
               {galleryUrls.length > 0 && (
                 <ul className="mt-3 flex flex-wrap gap-2">
@@ -369,7 +379,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={url}
-                        alt={`Gallery photo ${i + 1}`}
+                        alt={t("aria.galleryPhoto", { number: i + 1 })}
                         className="h-full w-auto object-contain"
                       />
                     </li>
@@ -378,7 +388,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
               )}
             </div>
           ) : (
-            <p className={hintClass}>Placeholder art until real product photos land.</p>
+            <p className={hintClass}>{t("hints.placeholderArt")}</p>
           )}
         </div>
         <div className="flex items-center gap-2.5">
@@ -391,28 +401,28 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             className="h-4.5 w-4.5 rounded border-forest-100 accent-[#f5c842]"
           />
           <label htmlFor="preorder" className="text-[13.5px] font-medium text-content">
-            Preorder (not in stock yet)
+            {t("fields.preorder")}
           </label>
         </div>
       </Section>
 
-      <Section title="Marketing copy — English">
+      <Section title={t("sections.marketingEnglish")}>
         <div>
           <label htmlFor="taglineEn" className={labelClass}>
-            Tagline
+            {t("fields.englishTagline")}
           </label>
           <input
             id="taglineEn"
             name="taglineEn"
             required
             defaultValue={initial?.tagline.en}
-            placeholder="All-wheel drive precision for large Thai gardens"
+            placeholder={t("placeholders.englishTagline")}
             className={inputClass}
           />
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="descriptionEn" className={labelClass}>
-            Description
+            {t("fields.englishDescription")}
           </label>
           <textarea
             id="descriptionEn"
@@ -425,7 +435,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="featuresEn" className={labelClass}>
-            Feature bullets — one per line
+            {t("fields.englishFeatureBullets")}
           </label>
           <textarea
             id="featuresEn"
@@ -433,16 +443,16 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             required
             rows={4}
             defaultValue={initial?.features.en.join("\n")}
-            placeholder={"AWD climbs slopes up to 80%\nNo boundary wire needed"}
+            placeholder={t("placeholders.englishFeatureBullets")}
             className={textareaClass}
           />
         </div>
       </Section>
 
-      <Section title="Marketing copy — Thai">
+      <Section title={t("sections.marketingThai")}>
         <div>
           <label htmlFor="taglineTh" className={labelClass}>
-            Tagline (ภาษาไทย)
+            {t("fields.thaiTagline")}
           </label>
           <input
             id="taglineTh"
@@ -454,7 +464,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="descriptionTh" className={labelClass}>
-            Description (ภาษาไทย)
+            {t("fields.thaiDescription")}
           </label>
           <textarea
             id="descriptionTh"
@@ -467,7 +477,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="featuresTh" className={labelClass}>
-            Feature bullets (ภาษาไทย) — one per line
+            {t("fields.thaiFeatureBullets")}
           </label>
           <textarea
             id="featuresTh"
@@ -481,13 +491,13 @@ export default function ProductForm({ initial }: { initial?: Product }) {
       </Section>
 
       <Section
-        title="Quick specs — not shown on the product page"
-        note="Specs shoppers see come from the Detailed specification table below. Coverage area is still used to pick which installation package is offered at checkout, so keep it filled in for robots."
+        title={t("sections.quickSpecs")}
+        note={t("sections.quickSpecsNote")}
       >
         {SPEC_KEYS.map((key) => (
           <div key={key}>
             <label htmlFor={`spec_${key}`} className={labelClass}>
-              {SPEC_LABELS[key]}
+              {t(SPEC_LABEL_KEYS[key])}
             </label>
             <input
               id={`spec_${key}`}
@@ -501,11 +511,10 @@ export default function ProductForm({ initial }: { initial?: Product }) {
 
       <section className="rounded-2xl border border-forest-100 bg-surface p-6 sm:p-8">
         <h2 className="font-display text-lg font-bold text-content">
-          Detail page builder
+          {t("sections.detailBuilder")}
         </h2>
         <p className="mt-1 text-[12.5px] text-ink-muted">
-          Everything below is optional and per-robot: an intro video, rich
-          content sections, and a detailed spec table shown on the product page.
+          {t("sections.detailBuilderDescription")}
         </p>
         <div className="mt-6">
           <PageBuilder draft={pageDraft} onChange={setPageDraft} />
@@ -518,7 +527,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           onClick={() => router.push("/admin")}
           className="flex min-h-[48px] cursor-pointer items-center rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-gold"
         >
-          Cancel
+          {t("actions.cancel")}
         </button>
         <button
           type="submit"
@@ -530,7 +539,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           ) : (
             <Save className="h-4 w-4" aria-hidden="true" />
           )}
-          {isEdit ? "Save changes" : "Save product"}
+          {isEdit ? t("actions.saveChanges") : t("actions.saveProduct")}
         </button>
       </div>
     </form>

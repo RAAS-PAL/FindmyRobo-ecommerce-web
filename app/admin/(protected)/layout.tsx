@@ -1,14 +1,19 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Bot, ExternalLink } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { isAdminAuthenticated } from "@/lib/adminAuth";
 import LogoutButton from "@/components/admin/LogoutButton";
+import AdminLanguageSwitcher from "@/components/admin/AdminLanguageSwitcher";
 import { ThemeToggleButton } from "@/components/layout/ThemeToggle";
+import { getAdminLocale } from "@/lib/adminLocale";
 
 export default async function AdminProtectedLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
+  const locale = await getAdminLocale();
+  const t = await getTranslations({ locale, namespace: "admin.navigation" });
 
   return (
     <>
@@ -19,24 +24,26 @@ export default async function AdminProtectedLayout({
               <Bot className="h-4.5 w-4.5" aria-hidden="true" />
             </span>
             <span className="font-display text-base font-extrabold tracking-tight text-white">
-              RoboStore TH <span className="text-gold">Admin</span>
+              RoboStore TH <span className="text-gold">{t("adminLabel")}</span>
             </span>
           </Link>
           <div className="flex items-center gap-2">
             <a
-              href="/en"
+              href={locale === "th" ? "/" : "/en"}
               target="_blank"
               rel="noreferrer"
+              aria-label={t("viewStore")}
+              title={t("viewStore")}
               className="flex min-h-[40px] items-center gap-2 rounded-full px-4 text-[13px] font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-gold"
             >
               <ExternalLink className="h-4 w-4" aria-hidden="true" />
-              View store
+              <span className="hidden sm:inline">{t("viewStore")}</span>
             </a>
-            {/* admin is English-only, so the labels are plain strings */}
+            <AdminLanguageSwitcher variant="dark" />
             <ThemeToggleButton
               variant="onDark"
-              toDark="Switch to dark mode"
-              toLight="Switch to light mode"
+              toDark={t("themeToDark")}
+              toLight={t("themeToLight")}
             />
             <LogoutButton />
           </div>
