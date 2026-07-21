@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { ChevronDown, Clock3, PackageCheck, ShoppingBag } from "lucide-react";
+import { ChevronDown, Clock3, PackageCheck, ShoppingBag, Truck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
 import { formatBaht, type Product } from "@/data/products";
@@ -117,6 +117,23 @@ export default function AccountHistory({
                       <p className="mt-1 font-mono text-lg font-bold text-content">{formatBaht(order.total)}</p>
                     </div>
                   </div>
+
+                  {order.fulfillment?.status && (
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-cloud/60 px-4 py-3 text-xs">
+                      <span className="flex items-center gap-2 font-semibold text-content">
+                        <Truck className="h-4 w-4 text-gold-600" aria-hidden="true" />
+                        {t(`shipment.status.${order.fulfillment.status}`)}
+                      </span>
+                      {order.fulfillment.trackingNumber && (
+                        <span className="text-ink-muted">
+                          {t("shipment.tracking")}{" "}
+                          <span className="font-mono font-semibold text-content">
+                            {order.fulfillment.trackingNumber}
+                          </span>
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </details>
             ))}

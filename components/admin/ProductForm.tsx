@@ -257,6 +257,20 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           </select>
         </div>
         <div>
+          <label htmlFor="sku" className={labelClass}>
+            {t("fields.sku")}
+          </label>
+          <input
+            id="sku"
+            name="sku"
+            maxLength={60}
+            defaultValue={initial?.sku ?? ""}
+            placeholder={t("placeholders.sku")}
+            className={`${inputClass} font-mono`}
+          />
+          <p className={hintClass}>{t("hints.sku")}</p>
+        </div>
+        <div>
           <label htmlFor="artChoice" className={labelClass}>
             {t("fields.productVisual")}
           </label>
