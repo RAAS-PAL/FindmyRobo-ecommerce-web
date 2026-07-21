@@ -459,10 +459,25 @@
     "payAmount": "Pay {amount}",
     "loading": "Loading secure payment…",
     "securityNote": "Your card details go directly to our payment provider over an encrypted connection — they never touch our servers.",
+    "methods": {
+      "heading": "Payment method",
+      "card": "Card",
+      "promptpay": "PromptPay"
+    },
+    "promptpay": {
+      "generating": "Creating your PromptPay QR…",
+      "instructions": "Open your banking app, scan this QR code, and confirm the payment.",
+      "qrAlt": "PromptPay QR code for this order",
+      "waiting": "Waiting for your payment…",
+      "keepOpen": "Keep this page open until payment is confirmed. If you close it, we will still receive your payment and update your order.",
+      "retry": "Try again"
+    },
     "errors": {
       "notReady": "Secure payment is still loading. Please try again in a moment.",
       "cardRejected": "Please check your card details and try again.",
-      "declined": "The payment could not be completed. Please try another card."
+      "declined": "The payment could not be completed. Please try another card.",
+      "promptpayFailed": "We could not create the PromptPay QR. Please try again.",
+      "network": "Could not reach the server. Please check your connection."
     },
     "result": {
       "paidHeading": "Payment received",

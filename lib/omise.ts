@@ -1,4 +1,5 @@
 import "server-only";
+import type { OrderStatus } from "@/lib/checkout";
 
 /**
  * Minimal Omise (Opn Payments) server client.
@@ -74,6 +75,28 @@ export interface OmiseSource {
   type: string;
   amount: number;
   currency: string;
+}
+
+/**
+ * Map an Omise charge onto our order status.
+ *
+ * Lives here rather than in a route file so the webhook, the payment route and
+ * the return page can all share one definition — App Router route modules are
+ * only meant to export HTTP handlers.
+ *
+ * Anything not terminal stays `pending_payment`, which covers 3-D Secure and
+ * PromptPay while the customer is still completing the payment.
+ */
+export function chargeToOrderStatus(charge: OmiseCharge): OrderStatus {
+  if (charge.paid || charge.status === "successful") return "paid";
+  if (charge.status === "failed" || charge.status === "reversed") return "failed";
+  if (charge.status === "expired") return "expired";
+  return "pending_payment";
+}
+
+/** The QR payload Omise returns for a PromptPay source, if present. */
+export function scannableQrUri(charge: OmiseCharge): string | null {
+  return charge.source?.scannable_code?.image?.download_uri ?? null;
 }
 
 /** One payment method the account actually has enabled. */
