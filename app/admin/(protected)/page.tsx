@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { GripVertical, Package, Pencil, Plus, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { getAllProducts } from "@/lib/productStore";
+import { getAllProductsForAdmin } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getAdminLocale } from "@/lib/adminLocale";
 import ProductVisual from "@/components/ui/ProductVisual";
 import DeleteProductButton from "@/components/admin/DeleteProductButton";
+import VisibilityToggle from "@/components/admin/VisibilityToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,7 @@ async function getCustomerCount(): Promise<number | null> {
 export default async function AdminProductsPage() {
   const locale = await getAdminLocale();
   const [products, customerCount, t, tc] = await Promise.all([
-    getAllProducts(),
+    getAllProductsForAdmin(),
     getCustomerCount(),
     getTranslations({ locale, namespace: "admin.dashboard" }),
     getTranslations({ locale, namespace: "categories" }),
@@ -128,7 +129,11 @@ export default async function AdminProductsPage() {
               {products.map((product) => (
                 <tr key={product.id} className="transition-colors hover:bg-cloud/60">
                   <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-3.5">
+                    <div
+                      className={`flex items-center gap-3.5 ${
+                        product.visible === false ? "opacity-55" : ""
+                      }`}
+                    >
                       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1">
                         <ProductVisual
                           product={product}
@@ -150,18 +155,32 @@ export default async function AdminProductsPage() {
                     {formatBaht(product.price)}
                   </td>
                   <td className="hidden px-5 py-3.5 sm:table-cell">
-                    {product.preorder ? (
-                      <span className="rounded-full bg-gold/15 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-gold-600">
-                        {t("status.preorder")}
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-forest-100/60 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
-                        {t("status.inStock")}
-                      </span>
-                    )}
+                    <div className="flex flex-wrap gap-1.5">
+                      {product.visible === false && (
+                        <span className="rounded-full border border-ink-muted/40 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
+                          {t("status.hidden")}
+                        </span>
+                      )}
+                      {product.preorder ? (
+                        <span className="rounded-full bg-gold/15 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-gold-600">
+                          {t("status.preorder")}
+                        </span>
+                      ) : (
+                        product.visible !== false && (
+                          <span className="rounded-full bg-forest-100/60 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
+                            {t("status.inStock")}
+                          </span>
+                        )
+                      )}
+                    </div>
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <VisibilityToggle
+                        id={product.id}
+                        name={product.name}
+                        visible={product.visible !== false}
+                      />
                       <Link
                         href={`/admin/products/${product.id}/edit`}
                         aria-label={t("editProduct", { name: product.name })}

@@ -168,7 +168,8 @@
       },
       "status": {
         "preorder": "Preorder",
-        "inStock": "In stock"
+        "inStock": "In stock",
+        "hidden": "Hidden"
       },
       "editProduct": "Edit {name}",
       "unavailableCategoryNote": "Products in unavailable categories stay hidden behind the “Coming Soon” page until the category is enabled in data/categories.ts."
@@ -185,6 +186,12 @@
       "failed": "Could not delete product.",
       "network": "Could not reach the server.",
       "label": "Delete {name}"
+    },
+    "visibility": {
+      "failed": "Could not update visibility.",
+      "network": "Could not reach the server.",
+      "hide": "Hide {name} from the shop",
+      "show": "Show {name} in the shop"
     },
     "reorder": {
       "backToProducts": "Back to products",
@@ -225,6 +232,7 @@
         "imageUrl": "Image URL",
         "galleryPhotos": "Gallery photos — one URL per line (optional)",
         "preorder": "Preorder (not in stock yet)",
+        "visible": "Visible in shop",
         "englishTagline": "Tagline",
         "englishDescription": "Description",
         "englishFeatureBullets": "Feature bullets — one per line",
@@ -252,7 +260,8 @@
         "createUrl": "URL: /products/{slug}",
         "imageUpload": "Upload a photo, or paste a direct image link (https://…). The illustration stays as the fallback if the image fails to load. Pick several at once and the extras go to the gallery below.",
         "gallery": "Extra angles for the product page gallery, shown after the main image in this order. Leave empty for a single photo.",
-        "placeholderArt": "Placeholder art until real product photos land."
+        "placeholderArt": "Placeholder art until real product photos land.",
+        "visible": "Hide it to keep working on it without listing it in the shop, or to pull it from sale without deleting it."
       },
       "actions": {
         "uploading": "Uploading…",
