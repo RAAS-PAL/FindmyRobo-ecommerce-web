@@ -30,6 +30,7 @@ interface OrderRow {
   currency: string;
   payment: OrderPayment | null;
   created_at: string;
+  updated_at?: string;
 }
 
 function rowToOrder(row: OrderRow): Order {
@@ -44,6 +45,7 @@ function rowToOrder(row: OrderRow): Order {
     currency: row.currency,
     ...(row.payment ? { payment: row.payment } : {}),
     createdAt: row.created_at,
+    ...(row.updated_at ? { updatedAt: row.updated_at } : {}),
   };
 }
 
@@ -105,6 +107,27 @@ export async function listOrdersByUser(userId: string): Promise<Order[]> {
     .order("created_at", { ascending: false });
   if (error) throw new Error(`Failed to load customer orders: ${error.message}`);
   return (data ?? []).map(rowToOrder);
+}
+
+/**
+ * Manually set an order's status from the admin panel. This is the operations
+ * lever for flows the payment webhook can't cover — chiefly "contact-to-pay"
+ * orders that staff confirm after a bank transfer, and cancellations. It writes
+ * only the status (the `payment` jsonb from the gateway is left intact) and is
+ * gated behind isAdminAuthenticated() at the API route.
+ */
+export async function setOrderStatus(
+  id: string,
+  status: OrderStatus
+): Promise<boolean> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .update({ status })
+    .eq("id", id)
+    .select("id");
+  if (error) throw new Error(`Failed to update order "${id}": ${error.message}`);
+  return (data?.length ?? 0) > 0;
 }
 
 /**
