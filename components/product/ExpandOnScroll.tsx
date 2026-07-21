@@ -5,16 +5,20 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 
 /**
  * Scroll-driven full-bleed reveal: the panel starts as an inset, rounded card
- * and grows to fill the window as it scrolls up, then stays pinned there for
- * the rest of the runway before scrolling on — the effect the Mammotion
- * product pages use for their full-width scenes.
+ * and grows to fill the window's width as it scrolls into view, straightening
+ * its corners — the full-width look the Mammotion product pages use.
  *
- * Breaks out of the page's centered container on its own (left-1/2 + w-screen),
- * so it can be dropped inside the normal max-width column. The ancestor needs
- * `overflow-x-clip` to swallow the scrollbar-width overhang of `w-screen`.
+ * Deliberately does NOT pin or cap its height: the card sits in normal flow at
+ * its natural (content) height, so the whole page scrolls through the specs as
+ * one piece. No inner overflow box, so no nested scrollbar and no scroll-
+ * hijacking — the expand is the only motion, driven by a MotionValue.
  *
- * Honors prefers-reduced-motion by rendering the panel plainly, no pin, no
- * runway — a scroll-linked size change is exactly what that setting is for.
+ * Breaks out of the page's centered column on its own (w-screen + negative
+ * margin), so it can be dropped inside the normal max-width column. The ancestor
+ * needs `overflow-x-clip` to swallow the scrollbar-width overhang of `w-screen`.
+ *
+ * Honors prefers-reduced-motion by rendering the panel plainly — a scroll-linked
+ * size change is exactly what that setting is for.
  */
 export default function ExpandOnScroll({
   children,
@@ -24,17 +28,19 @@ export default function ExpandOnScroll({
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   // 0 while the section's top sits at the bottom of the viewport, 1 once it
-  // reaches the top — so the growth finishes exactly as the panel pins.
+  // reaches the middle — so the panel is fully open well before you read the
+  // rows, then simply scrolls with the page from there.
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "start start"],
+    offset: ["start end", "start center"],
   });
 
+  // Inset card (min(72rem, 92vw)) → full viewport width. Continuous calc so the
+  // complex min() expression interpolates smoothly rather than snapping.
   const width = useTransform(
     scrollYProgress,
     (p) => `calc(min(72rem, 92vw) + (100vw - min(72rem, 92vw)) * ${p})`
   );
-  const height = useTransform(scrollYProgress, (p) => `${72 + 28 * p}vh`);
   const borderRadius = useTransform(scrollYProgress, (p) => `${24 - 24 * p}px`);
 
   if (reduced) {
@@ -46,24 +52,14 @@ export default function ExpandOnScroll({
   }
 
   return (
-    <div ref={ref} className="relative h-[180vh]">
-      {/* Breaks out of the page's centered column to full viewport width.
-          Negative margins, not left/translate: `left` on a sticky element is a
-          sticky constraint rather than an offset, so it would not move this at
-          all. 50% resolves against the column, 50vw against the window. */}
-      <div className="sticky top-0 mx-[calc(50%-50vw)] flex h-screen w-screen items-center justify-center">
-        <motion.div
-          style={{ width, height, borderRadius }}
-          // shrink-0: as a flex item it would otherwise be squeezed back to the
-          // parent column's width and never reach full bleed
-          className="flex shrink-0 items-center justify-center overflow-hidden bg-cloud"
-        >
-          {/* content scrolls inside if a long table outgrows the window */}
-          <div className="max-h-full w-full overflow-y-auto px-4 py-10">
-            {children}
-          </div>
-        </motion.div>
-      </div>
+    // Full-bleed track in normal flow; the inner card grows to fill it.
+    <div ref={ref} className="mx-[calc(50%-50vw)] w-screen">
+      <motion.div
+        style={{ width, borderRadius }}
+        className="mx-auto overflow-hidden bg-cloud"
+      >
+        <div className="px-4 py-10 sm:py-14">{children}</div>
+      </motion.div>
     </div>
   );
 }

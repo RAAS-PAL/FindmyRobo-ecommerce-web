@@ -1,11 +1,11 @@
 {
   "meta": {
     "title": "RoboStore TH — The Ultimate Robot Mowers for Thai Gardens",
-    "description": "Premium robot mowers, pool cleaners, and home robots in Thailand. Free in-home demos in Bangkok, 30-day returns, and local Thai support. Time for Life™"
+    "description": "Premium robot mowers, pool cleaners, and home robots in Thailand. In-home demos in Bangkok, 30-day returns, and local Thai support. Time for Life™"
   },
   "announcement": {
     "msg1": "🤖 Mammotion LUBA 3 AWD Now Available in Thailand!",
-    "msg2": "Book your free in-home demo now in Bangkok"
+    "msg2": "Book your in-home demo now in Bangkok"
   },
   "nav": {
     "shop": "Shop",
@@ -24,7 +24,7 @@
     "searchPlaceholder": "What are you looking for?",
     "searchNoResults": "No products found for “{query}”",
     "searchViewAll": "View all results for “{query}”",
-    "bookDemo": "Book a Free Demo",
+    "bookDemo": "Book a Demo",
     "cartLabel": "Shopping cart, {count} items",
     "themeToDark": "Switch to dark mode",
     "themeToLight": "Switch to light mode",
@@ -447,7 +447,7 @@
     "lineHint": "Scan the QR with your phone, or add us by ID",
     "qrComingSoon": "QR code coming soon — add us by LINE ID instead",
     "demoNote": "Prefer to see a robot in action first?",
-    "demoCta": "Book a free in-home demo"
+    "demoCta": "Book an in-home demo"
   },
   "payment": {
     "heading": "Payment",
@@ -459,10 +459,25 @@
     "payAmount": "Pay {amount}",
     "loading": "Loading secure payment…",
     "securityNote": "Your card details go directly to our payment provider over an encrypted connection — they never touch our servers.",
+    "methods": {
+      "heading": "Payment method",
+      "card": "Card",
+      "promptpay": "PromptPay"
+    },
+    "promptpay": {
+      "generating": "Creating your PromptPay QR…",
+      "instructions": "Open your banking app, scan this QR code, and confirm the payment.",
+      "qrAlt": "PromptPay QR code for this order",
+      "waiting": "Waiting for your payment…",
+      "keepOpen": "Keep this page open until payment is confirmed. If you close it, we will still receive your payment and update your order.",
+      "retry": "Try again"
+    },
     "errors": {
       "notReady": "Secure payment is still loading. Please try again in a moment.",
       "cardRejected": "Please check your card details and try again.",
-      "declined": "The payment could not be completed. Please try another card."
+      "declined": "The payment could not be completed. Please try another card.",
+      "promptpayFailed": "We could not create the PromptPay QR. Please try again.",
+      "network": "Could not reach the server. Please check your connection."
     },
     "result": {
       "paidHeading": "Payment received",
@@ -562,7 +577,7 @@
     "headlineAccent": "Better Business.",
     "sub": "Discover intelligent robotic solutions for cleaning, delivery, lawn care, pool maintenance, and more—designed to reduce workload, improve efficiency, and help your business operate smarter.",
     "ctaPrimary": "Explore Our Robots",
-    "ctaSecondary": "Book a Free Demo"
+    "ctaSecondary": "Book a Demo"
   },
   "products": {
     "eyebrow": "The Lineup",
@@ -578,7 +593,7 @@
     "sub": "Every robot we sell, backed by 30-day returns and Thai local support",
     "all": "All Products",
     "comingSoonTitle": "Coming soon to Thailand",
-    "comingSoonBody": "We are working with our partners to bring this category to you. Book a free demo to hear about it first.",
+    "comingSoonBody": "We are working with our partners to bring this category to you. Book a demo to hear about it first.",
     "backToShop": "Browse all robots",
     "metaTitle": "Shop Robots — RoboStore TH"
   },
@@ -603,7 +618,7 @@
     "specTableHeading": "Product Specifications",
     "featuresHeading": "Why you'll love it",
     "relatedHeading": "You may also like",
-    "ctaDemo": "Book a Free Demo",
+    "ctaDemo": "Book a Demo",
     "ctaContact": "Ask Us About This Robot",
     "preorderNote": "Preorder — contact us for delivery timing",
     "returnsNote": "30-day returns · Thai warranty · In-home support",
