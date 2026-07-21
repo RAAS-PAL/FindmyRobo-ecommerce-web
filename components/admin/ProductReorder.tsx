@@ -3,11 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowDown, ArrowUp, GripVertical, LoaderCircle, Save } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { Product } from "@/data/products";
 import ProductVisual from "@/components/ui/ProductVisual";
 
 export default function ProductReorder({ products }: { products: Product[] }) {
   const router = useRouter();
+  const t = useTranslations("admin.reorder");
+  const tc = useTranslations("categories");
   const [items, setItems] = useState(products);
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -43,12 +46,11 @@ export default function ProductReorder({ products }: { products: Product[] }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: items.map((item) => item.id) }),
       });
-      const body = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(body?.error ?? "Could not save order");
+      if (!response.ok) throw new Error(t("saveError"));
       setSaved(true);
       router.refresh();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Could not save order");
+      setError(cause instanceof Error ? cause.message : t("saveError"));
     } finally {
       setBusy(false);
     }
@@ -61,7 +63,7 @@ export default function ProductReorder({ products }: { products: Product[] }) {
           {error}
         </p>
       )}
-      <ol className="space-y-2" aria-label="Product display order">
+      <ol className="space-y-2" aria-label={t("listLabel")}>
         {items.map((product, index) => (
           <li
             key={product.id}
@@ -95,14 +97,16 @@ export default function ProductReorder({ products }: { products: Product[] }) {
             </span>
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-semibold text-content">{product.name}</span>
-              <span className="mt-0.5 block truncate text-xs text-ink-muted">{product.category}</span>
+              <span className="mt-0.5 block truncate text-xs text-ink-muted">
+                {tc(`${product.category}.name`)}
+              </span>
             </span>
             <span className="flex shrink-0 gap-1">
               <button
                 type="button"
                 onClick={() => move(index, index - 1)}
                 disabled={index === 0}
-                aria-label={`Move ${product.name} up`}
+                aria-label={t("moveUp", { name: product.name })}
                 className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-gold-600 disabled:cursor-not-allowed disabled:opacity-25"
               >
                 <ArrowUp className="h-4 w-4" aria-hidden="true" />
@@ -111,7 +115,7 @@ export default function ProductReorder({ products }: { products: Product[] }) {
                 type="button"
                 onClick={() => move(index, index + 1)}
                 disabled={index === items.length - 1}
-                aria-label={`Move ${product.name} down`}
+                aria-label={t("moveDown", { name: product.name })}
                 className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-gold-600 disabled:cursor-not-allowed disabled:opacity-25"
               >
                 <ArrowDown className="h-4 w-4" aria-hidden="true" />
@@ -122,7 +126,7 @@ export default function ProductReorder({ products }: { products: Product[] }) {
       </ol>
 
       <div className="sticky bottom-4 mt-6 flex items-center justify-end gap-4 rounded-2xl border border-forest-100 bg-surface/90 p-4 shadow-lg backdrop-blur-xl">
-        {saved && <p className="text-sm font-semibold text-forest">Order saved</p>}
+        {saved && <p className="text-sm font-semibold text-forest">{t("saved")}</p>}
         <button
           type="button"
           onClick={save}
@@ -130,7 +134,7 @@ export default function ProductReorder({ products }: { products: Product[] }) {
           className="flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-gold px-7 text-sm font-bold text-forest-950 transition-shadow hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Save className="h-4 w-4" aria-hidden="true" />}
-          {busy ? "Saving…" : "Save order"}
+          {busy ? t("saving") : t("save")}
         </button>
       </div>
     </div>

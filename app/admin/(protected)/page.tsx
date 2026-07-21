@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { GripVertical, Package, Pencil, Plus, Users } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { getAllProducts } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
-import { categories } from "@/data/categories";
 import { createServiceClient } from "@/lib/supabase/service";
+import { getAdminLocale } from "@/lib/adminLocale";
 import ProductVisual from "@/components/ui/ProductVisual";
 import DeleteProductButton from "@/components/admin/DeleteProductButton";
 
@@ -24,22 +25,24 @@ async function getCustomerCount(): Promise<number | null> {
 }
 
 export default async function AdminProductsPage() {
-  const [products, customerCount] = await Promise.all([
+  const locale = await getAdminLocale();
+  const [products, customerCount, t, tc] = await Promise.all([
     getAllProducts(),
     getCustomerCount(),
+    getTranslations({ locale, namespace: "admin.dashboard" }),
+    getTranslations({ locale, namespace: "categories" }),
   ]);
-  const categoryName = (slug: string) =>
-    categories.find((c) => c.slug === slug)?.name ?? slug;
+  const categoryName = (slug: string) => tc(`${slug}.name`);
 
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
-            Catalog
+            {t("eyebrow")}
           </p>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-content">
-            Products
+            {t("title")}
             <span className="ml-3 font-mono text-lg font-semibold text-ink-muted">
               {products.length}
             </span>
@@ -51,14 +54,14 @@ export default async function AdminProductsPage() {
             className="flex min-h-[46px] items-center gap-2 rounded-full border border-forest-100 bg-surface px-5 text-[13.5px] font-semibold text-content transition-colors hover:border-gold hover:text-gold-600"
           >
             <GripVertical className="h-4 w-4" aria-hidden="true" />
-            Reorder products
+            {t("reorderProducts")}
           </Link>
           <Link
             href="/admin/products/new"
             className="flex min-h-[46px] items-center gap-2 rounded-full bg-gold px-6 text-[13.5px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
-            Add product
+            {t("addProduct")}
           </Link>
         </div>
       </div>
@@ -69,7 +72,7 @@ export default async function AdminProductsPage() {
           <div className="flex items-center gap-2 text-ink-muted">
             <Users className="h-4 w-4 text-gold-600" aria-hidden="true" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">
-              Registered customers
+              {t("registeredCustomers")}
             </span>
           </div>
           <p className="mt-2 font-mono text-3xl font-extrabold tabular-nums text-content">
@@ -77,7 +80,7 @@ export default async function AdminProductsPage() {
           </p>
           {customerCount === null && (
             <p className="mt-1 text-[11px] text-ink-muted">
-              Connect Supabase to see signups
+              {t("connectSupabase")}
             </p>
           )}
         </div>
@@ -85,7 +88,7 @@ export default async function AdminProductsPage() {
           <div className="flex items-center gap-2 text-ink-muted">
             <Package className="h-4 w-4 text-gold-600" aria-hidden="true" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">
-              Products listed
+              {t("productsListed")}
             </span>
           </div>
           <p className="mt-2 font-mono text-3xl font-extrabold tabular-nums text-content">
@@ -99,19 +102,25 @@ export default async function AdminProductsPage() {
           <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
             <Package className="h-8 w-8 text-forest-300" aria-hidden="true" />
             <p className="text-sm text-ink-muted">
-              No products yet. Add your first robot.
+              {t("empty")}
             </p>
           </div>
         ) : (
           <table className="w-full text-left text-[13.5px]">
             <thead>
               <tr className="border-b border-forest-100 bg-cloud font-mono text-[10.5px] uppercase tracking-wider text-ink-muted">
-                <th className="px-5 py-3 font-semibold">Product</th>
-                <th className="hidden px-5 py-3 font-semibold md:table-cell">Category</th>
-                <th className="px-5 py-3 text-right font-semibold">Price</th>
-                <th className="hidden px-5 py-3 font-semibold sm:table-cell">Status</th>
+                <th className="px-5 py-3 font-semibold">{t("table.product")}</th>
+                <th className="hidden px-5 py-3 font-semibold md:table-cell">
+                  {t("table.category")}
+                </th>
                 <th className="px-5 py-3 text-right font-semibold">
-                  <span className="sr-only">Actions</span>
+                  {t("table.price")}
+                </th>
+                <th className="hidden px-5 py-3 font-semibold sm:table-cell">
+                  {t("table.status")}
+                </th>
+                <th className="px-5 py-3 text-right font-semibold">
+                  <span className="sr-only">{t("table.actions")}</span>
                 </th>
               </tr>
             </thead>
@@ -143,11 +152,11 @@ export default async function AdminProductsPage() {
                   <td className="hidden px-5 py-3.5 sm:table-cell">
                     {product.preorder ? (
                       <span className="rounded-full bg-gold/15 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-gold-600">
-                        Preorder
+                        {t("status.preorder")}
                       </span>
                     ) : (
                       <span className="rounded-full bg-forest-100/60 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
-                        In stock
+                        {t("status.inStock")}
                       </span>
                     )}
                   </td>
@@ -155,7 +164,7 @@ export default async function AdminProductsPage() {
                     <div className="flex items-center justify-end gap-1">
                       <Link
                         href={`/admin/products/${product.id}/edit`}
-                        aria-label={`Edit ${product.name}`}
+                        aria-label={t("editProduct", { name: product.name })}
                         className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-gold/15 hover:text-gold-600"
                       >
                         <Pencil className="h-4 w-4" aria-hidden="true" />
@@ -171,8 +180,7 @@ export default async function AdminProductsPage() {
       </div>
 
       <p className="mt-4 text-[12px] text-ink-muted">
-        Products in unavailable categories stay hidden behind the &quot;Coming
-        Soon&quot; page until the category is enabled in data/categories.ts.
+        {t("unavailableCategoryNote")}
       </p>
     </>
   );
