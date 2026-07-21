@@ -5,6 +5,7 @@ import { listOrders } from "@/lib/orderStore";
 import { formatBaht } from "@/data/products";
 import { getAdminLocale } from "@/lib/adminLocale";
 import OrderStatusBadge from "@/components/admin/OrderStatusBadge";
+import OrderFulfillmentBadge from "@/components/admin/OrderFulfillmentBadge";
 import type { OrderStatus } from "@/lib/checkout";
 
 export const dynamic = "force-dynamic";
@@ -200,10 +201,18 @@ export default async function AdminOrdersPage({
                     {formatBaht(order.total)}
                   </td>
                   <td className="hidden px-5 py-3.5 sm:table-cell">
-                    <OrderStatusBadge
-                      status={order.status}
-                      label={t(`status.${order.status}`)}
-                    />
+                    <div className="flex flex-col items-start gap-1.5">
+                      <OrderStatusBadge
+                        status={order.status}
+                        label={t(`status.${order.status}`)}
+                      />
+                      {order.fulfillment?.status && (
+                        <OrderFulfillmentBadge
+                          status={order.fulfillment.status}
+                          label={t(`fulfillment.status.${order.fulfillment.status}`)}
+                        />
+                      )}
+                    </div>
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <Link

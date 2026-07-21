@@ -107,6 +107,12 @@ export interface Product {
    * while keeping the record in the database. Absent is treated as visible.
    */
   visible?: boolean;
+  /**
+   * Warehouse SKU for 3PL fulfilment (Sokochan). Must match the code registered
+   * in the warehouse — it is sent as order_items[].item_sku when an order is
+   * pushed. Services (installation, demos) are never shipped and carry no SKU.
+   */
+  sku?: string;
   specs: Partial<Record<SpecKey, string>>;
   tagline: LocalizedText;
   description: LocalizedText;

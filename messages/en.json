@@ -122,6 +122,16 @@
         "expired": "Expired",
         "cancelled": "Cancelled",
         "refunded": "Refunded"
+      },
+      "shipment": {
+        "tracking": "Tracking:",
+        "status": {
+          "created": "Preparing your order",
+          "picked": "Preparing your order",
+          "packed": "Packed",
+          "shipped": "Shipped",
+          "cancelled": "Shipment cancelled"
+        }
       }
     }
   },
@@ -238,6 +248,33 @@
         "sourceId": "Source ID",
         "noPayment": "No payment recorded yet.",
         "updatedAt": "Last updated {date}"
+      },
+      "fulfillment": {
+        "heading": "Fulfilment",
+        "help": "Send this paid order to the Sokochan warehouse for pick, pack, and ship. Robots only — services aren't shipped.",
+        "send": "Send to warehouse",
+        "confirm": "Send this order to the warehouse via {carrier}?",
+        "failed": "Could not send the order to the warehouse.",
+        "network": "Could not reach the server.",
+        "notConfigured": "Fulfilment isn't connected yet. Add the Sokochan credentials to enable it.",
+        "notPaid": "The order must be paid before it can be sent to the warehouse.",
+        "orderCode": "Warehouse order",
+        "carrier": "Carrier",
+        "tracking": "Tracking no.",
+        "carriers": {
+          "EMS": "ThaiPost EMS",
+          "REG": "ThaiPost Registered",
+          "KND": "Kerry (Next Day)",
+          "K2D": "Kerry (2 Day)",
+          "KSD": "Kerry (Same Day)"
+        },
+        "status": {
+          "created": "Sent to warehouse",
+          "picked": "Picked",
+          "packed": "Packed",
+          "shipped": "Shipped",
+          "cancelled": "Cancelled"
+        }
       }
     },
     "productPages": {
@@ -292,6 +329,7 @@
         "productName": "Product name",
         "price": "Price (฿, THB)",
         "category": "Category",
+        "sku": "Warehouse SKU",
         "comingSoonSuffix": " (coming soon)",
         "productVisual": "Product visual",
         "customImage": "Custom image (URL)",
@@ -327,7 +365,8 @@
         "imageUpload": "Upload a photo, or paste a direct image link (https://…). The illustration stays as the fallback if the image fails to load. Pick several at once and the extras go to the gallery below.",
         "gallery": "Extra angles for the product page gallery, shown after the main image in this order. Leave empty for a single photo.",
         "placeholderArt": "Placeholder art until real product photos land.",
-        "visible": "Hide it to keep working on it without listing it in the shop, or to pull it from sale without deleting it."
+        "visible": "Hide it to keep working on it without listing it in the shop, or to pull it from sale without deleting it.",
+        "sku": "The code Sokochan's warehouse uses for this product. Required to ship it — leave blank for services."
       },
       "actions": {
         "uploading": "Uploading…",
@@ -344,6 +383,7 @@
       "placeholders": {
         "productName": "MAMMOTION LUBA 3 AWD 3000",
         "price": "159000",
+        "sku": "MMT-LUBA3-3000",
         "imageUrl": "https://example.com/robot.jpg",
         "galleryUrls": "https://example.com/robot-side.jpg\nhttps://example.com/robot-top.jpg",
         "englishTagline": "All-wheel drive precision for large Thai gardens",
