@@ -125,6 +125,220 @@
       }
     }
   },
+  "admin": {
+    "meta": {
+      "title": "Admin — RoboStore TH"
+    },
+    "navigation": {
+      "adminLabel": "Admin",
+      "viewStore": "View store",
+      "themeToDark": "Switch to dark mode",
+      "themeToLight": "Switch to light mode",
+      "switchLanguage": "Switch admin language to Thai",
+      "switchLocale": "ไทย",
+      "switchError": "Could not change the admin language.",
+      "signOut": "Sign out"
+    },
+    "login": {
+      "adminLabel": "Admin",
+      "staffOnly": "Staff access only. Sign in with your admin account.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "errors": {
+        "invalidCredentials": "Wrong email or password.",
+        "noAccess": "This account does not have admin access."
+      }
+    },
+    "dashboard": {
+      "eyebrow": "Catalog",
+      "title": "Products",
+      "reorderProducts": "Reorder products",
+      "addProduct": "Add product",
+      "registeredCustomers": "Registered customers",
+      "connectSupabase": "Connect Supabase to see signups",
+      "productsListed": "Products listed",
+      "empty": "No products yet. Add your first robot.",
+      "table": {
+        "product": "Product",
+        "category": "Category",
+        "price": "Price",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "status": {
+        "preorder": "Preorder",
+        "inStock": "In stock"
+      },
+      "editProduct": "Edit {name}",
+      "unavailableCategoryNote": "Products in unavailable categories stay hidden behind the “Coming Soon” page until the category is enabled in data/categories.ts."
+    },
+    "productPages": {
+      "backToProducts": "Back to products",
+      "newTitle": "Add Product",
+      "newDescription": "Fill in both English and Thai copy — the storefront shows whichever language the customer is browsing in.",
+      "editTitle": "Edit Product",
+      "editDescription": "Changes go live on the storefront as soon as you save."
+    },
+    "deleteProduct": {
+      "confirm": "Delete \"{name}\"? This cannot be undone.",
+      "failed": "Could not delete product.",
+      "network": "Could not reach the server.",
+      "label": "Delete {name}"
+    },
+    "reorder": {
+      "backToProducts": "Back to products",
+      "eyebrow": "Catalog",
+      "title": "Reorder products",
+      "description": "Drag products into the storefront order you want, then save. You can also use the arrow buttons for precise keyboard-friendly changes.",
+      "listLabel": "Product display order",
+      "moveUp": "Move {name} up",
+      "moveDown": "Move {name} down",
+      "saved": "Order saved",
+      "saving": "Saving…",
+      "save": "Save order",
+      "saveError": "Could not save order."
+    },
+    "productForm": {
+      "errors": {
+        "uploadStatus": "Upload failed (status {status}).",
+        "uploadFailed": "Upload failed.",
+        "saveStatus": "Save failed (status {status}).",
+        "serverUnavailable": "Could not reach the server."
+      },
+      "sections": {
+        "basics": "Basics",
+        "marketingEnglish": "Marketing copy — English",
+        "marketingThai": "Marketing copy — Thai",
+        "quickSpecs": "Quick specs — not shown on the product page",
+        "quickSpecsNote": "Specs shoppers see come from the detailed specification table below. Coverage area is still used to pick which installation package is offered at checkout, so keep it filled in for robots.",
+        "detailBuilder": "Detail page builder",
+        "detailBuilderDescription": "Everything below is optional and per robot: an intro video, rich content sections, and a detailed specification table shown on the product page."
+      },
+      "fields": {
+        "productName": "Product name",
+        "price": "Price (฿, THB)",
+        "category": "Category",
+        "comingSoonSuffix": " (coming soon)",
+        "productVisual": "Product visual",
+        "customImage": "Custom image (URL)",
+        "imageUrl": "Image URL",
+        "galleryPhotos": "Gallery photos — one URL per line (optional)",
+        "preorder": "Preorder (not in stock yet)",
+        "englishTagline": "Tagline",
+        "englishDescription": "Description",
+        "englishFeatureBullets": "Feature bullets — one per line",
+        "thaiTagline": "Tagline (Thai)",
+        "thaiDescription": "Description (Thai)",
+        "thaiFeatureBullets": "Feature bullets (Thai) — one per line"
+      },
+      "variants": {
+        "luba": "Large mower",
+        "mini": "Compact mower",
+        "pool": "Pool robot",
+        "install": "Installation service",
+        "demo": "Demo booking"
+      },
+      "specLabels": {
+        "area": "Coverage area (e.g. 3,000 m²)",
+        "slope": "Max slope (e.g. 80% (38°))",
+        "cuttingWidth": "Cutting width (e.g. 400 mm)",
+        "runtime": "Runtime (e.g. 180 min)",
+        "connectivity": "Navigation & connectivity",
+        "filtration": "Filtration (pool robots)"
+      },
+      "hints": {
+        "editUrl": "URL: /products/{id} (fixed — links keep working after edits)",
+        "createUrl": "URL: /products/{slug}",
+        "imageUpload": "Upload a photo, or paste a direct image link (https://…). The illustration stays as the fallback if the image fails to load. Pick several at once and the extras go to the gallery below.",
+        "gallery": "Extra angles for the product page gallery, shown after the main image in this order. Leave empty for a single photo.",
+        "placeholderArt": "Placeholder art until real product photos land."
+      },
+      "actions": {
+        "uploading": "Uploading…",
+        "uploadPhoto": "Upload photo",
+        "uploadGalleryPhotos": "Upload gallery photos",
+        "cancel": "Cancel",
+        "saveChanges": "Save changes",
+        "saveProduct": "Save product"
+      },
+      "aria": {
+        "productPreview": "Product preview",
+        "galleryPhoto": "Gallery photo {number}"
+      },
+      "placeholders": {
+        "productName": "MAMMOTION LUBA 3 AWD 3000",
+        "price": "159000",
+        "imageUrl": "https://example.com/robot.jpg",
+        "galleryUrls": "https://example.com/robot-side.jpg\nhttps://example.com/robot-top.jpg",
+        "englishTagline": "All-wheel drive precision for large Thai gardens",
+        "englishFeatureBullets": "AWD climbs slopes up to 80%\nNo boundary wire needed"
+      }
+    },
+    "pageBuilder": {
+      "blocks": {
+        "banner": "Full-width image",
+        "feature": "Feature (heading + text, optional image)",
+        "cardGrid": "Image card grid",
+        "imageText": "Image + text row",
+        "video": "Video section"
+      },
+      "fields": {
+        "imageUrl": "Image URL",
+        "imageUrlOptional": "Image URL (optional)",
+        "imagePosition": "Image position",
+        "heading": "Heading",
+        "headingOptional": "Heading (optional)",
+        "text": "Text",
+        "videoUrl": "Video URL (YouTube link or .mp4)",
+        "caption": "Caption",
+        "captionOptional": "Caption (optional)",
+        "cardImageUrl": "Card {number} image URL",
+        "groupTitle": "Group title",
+        "rowLabel": "Row {number} — label",
+        "value": "Value"
+      },
+      "positions": {
+        "right": "Image on the right",
+        "left": "Image on the left"
+      },
+      "actions": {
+        "removeCard": "Remove card {number}",
+        "addCard": "Add card",
+        "moveSectionUp": "Move section {number} up",
+        "moveSectionDown": "Move section {number} down",
+        "removeSection": "Remove section {number}",
+        "moveGroupUp": "Move group {number} up",
+        "moveGroupDown": "Move group {number} down",
+        "removeGroup": "Remove group {number}",
+        "removeRow": "Remove row {number}",
+        "addRow": "Add row",
+        "addSpecGroup": "Add specification group"
+      },
+      "intro": {
+        "title": "Intro video",
+        "note": "shown under the product information (optional)"
+      },
+      "content": {
+        "title": "Content sections",
+        "note": "mix and reorder freely — robots with fewer photos can use fewer sections",
+        "sectionLabel": "{number}. {type}"
+      },
+      "specs": {
+        "title": "Detailed specification table",
+        "note": "grouped rows; replaces the compact specification band when filled in",
+        "groupLabel": "Group {number}"
+      },
+      "languages": {
+        "en": "EN",
+        "th": "TH"
+      },
+      "placeholders": {
+        "url": "https://…",
+        "youtubeUrl": "https://www.youtube.com/watch?v=…"
+      }
+    }
+  },
   "cart": {
     "title": "Your Cart",
     "close": "Close cart",
