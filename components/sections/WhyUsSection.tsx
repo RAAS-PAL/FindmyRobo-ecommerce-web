@@ -2,12 +2,11 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Home, MessagesSquare, RefreshCcw } from "lucide-react";
+import { Home, MessagesSquare } from "lucide-react";
 
 export default function WhyUsSection() {
   const t = useTranslations("whyUs");
   const features = [
-    { Icon: RefreshCcw, title: t("f1Title"), body: t("f1Body") },
     { Icon: MessagesSquare, title: t("f2Title"), body: t("f2Body") },
     { Icon: Home, title: t("f3Title"), body: t("f3Body") },
   ];
@@ -35,7 +34,7 @@ export default function WhyUsSection() {
           </h2>
         </motion.div>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        <div className="mx-auto mt-14 grid max-w-3xl gap-6 sm:grid-cols-2">
           {features.map(({ Icon, title, body }, i) => (
             <motion.div
               key={title}
