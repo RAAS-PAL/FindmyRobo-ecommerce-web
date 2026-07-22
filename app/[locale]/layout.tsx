@@ -13,6 +13,8 @@ import { themeInitScript } from "@/components/ThemeProvider";
 import ProductsProvider from "@/components/ProductsProvider";
 import CartProvider from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
+import CompareProvider from "@/components/compare/CompareProvider";
+import FloatingCompareButton from "@/components/compare/FloatingCompareButton";
 import { getAllProducts } from "@/lib/productStore";
 
 // Barlow is not a variable font — list the weights the UI uses (body through
@@ -89,11 +91,14 @@ export default async function LocaleLayout({
           <MotionProvider>
             <ProductsProvider products={products}>
               <CartProvider>
-                <AnnouncementBar />
-                <Navbar />
-                {children}
-                <Footer />
-                <CartDrawer />
+                <CompareProvider>
+                  <AnnouncementBar />
+                  <Navbar />
+                  {children}
+                  <Footer />
+                  <CartDrawer />
+                  <FloatingCompareButton />
+                </CompareProvider>
               </CartProvider>
             </ProductsProvider>
           </MotionProvider>

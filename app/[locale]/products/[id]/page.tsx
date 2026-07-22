@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import FadeIn from "@/components/ui/FadeIn";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import FloatingAddToCart from "@/components/cart/FloatingAddToCart";
+import CompareToggleButton from "@/components/compare/CompareToggleButton";
 import ServicePurchasePanel from "@/components/cart/ServicePurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
 import ProductGallery from "@/components/product/ProductGallery";
@@ -146,6 +147,11 @@ export default async function ProductPage({
                 </div>
               )}
             </div>
+            {!isService && (
+              <div className="mt-3">
+                <CompareToggleButton productId={product.id} />
+              </div>
+            )}
             <p className="mt-4 text-center text-[12px] text-ink-muted sm:text-left">
               {t("returnsNote")}
             </p>
