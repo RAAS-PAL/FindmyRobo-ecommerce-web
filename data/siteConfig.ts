@@ -38,8 +38,10 @@ export const siteConfig = {
    * shows while it is null.
    */
   salesContact: {
-    phone: "+66 2 000 0000",
+    phone: "02-576-5555",
     email: "sales@raaspal.com",
+    // LINE official account still pending — keep the placeholder id and the
+    // "coming soon" QR frame (lineQrImage null) until the real one is issued.
     lineId: "@raaspal",
     lineQrImage: null as string | null,
   },

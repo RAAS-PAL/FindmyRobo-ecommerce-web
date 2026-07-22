@@ -7,10 +7,9 @@ import AnimatedCounter from "@/components/ui/AnimatedCounter";
 export default function TrustSection() {
   const t = useTranslations("trust");
   const stats = [
-    { value: 500, suffix: "+", label: t("stat1") },
-    { value: 4.9, decimals: 1, suffix: "★", label: t("stat2") },
-    { value: 10, suffix: "+", label: t("stat3") },
-    { value: 30, suffix: "", label: t("stat4") },
+    { value: 1900, suffix: "+", label: t("stat1") },
+    { value: 4.7, decimals: 1, suffix: "★", label: t("stat2") },
+    { value: 40, suffix: "+", label: t("stat3") },
   ];
   return (
     <section id="about" className="bg-cloud py-20 sm:py-28">
@@ -35,7 +34,7 @@ export default function TrustSection() {
         </motion.div>
 
         {/* stats */}
-        <div className="grid grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
