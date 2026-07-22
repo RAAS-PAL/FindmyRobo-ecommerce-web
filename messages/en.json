@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "RoboStore TH — The Ultimate Robot Mowers for Thai Gardens",
-    "description": "Premium robot mowers, pool cleaners, and home robots in Thailand. In-home demos in Bangkok, 30-day returns, and local Thai support. Time for Life™"
+    "description": "Premium robot mowers, pool cleaners, and home robots in Thailand. In-home demos in Bangkok and local Thai support. Time for Life™"
   },
   "announcement": {
     "msg1": "🤖 Mammotion LUBA 3 AWD Now Available in Thailand!",
@@ -671,7 +671,7 @@
   "shop": {
     "eyebrow": "Shop",
     "heading": "All Robots",
-    "sub": "Every robot we sell, backed by 30-day returns and Thai local support",
+    "sub": "Every robot we sell, backed by Thai local support",
     "all": "All Products",
     "comingSoonTitle": "Coming soon to Thailand",
     "comingSoonBody": "We are working with our partners to bring this category to you. Book a demo to hear about it first.",
@@ -702,7 +702,7 @@
     "ctaDemo": "Book a Demo",
     "ctaContact": "Ask Us About This Robot",
     "preorderNote": "Preorder — contact us for delivery timing",
-    "returnsNote": "30-day returns · Thai warranty · In-home support",
+    "returnsNote": "Thai warranty · In-home support",
     "galleryPrevious": "Previous photo",
     "galleryNext": "Next photo",
     "galleryThumbnail": "View photo",
@@ -721,17 +721,14 @@
   "trust": {
     "eyebrow": "Who We Are",
     "heading": "Thai Robot Experts That Care Like a True Friend",
-    "body": "Since 2024, we have helped Thai homeowners discover the joy of robotic lawn care. Our team of robot specialists are ready to help whenever you need us.",
+    "body": "Since 2021, we've brought cleaning and delivery robots to homes and businesses across Thailand — and we've since expanded into robot mowers and pool cleaners. Our team of robot specialists is ready to help whenever you need us.",
     "stat1": "Robots Deployed",
     "stat2": "Customer Rating",
-    "stat3": "Service Locations",
-    "stat4": "Day Returns"
+    "stat3": "Service Locations"
   },
   "whyUs": {
     "eyebrow": "Why Choose Us",
     "heading": "Service That Goes Beyond the Sale",
-    "f1Title": "30 Days to Play",
-    "f1Body": "Not satisfied? Return any robot within 30 days for a full refund. No questions asked.",
     "f2Title": "Thai Local Support",
     "f2Body": "Talk to real robot experts based in Thailand who speak Thai and understand local conditions.",
     "f3Title": "In-Home Support",
