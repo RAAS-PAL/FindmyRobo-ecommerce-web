@@ -469,6 +469,47 @@
     "shippingNote": "Shipping and taxes calculated at checkout",
     "checkout": "Checkout"
   },
+  "compare": {
+    "floating": {
+      "open": "Open robot comparison"
+    },
+    "panel": {
+      "title": "Compare Robots",
+      "sub": "Pick 2–3 robots to see them side by side.",
+      "close": "Close comparison picker",
+      "empty": "No robots picked yet — choose from the list above.",
+      "selectedCount": "{count} of {max} selected",
+      "clear": "Clear",
+      "compareNow": "Compare now",
+      "needTwo": "Pick at least 2 robots"
+    },
+    "toggle": {
+      "add": "Add to comparison",
+      "remove": "In comparison — remove",
+      "full": "Comparison is full (3 robots max)",
+      "compareNow": "Compare now ({count})"
+    },
+    "page": {
+      "metaTitle": "Compare Robots — RoboStore TH",
+      "eyebrow": "Side by Side",
+      "heading": "Robot Comparison",
+      "sub": "Specs, features, and prices side by side — so you can pick the right robot with confidence.",
+      "emptyTitle": "Nothing to compare yet",
+      "emptyBody": "Pick at least two robots to see them side by side. Use the floating compare button or the compare link on any robot's page.",
+      "browse": "Browse robots",
+      "preorder": "Preorder",
+      "features": "Key features",
+      "viewProduct": "View product",
+      "specs": {
+        "area": "Coverage area",
+        "slope": "Max slope",
+        "cuttingWidth": "Cutting width",
+        "runtime": "Runtime",
+        "connectivity": "Navigation & connectivity",
+        "filtration": "Filtration"
+      }
+    }
+  },
   "service": {
     "selectRobotLabel": "Which robot is this for?",
     "selectRobotPlaceholder": "Select a robot…",
