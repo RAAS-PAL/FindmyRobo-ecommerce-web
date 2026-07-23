@@ -9,7 +9,7 @@ import {
   YouTubeIcon,
 } from "@/components/ui/BrandIcons";
 
-const payments = ["PromptPay", "Visa", "Mastercard", "Amex", "Bank Transfer"];
+const payments = ["PromptPay", "Visa", "Mastercard", "Bank Transfer"];
 
 const socials = [
   { label: "Facebook", Icon: FacebookIcon },
