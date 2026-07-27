@@ -3,8 +3,11 @@
  *
  * heroVideoUrls — hero background videos, played one after another in a
  * loop (1, 2, 3, back to 1). While the list is empty, the hero shows the
- * animated lawn scene instead. heroVideoPoster is the still shown until
- * the first video has enough data to play.
+ * animated lawn scene instead.
+ *
+ * heroVideoPoster is NO LONGER USED. The player cross-fades between preloaded
+ * clips and never shows a poster — a poster used to flash on every clip switch.
+ * Don't re-wire it into the <video> without solving that first.
  *
  * ADDING A NEW HERO VIDEO — the encoding matters more than the source:
  * a raw export will stall on mobile no matter how fast the host is. Run it
@@ -24,9 +27,12 @@
  */
 export const siteConfig = {
   heroVideoUrls: [
-    "/videos/hero-1.mp4",
-    "/videos/hero-2.mp4",
-    "/videos/hero-3.mp4",
+    // Plays in order, then loops back to the first. Both are stream-copied
+    // from their sources (no re-encode, so original quality is preserved):
+    //   hero-banner-luba3 = Banner_Luba 3.mp4 (full 50s, remuxed +faststart)
+    //   hero-luba-mini     = brightest 20s (source 29-49s) of lubamini2.mp4
+    "/videos/hero-banner-luba3.mp4",
+    "/videos/hero-luba-mini.mp4",
   ] as string[],
   heroVideoPoster: "/videos/hero-poster.jpg" as string | null,
 
