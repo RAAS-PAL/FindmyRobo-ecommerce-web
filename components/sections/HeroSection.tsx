@@ -3,17 +3,19 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Sparkles, Waves } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { DeliveryRobotIcon, GrassIcon } from "@/components/ui/BrandIcons";
+import { GrassIcon } from "@/components/ui/BrandIcons";
 import { siteConfig } from "@/data/siteConfig";
 
-/** Robot categories surfaced as hero chips (order = how they read left to right). */
+/**
+ * Robot categories surfaced as hero chips (order = how they read left to right).
+ * Mowing-only for launch — the store is selling lawn mowers first. Add the
+ * other categories (pool-cleaners, cleaning-robots, delivery-robots) back here
+ * when they go live.
+ */
 const HERO_CATEGORIES = [
   { slug: "robot-mowers", Icon: GrassIcon },
-  { slug: "pool-cleaners", Icon: Waves },
-  { slug: "cleaning-robots", Icon: Sparkles },
-  { slug: "delivery-robots", Icon: DeliveryRobotIcon },
 ] as const;
 
 /** Spring pop-in for each chip, staggered by the parent. */
@@ -28,44 +30,63 @@ const chipVariants = {
 };
 
 /**
- * Full-bleed hero background that plays the configured videos in sequence,
- * looping back to the first when the last one ends. A single video simply
- * loops. `key={src}` remounts the element so the next clip autoplays.
+ * Full-bleed hero background. Every configured clip is mounted, stacked, and
+ * the active one plays while the rest sit paused on their first frame — so
+ * advancing is a cross-fade with no reload gap. (The old version remounted a
+ * single <video> per clip, which flashed the poster image on every switch;
+ * that's the bug this replaces, hence no `poster` here at all.)
  *
- * iOS Safari will only autoplay a video that is muted AND inline. React sets
- * `muted` as a DOM property but does not always emit the HTML attribute, and
- * Safari checks at load time — so the ref below asserts it directly, and the
- * play() promise is caught because iOS Low Power Mode refuses autoplay
- * outright (the poster then stays up, which is the intended fallback).
+ * iOS Safari only autoplays a muted + inline video, and wants `muted` set as a
+ * property before play() — hence the ref assertion; play() is called from the
+ * effect (not the autoPlay attr, which would start every stacked clip at once)
+ * and its promise is caught because Low Power Mode can refuse autoplay.
+ *
+ * Bandwidth: only the active clip preloads on first paint. The others flip to
+ * preload="auto" once it starts playing (`ready`), so they buffer a frame
+ * before the switch without competing with the hero for the initial load.
  */
-function HeroVideoPlaylist({ urls, poster }: { urls: string[]; poster?: string }) {
+function HeroVideoPlaylist({ urls }: { urls: string[] }) {
   const [index, setIndex] = useState(0);
-  const ref = useRef<HTMLVideoElement>(null);
-  const src = urls[index % urls.length];
+  const [ready, setReady] = useState(false);
+  const refs = useRef<(HTMLVideoElement | null)[]>([]);
+  const single = urls.length === 1;
 
+  // Play whichever clip just became active, from its start.
   useEffect(() => {
-    const el = ref.current;
+    const el = refs.current[index];
     if (!el) return;
     el.muted = true; // must be set before play() for iOS to allow it
+    el.currentTime = 0;
     const attempt = el.play();
-    if (attempt) attempt.catch(() => undefined); // blocked (e.g. Low Power Mode) — poster remains
-  }, [src]);
+    if (attempt) attempt.catch(() => undefined); // blocked (e.g. Low Power Mode)
+  }, [index]);
 
   return (
-    <video
-      key={src}
-      ref={ref}
-      className="absolute inset-0 h-full w-full object-cover"
-      src={src}
-      poster={poster}
-      autoPlay
-      muted
-      loop={urls.length === 1}
-      playsInline
-      preload="auto"
-      onEnded={() => setIndex((i) => (i + 1) % urls.length)}
-      aria-hidden="true"
-    />
+    <>
+      {urls.map((src, i) => (
+        <video
+          key={src}
+          ref={(el) => {
+            refs.current[i] = el;
+          }}
+          // brightness/saturate lift the (slightly dark) footage so the hero
+          // reads light — a tone lift only. Shown sharp (no blur, per request).
+          className={`absolute inset-0 h-full w-full object-cover brightness-110 saturate-[1.05] transition-opacity duration-700 ${
+            i === index ? "opacity-100" : "opacity-0"
+          }`}
+          src={src}
+          muted
+          loop={single}
+          playsInline
+          preload={i === index || ready ? "auto" : "none"}
+          onPlaying={() => {
+            if (i === index) setReady(true);
+          }}
+          onEnded={single ? undefined : () => setIndex((v) => (v + 1) % urls.length)}
+          aria-hidden="true"
+        />
+      ))}
+    </>
   );
 }
 
@@ -162,29 +183,24 @@ export default function HeroSection() {
     <section
       className={`relative overflow-hidden ${
         video
-          ? "bg-forest-950 text-white"
+          ? // min-h-[56.25vw] makes the section a 16:9 box the full width of the
+            // viewport, so the whole video frame shows uncropped (object-cover
+            // then has nothing to crop). On a 16:9 screen that's taller than the
+            // viewport, so the bottom of the hero scrolls off — intended. The
+            // copy is centred within the FIRST screenful (see min-h-svh on the
+            // copy wrapper), not in this whole tall box, so headings stay put.
+            "min-h-[56.25vw] bg-forest-950 text-white"
           : "bg-gradient-to-b from-surface via-[#f1f8ee] to-[#e4f1e0] text-content dark:via-forest-900 dark:to-forest-800"
       }`}
     >
       {video ? (
         /* ---- video hero: cycles the playlist set in data/siteConfig.ts ---- */
         <>
-          <HeroVideoPlaylist
-            urls={videos}
-            poster={siteConfig.heroVideoPoster ?? undefined}
-          />
-          {/* Legibility scrim. Deliberately strong: the clips are dark, and in
-              dark mode this tint is navy over them, so contrast can't come from
-              the overlay colour alone. Linear band + a radial pool behind the
-              copy; .hero-legible on the text is the third layer. */}
-          <div
-            className="absolute inset-0 bg-gradient-to-b from-forest-950/85 via-forest-950/55 to-forest-950/85"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_45%,rgba(3,8,24,0.55),transparent_75%)]"
-            aria-hidden="true"
-          />
+          <HeroVideoPlaylist urls={videos} />
+          {/* No dark scrim — manager wants the hero light and untinted. All
+              legibility now comes from .hero-legible (a text-shadow on the copy
+              itself), which stays readable over the bright lawn footage without
+              putting any dark tint over the video. */}
         </>
       ) : (
         /* ---- animated fallback: morning sun + drifting pollen ---- */
@@ -222,7 +238,7 @@ export default function HeroSection() {
       {/* copy */}
       <div
         className={`relative z-10 mx-auto flex max-w-5xl flex-col items-center px-4 text-center sm:px-6 ${
-          video ? "pb-32 pt-24 sm:pb-40 sm:pt-36" : "pb-56 pt-20 sm:pb-64 sm:pt-28"
+          video ? "min-h-[calc(100svh-100px)] justify-center py-20 sm:py-24" : "pb-56 pt-20 sm:pb-64 sm:pt-28"
         }`}
       >
         {/* Category chips: at a glance, what the store sells — and each one is a
