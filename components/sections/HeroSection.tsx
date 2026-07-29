@@ -71,7 +71,9 @@ function HeroVideoPlaylist({ urls }: { urls: string[] }) {
           }}
           // brightness/saturate lift the (slightly dark) footage so the hero
           // reads light — a tone lift only. Shown sharp (no blur, per request).
-          className={`absolute inset-0 h-full w-full object-cover brightness-110 saturate-[1.05] transition-opacity duration-700 ${
+          // In dark mode it's dimmed a little (dark:brightness overrides the
+          // light-mode 110%) so the bright hero doesn't glare against dark UI.
+          className={`absolute inset-0 h-full w-full object-cover brightness-110 saturate-[1.05] transition-opacity duration-700 dark:brightness-90 ${
             i === index ? "opacity-100" : "opacity-0"
           }`}
           src={src}
