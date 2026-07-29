@@ -221,10 +221,15 @@ export default function Navbar() {
               )}
               {link.children && (
                 <div
-                  className={`absolute top-full z-50 pt-3 transition-all duration-200 ${
+                  className={`absolute top-full z-50 transition-all duration-200 ${
                     linkIndex === 0
-                      ? "left-4 right-4 mx-auto w-[720px] max-w-[calc(100%-2rem)]"
-                      : "left-1/2 -translate-x-1/2"
+                      ? // Shop mega-menu is positioned off the <nav>, so top-full
+                        // already sits at the navbar's bottom edge — no pt, so the
+                        // panel is flush against the bar with no gap.
+                        "left-4 right-4 mx-auto w-[720px] max-w-[calc(100%-2rem)]"
+                      : // Simple dropdowns hang off their own button; pt-3 clears
+                        // the rest of the navbar height below the trigger.
+                        "left-1/2 -translate-x-1/2 pt-3"
                   } ${
                     desktopMenu === linkIndex
                       ? "visible translate-y-0 opacity-100"
