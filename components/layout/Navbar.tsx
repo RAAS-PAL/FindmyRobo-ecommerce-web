@@ -221,10 +221,15 @@ export default function Navbar() {
               )}
               {link.children && (
                 <div
-                  className={`absolute top-full z-50 pt-3 transition-all duration-200 ${
+                  className={`absolute top-full z-50 transition-all duration-200 ${
                     linkIndex === 0
-                      ? "left-4 right-4 mx-auto w-[720px] max-w-[calc(100%-2rem)]"
-                      : "left-1/2 -translate-x-1/2"
+                      ? // Shop mega-menu is positioned off the <nav>, so top-full
+                        // already sits at the navbar's bottom edge — no pt, so the
+                        // panel is flush against the bar with no gap.
+                        "left-4 right-4 mx-auto w-[720px] max-w-[calc(100%-2rem)]"
+                      : // Simple dropdowns hang off their own button; pt-3 clears
+                        // the rest of the navbar height below the trigger.
+                        "left-1/2 -translate-x-1/2 pt-3"
                   } ${
                     desktopMenu === linkIndex
                       ? "visible translate-y-0 opacity-100"
@@ -234,27 +239,51 @@ export default function Navbar() {
                   {linkIndex === 0 ? (
                     <div className="grid w-full grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
                       <div className="border-r border-forest-100 p-2.5">
-                        {categories.map((category) => (
-                          <Link
-                            key={category.slug}
-                            href={categoryHref(category.slug)}
-                            onClick={() => setDesktopMenu(null)}
-                            onMouseEnter={() => setPreviewCategory(category.slug)}
-                            onFocus={() => setPreviewCategory(category.slug)}
-                            className={`block rounded-xl px-3.5 py-3 transition-colors ${
-                              previewCategory === category.slug
-                                ? "bg-cloud text-gold-600"
-                                : "text-content/85 hover:bg-cloud hover:text-gold-600"
-                            }`}
-                          >
-                            <span className="block text-[13px] font-semibold">
-                              {tc(`${category.slug}.name`)}
-                            </span>
-                            <span className="mt-1 block text-[10.5px] leading-snug text-ink-muted/70">
-                              {tc(`${category.slug}.description`)}
-                            </span>
-                          </Link>
-                        ))}
+                        {categories.map((category) => {
+                          const active = previewCategory === category.slug;
+                          const inner = (
+                            <>
+                              <span className="flex items-center text-[13px] font-semibold">
+                                {tc(`${category.slug}.name`)}
+                                {!category.available && <SoonBadge label={t("soon")} />}
+                              </span>
+                              <span className="mt-1 block text-[10.5px] leading-snug text-ink-muted/70">
+                                {tc(`${category.slug}.description`)}
+                              </span>
+                            </>
+                          );
+                          // Coming-soon categories still drive the preview on
+                          // hover/focus, but aren't links — nothing to shop yet.
+                          return category.available ? (
+                            <Link
+                              key={category.slug}
+                              href={categoryHref(category.slug)}
+                              onClick={() => setDesktopMenu(null)}
+                              onMouseEnter={() => setPreviewCategory(category.slug)}
+                              onFocus={() => setPreviewCategory(category.slug)}
+                              className={`block rounded-xl px-3.5 py-3 transition-colors ${
+                                active
+                                  ? "bg-cloud text-gold-600"
+                                  : "text-content/85 hover:bg-cloud hover:text-gold-600"
+                              }`}
+                            >
+                              {inner}
+                            </Link>
+                          ) : (
+                            <button
+                              key={category.slug}
+                              type="button"
+                              aria-disabled="true"
+                              onMouseEnter={() => setPreviewCategory(category.slug)}
+                              onFocus={() => setPreviewCategory(category.slug)}
+                              className={`block w-full cursor-default rounded-xl px-3.5 py-3 text-left text-ink-muted/70 transition-colors ${
+                                active ? "bg-cloud" : "hover:bg-cloud"
+                              }`}
+                            >
+                              {inner}
+                            </button>
+                          );
+                        })}
                       </div>
 
                       <div className="min-h-[330px] p-5">
@@ -267,13 +296,17 @@ export default function Navbar() {
                               {tc(`${previewCategory}.description`)}
                             </p>
                           </div>
-                          <Link
-                            href={categoryHref(previewCategory)}
-                            onClick={() => setDesktopMenu(null)}
-                            className="shrink-0 text-xs font-semibold text-gold-600 hover:text-content"
-                          >
-                            {t("shop")} →
-                          </Link>
+                          {categories.find((c) => c.slug === previewCategory)?.available ? (
+                            <Link
+                              href={categoryHref(previewCategory)}
+                              onClick={() => setDesktopMenu(null)}
+                              className="shrink-0 text-xs font-semibold text-gold-600 hover:text-content"
+                            >
+                              {t("shop")} →
+                            </Link>
+                          ) : (
+                            <SoonBadge label={t("soon")} />
+                          )}
                         </div>
 
                         {products.some((product) => product.category === previewCategory) ? (
@@ -309,6 +342,11 @@ export default function Navbar() {
                             <p className="mt-1 max-w-xs text-xs leading-relaxed text-ink-muted">
                               {tc(`${previewCategory}.description`)}
                             </p>
+                            {!categories.find((c) => c.slug === previewCategory)?.available && (
+                              <span className="mt-3">
+                                <SoonBadge label={t("soon")} />
+                              </span>
+                            )}
                           </div>
                         )}
                       </div>
