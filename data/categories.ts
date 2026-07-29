@@ -34,19 +34,22 @@ export const categories: Category[] = [
     slug: "pool-cleaners",
     name: "Pool Cleaners",
     description: "Effortless crystal-clear pools",
-    available: true,
+    // Mowing-only launch — flip to true when the category goes live.
+    available: false,
   },
   {
     slug: "cleaning-robots",
     name: "Cleaning Robots",
     description: "Floor and window robots for the home",
-    available: true,
+    // Mowing-only launch — flip to true when the category goes live.
+    available: false,
   },
   {
     slug: "delivery-robots",
     name: "Delivery Robots",
     description: "Autonomous delivery for business",
-    available: true,
+    // Mowing-only launch — flip to true when the category goes live.
+    available: false,
   },
   {
     slug: "services",
