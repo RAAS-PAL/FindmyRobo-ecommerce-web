@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
+  Check,
   CircleCheck,
   CreditCard,
   Info,
@@ -14,7 +14,6 @@ import {
   ShoppingCart,
   Sparkles,
   UserRound,
-  X,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import FadeIn from "@/components/ui/FadeIn";
@@ -32,9 +31,13 @@ import {
   type ShippingInfo,
 } from "@/lib/checkout";
 
-/** One upsell suggestion: a service package attached to a robot in the cart. */
+/** One upsell suggestion: a service package that can be attached to a robot. */
 interface UpsellOffer {
+  /** Stable list key for rendering. */
   key: string;
+  /** The cart line key this maps to (`${serviceId}__for__${robotId}`) — used to
+   *  tell whether it's currently in the cart and to remove it when toggled off. */
+  cartKey: string;
   service: Product;
   robot: Product;
   kind: "install" | "demo";
@@ -45,9 +48,11 @@ const parseArea = (spec?: string) =>
   spec ? Number(spec.replace(/[^0-9]/g, "")) : NaN;
 
 /**
- * PRD req 11: before payment, offer installation tiers matched to the robots
- * in the cart (smallest tier that covers the robot's area spec), or a demo.
- * Robots that already have that service attached in the cart are skipped.
+ * PRD req 11: recommend service add-ons for the robots in the cart — the
+ * smallest installation tier that covers each robot's area, plus one on-site
+ * demo. Returns every applicable candidate (NOT filtered by what's already in
+ * the cart); the checkout derives each one's checked state from the cart so
+ * they render as live toggles above the form.
  */
 function buildOffers(items: CartLine[], catalog: Product[]): UpsellOffer[] {
   const robots = items.filter((l) => l.product.category !== SERVICE_CATEGORY);
@@ -60,27 +65,26 @@ function buildOffers(items: CartLine[], catalog: Product[]): UpsellOffer[] {
     (p) => p.category === SERVICE_CATEGORY && p.variant === "demo"
   );
 
-  const hasService = (serviceId: string, robotId: string) =>
-    items.some((l) => l.id === serviceId && l.forId === robotId);
-
   const offers: UpsellOffer[] = [];
   for (const line of robots) {
     const area = parseArea(line.product.specs.area);
     const tier =
       tiers.find((s) => Number.isNaN(area) || parseArea(s.specs.area) >= area) ??
       tiers[tiers.length - 1];
-    if (tier && !hasService(tier.id, line.id)) {
+    if (tier) {
       offers.push({
         key: `${tier.id}__${line.id}`,
+        cartKey: `${tier.id}__for__${line.id}`,
         service: tier,
         robot: line.product,
         kind: "install",
       });
     }
   }
-  if (demo && !items.some((l) => l.id === demo.id)) {
+  if (demo) {
     offers.push({
       key: `${demo.id}__${robots[0].id}`,
+      cartKey: `${demo.id}__for__${robots[0].id}`,
       service: demo,
       robot: robots[0].product,
       kind: "demo",
@@ -166,7 +170,7 @@ export default function CheckoutClient() {
   const t = useTranslations("checkout");
   const tc = useTranslations("cart");
   const tp = useTranslations("payment");
-  const { items, subtotal, clear, add } = useCart();
+  const { items, subtotal, clear, add, remove } = useCart();
   const { products } = useProducts();
   // Absent until the Omise keys are added; the order still gets created and the
   // customer sees the previous "our team will contact you" confirmation.
@@ -177,13 +181,17 @@ export default function CheckoutClient() {
   const [placed, setPlaced] = useState<PlacedOrder | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [offers, setOffers] = useState<UpsellOffer[]>([]);
-  const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
-  const [upsellOpen, setUpsellOpen] = useState(false);
-  // the prompt appears at most once per checkout — dismissing must never block payment
-  const [upsellShown, setUpsellShown] = useState(false);
   // which payment method the customer picked on the post-order payment screen
   const [payMethod, setPayMethod] = useState<"card" | "promptpay">("card");
+
+  // Recommended service add-ons for the robots in the cart, shown as live
+  // toggles above the form (PRD req 11). Toggling adds/removes the service
+  // straight from the cart, so the order summary reflects the choice at once.
+  const offers = useMemo(() => buildOffers(items, products), [items, products]);
+  const toggleOffer = (offer: UpsellOffer, checked: boolean) => {
+    if (checked) add(offer.service.id, 1, offer.robot.id);
+    else remove(offer.cartKey);
+  };
 
   const setField = (name: FieldName) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((f) => ({ ...f, [name]: e.target.value }));
@@ -222,18 +230,15 @@ export default function CheckoutClient() {
       if (!res.ok) {
         if (body?.errors) setErrors(body.errors);
         setSubmitError(body?.error ?? `Could not place the order (${res.status})`);
-        setUpsellOpen(false);
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
 
-      setUpsellOpen(false);
       setPlaced({ id: body.orderId, items: body.items, total: body.total });
       clear();
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
       setSubmitError(t("errors.network"));
-      setUpsellOpen(false);
     } finally {
       setBusy(false);
     }
@@ -250,40 +255,9 @@ export default function CheckoutClient() {
       return;
     }
 
-    // PRD req 11: one upsell prompt before payment when the cart has robots
-    // without a matching service. Dismissing proceeds normally.
-    if (!upsellShown) {
-      const nextOffers = buildOffers(items, products);
-      if (nextOffers.length > 0) {
-        setOffers(nextOffers);
-        setSelectedOffer(nextOffers[0].key);
-        setUpsellShown(true);
-        setUpsellOpen(true);
-        return;
-      }
-    }
-
+    // Add-ons are chosen up front via the toggles above the form, so the cart
+    // already holds them — nothing to prompt for here, just place the order.
     placeOrder(items);
-  };
-
-  /** Upsell "Add & continue": include the chosen package in cart + order. */
-  const acceptOffer = () => {
-    const offer = offers.find((o) => o.key === selectedOffer);
-    if (!offer) {
-      placeOrder(items);
-      return;
-    }
-    // reflect it in the cart (for the record) and in this order's lines
-    add(offer.service.id, 1, offer.robot.id);
-    const extraLine: CartLine = {
-      id: offer.service.id,
-      qty: 1,
-      forId: offer.robot.id,
-      key: `${offer.service.id}__for__${offer.robot.id}`,
-      product: offer.service,
-      forProduct: offer.robot,
-    };
-    placeOrder([...items, extraLine]);
   };
 
   /* order created — collect payment (or, until Omise keys exist, confirm and
@@ -447,6 +421,81 @@ export default function CheckoutClient() {
             {submitError}
           </p>
         )}
+
+        {offers.length > 0 && (
+          <FadeIn>
+            <section aria-labelledby="addons-heading">
+              <h2
+                id="addons-heading"
+                className="flex items-center gap-2.5 font-display text-lg font-bold text-content"
+              >
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/20">
+                  <Sparkles className="h-4 w-4 text-gold-600" aria-hidden="true" />
+                </span>
+                {t("upsell.heading")}
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                {t("upsell.subtext")}
+              </p>
+              <div className="mt-5 space-y-2.5">
+                {offers.map((offer, i) => {
+                  const checked = items.some((l) => l.key === offer.cartKey);
+                  return (
+                    <label
+                      key={offer.key}
+                      className={`flex cursor-pointer items-center gap-3.5 rounded-2xl border p-3.5 transition-colors ${
+                        checked
+                          ? "border-gold bg-gold/10"
+                          : "border-forest-100 hover:border-gold/50"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(e) => toggleOffer(offer, e.target.checked)}
+                        className="sr-only"
+                      />
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
+                          checked
+                            ? "border-gold bg-gold text-forest-950"
+                            : "border-forest-200"
+                        }`}
+                        aria-hidden="true"
+                      >
+                        {checked && <Check className="h-3.5 w-3.5" />}
+                      </span>
+                      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
+                        <ProductVisual product={offer.service} className="h-full w-auto" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span className="text-[13.5px] font-bold leading-snug text-content">
+                            {offer.service.name}
+                          </span>
+                          {i === 0 && (
+                            <span className="rounded-full bg-gold/20 px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-wider text-gold-600">
+                              {t("upsell.recommendedBadge")}
+                            </span>
+                          )}
+                        </span>
+                        <span className="mt-0.5 block text-[12px] text-ink-muted">
+                          {t(offer.kind === "install" ? "upsell.installFor" : "upsell.demoFor", {
+                            name: offer.robot.name,
+                          })}
+                        </span>
+                      </span>
+                      <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
+                        {formatBaht(offer.service.price)}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </section>
+          </FadeIn>
+        )}
+
         <FadeIn>
           <section aria-labelledby="contact-heading">
             <h2
@@ -627,124 +676,6 @@ export default function CheckoutClient() {
           </div>
         </aside>
       </FadeIn>
-
-      {/* upsell prompt — shown once before payment (PRD req 11) */}
-      <AnimatePresence>
-        {upsellOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => placeOrder(items)}
-              className="fixed inset-0 z-50 bg-forest-950/60 backdrop-blur-sm"
-              aria-hidden="true"
-            />
-            <motion.div
-              initial={{ opacity: 0, y: 32, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 32, scale: 0.97 }}
-              transition={{ type: "spring", damping: 28, stiffness: 320 }}
-              role="dialog"
-              aria-modal="true"
-              aria-label={t("upsell.heading")}
-              className="fixed inset-x-4 top-1/2 z-50 mx-auto max-w-lg -translate-y-1/2 rounded-3xl bg-surface p-6 shadow-2xl sm:p-8"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/20">
-                  <Sparkles className="h-5 w-5 text-gold-600" aria-hidden="true" />
-                </span>
-                <button
-                  type="button"
-                  onClick={() => placeOrder(items)}
-                  aria-label={t("upsell.skip")}
-                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-forest/5 hover:text-content"
-                >
-                  <X className="h-5 w-5" aria-hidden="true" />
-                </button>
-              </div>
-              <h2 className="mt-4 font-display text-xl font-extrabold tracking-tight text-content sm:text-2xl">
-                {t("upsell.heading")}
-              </h2>
-              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                {t("upsell.subtext")}
-              </p>
-
-              <div className="mt-5 max-h-72 space-y-2.5 overflow-y-auto">
-                {offers.map((offer, i) => (
-                  <label
-                    key={offer.key}
-                    className={`flex cursor-pointer items-center gap-3.5 rounded-2xl border p-3.5 transition-colors ${
-                      selectedOffer === offer.key
-                        ? "border-gold bg-gold/10"
-                        : "border-forest-100 hover:border-gold/50"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="upsell-offer"
-                      checked={selectedOffer === offer.key}
-                      onChange={() => setSelectedOffer(offer.key)}
-                      className="sr-only"
-                    />
-                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
-                      <ProductVisual
-                        product={offer.service}
-                        className="h-full w-auto"
-                      />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex flex-wrap items-center gap-2">
-                        <span className="text-[13.5px] font-bold leading-snug text-content">
-                          {offer.service.name}
-                        </span>
-                        {i === 0 && (
-                          <span className="rounded-full bg-gold/20 px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-wider text-gold-600">
-                            {t("upsell.recommendedBadge")}
-                          </span>
-                        )}
-                      </span>
-                      <span className="mt-0.5 block text-[12px] text-ink-muted">
-                        {t(offer.kind === "install" ? "upsell.installFor" : "upsell.demoFor", {
-                          name: offer.robot.name,
-                        })}
-                      </span>
-                    </span>
-                    <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
-                      {formatBaht(offer.service.price)}
-                    </span>
-                  </label>
-                ))}
-              </div>
-
-              <button
-                type="button"
-                onClick={acceptOffer}
-                disabled={busy}
-                className="mt-5 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
-              >
-                {busy ? (
-                  <LoaderCircle className="h-4.5 w-4.5 animate-spin" aria-hidden="true" />
-                ) : (
-                  <>
-                    {t("upsell.addAndContinue")}
-                    <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => placeOrder(items)}
-                disabled={busy}
-                className="mt-3 w-full cursor-pointer text-center text-[13px] font-medium text-ink-muted transition-colors hover:text-content disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {t("upsell.skip")}
-              </button>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </form>
   );
 }
