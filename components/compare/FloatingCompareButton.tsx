@@ -147,7 +147,7 @@ export default function FloatingCompareButton() {
           whileDrag={{ scale: 1.08, opacity: 1 }}
           whileHover={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.25 }}
-          className="fixed left-0 top-0 z-40 flex cursor-grab touch-none items-center justify-center rounded-full border border-forest-100 bg-surface/95 shadow-[0_10px_30px_-8px_rgba(10,46,31,0.45)] backdrop-blur-md active:cursor-grabbing"
+          className="fixed left-0 top-0 z-40 flex cursor-grab touch-none items-center justify-center rounded-full border border-forest-100 bg-surface/95 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.45)] backdrop-blur-md active:cursor-grabbing"
         >
           {/* concentric AssistiveTouch-style face in brand colors */}
           <span className="pointer-events-none flex h-10 w-10 items-center justify-center rounded-full bg-gold/20">

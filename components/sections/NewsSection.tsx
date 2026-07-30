@@ -64,7 +64,7 @@ export default function NewsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.55, delay: i * 0.09, ease: [0.16, 1, 0.3, 1] }}
-            className="group w-[300px] shrink-0 cursor-pointer snap-start overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_44px_-18px_rgba(10,46,31,0.25)] sm:w-[320px]"
+            className="group w-[300px] shrink-0 cursor-pointer snap-start overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_44px_-18px_rgba(0,0,0,0.25)] sm:w-[320px]"
           >
             {/* banner placeholder */}
             <div

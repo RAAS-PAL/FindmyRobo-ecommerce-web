@@ -113,7 +113,7 @@ function MowerSvg() {
   return (
     <svg
       viewBox="0 0 220 130"
-      className="h-24 w-auto drop-shadow-[0_12px_18px_rgba(11,46,31,0.3)] sm:h-28"
+      className="h-24 w-auto drop-shadow-[0_12px_18px_rgba(0,0,0,0.3)] sm:h-28"
       role="img"
       aria-label="Robot mower cutting the lawn"
     >
@@ -252,7 +252,7 @@ export default function HeroSection() {
           className="mb-8 flex flex-col items-center gap-3"
         >
           <span
-            className={`font-mono text-[12.5px] font-semibold uppercase tracking-[0.35em] ${
+            className={`font-mono text-[12.5px] font-bold uppercase tracking-[0.35em] ${
               video ? "hero-legible text-gold" : "text-gold-600"
             }`}
           >
