@@ -328,8 +328,8 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className={`mt-7 max-w-2xl text-base leading-relaxed sm:text-lg ${
-            video ? "hero-legible text-white/90" : "text-ink-muted"
+          className={`mt-7 max-w-2xl text-base font-semibold leading-relaxed sm:text-lg ${
+            video ? "hero-legible text-white" : "text-ink-muted"
           }`}
         >
           {t("sub")}

@@ -18,22 +18,27 @@
        --color-content  (primary text)  — forest in light, near-white in dark
      ...because `bg-forest` (a dark surface) and `text-forest` (dark text on a
      light surface) need OPPOSITE treatment in dark mode. */
-  --color-forest-950: #0b2e1f;
-  --color-forest-900: #10402b;
-  --color-forest: #123b28;
-  --color-forest-800: #1a5c3e;
-  --color-forest-700: #237a52;
-  --color-forest-300: #9ec9ae;
-  --color-forest-100: #dcebe0;
+  /* EXPERIMENT (light-mode "green → black"): the forest scale is remapped to a
+     neutral charcoal/grey scale — same lightness per step, green hue removed —
+     so the brand reads BLACK + gold instead of green + gold. Gold and the white
+     surface are unchanged, and the .dark block below is untouched. To go back
+     to green, restore this block from git (the original greens are in history). */
+  --color-forest-950: #0a0a0b;
+  --color-forest-900: #151517;
+  --color-forest: #17181b;
+  --color-forest-800: #2f3034;
+  --color-forest-700: #46484e;
+  --color-forest-300: #bbbdc3;
+  --color-forest-100: #e4e5e8;
   --color-gold: #f5c842;
   --color-gold-300: #ffe08a;
   --color-gold-600: #8a6a00; /* darkened amber: 4.5:1+ on white for text accents */
-  --color-cloud: #f4f8f3;
-  --color-ink-muted: #55705f;
+  --color-cloud: #f6f6f7;
+  --color-ink-muted: #5b5f66;
 
   /* semantic — see note above */
   --color-surface: #ffffff;
-  --color-content: #123b28;
+  --color-content: #17181b;
 
   /* Thai fallbacks: Barlow/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
   --font-display: var(--font-barlow), var(--font-prompt), system-ui, sans-serif;
@@ -86,7 +91,7 @@
 
 ::selection {
   background: var(--color-gold);
-  color: #0b2e1f;
+  color: #0a0a0b;
 }
 
 :focus-visible {
