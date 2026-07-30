@@ -158,7 +158,7 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled
-          ? "border-forest-100 bg-surface/85 shadow-[0_8px_28px_-16px_rgba(10,46,31,0.25)] backdrop-blur-xl"
+          ? "border-forest-100 bg-surface/85 shadow-[0_8px_28px_-16px_rgba(0,0,0,0.25)] backdrop-blur-xl"
           : "border-forest-100/70 bg-surface"
       }`}
     >
@@ -237,7 +237,7 @@ export default function Navbar() {
                   }`}
                 >
                   {linkIndex === 0 ? (
-                    <div className="grid w-full grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
+                    <div className="grid w-full grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
                       <div className="border-r border-forest-100 p-2.5">
                         {categories.map((category) => {
                           const active = previewCategory === category.slug;
@@ -352,7 +352,7 @@ export default function Navbar() {
                       </div>
                     </div>
                   ) : (
-                    <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
+                    <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
                       {link.children.map((item) => (
                         <DropdownChild
                           key={item.label}

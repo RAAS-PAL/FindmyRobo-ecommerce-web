@@ -50,7 +50,7 @@ export default function PartnersSection() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.9, delay: 0.25 + i * 0.25 }}
-              className="flex flex-col items-center rounded-2xl border border-forest-100 bg-surface p-10 text-center transition-all duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-[0_20px_44px_-18px_rgba(10,46,31,0.2)]"
+              className="flex flex-col items-center rounded-2xl border border-forest-100 bg-surface p-10 text-center transition-all duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-[0_20px_44px_-18px_rgba(0,0,0,0.2)]"
             >
               <div className="flex h-24 items-center">
                 <span className={partner.wordmarkClass}>{partner.name}</span>

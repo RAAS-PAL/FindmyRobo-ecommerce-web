@@ -27,7 +27,7 @@ export default function ProductCard({
     >
       <Link
         href={`/products/${product.id}`}
-        className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-gold hover:shadow-[0_24px_48px_-16px_rgba(10,46,31,0.25)]"
+        className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-gold hover:shadow-[0_24px_48px_-16px_rgba(0,0,0,0.25)]"
       >
         {/* image area */}
         <div className="relative flex min-h-60 items-center overflow-hidden bg-gradient-to-b from-cloud to-forest-100/40 px-3 pb-3 pt-7">

@@ -22,7 +22,7 @@ export default function AuthShell({
           </h1>
           <p className="mt-2 text-sm text-ink-muted">{sub}</p>
         </div>
-        <div className="rounded-3xl border border-forest-100 bg-surface p-7 shadow-[0_16px_40px_-20px_rgba(10,46,31,0.25)] sm:p-8">
+        <div className="rounded-3xl border border-forest-100 bg-surface p-7 shadow-[0_16px_40px_-20px_rgba(0,0,0,0.25)] sm:p-8">
           {children}
         </div>
       </div>
