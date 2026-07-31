@@ -42,7 +42,7 @@ export default function TrustSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.55, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-2xl bg-forest p-6 shadow-[0_16px_40px_-16px_rgba(10,46,31,0.4)] sm:p-8"
+              className="rounded-2xl bg-forest p-6 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.4)] sm:p-8"
             >
               <AnimatedCounter
                 to={stat.value}

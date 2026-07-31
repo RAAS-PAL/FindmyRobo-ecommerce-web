@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import ProductCard from "@/components/ui/ProductCard";
+import FeaturedProductCard from "@/components/ui/FeaturedProductCard";
 import { useProducts } from "@/components/ProductsProvider";
 
 export default function ProductGrid() {
@@ -13,7 +13,7 @@ export default function ProductGrid() {
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const scrollBy = (dir: 1 | -1) =>
-    scrollerRef.current?.scrollBy({ left: dir * 330, behavior: "smooth" });
+    scrollerRef.current?.scrollBy({ left: dir * 424, behavior: "smooth" });
 
   return (
     <section id="products" className="bg-surface py-20 sm:py-28">
@@ -59,7 +59,7 @@ export default function ProductGrid() {
         className="no-scrollbar mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-px-4 px-4 pb-6 pt-2 sm:scroll-px-6 sm:px-6 lg:scroll-px-8 lg:px-[max(2rem,calc((100vw-80rem)/2+2rem))]"
       >
         {products.map((product, i) => (
-          <ProductCard key={product.id} product={product} index={i} />
+          <FeaturedProductCard key={product.id} product={product} index={i} />
         ))}
       </div>
     </section>

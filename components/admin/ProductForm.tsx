@@ -35,6 +35,14 @@ const VARIANT_LABEL_KEYS = {
   demo: "variants.demo",
 } as const satisfies Record<(typeof ROBOT_VARIANTS)[number], string>;
 
+/** Clips already sitting in /public/videos, offered as quick picks in the
+ *  hover-video field (a datalist). Any other URL/path can still be typed. */
+const HOVER_VIDEO_OPTIONS = [
+  "/videos/hero-banner-luba3.mp4",
+  "/videos/hero-luba-mini.mp4",
+  "/videos/luba-mini-1500.mp4",
+];
+
 const slugify = (name: string) =>
   name
     .toLowerCase()
@@ -103,10 +111,13 @@ export default function ProductForm({ initial }: { initial?: Product }) {
     initial?.imageUrl ? "image" : initial?.variant ?? "luba"
   );
   const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? "");
+  const [homeImage, setHomeImage] = useState(initial?.homeImage ?? "");
+  const [hoverVideo, setHoverVideo] = useState(initial?.hoverVideo ?? "");
   // gallery URLs stay raw text so typing/pasting behaves; uploads append lines
   const [imagesText, setImagesText] = useState((initial?.images ?? []).join("\n"));
-  const [uploading, setUploading] = useState<"main" | "gallery" | null>(null);
+  const [uploading, setUploading] = useState<"main" | "gallery" | "home" | null>(null);
   const mainFileRef = useRef<HTMLInputElement>(null);
+  const homeFileRef = useRef<HTMLInputElement>(null);
   const galleryFileRef = useRef<HTMLInputElement>(null);
   const fallbackVariant =
     artChoice === "image" ? initial?.variant ?? "luba" : artChoice;
@@ -115,7 +126,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
 
   /** Upload the picked files, then hand their URLs to the matching field. */
   const handleFiles = async (
-    target: "main" | "gallery",
+    target: "main" | "gallery" | "home",
     input: HTMLInputElement
   ) => {
     const files = Array.from(input.files ?? []);
@@ -130,6 +141,8 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         setImageUrl(urls[0]);
         // a multi-pick on the main field spills the rest into the gallery
         if (urls.length > 1) appendGallery(urls.slice(1));
+      } else if (target === "home") {
+        setHomeImage(urls[0]);
       } else {
         appendGallery(urls);
       }
@@ -404,6 +417,72 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           ) : (
             <p className={hintClass}>{t("hints.placeholderArt")}</p>
           )}
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="homeImage" className={labelClass}>
+            {t("fields.homeImage")}
+          </label>
+          <input
+            id="homeImage"
+            name="homeImage"
+            type="text"
+            value={homeImage}
+            onChange={(e) => setHomeImage(e.target.value)}
+            placeholder={t("placeholders.homeImage")}
+            className={inputClass}
+          />
+          <input
+            ref={homeFileRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+            hidden
+            onChange={(e) => handleFiles("home", e.currentTarget)}
+          />
+          <button
+            type="button"
+            disabled={uploading !== null}
+            onClick={() => homeFileRef.current?.click()}
+            className={uploadButtonClass}
+          >
+            {uploading === "home" ? (
+              <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+            ) : (
+              <ImagePlus className="h-4 w-4" aria-hidden="true" />
+            )}
+            {uploading === "home" ? t("actions.uploading") : t("actions.uploadPhoto")}
+          </button>
+          {homeImage && (
+            <span className="mt-3 flex h-16 w-24 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={homeImage}
+                alt={t("aria.productPreview")}
+                className="h-full w-full object-cover"
+              />
+            </span>
+          )}
+          <p className={hintClass}>{t("hints.homeImage")}</p>
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="hoverVideo" className={labelClass}>
+            {t("fields.hoverVideo")}
+          </label>
+          <input
+            id="hoverVideo"
+            name="hoverVideo"
+            type="text"
+            list="hoverVideoOptions"
+            value={hoverVideo}
+            onChange={(e) => setHoverVideo(e.target.value)}
+            placeholder={t("placeholders.hoverVideo")}
+            className={inputClass}
+          />
+          <datalist id="hoverVideoOptions">
+            {HOVER_VIDEO_OPTIONS.map((src) => (
+              <option key={src} value={src} />
+            ))}
+          </datalist>
+          <p className={hintClass}>{t("hints.hoverVideo")}</p>
         </div>
         <div className="flex items-center gap-2.5">
           <input
