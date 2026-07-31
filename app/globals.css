@@ -55,27 +55,28 @@
   --radius-3xl: 1rem;
 }
 
-/* ---------- dark theme: the brand's original deep navy + gold ----------
-   Contrast verified against WCAG AA (measured on #132247 surface):
-     content #e8edfb 13.3:1 · muted #8d9ac9 5.6:1 · gold accent #ffe08a 12.1:1
-     navy-950 text on gold button 11.8:1 · card lifts 1.21:1 off the canvas
-   gold-600 MUST flip: the light-theme #8a6a00 scores only 3.5:1 on navy. */
+/* ---------- dark theme: neutral black + gold (matches the light theme) ----------
+   The brand moved to black + gold, so dark mode is a neutral charcoal/near-black
+   scale (no blue tint) instead of the original navy. Gold accents are unchanged;
+   gold-600 still flips to a light amber so it reads on the dark surfaces.
+   Contrast (AA): content #f1f2f4 on #18191c ~15:1 · muted #9a9ca2 ~6.5:1 ·
+   gold #ffe08a high · surface lifts off the near-black canvas. */
 .dark {
   color-scheme: dark;
 
-  --color-forest-950: #070f2e; /* deepest surfaces: footer, drawer, hero scrim */
-  --color-forest-900: #0a163d;
-  --color-forest: #0d1b4b; /* mid brand surface (gradient tiles, badges) */
-  --color-forest-800: #16276b;
-  --color-forest-700: #21358a;
-  --color-forest-300: #8d9ac9;
-  --color-forest-100: #2a3f7d; /* borders — navy-800 was invisible at 1.3:1 */
+  --color-forest-950: #070708; /* deepest surfaces: footer, drawer, hero scrim */
+  --color-forest-900: #131316;
+  --color-forest: #1b1c20; /* mid brand surface (gradient tiles, badges) */
+  --color-forest-800: #2a2b30;
+  --color-forest-700: #3a3b41;
+  --color-forest-300: #a1a3a9;
+  --color-forest-100: #2d2e33; /* borders — visible on the near-black canvas */
   --color-gold-600: #ffe08a; /* accent text, lightened for dark surfaces */
-  --color-cloud: #070f2e; /* page canvas */
-  --color-ink-muted: #8d9ac9;
+  --color-cloud: #0a0a0b; /* page canvas */
+  --color-ink-muted: #9a9ca2;
 
-  --color-surface: #132247; /* cards, raised above the canvas */
-  --color-content: #e8edfb; /* tinted near-white avoids pure-white halation */
+  --color-surface: #18191c; /* cards, raised above the canvas */
+  --color-content: #f1f2f4; /* near-white, neutral (not blue-tinted) */
 }
 
 /* @layer base so a `bg-*` utility on <body> still wins — unlayered rules beat

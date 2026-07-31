@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "RoboStore TH — The Ultimate Robot Mowers for Thai Gardens",
-    "description": "Premium robot mowers, pool cleaners, and home robots in Thailand. In-home demos in Bangkok and local Thai support. Time for Life™"
+    "description": "Premium robot lawn mowers for Thai gardens — wire-free, all-weather cutting that handles slopes and the rainy season. In-home demos in Bangkok with local Thai support."
   },
   "announcement": {
     "msg1": "🤖 Mammotion LUBA 3 AWD Now Available in Thailand!",
@@ -680,6 +680,18 @@
     "heading": "Watch Them Work Their Magic",
     "sub": "A closer look at how our mowers handle real Thai lawns — precision, power, and hands-free convenience.",
     "placeholder": "Videos coming soon"
+  },
+  "stats": {
+    "eyebrow": "By the Numbers",
+    "heading": "Built to Cover More, Faster",
+    "coverage": "Sq. metres per charge",
+    "slope": "Max slope",
+    "speed": "Mowing speed",
+    "vision": "LiDAR vision"
+  },
+  "featureShowcase": {
+    "eyebrow": "Under the Hood",
+    "heading": "Engineered to Outperform"
   },
   "shop": {
     "eyebrow": "Shop",
