@@ -151,7 +151,6 @@ export default function Navbar() {
       ],
     },
     { label: t("support"), href: "/#support" },
-    { label: t("blog"), href: "/#news" },
   ];
 
   return (
