@@ -383,9 +383,11 @@ export default function Navbar() {
 
         {/* right cluster */}
         <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Collapsed to a magnifier button; the field slides open on hover
+              (group-hover) or when focused/clicked (focus). */}
           <CatalogSearch
-            className="hidden lg:block"
-            inputClassName="h-11 w-44 rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-[13px] text-content placeholder:text-ink-muted/70 transition-all focus:w-56 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
+            className="group hidden lg:block"
+            inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-60 group-hover:cursor-text group-hover:pr-4 focus:w-60 focus:cursor-text focus:pr-4 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
             dropdownClassName="right-0 w-[360px]"
           />
 
