@@ -8,7 +8,7 @@
     "msg2": "Book your in-home demo now in Bangkok"
   },
   "nav": {
-    "shop": "Shop",
+    "shop": "Products",
     "tv": "RoboStore TV",
     "about": "About",
     "aboutStory": "Our Story",
@@ -335,6 +335,8 @@
         "customImage": "Custom image (URL)",
         "imageUrl": "Image URL",
         "galleryPhotos": "Gallery photos — one URL per line (optional)",
+        "hoverVideo": "Hover video (optional)",
+        "homeImage": "Home card image (optional)",
         "preorder": "Preorder (not in stock yet)",
         "visible": "Visible in shop",
         "englishTagline": "Tagline",
@@ -363,6 +365,8 @@
         "editUrl": "URL: /products/{id} (fixed — links keep working after edits)",
         "createUrl": "URL: /products/{slug}",
         "imageUpload": "Upload a photo, or paste a direct image link (https://…). The illustration stays as the fallback if the image fails to load. Pick several at once and the extras go to the gallery below.",
+        "hoverVideo": "Plays on the product card when a shopper hovers over it. Pick an existing clip or paste a URL/path — keep it short and light (a few MB).",
+        "homeImage": "Shown on the large home-page card (a lifestyle photo works best). Leave blank to reuse the product image.",
         "gallery": "Extra angles for the product page gallery, shown after the main image in this order. Leave empty for a single photo.",
         "placeholderArt": "Placeholder art until real product photos land.",
         "visible": "Hide it to keep working on it without listing it in the shop, or to pull it from sale without deleting it.",
@@ -385,6 +389,8 @@
         "price": "159000",
         "sku": "MMT-LUBA3-3000",
         "imageUrl": "https://example.com/robot.jpg",
+        "hoverVideo": "/videos/luba-3.mp4 or https://…",
+        "homeImage": "https://example.com/luba-in-garden.jpg",
         "galleryUrls": "https://example.com/robot-side.jpg\nhttps://example.com/robot-top.jpg",
         "englishTagline": "All-wheel drive precision for large Thai gardens",
         "englishFeatureBullets": "AWD climbs slopes up to 80%\nNo boundary wire needed"
@@ -665,6 +671,7 @@
     "heading": "Popular Robots for Every Need",
     "preorder": "Preorder",
     "viewProduct": "View Product",
+    "learnMore": "Learn More",
     "scrollLeft": "Scroll products left",
     "scrollRight": "Scroll products right"
   },
@@ -693,7 +700,7 @@
   },
   "productDetail": {
     "home": "Home",
-    "shop": "Shop",
+    "shop": "Products",
     "specsHeading": "Technical Specs",
     "specsNote": "Preliminary specs — confirmed at delivery",
     "specTableHeading": "Product Specifications",

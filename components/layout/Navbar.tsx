@@ -151,18 +151,28 @@ export default function Navbar() {
       ],
     },
     { label: t("support"), href: "/#support" },
-    { label: t("blog"), href: "/#news" },
   ];
 
   return (
     <header
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled
-          ? "border-forest-100 bg-surface/85 shadow-[0_8px_28px_-16px_rgba(10,46,31,0.25)] backdrop-blur-xl"
+          ? "border-forest-100 bg-surface/85 shadow-[0_8px_28px_-16px_rgba(0,0,0,0.25)] backdrop-blur-xl"
           : "border-forest-100/70 bg-surface"
       }`}
     >
-      <nav className="relative mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <nav className="relative flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
+        {/* soft grey wedge over the left half (light mode only): a subtle panel
+            that ends in an angled edge near the middle; the rest stays white.
+            -z-10 keeps it behind the bar content; dark mode hides it. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 -z-10 w-[46%] bg-[#eef0f2] dark:hidden"
+          style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 44px) 100%, 0 100%)" }}
+        />
+
+        {/* left group: logo + primary links, kept together on the left edge */}
+        <div className="flex items-center gap-6 xl:gap-9">
         {/* logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="RoboStore TH home">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold text-forest-950">
@@ -237,7 +247,7 @@ export default function Navbar() {
                   }`}
                 >
                   {linkIndex === 0 ? (
-                    <div className="grid w-full grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
+                    <div className="grid w-full grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
                       <div className="border-r border-forest-100 p-2.5">
                         {categories.map((category) => {
                           const active = previewCategory === category.slug;
@@ -352,7 +362,7 @@ export default function Navbar() {
                       </div>
                     </div>
                   ) : (
-                    <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(10,46,31,0.28)] backdrop-blur-xl">
+                    <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
                       {link.children.map((item) => (
                         <DropdownChild
                           key={item.label}
@@ -368,12 +378,15 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
+        </div>
 
         {/* right cluster */}
         <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Collapsed to a magnifier button; the field slides open on hover
+              (group-hover) or when focused/clicked (focus). */}
           <CatalogSearch
-            className="hidden lg:block"
-            inputClassName="h-11 w-44 rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-[13px] text-content placeholder:text-ink-muted/70 transition-all focus:w-56 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
+            className="group hidden lg:block"
+            inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-60 group-hover:cursor-text group-hover:pr-4 focus:w-60 focus:cursor-text focus:pr-4 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
             dropdownClassName="right-0 w-[360px]"
           />
 

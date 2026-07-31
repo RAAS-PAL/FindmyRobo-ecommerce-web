@@ -42,7 +42,7 @@ export default function WhyUsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="group rounded-2xl border border-forest-100 bg-surface p-8 shadow-[0_12px_32px_-20px_rgba(10,46,31,0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/70 hover:shadow-[0_24px_48px_-20px_rgba(10,46,31,0.25)]"
+              className="group rounded-2xl border border-forest-100 bg-surface p-8 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/70 hover:shadow-[0_24px_48px_-20px_rgba(0,0,0,0.25)]"
             >
               <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-forest-950 text-gold transition-colors duration-300 group-hover:bg-gold group-hover:text-forest-950">
                 <Icon className="h-6.5 w-6.5" aria-hidden="true" />
