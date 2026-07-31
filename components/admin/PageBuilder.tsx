@@ -46,9 +46,6 @@ export interface DraftSpecGroup {
   rows: DraftSpecRow[];
 }
 export interface DraftPage {
-  videoUrl: string;
-  videoCaptionEn: string;
-  videoCaptionTh: string;
   blocks: DraftBlock[];
   specGroups: DraftSpecGroup[];
 }
@@ -74,11 +71,23 @@ const emptyRow = (): DraftSpecRow => ({ labelEn: "", labelTh: "", valueEn: "", v
 const loc = (t?: LocalizedText) => ({ en: t?.en ?? "", th: t?.th ?? "" });
 
 export function pageToDraft(page?: ProductPage): DraftPage {
+  // Legacy top-of-page video (page.videoUrl) migrates into the ordered blocks
+  // as a leading video block, so it reorders alongside everything else and
+  // stops being a fixed, separate slot.
+  const legacyVideo: DraftBlock[] = page?.videoUrl
+    ? [
+        {
+          ...emptyBlock("video"),
+          url: page.videoUrl,
+          captionEn: loc(page.videoCaption).en,
+          captionTh: loc(page.videoCaption).th,
+        },
+      ]
+    : [];
   return {
-    videoUrl: page?.videoUrl ?? "",
-    videoCaptionEn: loc(page?.videoCaption).en,
-    videoCaptionTh: loc(page?.videoCaption).th,
-    blocks: (page?.blocks ?? []).map((b) => ({
+    blocks: [
+      ...legacyVideo,
+      ...(page?.blocks ?? []).map((b) => ({
       ...emptyBlock(b.type),
       image: "image" in b ? b.image ?? "" : "",
       url: b.type === "video" ? b.url : "",
@@ -98,6 +107,7 @@ export function pageToDraft(page?: ProductPage): DraftPage {
             }))
           : [],
     })),
+    ],
     specGroups: (page?.specGroups ?? []).map((g) => ({
       titleEn: g.title.en,
       titleTh: g.title.th,
@@ -115,8 +125,6 @@ export function pageToDraft(page?: ProductPage): DraftPage {
 export function draftToPage(draft: DraftPage): Record<string, unknown> {
   const l = (en: string, th: string) => ({ en: en.trim(), th: th.trim() });
   return {
-    videoUrl: draft.videoUrl.trim(),
-    videoCaption: l(draft.videoCaptionEn, draft.videoCaptionTh),
     blocks: draft.blocks.map((b) => ({
       type: b.type,
       image: b.image.trim(),
@@ -403,35 +411,9 @@ export default function PageBuilder({
 
   return (
     <div className="space-y-8">
-      {/* intro video */}
-      <div className="space-y-3">
-        <h3 className="text-[13.5px] font-bold text-content">
-          {t("intro.title")}
-          <span className="ml-2 font-normal text-ink-muted">
-            {t("intro.note")}
-          </span>
-        </h3>
-        <div>
-          <label className={miniLabel}>{t("fields.videoUrl")}</label>
-          <input
-            value={draft.videoUrl}
-            onChange={(e) => set({ videoUrl: e.target.value })}
-            placeholder={t("placeholders.youtubeUrl")}
-            className={inputClass}
-          />
-        </div>
-        {draft.videoUrl.trim() && (
-          <EnThPair
-            label={t("fields.captionOptional")}
-            en={draft.videoCaptionEn}
-            th={draft.videoCaptionTh}
-            onEn={(v) => set({ videoCaptionEn: v })}
-            onTh={(v) => set({ videoCaptionTh: v })}
-          />
-        )}
-      </div>
-
-      {/* content blocks */}
+      {/* content blocks — including videos; add a "video" section and move it
+          wherever you want. (The old fixed top-of-page video field was folded
+          into these blocks so everything shares one order.) */}
       <div className="space-y-3">
         <h3 className="text-[13.5px] font-bold text-content">
           {t("content.title")}
