@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -98,6 +98,24 @@ export default function Navbar() {
     categories[0].slug
   );
 
+  // Hover menus close on a short delay, so moving the cursor from the trigger
+  // down to the panel (across the small gap) doesn't dismiss them mid-travel.
+  const menuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openMenu = (index: number) => {
+    if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    setDesktopMenu(index);
+  };
+  const scheduleCloseMenu = () => {
+    if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    menuCloseTimer.current = setTimeout(() => setDesktopMenu(null), 220);
+  };
+  useEffect(
+    () => () => {
+      if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    },
+    []
+  );
+
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setLoggedIn(!!data.user));
@@ -189,8 +207,8 @@ export default function Navbar() {
             <li
               key={link.label}
               className={linkIndex === 0 ? "static" : "relative"}
-              onMouseEnter={() => link.children && setDesktopMenu(linkIndex)}
-              onMouseLeave={() => link.children && setDesktopMenu(null)}
+              onMouseEnter={() => link.children && openMenu(linkIndex)}
+              onMouseLeave={() => link.children && scheduleCloseMenu()}
               onBlur={(event) => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
                   setDesktopMenu(null);
@@ -206,9 +224,10 @@ export default function Navbar() {
               {link.children ? (
                 <button
                   type="button"
-                  onClick={() =>
-                    setDesktopMenu((current) => current === linkIndex ? null : linkIndex)
-                  }
+                  onClick={() => {
+                    if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+                    setDesktopMenu((current) => (current === linkIndex ? null : linkIndex));
+                  }}
                   aria-expanded={desktopMenu === linkIndex}
                   aria-haspopup="menu"
                   className="nav-underline flex cursor-pointer items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-medium text-content/80 transition-colors hover:text-content"
@@ -236,7 +255,7 @@ export default function Navbar() {
                       ? // Shop mega-menu is positioned off the <nav>, so top-full
                         // already sits at the navbar's bottom edge — no pt, so the
                         // panel is flush against the bar with no gap.
-                        "left-4 right-4 mx-auto w-[720px] max-w-[calc(100%-2rem)]"
+                        "left-4 right-4 mx-auto w-[920px] max-w-[calc(100%-2rem)]"
                       : // Simple dropdowns hang off their own button; pt-3 clears
                         // the rest of the navbar height below the trigger.
                         "left-1/2 -translate-x-1/2 pt-3"

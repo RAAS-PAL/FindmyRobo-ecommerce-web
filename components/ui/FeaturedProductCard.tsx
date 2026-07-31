@@ -118,9 +118,9 @@ export default function FeaturedProductCard({
             <span className="max-w-[88%] text-[13.5px] font-medium leading-snug text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)]">
               {product.tagline[locale]}
             </span>
-            <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[13.5px] font-bold text-content shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <span className="mt-1 inline-flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-5 py-2.5 text-[13.5px] font-bold text-forest-950 shadow-[0_10px_26px_-10px_rgba(0,0,0,0.6)] transition-transform duration-300 group-hover:scale-105">
               {t("learnMore")}
-              <ArrowRight className="h-4 w-4 text-gold-600" aria-hidden="true" />
+              <ArrowRight className="h-4 w-4 shrink-0 text-forest-950" aria-hidden="true" />
             </span>
           </span>
 
