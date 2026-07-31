@@ -62,7 +62,7 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
         {id ? (
           <iframe
             ref={iframeRef}
-            src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&color=white`}
+            src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&color=white`}
             title={video.title}
             allow="autoplay; encrypted-media; picture-in-picture; web-share"
             allowFullScreen
@@ -80,6 +80,7 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
             poster={poster || undefined}
             controls
             autoPlay
+            muted
             playsInline
             onEnded={() => setPlaying(false)}
             className="absolute inset-0 h-full w-full object-cover"
