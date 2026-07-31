@@ -36,6 +36,9 @@ export default function FeaturedProductCard({
   const t = useTranslations("products");
   const locale = useLocale() as Locale;
 
+  // Home card prefers a dedicated lifestyle photo; falls back to the product
+  // render used everywhere else.
+  const cardImage = product.homeImage ?? product.imageUrl;
   const hoverVideo = product.hoverVideo ?? DEMO_HOVER_VIDEO[product.variant];
   const videoRef = useRef<HTMLVideoElement>(null);
   const playVideo = () => videoRef.current?.play().catch(() => undefined);
@@ -59,11 +62,12 @@ export default function FeaturedProductCard({
       className="group relative aspect-[4/5] w-[340px] shrink-0 snap-start overflow-hidden rounded-3xl border border-forest-100 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.4)] transition-shadow duration-300 hover:shadow-[0_28px_60px_-20px_rgba(0,0,0,0.5)] sm:w-[400px]"
     >
       <Link href={`/products/${product.id}`} className="block h-full w-full">
-        {/* full-bleed background: product photo, or the variant illustration */}
-        {product.imageUrl ? (
+        {/* full-bleed background: home photo (or product render), else the
+            variant illustration */}
+        {cardImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={product.imageUrl}
+            src={cardImage}
             alt={product.name}
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"

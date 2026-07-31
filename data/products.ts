@@ -95,6 +95,14 @@ export interface Product {
    */
   imageUrl?: string;
   /**
+   * Optional separate image for the large home-page feature card
+   * (components/ui/FeaturedProductCard.tsx) — typically a lifestyle photo.
+   * Falls back to `imageUrl` when unset, so the product page and shop cards
+   * keep using the plain product render (`imageUrl`) while the home card can
+   * show a scene instead.
+   */
+  homeImage?: string;
+  /**
    * Extra gallery photos (absolute URLs or /public paths), shown after
    * `imageUrl` in the product-page gallery. `imageUrl` stays the single image
    * used in cards, so this is only read by the detail page.
