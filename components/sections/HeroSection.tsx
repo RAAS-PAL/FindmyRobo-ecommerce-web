@@ -239,7 +239,7 @@ export default function HeroSection() {
 
       {/* copy */}
       <div
-        className={`relative z-10 mx-auto flex max-w-5xl flex-col items-center px-4 text-center sm:px-6 ${
+        className={`relative z-10 mx-auto flex max-w-[86rem] flex-col items-center px-4 text-center sm:px-6 ${
           video ? "min-h-[calc(100svh-100px)] justify-center py-20 sm:py-24" : "pb-56 pt-20 sm:pb-64 sm:pt-28"
         }`}
       >
@@ -290,7 +290,7 @@ export default function HeroSection() {
           initial="hidden"
           animate="visible"
           variants={{ visible: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } } }}
-          className={`font-display text-[42px] font-extrabold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl ${
+          className={`font-display text-[42px] font-extrabold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl 2xl:text-[7rem] ${
             video ? "hero-legible" : ""
           }`}
         >
