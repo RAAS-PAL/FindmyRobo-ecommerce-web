@@ -195,6 +195,12 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
     return "Image URL must start with https:// (or a /path inside the site)";
   }
 
+  // optional hover-preview clip for the product card: https URL or /public path
+  const hoverVideo = asText(body.hoverVideo);
+  if (hoverVideo && !URL_RE.test(hoverVideo)) {
+    return "Hover video must be an https:// URL (or a /path inside the site)";
+  }
+
   // optional extra gallery photos, one URL per line
   const images = asLines(body.images).filter((url) => url !== imageUrl);
   if (images.some((url) => !URL_RE.test(url))) {
@@ -224,6 +230,7 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
     variant: variant as Product["variant"],
     ...(imageUrl ? { imageUrl } : {}),
     ...(images.length > 0 ? { images } : {}),
+    ...(hoverVideo ? { hoverVideo } : {}),
     ...(body.preorder ? { preorder: true } : {}),
     visible,
     ...(sku ? { sku } : {}),

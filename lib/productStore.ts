@@ -25,6 +25,7 @@ interface ProductRow {
   variant: string;
   image_url: string | null;
   images: string[] | null;
+  hover_video?: string | null;
   preorder: boolean;
   visible?: boolean;
   sku?: string | null;
@@ -45,6 +46,7 @@ function rowToProduct(row: ProductRow): Product {
     variant: row.variant as Product["variant"],
     ...(row.image_url ? { imageUrl: row.image_url } : {}),
     ...(row.images?.length ? { images: row.images } : {}),
+    ...(row.hover_video ? { hoverVideo: row.hover_video } : {}),
     preorder: row.preorder,
     // absent column (pre-migration) reads as visible so the storefront never
     // blanks out before add-product-visibility.sql is applied
@@ -66,7 +68,7 @@ const isMissingSortOrder = (error: { code?: string; message?: string } | null) =
 // (undefined column) and PostgREST reports PGRST204 (not in the schema cache) —
 // either way the message names the column. We strip the named column and retry
 // so a product save keeps working before its migration is applied.
-const DEGRADABLE_COLUMNS = ["visible", "sku"] as const;
+const DEGRADABLE_COLUMNS = ["visible", "sku", "hover_video"] as const;
 
 function missingOptionalColumn(
   error: { code?: string; message?: string } | null
@@ -86,6 +88,7 @@ function productFields(
     variant: product.variant,
     image_url: product.imageUrl ?? null,
     images: product.images ?? [],
+    hover_video: product.hoverVideo ?? null,
     preorder: product.preorder ?? false,
     visible: product.visible ?? true,
     sku: product.sku ?? null,

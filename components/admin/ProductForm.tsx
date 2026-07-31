@@ -35,6 +35,14 @@ const VARIANT_LABEL_KEYS = {
   demo: "variants.demo",
 } as const satisfies Record<(typeof ROBOT_VARIANTS)[number], string>;
 
+/** Clips already sitting in /public/videos, offered as quick picks in the
+ *  hover-video field (a datalist). Any other URL/path can still be typed. */
+const HOVER_VIDEO_OPTIONS = [
+  "/videos/hero-banner-luba3.mp4",
+  "/videos/hero-luba-mini.mp4",
+  "/videos/luba-mini-1500.mp4",
+];
+
 const slugify = (name: string) =>
   name
     .toLowerCase()
@@ -103,6 +111,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
     initial?.imageUrl ? "image" : initial?.variant ?? "luba"
   );
   const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? "");
+  const [hoverVideo, setHoverVideo] = useState(initial?.hoverVideo ?? "");
   // gallery URLs stay raw text so typing/pasting behaves; uploads append lines
   const [imagesText, setImagesText] = useState((initial?.images ?? []).join("\n"));
   const [uploading, setUploading] = useState<"main" | "gallery" | null>(null);
@@ -404,6 +413,27 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           ) : (
             <p className={hintClass}>{t("hints.placeholderArt")}</p>
           )}
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="hoverVideo" className={labelClass}>
+            {t("fields.hoverVideo")}
+          </label>
+          <input
+            id="hoverVideo"
+            name="hoverVideo"
+            type="text"
+            list="hoverVideoOptions"
+            value={hoverVideo}
+            onChange={(e) => setHoverVideo(e.target.value)}
+            placeholder={t("placeholders.hoverVideo")}
+            className={inputClass}
+          />
+          <datalist id="hoverVideoOptions">
+            {HOVER_VIDEO_OPTIONS.map((src) => (
+              <option key={src} value={src} />
+            ))}
+          </datalist>
+          <p className={hintClass}>{t("hints.hoverVideo")}</p>
         </div>
         <div className="flex items-center gap-2.5">
           <input

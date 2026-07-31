@@ -162,7 +162,18 @@ export default function Navbar() {
           : "border-forest-100/70 bg-surface"
       }`}
     >
-      <nav className="relative mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <nav className="relative flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
+        {/* soft grey wedge over the left half (light mode only): a subtle panel
+            that ends in an angled edge near the middle; the rest stays white.
+            -z-10 keeps it behind the bar content; dark mode hides it. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 -z-10 w-[46%] bg-[#eef0f2] dark:hidden"
+          style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 44px) 100%, 0 100%)" }}
+        />
+
+        {/* left group: logo + primary links, kept together on the left edge */}
+        <div className="flex items-center gap-6 xl:gap-9">
         {/* logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="RoboStore TH home">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold text-forest-950">
@@ -368,6 +379,7 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
+        </div>
 
         {/* right cluster */}
         <div className="flex items-center gap-2.5 sm:gap-3">
