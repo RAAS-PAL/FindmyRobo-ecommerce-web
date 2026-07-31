@@ -25,6 +25,20 @@
  *   -an                  : drop audio — the hero is muted anyway.
  *   ~12s, ~2 Mbps        : keep each file 2-3 MB. Bandwidth is billed.
  */
+/** One card in the home video gallery (components/sections/VideoShowcase.tsx). */
+export interface GalleryVideo {
+  /** YouTube (Short) link, or an mp4 URL/path. */
+  url: string;
+  /** Custom thumbnail (URL or /public path). Falls back to the YouTube
+   *  thumbnail; set this for a clean, non-YouTube look. */
+  poster?: string;
+  title: string;
+  /** Small credit line, e.g. the creator's handle. */
+  author?: string;
+  /** Small pill label, e.g. the product shown. */
+  tag?: string;
+}
+
 export const siteConfig = {
   heroVideoUrls: [
     // Plays in order, then loops back to the first. Both are stream-copied
@@ -35,6 +49,23 @@ export const siteConfig = {
     "/videos/hero-luba-mini.mp4",
   ] as string[],
   heroVideoPoster: "/videos/hero-poster.jpg" as string | null,
+
+  /**
+   * Home video gallery ("See It in Action"), shown between the product cards
+   * and the "Who We Are" story (components/sections/VideoShowcase.tsx). Each
+   * card shows its poster + a play button and only loads a stripped-down embed
+   * on click (no YouTube chrome until played). Set a custom `poster` on every
+   * card for the cleanest, non-YouTube look. Empty shows a placeholder.
+   */
+  videoGallery: [
+    {
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785480888/YTDown.com_YouTube_LUBA-mini-2-AWD-1000-Enjoy-Every-Mowment_Media_1DecraXBr8Y_001_1080p_kdcu6b.mp4", // your Short link
+      poster: "/posters/oar2.jpg",           // optional custom image
+      title: "Enjoy Every Moment",
+      author: "",                         // optional
+      tag: "LUBA mini 2 AWD 1000",                                  // optional
+    }
+  ] as GalleryVideo[],
 
   /**
    * Sales team contacts, shown on /contact-sales (PRD req 13 + 19).

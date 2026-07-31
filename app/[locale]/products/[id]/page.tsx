@@ -14,11 +14,11 @@ import ProductGallery from "@/components/product/ProductGallery";
 import ProductPageBlocks from "@/components/product/ProductPageBlocks";
 import ExpandOnScroll from "@/components/product/ExpandOnScroll";
 import SpecTable from "@/components/product/SpecTable";
-import VideoEmbed from "@/components/product/VideoEmbed";
 import {
   formatBaht,
   SERVICE_CATEGORY,
   type Locale,
+  type PageBlock,
 } from "@/data/products";
 import { getAllProducts, getProductById } from "@/lib/productStore";
 
@@ -175,30 +175,31 @@ export default async function ProductPage({
           </FadeIn>
         </div>
 
-        {/* review/demo video (admin page builder) */}
-        {page?.videoUrl && (
-          <FadeIn className="mt-16 sm:mt-20">
-            <div className="mx-auto max-w-3xl">
-              <VideoEmbed url={page.videoUrl} title={product.name} />
-              {page.videoCaption && (
-                <p className="mt-3 text-center text-[12.5px] text-ink-muted">
-                  {page.videoCaption[locale as Locale] || page.videoCaption.en}
-                </p>
-              )}
+        {/* content sections (admin page builder). The legacy top-of-page video
+            (page.videoUrl) is folded in as a leading video block so it orders
+            alongside everything else; once the product is re-saved in the admin
+            it becomes a real, reorderable block and videoUrl is dropped. */}
+        {(() => {
+          const legacyVideo: PageBlock[] = page?.videoUrl
+            ? [
+                {
+                  type: "video",
+                  url: page.videoUrl,
+                  ...(page.videoCaption ? { caption: page.videoCaption } : {}),
+                },
+              ]
+            : [];
+          const blocks: PageBlock[] = [...legacyVideo, ...(page?.blocks ?? [])];
+          return blocks.length > 0 ? (
+            <div className="mt-16 sm:mt-20">
+              <ProductPageBlocks
+                blocks={blocks}
+                locale={locale as Locale}
+                productName={product.name}
+              />
             </div>
-          </FadeIn>
-        )}
-
-        {/* content sections (admin page builder) */}
-        {page?.blocks && page.blocks.length > 0 && (
-          <div className="mt-16 sm:mt-20">
-            <ProductPageBlocks
-              blocks={page.blocks}
-              locale={locale as Locale}
-              productName={product.name}
-            />
-          </div>
-        )}
+          ) : null;
+        })()}
 
         {/* specs: the page-builder table only — the quick-spec fields are no
             longer shown here, they feed the checkout install-tier match */}

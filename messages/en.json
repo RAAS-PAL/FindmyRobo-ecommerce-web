@@ -675,6 +675,12 @@
     "scrollLeft": "Scroll products left",
     "scrollRight": "Scroll products right"
   },
+  "videoShowcase": {
+    "eyebrow": "From Real Users and Owners",
+    "heading": "Watch Them Work Their Magic",
+    "sub": "A closer look at how our mowers handle real Thai lawns — precision, power, and hands-free convenience.",
+    "placeholder": "Videos coming soon"
+  },
   "shop": {
     "eyebrow": "Shop",
     "heading": "All Robots",
