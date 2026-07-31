@@ -60,10 +60,24 @@ export const siteConfig = {
   videoGallery: [
     {
       url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785480888/YTDown.com_YouTube_LUBA-mini-2-AWD-1000-Enjoy-Every-Mowment_Media_1DecraXBr8Y_001_1080p_kdcu6b.mp4", // your Short link
-      poster: "/posters/oar2.jpg",           // optional custom image
+      poster: "/posters/youtubelubamini21000.jpg",           // optional custom image
       title: "Enjoy Every Moment",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1000",                                  // optional
+    },
+    {
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785482881/20260714_095215_erxeyw.mp4", // your Short link
+      poster: "/posters/onebangkok1.png",           // optional custom image
+      title: "One Bangkok",
+      author: "",                         // optional
+      tag: "LUBA mini 2 AWD 1500",                                  // optional
+    },
+    {
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785482881/20260714_095215_erxeyw.mp4", // your Short link
+      poster: "/posters/onebangkok1.jpg",           // optional custom image
+      title: "One Bangkok",
+      author: "",                         // optional
+      tag: "LUBA mini 2 AWD 1500",                                  // optional
     }
   ] as GalleryVideo[],
 

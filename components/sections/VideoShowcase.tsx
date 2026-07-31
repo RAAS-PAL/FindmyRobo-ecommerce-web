@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Play, Tag } from "lucide-react";
 import FadeIn from "@/components/ui/FadeIn";
@@ -26,16 +26,52 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
   const [playing, setPlaying] = useState(false);
   const id = youTubeId(video.url);
   const poster = video.poster || (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : "");
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Snap back to the poster when the clip ends. YouTube only reports "ended"
+  // through its iframe API, so we opt in (enablejsapi=1), announce we're
+  // listening on load, then watch for playerState 0. (mp4 uses onEnded below.)
+  useEffect(() => {
+    if (!playing || !id) return;
+    const onMessage = (e: MessageEvent) => {
+      if (e.source !== iframeRef.current?.contentWindow || typeof e.data !== "string") return;
+      let data: { event?: string; info?: unknown };
+      try {
+        data = JSON.parse(e.data);
+      } catch {
+        return;
+      }
+      const info = data.info;
+      const state =
+        typeof info === "number"
+          ? info
+          : info && typeof info === "object"
+            ? (info as { playerState?: number }).playerState
+            : undefined;
+      if ((data.event === "onStateChange" || data.event === "infoDelivery") && state === 0) {
+        setPlaying(false);
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [playing, id]);
 
   if (playing) {
     return (
       <article className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-forest-950">
         {id ? (
           <iframe
-            src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&modestbranding=1&rel=0&playsinline=1&color=white`}
+            ref={iframeRef}
+            src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&color=white`}
             title={video.title}
             allow="autoplay; encrypted-media; picture-in-picture; web-share"
             allowFullScreen
+            onLoad={() =>
+              iframeRef.current?.contentWindow?.postMessage(
+                JSON.stringify({ event: "listening", id: 1, channel: "widget" }),
+                "*"
+              )
+            }
             className="absolute inset-0 h-full w-full border-0"
           />
         ) : (
@@ -45,6 +81,7 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
             controls
             autoPlay
             playsInline
+            onEnded={() => setPlaying(false)}
             className="absolute inset-0 h-full w-full object-cover"
           />
         )}
