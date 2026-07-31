@@ -39,6 +39,17 @@ export interface GalleryVideo {
   tag?: string;
 }
 
+/**
+ * One row in the home feature showcase (components/sections/FeatureShowcase.tsx)
+ * — a sticky product image on the left that swaps as you scroll each feature.
+ */
+export interface ShowcaseFeature {
+  /** Image shown in the sticky panel (URL or /public path). */
+  image: string;
+  heading: { en: string; th: string };
+  body: { en: string; th: string };
+}
+
 export const siteConfig = {
   heroVideoUrls: [
     // Plays in order, then loops back to the first. Both are stream-copied
@@ -51,6 +62,40 @@ export const siteConfig = {
   heroVideoPoster: "/videos/hero-poster.jpg" as string | null,
 
   /**
+   * Home feature showcase between the product cards and the video gallery: a
+   * sticky image on the left that swaps as you scroll each feature on the right
+   * (components/sections/FeatureShowcase.tsx). Give each entry its OWN image so
+   * the swap is visible. Images below are PLACEHOLDERS — replace with real
+   * feature/cutaway shots. Empty array hides the section.
+   */
+  featureShowcase: [
+    {
+      image: "/posters/feature-awd.png",
+      heading: { en: "All-Wheel-Drive Traction", th: "ระบบขับเคลื่อนสี่ล้อ AWD" },
+      body: {
+        en: "Powerful AWD grips slopes and wet, uneven ground for a consistent cut across the most demanding Thai lawns.",
+        th: "ระบบ AWD ทรงพลังยึดเกาะทางลาดชันและพื้นเปียกหรือขรุขระ ตัดหญ้าได้สม่ำเสมอแม้ในสนามที่ท้าทายที่สุดในเมืองไทย",
+      },
+    },
+    {
+      image: "/posters/feature-navigation.png",
+      heading: { en: "Wire-Free Smart Navigation", th: "นำทางอัจฉริยะไร้สาย" },
+      body: {
+        en: "Vision and RTK positioning map your lawn precisely — no perimeter wire to bury, no guesswork.",
+        th: "ระบบวิชันและ RTK ทำแผนที่สนามอย่างแม่นยำ ไม่ต้องฝังสายรอบสนาม ไม่ต้องเดา",
+      },
+    },
+    {
+      image: "/posters/feature-ai.png",
+      heading: { en: "On-Device AI", th: "AI ในตัวเครื่อง" },
+      body: {
+        en: "Fast on-board AI recognises obstacles and plans efficient mowing paths in real time.",
+        th: "AI ในตัวประมวลผลรวดเร็ว รู้จำสิ่งกีดขวางและวางเส้นทางตัดหญ้าอย่างมีประสิทธิภาพแบบเรียลไทม์",
+      },
+    },
+  ] as ShowcaseFeature[],
+
+  /**
    * Home video gallery ("See It in Action"), shown between the product cards
    * and the "Who We Are" story (components/sections/VideoShowcase.tsx). Each
    * card shows its poster + a play button and only loads a stripped-down embed
@@ -59,22 +104,29 @@ export const siteConfig = {
    */
   videoGallery: [
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785480888/YTDown.com_YouTube_LUBA-mini-2-AWD-1000-Enjoy-Every-Mowment_Media_1DecraXBr8Y_001_1080p_kdcu6b.mp4", // your Short link
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785491333/0731_3_ch5yoi.mp4", // your Short link
       poster: "/posters/youtubelubamini21000.jpg",           // optional custom image
       title: "Enjoy Every Moment",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1000",                                  // optional
     },
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785482881/20260714_095215_erxeyw.mp4", // your Short link
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785491668/0731_5_yzbrty.mp4", // your Short link
       poster: "/posters/onebangkok1.png",           // optional custom image
       title: "One Bangkok",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1500",                                  // optional
     },
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785482881/20260714_095215_erxeyw.mp4", // your Short link
-      poster: "/posters/onebangkok1.jpg",           // optional custom image
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785491948/0731_6_odc3mj.mp4", // your Short link
+      poster: "/posters/onebangkok2.png",           // optional custom image
+      title: "One Bangkok",
+      author: "",                         // optional
+      tag: "LUBA mini 2 AWD 1500",                                  // optional
+    },
+    {
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785484132/0731_1_vm2dm2.mp4", // your Short link
+      poster: "/posters/onebangkok2.png",           // optional custom image
       title: "One Bangkok",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1500",                                  // optional
