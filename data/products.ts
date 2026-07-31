@@ -100,6 +100,12 @@ export interface Product {
    * used in cards, so this is only read by the detail page.
    */
   images?: string[];
+  /**
+   * Optional short clip that plays on hover over the product card (muted,
+   * looped). Absolute URL or /public path. When unset the card just shows the
+   * image. Keep these small (a few MB) — they load on hover, not on page load.
+   */
+  hoverVideo?: string;
   preorder?: boolean;
   /**
    * Whether the product appears on the storefront. false hides it from every
