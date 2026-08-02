@@ -3,6 +3,8 @@ import {
   PAGE_BLOCK_TYPES,
   ROBOT_VARIANTS,
   SPEC_KEYS,
+  type BoxItem,
+  type FaqItem,
   type LocalizedText,
   type PageBlock,
   type Product,
@@ -148,6 +150,38 @@ export function parsePage(raw: unknown): ProductPage | undefined | string {
       if (rows.length > 0) groups.push({ title, rows });
     }
     if (groups.length > 0) page.specGroups = groups;
+  }
+
+  if (Array.isArray(input.boxItems)) {
+    const items: BoxItem[] = [];
+    for (const [i, item] of input.boxItems.entries()) {
+      if (typeof item !== "object" || item === null) continue;
+      const o = item as Record<string, unknown>;
+      const image = asText(o.image);
+      const name = asLocalized(o.name);
+      // Drop half-filled rows so an admin can save a partly-built list.
+      if (!image || !name) continue;
+      if (!URL_RE.test(image)) {
+        return `Detail page: What's-in-the-box item ${i + 1} image URL must start with https:// or /`;
+      }
+      const qtyNum = Math.floor(Number(o.qty));
+      const qty = Number.isFinite(qtyNum) && qtyNum > 0 ? qtyNum : 1;
+      items.push({ image, name, qty });
+    }
+    if (items.length > 0) page.boxItems = items;
+  }
+
+  if (Array.isArray(input.faqs)) {
+    const faqs: FaqItem[] = [];
+    for (const item of input.faqs) {
+      if (typeof item !== "object" || item === null) continue;
+      const o = item as Record<string, unknown>;
+      const question = asLocalized(o.question);
+      const answer = asLocalized(o.answer);
+      // Drop half-filled rows so an admin can save a partly-built FAQ list.
+      if (question && answer) faqs.push({ question, answer });
+    }
+    if (faqs.length > 0) page.faqs = faqs;
   }
 
   return Object.keys(page).length > 0 ? page : undefined;
