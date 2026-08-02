@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Bot, ExternalLink } from "lucide-react";
+import Image from "next/image";
+import { ExternalLink } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { isAdminAuthenticated } from "@/lib/adminAuth";
 import LogoutButton from "@/components/admin/LogoutButton";
@@ -22,9 +23,13 @@ export default async function AdminProtectedLayout({
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3 sm:gap-6">
             <Link href="/admin" className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-md bg-gold text-forest-950">
-                <Bot className="h-4.5 w-4.5" aria-hidden="true" />
-              </span>
+              <Image
+                src="/logo-r-gold.png"
+                alt="RoboStore TH"
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full object-cover"
+              />
               <span className="hidden font-display text-base font-extrabold tracking-tight text-white sm:inline">
                 RoboStore TH <span className="text-gold">{t("adminLabel")}</span>
               </span>
