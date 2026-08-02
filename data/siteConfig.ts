@@ -52,12 +52,13 @@ export interface ShowcaseFeature {
 
 export const siteConfig = {
   heroVideoUrls: [
-    // Plays in order, then loops back to the first. Both are stream-copied
-    // from their sources (no re-encode, so original quality is preserved):
-    //   hero-banner-luba3 = Banner_Luba 3.mp4 (full 50s, remuxed +faststart)
-    //   hero-luba-mini     = brightest 20s (source 29-49s) of lubamini2.mp4
-    "/videos/hero-banner-luba3.mp4",
-    "/videos/hero-luba-mini.mp4",
+    // Hero background clips, played in order then looped. Hosted on Cloudinary
+    // and served through its CDN with q_auto (auto-compress to the best
+    // quality-per-byte) + ac_none (drop the audio track — the hero is muted).
+    // So they stay high quality, load fast, and don't use Vercel bandwidth.
+    // Swap these URLs (keeping the q_auto/ac_none prefix) to change the hero.
+    "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/ac_none/v1785654768/0802_haja8d.mp4",
+    "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/ac_none/v1785655421/0802_2_siatdr.mp4",
   ] as string[],
   heroVideoPoster: "/videos/hero-poster.jpg" as string | null,
 
@@ -70,7 +71,7 @@ export const siteConfig = {
    */
   featureShowcase: [
     {
-      image: "/posters/feature-awd.png",
+      image: "/posters/feature-awd.webp",
       heading: { en: "All-Wheel-Drive Traction", th: "ระบบขับเคลื่อนสี่ล้อ AWD" },
       body: {
         en: "Powerful AWD grips slopes and wet, uneven ground for a consistent cut across the most demanding Thai lawns.",
@@ -78,7 +79,7 @@ export const siteConfig = {
       },
     },
     {
-      image: "/posters/feature-navigation.png",
+      image: "/posters/feature-navigation.webp",
       heading: { en: "Wire-Free Smart Navigation", th: "นำทางอัจฉริยะไร้สาย" },
       body: {
         en: "Vision and RTK positioning map your lawn precisely — no perimeter wire to bury, no guesswork.",
@@ -86,7 +87,7 @@ export const siteConfig = {
       },
     },
     {
-      image: "/posters/feature-ai.png",
+      image: "/posters/feature-ai.webp",
       heading: { en: "On-Device AI", th: "AI ในตัวเครื่อง" },
       body: {
         en: "Fast on-board AI recognises obstacles and plans efficient mowing paths in real time.",
@@ -104,29 +105,29 @@ export const siteConfig = {
    */
   videoGallery: [
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785491333/0731_3_ch5yoi.mp4", // your Short link
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491333/0731_3_ch5yoi.mp4", // your Short link
       poster: "/posters/youtubelubamini21000.jpg",           // optional custom image
       title: "Enjoy Every Moment",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1000",                                  // optional
     },
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785491668/0731_5_yzbrty.mp4", // your Short link
-      poster: "/posters/onebangkok1.png",           // optional custom image
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491668/0731_5_yzbrty.mp4", // your Short link
+      poster: "/posters/onebangkok1.webp",           // optional custom image
       title: "One Bangkok",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1500",                                  // optional
     },
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785491948/0731_6_odc3mj.mp4", // your Short link
-      poster: "/posters/onebangkok2.png",           // optional custom image
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491948/0731_6_odc3mj.mp4", // your Short link
+      poster: "/posters/onebangkok2.webp",           // optional custom image
       title: "One Bangkok",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1500",                                  // optional
     },
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785484132/0731_1_vm2dm2.mp4", // your Short link
-      poster: "/posters/onebangkok2.png",           // optional custom image
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785484132/0731_1_vm2dm2.mp4", // your Short link
+      poster: "/posters/onebangkok2.webp",           // optional custom image
       title: "One Bangkok",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1500",                                  // optional

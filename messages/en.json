@@ -5,7 +5,7 @@
   },
   "announcement": {
     "msg1": "🤖 Mammotion LUBA 3 AWD Now Available in Thailand!",
-    "msg2": "Book your in-home demo now in Bangkok"
+    "msg2": "Book your on-site demo now in Bangkok"
   },
   "nav": {
     "shop": "Products",
@@ -519,7 +519,14 @@
   "service": {
     "selectRobotLabel": "Which robot is this for?",
     "selectRobotPlaceholder": "Select a robot…",
-    "selectRobotHint": "Choose the robot this service applies to before adding it to your cart."
+    "selectRobotHint": "Choose the robot this service applies to before adding it to your cart.",
+    "noRobotsTitle": "No robot in your cart yet",
+    "noRobotsBody": "Add the robot you'd like installed to your cart first, then come back to choose it here.",
+    "noRobotsCta": "Browse robots",
+    "demoAreaLabel": "Area to demo",
+    "demoAreaHint": "The demo fee depends on the size of the area we'll cover.",
+    "demoRobotLabel": "Which robot would you like to demo?",
+    "demoRobotHint": "Pick the robot you'd like to see working on your own lawn — no purchase needed."
   },
   "contactSales": {
     "metaTitle": "Contact Sales — RoboStore TH",
@@ -614,7 +621,7 @@
     "emptyCta": "Browse Robots",
     "upsell": {
       "heading": "Get the most from your robot",
-      "subtext": "Add professional installation or an on-site demo before you check out.",
+      "subtext": "Add professional installation before you check out.",
       "recommendedBadge": "Recommended",
       "installFor": "Installation for {name}",
       "demoFor": "Demo for {name}",
@@ -662,7 +669,7 @@
     },
     "headlineMain": "Let the Robot Mow.",
     "headlineAccent": "You Stay in the Shade.",
-    "sub": "Discover intelligent robotic solutions for cleaning, delivery, lawn care, pool maintenance, and more—designed to reduce workload, improve efficiency, and help your business operate smarter.",
+    "sub": "The best mowing robots you can find in Thailand — operating independently, with no need for constant human supervision.",
     "ctaPrimary": "Explore Our Robots",
     "ctaSecondary": "Book a Demo"
   },
