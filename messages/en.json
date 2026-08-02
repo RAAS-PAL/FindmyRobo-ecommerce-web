@@ -5,7 +5,7 @@
   },
   "announcement": {
     "msg1": "🤖 Mammotion LUBA 3 AWD Now Available in Thailand!",
-    "msg2": "Book your in-home demo now in Bangkok"
+    "msg2": "Book your on-site demo now in Bangkok"
   },
   "nav": {
     "shop": "Products",
@@ -417,7 +417,11 @@
         "cardImageUrl": "Card {number} image URL",
         "groupTitle": "Group title",
         "rowLabel": "Row {number} — label",
-        "value": "Value"
+        "value": "Value",
+        "boxItemName": "Item name",
+        "boxItemQty": "Quantity",
+        "faqQuestion": "Question",
+        "faqAnswer": "Answer"
       },
       "positions": {
         "right": "Image on the right",
@@ -434,7 +438,15 @@
         "removeGroup": "Remove group {number}",
         "removeRow": "Remove row {number}",
         "addRow": "Add row",
-        "addSpecGroup": "Add specification group"
+        "addSpecGroup": "Add specification group",
+        "moveBoxItemUp": "Move item {number} up",
+        "moveBoxItemDown": "Move item {number} down",
+        "removeBoxItem": "Remove item {number}",
+        "addBoxItem": "Add box item",
+        "moveFaqUp": "Move question {number} up",
+        "moveFaqDown": "Move question {number} down",
+        "removeFaq": "Remove question {number}",
+        "addFaq": "Add question"
       },
       "intro": {
         "title": "Intro video",
@@ -449,6 +461,16 @@
         "title": "Detailed specification table",
         "note": "grouped rows; replaces the compact specification band when filled in",
         "groupLabel": "Group {number}"
+      },
+      "box": {
+        "title": "What's in the box",
+        "note": "photos of everything included; shown after the specs (optional)",
+        "itemLabel": "Item {number}"
+      },
+      "faq": {
+        "title": "FAQ",
+        "note": "questions and answers, shown as an accordion (optional)",
+        "itemLabel": "Question {number}"
       },
       "languages": {
         "en": "EN",
@@ -519,7 +541,14 @@
   "service": {
     "selectRobotLabel": "Which robot is this for?",
     "selectRobotPlaceholder": "Select a robot…",
-    "selectRobotHint": "Choose the robot this service applies to before adding it to your cart."
+    "selectRobotHint": "Choose the robot this service applies to before adding it to your cart.",
+    "noRobotsTitle": "No robot in your cart yet",
+    "noRobotsBody": "Add the robot you'd like installed to your cart first, then come back to choose it here.",
+    "noRobotsCta": "Browse robots",
+    "demoAreaLabel": "Area to demo",
+    "demoAreaHint": "The demo fee depends on the size of the area we'll cover.",
+    "demoRobotLabel": "Which robot would you like to demo?",
+    "demoRobotHint": "Pick the robot you'd like to see working on your own lawn — no purchase needed."
   },
   "contactSales": {
     "metaTitle": "Contact Sales — RoboStore TH",
@@ -614,7 +643,7 @@
     "emptyCta": "Browse Robots",
     "upsell": {
       "heading": "Get the most from your robot",
-      "subtext": "Add professional installation or an on-site demo before you check out.",
+      "subtext": "Add professional installation before you check out.",
       "recommendedBadge": "Recommended",
       "installFor": "Installation for {name}",
       "demoFor": "Demo for {name}",
@@ -662,7 +691,7 @@
     },
     "headlineMain": "Let the Robot Mow.",
     "headlineAccent": "You Stay in the Shade.",
-    "sub": "Discover intelligent robotic solutions for cleaning, delivery, lawn care, pool maintenance, and more—designed to reduce workload, improve efficiency, and help your business operate smarter.",
+    "sub": "The best mowing robots you can find in Thailand — operating independently, with no need for constant human supervision.",
     "ctaPrimary": "Explore Our Robots",
     "ctaSecondary": "Book a Demo"
   },
@@ -722,6 +751,8 @@
     "specsHeading": "Technical Specs",
     "specsNote": "Preliminary specs — confirmed at delivery",
     "specTableHeading": "Product Specifications",
+    "boxHeading": "What's in the Box",
+    "faqHeading": "Frequently Asked Questions",
     "featuresHeading": "Why you'll love it",
     "relatedHeading": "You may also like",
     "ctaDemo": "Book a Demo",

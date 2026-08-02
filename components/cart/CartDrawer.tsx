@@ -37,7 +37,7 @@ export default function CartDrawer() {
             {/* header */}
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <span className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-forest-950">
+                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-gold text-forest-950">
                   <ShoppingCart className="h-4.5 w-4.5" aria-hidden="true" />
                 </span>
                 <span className="font-display text-base font-extrabold text-white">

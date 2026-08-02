@@ -9,11 +9,14 @@ import AddToCartButton from "@/components/cart/AddToCartButton";
 import FloatingAddToCart from "@/components/cart/FloatingAddToCart";
 import CompareToggleButton from "@/components/compare/CompareToggleButton";
 import ServicePurchasePanel from "@/components/cart/ServicePurchasePanel";
+import DemoPurchasePanel from "@/components/cart/DemoPurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
 import ProductGallery from "@/components/product/ProductGallery";
 import ProductPageBlocks from "@/components/product/ProductPageBlocks";
 import ExpandOnScroll from "@/components/product/ExpandOnScroll";
 import SpecTable from "@/components/product/SpecTable";
+import BoxContents from "@/components/product/BoxContents";
+import FaqSection from "@/components/product/FaqSection";
 import {
   formatBaht,
   SERVICE_CATEGORY,
@@ -59,10 +62,9 @@ export default async function ProductPage({
   const page = product.page;
   const allProducts = await getAllProducts();
   const isService = product.category === SERVICE_CATEGORY;
-  // Robots a service can be attached to (everything that isn't itself a service).
-  const robotOptions = allProducts
-    .filter((p) => p.category !== SERVICE_CATEGORY)
-    .map((p) => ({ id: p.id, name: p.name }));
+  // Demo packages price by area, so the price is chosen inside DemoPurchasePanel
+  // (per selected area band) rather than shown as a single fixed number here.
+  const isDemo = isService && product.variant === "demo";
   const related = allProducts
     .filter((p) => p.id !== product.id)
     .sort((a, b) =>
@@ -124,26 +126,32 @@ export default async function ProductPage({
               {product.description[locale as Locale] ?? product.description.en}
             </p>
 
-            <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-content">
-              {formatBaht(product.price)}
-            </p>
+            {!isDemo && (
+              <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-content">
+                {formatBaht(product.price)}
+              </p>
+            )}
             {product.preorder && (
               <p className="mt-2 text-[13px] font-medium text-gold-600">{t("preorderNote")}</p>
             )}
 
             <div className="mt-8">
               {isService ? (
-                <ServicePurchasePanel serviceId={product.id} robots={robotOptions} />
+                isDemo ? (
+                  <DemoPurchasePanel currentId={product.id} />
+                ) : (
+                  <ServicePurchasePanel serviceId={product.id} />
+                )
               ) : (
                 <div id="pdp-primary-cta" className="flex flex-col gap-3 sm:flex-row">
                   <AddToCartButton productId={product.id} />
-                  <a
-                    href="#contact"
+                  <Link
+                    href="/products/request-a-demo"
                     className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-gold hover:text-gold-600"
                   >
                     <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
                     {t("ctaDemo")}
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -213,6 +221,32 @@ export default async function ProductPage({
                 locale={locale as Locale}
               />
             </ExpandOnScroll>
+          </div>
+        )}
+
+        {/* what's in the box — admin-editable, rendered after the specs */}
+        {page?.boxItems && page.boxItems.length > 0 && (
+          <div className="mt-16 sm:mt-20">
+            <FadeIn>
+              <BoxContents
+                items={page.boxItems}
+                heading={t("boxHeading")}
+                locale={locale as Locale}
+              />
+            </FadeIn>
+          </div>
+        )}
+
+        {/* FAQ accordion — admin-editable */}
+        {page?.faqs && page.faqs.length > 0 && (
+          <div className="mt-16 sm:mt-20">
+            <FadeIn>
+              <FaqSection
+                faqs={page.faqs}
+                heading={t("faqHeading")}
+                locale={locale as Locale}
+              />
+            </FadeIn>
           </div>
         )}
 

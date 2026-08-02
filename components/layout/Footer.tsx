@@ -31,7 +31,7 @@ export default function Footer() {
           {/* brand */}
           <div>
             <Link href="/" className="flex items-center gap-2.5" aria-label="RoboStore TH home">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold text-forest-950">
+              <span className="flex h-10 w-10 items-center justify-center rounded-md bg-gold text-forest-950">
                 <Bot className="h-5.5 w-5.5" aria-hidden="true" />
               </span>
               <span className="font-display text-xl font-extrabold tracking-tight">

@@ -12,6 +12,7 @@ import {
   User,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { categories, categoryHref } from "@/data/categories";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
@@ -164,7 +165,7 @@ export default function Navbar() {
       children: [
         { label: t("contactSales"), href: "/contact-sales" },
         { label: t("contactTouch"), href: "/#contact" },
-        { label: t("contactDemo"), href: "/#contact" },
+        { label: t("contactDemo"), href: "/products/request-a-demo" },
         { label: t("contactLocations"), href: "/#contact" },
       ],
     },
@@ -193,9 +194,14 @@ export default function Navbar() {
         <div className="flex items-center gap-6 xl:gap-9">
         {/* logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="RoboStore TH home">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold text-forest-950">
-            <Bot className="h-5 w-5" aria-hidden="true" />
-          </span>
+          <Image
+            src="/logo-r-gold.png"
+            alt="RoboStore TH"
+            width={36}
+            height={36}
+            priority
+            className="h-9 w-9 rounded-full object-cover"
+          />
           <span className="font-display text-lg font-extrabold tracking-tight text-content">
             RoboStore<span className="text-gold-600"> TH</span>
           </span>
@@ -230,7 +236,7 @@ export default function Navbar() {
                   }}
                   aria-expanded={desktopMenu === linkIndex}
                   aria-haspopup="menu"
-                  className="nav-underline flex cursor-pointer items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-medium text-content/80 transition-colors hover:text-content"
+                  className="nav-underline flex cursor-pointer items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-bold text-content/80 transition-colors hover:text-content"
                 >
                   {link.label}
                   <ChevronDown
@@ -243,7 +249,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   href={link.href}
-                  className="nav-underline flex items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-medium text-content/80 transition-colors hover:text-content"
+                  className="nav-underline flex items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-bold text-content/80 transition-colors hover:text-content"
                 >
                   {link.label}
                 </Link>
@@ -351,7 +357,7 @@ export default function Navbar() {
                                   className="group/card overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3 transition hover:-translate-y-0.5 hover:border-gold-600/40 hover:shadow-md"
                                 >
                                   <div className="flex h-28 items-center justify-center">
-                                    <ProductVisual product={product} className="h-full w-full" />
+                                    <ProductVisual product={product} preferHome className="h-full w-full" />
                                   </div>
                                   <p className="mt-2 line-clamp-2 text-xs font-bold leading-snug text-content">
                                     {product.name}
@@ -409,15 +415,13 @@ export default function Navbar() {
             dropdownClassName="right-0 w-[360px]"
           />
 
-          <motion.a
-            href="#contact"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            className="hidden min-h-[44px] items-center gap-2 rounded-full bg-gold px-5 text-[13.5px] font-bold text-forest-950 shadow-[0_0_0_0_rgba(245,200,66,0)] transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] sm:flex"
+          <Link
+            href="/products/request-a-demo"
+            className="hidden min-h-[44px] items-center gap-2 rounded-full bg-gold px-5 text-[13.5px] font-bold text-forest-950 shadow-[0_0_0_0_rgba(245,200,66,0)] transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] active:scale-[0.97] sm:flex"
           >
             <Calendar className="h-4 w-4" aria-hidden="true" />
             {t("bookDemo")}
-          </motion.a>
+          </Link>
 
           <ThemeToggle className="hidden md:flex" />
           <LanguageSwitcher className="hidden md:flex" />
@@ -479,9 +483,13 @@ export default function Navbar() {
             >
               <div className="flex items-center justify-between border-b border-forest-100 px-5 py-4">
                 <span className="flex items-center gap-2.5">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-forest-950">
-                    <Bot className="h-4.5 w-4.5" aria-hidden="true" />
-                  </span>
+                  <Image
+                    src="/logo-r-gold.png"
+                    alt="RoboStore TH"
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
                   <span className="font-display text-base font-extrabold text-content">
                     RoboStore<span className="text-gold-600"> TH</span>
                   </span>
@@ -517,7 +525,7 @@ export default function Navbar() {
                             type="button"
                             onClick={() => setExpanded(expanded === i ? null : i)}
                             aria-expanded={expanded === i}
-                            className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-[15px] font-medium text-content transition-colors hover:bg-cloud hover:text-gold-600"
+                            className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-[15px] font-bold text-content transition-colors hover:bg-cloud hover:text-gold-600"
                           >
                             {link.label}
                             <ChevronDown
@@ -562,7 +570,7 @@ export default function Navbar() {
                         <Link
                           href={link.href}
                           onClick={() => setOpen(false)}
-                          className="flex min-h-[48px] items-center rounded-xl px-4 text-[15px] font-medium text-content transition-colors hover:bg-cloud hover:text-gold-600"
+                          className="flex min-h-[48px] items-center rounded-xl px-4 text-[15px] font-bold text-content transition-colors hover:bg-cloud hover:text-gold-600"
                         >
                           {link.label}
                         </Link>
@@ -578,14 +586,14 @@ export default function Navbar() {
               </div>
 
               <div className="border-t border-forest-100 p-5">
-                <a
-                  href="#contact"
+                <Link
+                  href="/products/request-a-demo"
                   onClick={() => setOpen(false)}
                   className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950"
                 >
                   <Calendar className="h-4 w-4" aria-hidden="true" />
                   {t("bookDemo")}
-                </a>
+                </Link>
               </div>
             </motion.aside>
           </>
