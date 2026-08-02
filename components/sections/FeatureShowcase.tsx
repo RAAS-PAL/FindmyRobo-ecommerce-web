@@ -66,8 +66,9 @@ export default function FeatureShowcase() {
               />
             ))}
 
-            {/* caption box — overlaid on the right side of the image */}
-            <div className="absolute right-3 top-1/2 max-w-[78%] -translate-y-1/2 sm:right-8 sm:max-w-md">
+            {/* caption box — a bottom bar on phones (so it doesn't cover the
+                product), an overlay on the right on larger screens */}
+            <div className="absolute bottom-3 left-3 right-3 sm:bottom-auto sm:left-auto sm:right-8 sm:top-1/2 sm:max-w-md sm:-translate-y-1/2">
               <div className="rounded-2xl border border-white/10 bg-black/55 p-5 backdrop-blur-md sm:p-7">
                 <h3 className="font-display text-lg font-bold text-white sm:text-2xl">
                   {text(features[active].heading)}

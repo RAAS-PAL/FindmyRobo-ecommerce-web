@@ -173,6 +173,7 @@ export default function Navbar() {
   ];
 
   return (
+    <>
     <header
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled
@@ -458,8 +459,12 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
+    </header>
 
-      {/* mobile drawer */}
+      {/* mobile drawer — rendered OUTSIDE <header>: when scrolled the header
+          gets backdrop-blur, which would otherwise become the containing block
+          for these position:fixed elements and clip the drawer to the header's
+          height instead of the viewport. */}
       <AnimatePresence>
         {open && (
           <>
@@ -599,6 +604,6 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
