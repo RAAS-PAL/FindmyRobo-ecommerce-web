@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Bot } from "lucide-react";
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { isAdminAuthenticated } from "@/lib/adminAuth";
 import LoginForm from "@/components/admin/LoginForm";
@@ -18,11 +18,13 @@ export default async function AdminLoginPage() {
       </div>
       <div className="w-full max-w-sm">
         <div className="mb-8 flex items-center justify-center gap-2.5">
-          {/* gold tile (matching the admin header) — a forest-950 tile would be
-              invisible against the navy canvas in dark mode */}
-          <span className="flex h-10 w-10 items-center justify-center rounded-md bg-gold text-forest-950">
-            <Bot className="h-5 w-5" aria-hidden="true" />
-          </span>
+          <Image
+            src="/logo-r-gold.png"
+            alt="RoboStore TH"
+            width={40}
+            height={40}
+            className="h-10 w-10 rounded-full object-cover"
+          />
           <span className="font-display text-lg font-extrabold tracking-tight text-content">
             RoboStore TH <span className="text-gold-600">{t("adminLabel")}</span>
           </span>
