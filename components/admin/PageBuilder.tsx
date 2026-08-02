@@ -45,9 +45,23 @@ export interface DraftSpecGroup {
   titleTh: string;
   rows: DraftSpecRow[];
 }
+export interface DraftBoxItem {
+  image: string;
+  nameEn: string;
+  nameTh: string;
+  qty: string;
+}
+export interface DraftFaq {
+  questionEn: string;
+  questionTh: string;
+  answerEn: string;
+  answerTh: string;
+}
 export interface DraftPage {
   blocks: DraftBlock[];
   specGroups: DraftSpecGroup[];
+  boxItems: DraftBoxItem[];
+  faqs: DraftFaq[];
 }
 
 export const emptyBlock = (type: PageBlock["type"]): DraftBlock => ({
@@ -65,6 +79,10 @@ export const emptyBlock = (type: PageBlock["type"]): DraftBlock => ({
 });
 
 const emptyRow = (): DraftSpecRow => ({ labelEn: "", labelTh: "", valueEn: "", valueTh: "" });
+
+const emptyBoxItem = (): DraftBoxItem => ({ image: "", nameEn: "", nameTh: "", qty: "1" });
+
+const emptyFaq = (): DraftFaq => ({ questionEn: "", questionTh: "", answerEn: "", answerTh: "" });
 
 /* ---------- Product ↔ draft conversion ---------- */
 
@@ -118,6 +136,18 @@ export function pageToDraft(page?: ProductPage): DraftPage {
         valueTh: r.value.th,
       })),
     })),
+    boxItems: (page?.boxItems ?? []).map((b) => ({
+      image: b.image,
+      nameEn: b.name.en,
+      nameTh: b.name.th,
+      qty: String(b.qty ?? 1),
+    })),
+    faqs: (page?.faqs ?? []).map((f) => ({
+      questionEn: f.question.en,
+      questionTh: f.question.th,
+      answerEn: f.answer.en,
+      answerTh: f.answer.th,
+    })),
   };
 }
 
@@ -144,6 +174,15 @@ export function draftToPage(draft: DraftPage): Record<string, unknown> {
         label: l(r.labelEn, r.labelTh),
         value: l(r.valueEn, r.valueTh),
       })),
+    })),
+    boxItems: draft.boxItems.map((b) => ({
+      image: b.image.trim(),
+      name: l(b.nameEn, b.nameTh),
+      qty: Number(b.qty) || 1,
+    })),
+    faqs: draft.faqs.map((f) => ({
+      question: l(f.questionEn, f.questionTh),
+      answer: l(f.answerEn, f.answerTh),
     })),
   };
 }
@@ -622,6 +661,179 @@ export default function PageBuilder({
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
           {t("actions.addSpecGroup")}
+        </button>
+      </div>
+
+      {/* what's in the box — rendered after the spec table on the product page */}
+      <div className="space-y-3">
+        <h3 className="text-[13.5px] font-bold text-content">
+          {t("box.title")}
+          <span className="ml-2 font-normal text-ink-muted">{t("box.note")}</span>
+        </h3>
+        {draft.boxItems.map((item, i) => (
+          <div key={i} className="rounded-2xl border border-forest-100 bg-surface p-4">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+                {t("box.itemLabel", { number: i + 1 })}
+              </p>
+              <div className="flex items-center">
+                <IconButton
+                  label={t("actions.moveBoxItemUp", { number: i + 1 })}
+                  onClick={() => set({ boxItems: move(draft.boxItems, i, -1) })}
+                  disabled={i === 0}
+                >
+                  <ChevronUp className="h-4 w-4" aria-hidden="true" />
+                </IconButton>
+                <IconButton
+                  label={t("actions.moveBoxItemDown", { number: i + 1 })}
+                  onClick={() => set({ boxItems: move(draft.boxItems, i, 1) })}
+                  disabled={i === draft.boxItems.length - 1}
+                >
+                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                </IconButton>
+                <IconButton
+                  label={t("actions.removeBoxItem", { number: i + 1 })}
+                  onClick={() =>
+                    set({ boxItems: draft.boxItems.filter((_, j) => j !== i) })
+                  }
+                >
+                  <Trash2 className="h-4 w-4" aria-hidden="true" />
+                </IconButton>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className={miniLabel}>{t("fields.imageUrl")}</label>
+                <input
+                  value={item.image}
+                  onChange={(e) => {
+                    const boxItems = [...draft.boxItems];
+                    boxItems[i] = { ...item, image: e.target.value };
+                    set({ boxItems });
+                  }}
+                  placeholder={t("placeholders.url")}
+                  className={inputClass}
+                />
+              </div>
+              <EnThPair
+                label={t("fields.boxItemName")}
+                en={item.nameEn}
+                th={item.nameTh}
+                onEn={(v) => {
+                  const boxItems = [...draft.boxItems];
+                  boxItems[i] = { ...item, nameEn: v };
+                  set({ boxItems });
+                }}
+                onTh={(v) => {
+                  const boxItems = [...draft.boxItems];
+                  boxItems[i] = { ...item, nameTh: v };
+                  set({ boxItems });
+                }}
+              />
+              <div className="w-28">
+                <label className={miniLabel}>{t("fields.boxItemQty")}</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={item.qty}
+                  onChange={(e) => {
+                    const boxItems = [...draft.boxItems];
+                    boxItems[i] = { ...item, qty: e.target.value };
+                    set({ boxItems });
+                  }}
+                  className={inputClass}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => set({ boxItems: [...draft.boxItems, emptyBoxItem()] })}
+          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+        >
+          <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+          {t("actions.addBoxItem")}
+        </button>
+      </div>
+
+      {/* FAQ — rendered as an accordion near the bottom of the product page */}
+      <div className="space-y-3">
+        <h3 className="text-[13.5px] font-bold text-content">
+          {t("faq.title")}
+          <span className="ml-2 font-normal text-ink-muted">{t("faq.note")}</span>
+        </h3>
+        {draft.faqs.map((item, i) => (
+          <div key={i} className="rounded-2xl border border-forest-100 bg-surface p-4">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+                {t("faq.itemLabel", { number: i + 1 })}
+              </p>
+              <div className="flex items-center">
+                <IconButton
+                  label={t("actions.moveFaqUp", { number: i + 1 })}
+                  onClick={() => set({ faqs: move(draft.faqs, i, -1) })}
+                  disabled={i === 0}
+                >
+                  <ChevronUp className="h-4 w-4" aria-hidden="true" />
+                </IconButton>
+                <IconButton
+                  label={t("actions.moveFaqDown", { number: i + 1 })}
+                  onClick={() => set({ faqs: move(draft.faqs, i, 1) })}
+                  disabled={i === draft.faqs.length - 1}
+                >
+                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                </IconButton>
+                <IconButton
+                  label={t("actions.removeFaq", { number: i + 1 })}
+                  onClick={() => set({ faqs: draft.faqs.filter((_, j) => j !== i) })}
+                >
+                  <Trash2 className="h-4 w-4" aria-hidden="true" />
+                </IconButton>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <EnThPair
+                label={t("fields.faqQuestion")}
+                en={item.questionEn}
+                th={item.questionTh}
+                onEn={(v) => {
+                  const faqs = [...draft.faqs];
+                  faqs[i] = { ...item, questionEn: v };
+                  set({ faqs });
+                }}
+                onTh={(v) => {
+                  const faqs = [...draft.faqs];
+                  faqs[i] = { ...item, questionTh: v };
+                  set({ faqs });
+                }}
+              />
+              <EnThPair
+                label={t("fields.faqAnswer")}
+                multiline
+                en={item.answerEn}
+                th={item.answerTh}
+                onEn={(v) => {
+                  const faqs = [...draft.faqs];
+                  faqs[i] = { ...item, answerEn: v };
+                  set({ faqs });
+                }}
+                onTh={(v) => {
+                  const faqs = [...draft.faqs];
+                  faqs[i] = { ...item, answerTh: v };
+                  set({ faqs });
+                }}
+              />
+            </div>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => set({ faqs: [...draft.faqs, emptyFaq()] })}
+          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+        >
+          <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+          {t("actions.addFaq")}
         </button>
       </div>
     </div>

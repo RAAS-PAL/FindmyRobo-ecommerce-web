@@ -23,6 +23,11 @@ on conflict (id) do update set
   variant = excluded.variant, visible = true, specs = excluded.specs,
   tagline = excluded.tagline, description = excluded.description, features = excluded.features;
 
--- Retire the old single flat-rate demo so the storefront shows only the
--- area-based tiers above. (No-op if the row was never seeded.)
-update public.products set visible = false where id = 'request-a-demo';
+-- Keep 'request-a-demo' as the single "Book a Demo" landing page: every
+-- "Book a Demo" button links to /products/request-a-demo, and its product page
+-- hosts the demo picker (choose a robot model + one of the area bands above).
+-- The area tiers supply the prices; adding to cart from that page adds the
+-- matching tier. (No-op if the row was never seeded.)
+update public.products
+set name = 'Book an On-Site Demo', visible = true
+where id = 'request-a-demo';

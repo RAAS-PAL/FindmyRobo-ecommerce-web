@@ -342,11 +342,9 @@ export default function HeroSection() {
             {t("ctaPrimary")}
             <ArrowRight className="h-4.5 w-4.5" aria-hidden="true" />
           </Link>
-          <motion.a
-            href="#contact"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            className={`flex min-h-[52px] items-center gap-2 rounded-full border-2 px-8 text-[15px] font-semibold transition-colors duration-300 ${
+          <Link
+            href="/products/request-a-demo"
+            className={`flex min-h-[52px] items-center gap-2 rounded-full border-2 px-8 text-[15px] font-semibold transition-all duration-300 hover:scale-105 active:scale-[0.97] ${
               video
                 ? "border-white/40 text-white hover:border-gold hover:text-gold"
                 : "border-content/25 text-content hover:border-gold-600 hover:text-gold-600"
@@ -354,7 +352,7 @@ export default function HeroSection() {
           >
             <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
             {t("ctaSecondary")}
-          </motion.a>
+          </Link>
         </motion.div>
       </div>
 

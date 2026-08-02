@@ -60,6 +60,21 @@ export interface SpecGroup {
   rows: { label: LocalizedText; value: LocalizedText }[];
 }
 
+/** One item packed in the box, shown in the "What's in the box" grid. */
+export interface BoxItem {
+  /** Photo of the item (absolute URL or /public path). */
+  image: string;
+  name: LocalizedText;
+  /** Quantity included; defaults to 1 when unset. */
+  qty?: number;
+}
+
+/** One question/answer pair shown in the product FAQ accordion. */
+export interface FaqItem {
+  question: LocalizedText;
+  answer: LocalizedText;
+}
+
 /**
  * Optional rich detail-page content. When absent the product page falls back
  * to the compact layout (description + features + the small specs band).
@@ -72,6 +87,10 @@ export interface ProductPage {
   blocks?: PageBlock[];
   /** Grouped specification table; replaces the compact specs band when set. */
   specGroups?: SpecGroup[];
+  /** "What's in the box" items, rendered after the specification table. */
+  boxItems?: BoxItem[];
+  /** Frequently-asked questions, rendered as an accordion near the page bottom. */
+  faqs?: FaqItem[];
 }
 
 /**

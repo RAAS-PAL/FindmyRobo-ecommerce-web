@@ -165,7 +165,7 @@ export default function Navbar() {
       children: [
         { label: t("contactSales"), href: "/contact-sales" },
         { label: t("contactTouch"), href: "/#contact" },
-        { label: t("contactDemo"), href: "/#contact" },
+        { label: t("contactDemo"), href: "/products/request-a-demo" },
         { label: t("contactLocations"), href: "/#contact" },
       ],
     },
@@ -415,15 +415,13 @@ export default function Navbar() {
             dropdownClassName="right-0 w-[360px]"
           />
 
-          <motion.a
-            href="#contact"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            className="hidden min-h-[44px] items-center gap-2 rounded-full bg-gold px-5 text-[13.5px] font-bold text-forest-950 shadow-[0_0_0_0_rgba(245,200,66,0)] transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] sm:flex"
+          <Link
+            href="/products/request-a-demo"
+            className="hidden min-h-[44px] items-center gap-2 rounded-full bg-gold px-5 text-[13.5px] font-bold text-forest-950 shadow-[0_0_0_0_rgba(245,200,66,0)] transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] active:scale-[0.97] sm:flex"
           >
             <Calendar className="h-4 w-4" aria-hidden="true" />
             {t("bookDemo")}
-          </motion.a>
+          </Link>
 
           <ThemeToggle className="hidden md:flex" />
           <LanguageSwitcher className="hidden md:flex" />
@@ -588,14 +586,14 @@ export default function Navbar() {
               </div>
 
               <div className="border-t border-forest-100 p-5">
-                <a
-                  href="#contact"
+                <Link
+                  href="/products/request-a-demo"
                   onClick={() => setOpen(false)}
                   className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950"
                 >
                   <Calendar className="h-4 w-4" aria-hidden="true" />
                   {t("bookDemo")}
-                </a>
+                </Link>
               </div>
             </motion.aside>
           </>

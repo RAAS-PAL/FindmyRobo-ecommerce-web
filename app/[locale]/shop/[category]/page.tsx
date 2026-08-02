@@ -80,13 +80,13 @@ export default async function CategoryPage({
                 {t("comingSoonBody")}
               </p>
               <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
-                <a
-                  href="#contact"
+                <Link
+                  href="/products/request-a-demo"
                   className="flex min-h-[48px] items-center gap-2 rounded-full bg-gold px-7 text-sm font-bold text-forest-950 transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
                 >
                   <Calendar className="h-4 w-4" aria-hidden="true" />
                   {tn("bookDemo")}
-                </a>
+                </Link>
                 <Link
                   href="/shop"
                   className="flex min-h-[48px] items-center rounded-full border border-forest-100 px-7 text-sm font-semibold text-content transition-colors hover:border-gold"

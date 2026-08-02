@@ -417,7 +417,11 @@
         "cardImageUrl": "URL รูปภาพการ์ด {number}",
         "groupTitle": "ชื่อกลุ่ม",
         "rowLabel": "แถว {number} — ป้ายกำกับ",
-        "value": "ค่า"
+        "value": "ค่า",
+        "boxItemName": "ชื่อรายการ",
+        "boxItemQty": "จำนวน",
+        "faqQuestion": "คำถาม",
+        "faqAnswer": "คำตอบ"
       },
       "positions": {
         "right": "รูปภาพอยู่ด้านขวา",
@@ -434,7 +438,15 @@
         "removeGroup": "ลบกลุ่ม {number}",
         "removeRow": "ลบแถว {number}",
         "addRow": "เพิ่มแถว",
-        "addSpecGroup": "เพิ่มกลุ่มข้อมูลจำเพาะ"
+        "addSpecGroup": "เพิ่มกลุ่มข้อมูลจำเพาะ",
+        "moveBoxItemUp": "เลื่อนรายการ {number} ขึ้น",
+        "moveBoxItemDown": "เลื่อนรายการ {number} ลง",
+        "removeBoxItem": "ลบรายการ {number}",
+        "addBoxItem": "เพิ่มรายการในกล่อง",
+        "moveFaqUp": "เลื่อนคำถาม {number} ขึ้น",
+        "moveFaqDown": "เลื่อนคำถาม {number} ลง",
+        "removeFaq": "ลบคำถาม {number}",
+        "addFaq": "เพิ่มคำถาม"
       },
       "intro": {
         "title": "วิดีโอแนะนำ",
@@ -449,6 +461,16 @@
         "title": "ตารางข้อมูลจำเพาะโดยละเอียด",
         "note": "จัดข้อมูลเป็นกลุ่ม และจะแทนแถบข้อมูลจำเพาะแบบย่อเมื่อมีการกรอก",
         "groupLabel": "กลุ่ม {number}"
+      },
+      "box": {
+        "title": "อุปกรณ์ในกล่อง",
+        "note": "รูปของทุกอย่างที่ให้มาในกล่อง แสดงหลังตารางข้อมูลจำเพาะ (ไม่บังคับ)",
+        "itemLabel": "รายการ {number}"
+      },
+      "faq": {
+        "title": "คำถามที่พบบ่อย",
+        "note": "คำถามและคำตอบ แสดงแบบ accordion (ไม่บังคับ)",
+        "itemLabel": "คำถาม {number}"
       },
       "languages": {
         "en": "อังกฤษ",
@@ -729,6 +751,8 @@
     "specsHeading": "ข้อมูลจำเพาะ",
     "specsNote": "ข้อมูลเบื้องต้น — ยืนยันอีกครั้งเมื่อส่งมอบสินค้า",
     "specTableHeading": "ข้อมูลจำเพาะของสินค้า",
+    "boxHeading": "อุปกรณ์ในกล่อง",
+    "faqHeading": "คำถามที่พบบ่อย",
     "featuresHeading": "จุดเด่นที่คุณจะหลงรัก",
     "relatedHeading": "สินค้าที่คุณอาจสนใจ",
     "ctaDemo": "จองเดโม",
