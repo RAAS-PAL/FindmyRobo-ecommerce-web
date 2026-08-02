@@ -3,27 +3,47 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Bot } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import AddToCartButton from "@/components/cart/AddToCartButton";
-
-export interface RobotOption {
-  id: string;
-  name: string;
-}
+import { useCart } from "@/components/cart/CartProvider";
+import { SERVICE_CATEGORY } from "@/data/products";
 
 /**
- * Purchase panel for service products (installation, demo). The customer must
- * choose which robot the service is for before it can be added to the cart —
- * that choice travels with the cart line (forId).
+ * Purchase panel for service products (installation, demo). PRD #31: the
+ * service must attach to a robot the customer is actually buying, so the picker
+ * lists the robots currently in the cart (not the whole catalog). The choice
+ * travels with the cart line via `forId`. If there's no robot in the cart yet,
+ * we prompt the shopper to add one first instead of letting them attach the
+ * service to nothing.
  */
-export default function ServicePurchasePanel({
-  serviceId,
-  robots,
-}: {
-  serviceId: string;
-  robots: RobotOption[];
-}) {
+export default function ServicePurchasePanel({ serviceId }: { serviceId: string }) {
   const t = useTranslations("service");
+  const { items } = useCart();
   const [robotId, setRobotId] = useState("");
+
+  // Distinct robots in the cart (a service can't be installed onto a service).
+  const robots = items
+    .filter((line) => line.product.category !== SERVICE_CATEGORY)
+    .map((line) => ({ id: line.product.id, name: line.product.name }))
+    .filter((r, i, arr) => arr.findIndex((x) => x.id === r.id) === i);
+
+  if (robots.length === 0) {
+    return (
+      <div className="rounded-2xl border border-forest-100 bg-cloud/60 p-5 text-center">
+        <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-gold/20">
+          <Bot className="h-5 w-5 text-gold-600" aria-hidden="true" />
+        </span>
+        <p className="mt-3 text-[13.5px] font-semibold text-content">{t("noRobotsTitle")}</p>
+        <p className="mt-1 text-[12.5px] leading-relaxed text-ink-muted">{t("noRobotsBody")}</p>
+        <Link
+          href="/shop"
+          className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full bg-gold px-6 text-[13.5px] font-bold text-forest-950 transition-transform duration-300 hover:scale-[1.02]"
+        >
+          {t("noRobotsCta")}
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">

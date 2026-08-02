@@ -40,7 +40,6 @@ interface UpsellOffer {
   cartKey: string;
   service: Product;
   robot: Product;
-  kind: "install" | "demo";
 }
 
 /** "5,000 m²" → 5000; NaN when the spec is missing/unparsable. */
@@ -48,9 +47,11 @@ const parseArea = (spec?: string) =>
   spec ? Number(spec.replace(/[^0-9]/g, "")) : NaN;
 
 /**
- * PRD req 11: recommend service add-ons for the robots in the cart — the
- * smallest installation tier that covers each robot's area, plus one on-site
- * demo. Returns every applicable candidate (NOT filtered by what's already in
+ * PRD req 11 + #32: recommend the smallest installation tier that covers each
+ * robot's area. Demo packages are deliberately NOT offered here — the shopper
+ * has already added a robot, and a demo's purpose is to win an undecided buyer
+ * before purchase, so it belongs on its own product page, not the checkout
+ * upsell. Returns every applicable candidate (NOT filtered by what's already in
  * the cart); the checkout derives each one's checked state from the cart so
  * they render as live toggles above the form.
  */
@@ -61,9 +62,6 @@ function buildOffers(items: CartLine[], catalog: Product[]): UpsellOffer[] {
   const tiers = catalog
     .filter((p) => p.category === SERVICE_CATEGORY && p.variant === "install")
     .sort((a, b) => parseArea(a.specs.area) - parseArea(b.specs.area));
-  const demo = catalog.find(
-    (p) => p.category === SERVICE_CATEGORY && p.variant === "demo"
-  );
 
   const offers: UpsellOffer[] = [];
   for (const line of robots) {
@@ -77,18 +75,8 @@ function buildOffers(items: CartLine[], catalog: Product[]): UpsellOffer[] {
         cartKey: `${tier.id}__for__${line.id}`,
         service: tier,
         robot: line.product,
-        kind: "install",
       });
     }
-  }
-  if (demo) {
-    offers.push({
-      key: `${demo.id}__${robots[0].id}`,
-      cartKey: `${demo.id}__for__${robots[0].id}`,
-      service: demo,
-      robot: robots[0].product,
-      kind: "demo",
-    });
   }
   return offers.slice(0, 4);
 }
@@ -480,9 +468,7 @@ export default function CheckoutClient() {
                           )}
                         </span>
                         <span className="mt-0.5 block text-[12px] text-ink-muted">
-                          {t(offer.kind === "install" ? "upsell.installFor" : "upsell.demoFor", {
-                            name: offer.robot.name,
-                          })}
+                          {t("upsell.installFor", { name: offer.robot.name })}
                         </span>
                       </span>
                       <span className="font-mono text-[14px] font-semibold tabular-nums text-content">

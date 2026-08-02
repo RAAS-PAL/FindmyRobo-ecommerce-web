@@ -83,10 +83,13 @@ export default async function LocaleLayout({
       suppressHydrationWarning
       className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className="flex min-h-full flex-col">
+        {/* Runs synchronously during body parse (before the page paints) to set
+            the .dark class and avoid a theme flash. Kept out of <head>: React 19
+            owns the head singleton and re-mounts inline scripts placed there on
+            the client, which both fails to run them and logs a "script tag"
+            warning. As a plain body element it hydrates in place instead. */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
             <ProductsProvider products={products}>

@@ -6,10 +6,14 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import FeaturedProductCard from "@/components/ui/FeaturedProductCard";
 import { useProducts } from "@/components/ProductsProvider";
+import { SERVICE_CATEGORY } from "@/data/products";
 
 export default function ProductGrid() {
   const t = useTranslations("products");
   const { products } = useProducts();
+  // Home carousel is robots only — installation/demo service packages are
+  // bought from the shop or the checkout upsell, not featured here.
+  const robots = products.filter((p) => p.category !== SERVICE_CATEGORY);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const scrollBy = (dir: 1 | -1) =>
@@ -58,7 +62,7 @@ export default function ProductGrid() {
         ref={scrollerRef}
         className="no-scrollbar mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-px-4 px-4 pb-6 pt-2 sm:scroll-px-6 sm:px-6 lg:scroll-px-8 lg:px-[max(2rem,calc((100vw-80rem)/2+2rem))]"
       >
-        {products.map((product, i) => (
+        {robots.map((product, i) => (
           <FeaturedProductCard key={product.id} product={product} index={i} />
         ))}
       </div>

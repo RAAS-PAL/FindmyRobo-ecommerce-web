@@ -9,6 +9,7 @@ import AddToCartButton from "@/components/cart/AddToCartButton";
 import FloatingAddToCart from "@/components/cart/FloatingAddToCart";
 import CompareToggleButton from "@/components/compare/CompareToggleButton";
 import ServicePurchasePanel from "@/components/cart/ServicePurchasePanel";
+import DemoPurchasePanel from "@/components/cart/DemoPurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
 import ProductGallery from "@/components/product/ProductGallery";
 import ProductPageBlocks from "@/components/product/ProductPageBlocks";
@@ -59,10 +60,9 @@ export default async function ProductPage({
   const page = product.page;
   const allProducts = await getAllProducts();
   const isService = product.category === SERVICE_CATEGORY;
-  // Robots a service can be attached to (everything that isn't itself a service).
-  const robotOptions = allProducts
-    .filter((p) => p.category !== SERVICE_CATEGORY)
-    .map((p) => ({ id: p.id, name: p.name }));
+  // Demo packages price by area, so the price is chosen inside DemoPurchasePanel
+  // (per selected area band) rather than shown as a single fixed number here.
+  const isDemo = isService && product.variant === "demo";
   const related = allProducts
     .filter((p) => p.id !== product.id)
     .sort((a, b) =>
@@ -124,16 +124,22 @@ export default async function ProductPage({
               {product.description[locale as Locale] ?? product.description.en}
             </p>
 
-            <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-content">
-              {formatBaht(product.price)}
-            </p>
+            {!isDemo && (
+              <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-content">
+                {formatBaht(product.price)}
+              </p>
+            )}
             {product.preorder && (
               <p className="mt-2 text-[13px] font-medium text-gold-600">{t("preorderNote")}</p>
             )}
 
             <div className="mt-8">
               {isService ? (
-                <ServicePurchasePanel serviceId={product.id} robots={robotOptions} />
+                isDemo ? (
+                  <DemoPurchasePanel currentId={product.id} />
+                ) : (
+                  <ServicePurchasePanel serviceId={product.id} />
+                )
               ) : (
                 <div id="pdp-primary-cta" className="flex flex-col gap-3 sm:flex-row">
                   <AddToCartButton productId={product.id} />
