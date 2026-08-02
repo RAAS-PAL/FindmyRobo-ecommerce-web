@@ -357,7 +357,7 @@ export default function Navbar() {
                                   className="group/card overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3 transition hover:-translate-y-0.5 hover:border-gold-600/40 hover:shadow-md"
                                 >
                                   <div className="flex h-28 items-center justify-center">
-                                    <ProductVisual product={product} className="h-full w-full" />
+                                    <ProductVisual product={product} preferHome className="h-full w-full" />
                                   </div>
                                   <p className="mt-2 line-clamp-2 text-xs font-bold leading-snug text-content">
                                     {product.name}
