@@ -128,6 +128,23 @@ export function parsePage(raw: unknown): ProductPage | undefined | string {
         if (cards.length > 0) {
           blocks.push({ type, cards, ...(heading ? { heading } : {}) });
         }
+      } else if (type === "showcase" && Array.isArray(b.cards)) {
+        const cards = [];
+        for (const c of b.cards) {
+          if (typeof c !== "object" || c === null) continue;
+          const o = c as Record<string, unknown>;
+          const cardImage = asText(o.image);
+          const title = asLocalized(o.title);
+          const body = asLocalized(o.body);
+          if (!cardImage || !title || !body) continue;
+          if (!URL_RE.test(cardImage)) {
+            return `Detail page: a card image URL in block ${i + 1} must start with https:// or /`;
+          }
+          cards.push({ image: cardImage, title, body });
+        }
+        if (cards.length > 0) {
+          blocks.push({ type, cards, ...(heading ? { heading } : {}) });
+        }
       }
     }
     if (blocks.length > 0) page.blocks = blocks;

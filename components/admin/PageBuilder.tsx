@@ -20,6 +20,10 @@ export interface DraftCard {
   image: string;
   captionEn: string;
   captionTh: string;
+  titleEn: string;
+  titleTh: string;
+  bodyEn: string;
+  bodyTh: string;
 }
 export interface DraftBlock {
   type: PageBlock["type"];
@@ -80,6 +84,16 @@ export const emptyBlock = (type: PageBlock["type"]): DraftBlock => ({
 
 const emptyRow = (): DraftSpecRow => ({ labelEn: "", labelTh: "", valueEn: "", valueTh: "" });
 
+const emptyCard = (): DraftCard => ({
+  image: "",
+  captionEn: "",
+  captionTh: "",
+  titleEn: "",
+  titleTh: "",
+  bodyEn: "",
+  bodyTh: "",
+});
+
 const emptyBoxItem = (): DraftBoxItem => ({ image: "", nameEn: "", nameTh: "", qty: "1" });
 
 const emptyFaq = (): DraftFaq => ({ questionEn: "", questionTh: "", answerEn: "", answerTh: "" });
@@ -119,11 +133,21 @@ export function pageToDraft(page?: ProductPage): DraftPage {
       cards:
         b.type === "cardGrid"
           ? b.cards.map((c) => ({
+              ...emptyCard(),
               image: c.image,
               captionEn: c.caption.en,
               captionTh: c.caption.th,
             }))
-          : [],
+          : b.type === "showcase"
+            ? b.cards.map((c) => ({
+                ...emptyCard(),
+                image: c.image,
+                titleEn: c.title.en,
+                titleTh: c.title.th,
+                bodyEn: c.body.en,
+                bodyTh: c.body.th,
+              }))
+            : [],
     })),
     ],
     specGroups: (page?.specGroups ?? []).map((g) => ({
@@ -166,6 +190,8 @@ export function draftToPage(draft: DraftPage): Record<string, unknown> {
       cards: b.cards.map((c) => ({
         image: c.image.trim(),
         caption: l(c.captionEn, c.captionTh),
+        title: l(c.titleEn, c.titleTh),
+        body: l(c.bodyEn, c.bodyTh),
       })),
     })),
     specGroups: draft.specGroups.map((g) => ({
@@ -275,6 +301,7 @@ const BLOCK_LABEL_KEYS = {
   banner: "blocks.banner",
   feature: "blocks.feature",
   cardGrid: "blocks.cardGrid",
+  showcase: "blocks.showcase",
   imageText: "blocks.imageText",
   video: "blocks.video",
 } as const satisfies Record<PageBlock["type"], string>;
@@ -321,7 +348,10 @@ function BlockEditor({
         </div>
       )}
 
-      {(block.type === "feature" || block.type === "cardGrid" || block.type === "video") && (
+      {(block.type === "feature" ||
+        block.type === "cardGrid" ||
+        block.type === "showcase" ||
+        block.type === "video") && (
         <EnThPair
           label={t(block.type === "feature" ? "fields.heading" : "fields.headingOptional")}
           en={block.headingEn}
@@ -363,7 +393,7 @@ function BlockEditor({
         </>
       )}
 
-      {block.type === "cardGrid" && (
+      {(block.type === "cardGrid" || block.type === "showcase") && (
         <div className="space-y-3">
           {block.cards.map((card, i) => (
             <div
@@ -387,21 +417,57 @@ function BlockEditor({
                       className={inputClass}
                     />
                   </div>
-                  <EnThPair
-                    label={t("fields.caption")}
-                    en={card.captionEn}
-                    th={card.captionTh}
-                    onEn={(v) => {
-                      const cards = [...block.cards];
-                      cards[i] = { ...card, captionEn: v };
-                      set({ cards });
-                    }}
-                    onTh={(v) => {
-                      const cards = [...block.cards];
-                      cards[i] = { ...card, captionTh: v };
-                      set({ cards });
-                    }}
-                  />
+                  {block.type === "cardGrid" ? (
+                    <EnThPair
+                      label={t("fields.caption")}
+                      en={card.captionEn}
+                      th={card.captionTh}
+                      onEn={(v) => {
+                        const cards = [...block.cards];
+                        cards[i] = { ...card, captionEn: v };
+                        set({ cards });
+                      }}
+                      onTh={(v) => {
+                        const cards = [...block.cards];
+                        cards[i] = { ...card, captionTh: v };
+                        set({ cards });
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <EnThPair
+                        label={t("fields.cardTitle")}
+                        en={card.titleEn}
+                        th={card.titleTh}
+                        onEn={(v) => {
+                          const cards = [...block.cards];
+                          cards[i] = { ...card, titleEn: v };
+                          set({ cards });
+                        }}
+                        onTh={(v) => {
+                          const cards = [...block.cards];
+                          cards[i] = { ...card, titleTh: v };
+                          set({ cards });
+                        }}
+                      />
+                      <EnThPair
+                        label={t("fields.cardText")}
+                        multiline
+                        en={card.bodyEn}
+                        th={card.bodyTh}
+                        onEn={(v) => {
+                          const cards = [...block.cards];
+                          cards[i] = { ...card, bodyEn: v };
+                          set({ cards });
+                        }}
+                        onTh={(v) => {
+                          const cards = [...block.cards];
+                          cards[i] = { ...card, bodyTh: v };
+                          set({ cards });
+                        }}
+                      />
+                    </>
+                  )}
                 </div>
                 <IconButton
                   label={t("actions.removeCard", { number: i + 1 })}
@@ -414,9 +480,7 @@ function BlockEditor({
           ))}
           <button
             type="button"
-            onClick={() =>
-              set({ cards: [...block.cards, { image: "", captionEn: "", captionTh: "" }] })
-            }
+            onClick={() => set({ cards: [...block.cards, emptyCard()] })}
             className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
