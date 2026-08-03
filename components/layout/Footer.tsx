@@ -38,9 +38,6 @@ export default function Footer() {
                 RoboStore<span className="text-gold"> TH</span>
               </span>
             </Link>
-            <p className="mt-4 font-display text-sm font-semibold tracking-wide text-gold">
-              {t("tagline")}
-            </p>
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-white/50">
               {t("copyright")}
             </p>

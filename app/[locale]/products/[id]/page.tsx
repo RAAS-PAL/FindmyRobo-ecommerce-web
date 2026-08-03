@@ -99,7 +99,7 @@ export default async function ProductPage({
         </nav>
 
         {/* top: gallery + info */}
-        <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16">
+        <div className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-12">
           {/* gallery */}
           <FadeIn>
             <ProductGallery
@@ -111,6 +111,8 @@ export default async function ProductPage({
                 openFullscreen: t("galleryOpenFullscreen"),
                 closeFullscreen: t("galleryCloseFullscreen"),
                 imageCount: t("galleryImageCount", { current: "#current#", total: "#total#" }),
+                zoomIn: t("galleryZoomIn"),
+                zoomOut: t("galleryZoomOut"),
               }}
             />
           </FadeIn>
