@@ -17,6 +17,7 @@ import ExpandOnScroll from "@/components/product/ExpandOnScroll";
 import SpecTable from "@/components/product/SpecTable";
 import BoxContents from "@/components/product/BoxContents";
 import FaqSection from "@/components/product/FaqSection";
+import ProductReviews from "@/components/product/ProductReviews";
 import {
   formatBaht,
   SERVICE_CATEGORY,
@@ -249,6 +250,13 @@ export default async function ProductPage({
             </FadeIn>
           </div>
         )}
+
+        {/* customer reviews — public, written by signed-in customers */}
+        <div className="mt-16 sm:mt-20">
+          <FadeIn>
+            <ProductReviews productId={product.id} />
+          </FadeIn>
+        </div>
 
         {/* related */}
         <div className="mt-16 sm:mt-20">
