@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, X, ZoomIn, ZoomOut } from "lucide-react";
 import ProductVisual from "@/components/ui/ProductVisual";
 import type { Product } from "@/data/products";
 
@@ -13,9 +13,14 @@ import type { Product } from "@/data/products";
  * Devices without hover never get that reveal, so `@media (hover: none)` pins
  * the thumbnails open there instead.
  *
+ * Fullscreen (the lightbox) supports zoom: scroll to zoom at the cursor, click
+ * to toggle 2.5×, drag to pan, on-screen +/- controls, and +/-/0 keys.
+ *
  * Falls back to the plain single visual (photo or variant illustration) when
  * the product has fewer than two photos.
  */
+const MAX_ZOOM = 5;
+
 export default function ProductGallery({
   product,
   labels,
@@ -28,6 +33,8 @@ export default function ProductGallery({
     openFullscreen: string;
     closeFullscreen: string;
     imageCount: string;
+    zoomIn: string;
+    zoomOut: string;
   };
 }) {
   const [index, setIndex] = useState(0);
@@ -38,9 +45,82 @@ export default function ProductGallery({
     (url): url is string => !!url
   );
 
-  const go = (next: number) => setIndex((next + images.length) % images.length);
+  /* ---------- fullscreen zoom & pan ---------- */
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const dragRef = useRef({ x: 0, y: 0, panX: 0, panY: 0, moved: false, active: false });
 
-  const openFullscreen = () => dialogRef.current?.showModal();
+  const clampPan = (x: number, y: number, z: number) => {
+    const rect = stageRef.current?.getBoundingClientRect();
+    const w = rect?.width ?? 800;
+    const h = rect?.height ?? 600;
+    const mx = (w / 2) * (z - 1) + 120;
+    const my = (h / 2) * (z - 1) + 120;
+    return { x: Math.max(-mx, Math.min(mx, x)), y: Math.max(-my, Math.min(my, y)) };
+  };
+  const resetZoom = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+  const center = (e: { clientX: number; clientY: number }) => {
+    const rect = stageRef.current?.getBoundingClientRect();
+    if (!rect) return { cx: 0, cy: 0 };
+    return { cx: e.clientX - rect.left - rect.width / 2, cy: e.clientY - rect.top - rect.height / 2 };
+  };
+  const zoomTo = (next: number, cx: number, cy: number) => {
+    const nz = Math.min(MAX_ZOOM, Math.max(1, next));
+    if (nz <= 1) return resetZoom();
+    const ratio = nz / zoom;
+    setZoom(nz);
+    setPan((p) => clampPan(cx - (cx - p.x) * ratio, cy - (cy - p.y) * ratio, nz));
+  };
+  const onWheel = (e: React.WheelEvent) => {
+    const { cx, cy } = center(e);
+    zoomTo(zoom * (e.deltaY < 0 ? 1.2 : 1 / 1.2), cx, cy);
+  };
+  const onStageClick = (e: React.MouseEvent) => {
+    if (dragRef.current.moved) return;
+    if (e.target === imgRef.current) {
+      if (zoom > 1) return resetZoom();
+      const { cx, cy } = center(e);
+      zoomTo(2.5, cx, cy);
+    } else if (zoom > 1) {
+      resetZoom();
+    } else {
+      closeFullscreen();
+    }
+  };
+  const onPointerDown = (e: React.PointerEvent) => {
+    dragRef.current.moved = false;
+    if (zoom <= 1) return;
+    dragRef.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y, moved: false, active: true };
+    setDragging(true);
+    stageRef.current?.setPointerCapture(e.pointerId);
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragRef.current.active) return;
+    const dx = e.clientX - dragRef.current.x;
+    const dy = e.clientY - dragRef.current.y;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragRef.current.moved = true;
+    setPan(clampPan(dragRef.current.panX + dx, dragRef.current.panY + dy, zoom));
+  };
+  const onPointerUp = () => {
+    dragRef.current.active = false;
+    setDragging(false);
+  };
+
+  const go = (next: number) => {
+    resetZoom();
+    setIndex((next + images.length) % images.length);
+  };
+
+  const openFullscreen = () => {
+    resetZoom();
+    dialogRef.current?.showModal();
+  };
   const closeFullscreen = () => dialogRef.current?.close();
 
   const lightbox = images[index] ? (
@@ -48,7 +128,10 @@ export default function ProductGallery({
           ref={dialogRef}
           role="dialog"
           aria-label={product.name}
-          onClose={() => openerRef.current?.focus()}
+          onClose={() => {
+            resetZoom();
+            openerRef.current?.focus();
+          }}
           onKeyDown={(event) => {
             if (images.length > 1 && event.key === "ArrowLeft") {
               event.preventDefault();
@@ -58,11 +141,20 @@ export default function ProductGallery({
               event.preventDefault();
               go(index + 1);
             }
+            if (event.key === "+" || event.key === "=") {
+              event.preventDefault();
+              zoomTo(zoom * 1.4, 0, 0);
+            }
+            if (event.key === "-" || event.key === "_") {
+              event.preventDefault();
+              zoomTo(zoom / 1.4, 0, 0);
+            }
+            if (event.key === "0") {
+              event.preventDefault();
+              resetZoom();
+            }
           }}
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) closeFullscreen();
-          }}
-          className="fixed inset-0 z-[100] m-0 h-screen max-h-none w-screen max-w-none border-0 bg-black/92 p-4 backdrop:bg-black/70 backdrop:backdrop-blur-sm open:flex open:items-center open:justify-center sm:p-8"
+          className="fixed inset-0 z-[100] m-0 h-screen max-h-none w-screen max-w-none overflow-hidden border-0 bg-black/92 p-4 backdrop:bg-black/70 backdrop:backdrop-blur-sm open:flex open:items-center open:justify-center sm:p-8"
         >
           <button
             type="button"
@@ -95,20 +187,71 @@ export default function ProductGallery({
             </>
           )}
 
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={images[index]}
-            alt={index === 0 ? product.name : `${product.name} — ${index + 1}`}
-            className="max-h-[calc(100vh-7rem)] max-w-[calc(100vw-2rem)] select-none object-contain sm:max-w-[calc(100vw-8rem)]"
-          />
-          <p aria-live="polite" className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-xs text-white/70 sm:bottom-6">
+          {/* zoom stage */}
+          <div
+            ref={stageRef}
+            onWheel={onWheel}
+            onClick={onStageClick}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            className="flex h-full w-full items-center justify-center overflow-hidden"
+            style={{
+              cursor: zoom > 1 ? (dragging ? "grabbing" : "grab") : "zoom-in",
+              touchAction: "none",
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              ref={imgRef}
+              src={images[index]}
+              alt={index === 0 ? product.name : `${product.name} — ${index + 1}`}
+              draggable={false}
+              style={{
+                transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+                transition: dragging ? "none" : "transform 0.18s ease-out",
+              }}
+              className="max-h-[calc(100vh-7rem)] max-w-[calc(100vw-2rem)] select-none object-contain sm:max-w-[calc(100vw-8rem)]"
+            />
+          </div>
+
+          {/* zoom controls */}
+          <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-full bg-white/10 p-1 backdrop-blur-sm">
+            <button
+              type="button"
+              onClick={() => zoomTo(zoom / 1.4, 0, 0)}
+              aria-label={labels.zoomOut}
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-white/20"
+            >
+              <ZoomOut className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={resetZoom}
+              aria-label={`${Math.round(zoom * 100)}%`}
+              className="min-w-[3.25rem] cursor-pointer rounded-full px-2 py-1.5 text-center font-mono text-xs text-white transition-colors hover:bg-white/20"
+            >
+              {Math.round(zoom * 100)}%
+            </button>
+            <button
+              type="button"
+              onClick={() => zoomTo(zoom * 1.4, 0, 0)}
+              aria-label={labels.zoomIn}
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-white/20"
+            >
+              <ZoomIn className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+
+          <p aria-live="polite" className="absolute bottom-7 left-5 font-mono text-xs text-white/70">
             {labels.imageCount.replace("#current#", String(index + 1)).replace("#total#", String(images.length))}
           </p>
         </dialog>
       ) : null;
 
   const panelClass =
-    "relative flex min-h-[430px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-forest-950 via-forest to-forest-800 p-5 sm:min-h-[520px] sm:p-8";
+    "relative flex min-h-[460px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-forest-950 via-forest to-forest-800 p-5 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
   const glow = (
     <div
       className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/20 blur-[90px]"
@@ -131,7 +274,7 @@ export default function ProductGallery({
             >
               <ProductVisual
                 product={product}
-                className="relative mx-auto h-[360px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover/image:scale-[1.02] sm:h-[440px]"
+                className="relative mx-auto h-[400px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover/image:scale-[1.02] sm:h-[560px] lg:h-[620px]"
               />
               <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-black/55 px-3 py-2 text-xs font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
                 <Maximize2 className="h-4 w-4" aria-hidden="true" />
@@ -141,7 +284,7 @@ export default function ProductGallery({
           ) : (
             <ProductVisual
               product={product}
-              className="relative mx-auto h-[360px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] sm:h-[440px]"
+              className="relative mx-auto h-[400px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] sm:h-[560px] lg:h-[620px]"
             />
           )}
         </div>
