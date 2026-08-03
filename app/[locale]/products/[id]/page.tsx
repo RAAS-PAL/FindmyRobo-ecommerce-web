@@ -111,6 +111,8 @@ export default async function ProductPage({
                 openFullscreen: t("galleryOpenFullscreen"),
                 closeFullscreen: t("galleryCloseFullscreen"),
                 imageCount: t("galleryImageCount", { current: "#current#", total: "#total#" }),
+                zoomIn: t("galleryZoomIn"),
+                zoomOut: t("galleryZoomOut"),
               }}
             />
           </FadeIn>

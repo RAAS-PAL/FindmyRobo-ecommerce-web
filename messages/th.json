@@ -797,6 +797,8 @@
     "galleryOpenFullscreen": "ดูแบบเต็มหน้าจอ",
     "galleryCloseFullscreen": "ปิดรูปภาพเต็มหน้าจอ",
     "galleryImageCount": "รูปที่ {current} จาก {total}",
+    "galleryZoomIn": "ขยาย",
+    "galleryZoomOut": "ย่อ",
     "specLabels": {
       "area": "พื้นที่ครอบคลุม",
       "slope": "ความชันสูงสุด",
