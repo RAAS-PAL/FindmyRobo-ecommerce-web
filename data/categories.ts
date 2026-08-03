@@ -26,7 +26,7 @@ export interface Category {
 export const categories: Category[] = [
   {
     slug: "robot-mowers",
-    name: "Robot Mowers",
+    name: "Robotic Lawn Mowers",
     description: "Wire-free AWD mowers for every Thai garden",
     available: true,
   },

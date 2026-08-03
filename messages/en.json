@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "RoboStore TH — The Ultimate Robot Mowers for Thai Gardens",
+    "title": "RoboStore TH — The Ultimate Robotic Lawn Mowers for Thai Gardens",
     "description": "Premium robot lawn mowers for Thai gardens — wire-free, all-weather cutting that handles slopes and the rainy season. In-home demos in Bangkok with local Thai support."
   },
   "announcement": {
@@ -660,7 +660,7 @@
   },
   "categories": {
     "robot-mowers": {
-      "name": "Robot Mowers",
+      "name": "Robotic Lawn Mowers",
       "description": "Wire-free AWD mowers for every Thai garden"
     },
     "pool-cleaners": {
