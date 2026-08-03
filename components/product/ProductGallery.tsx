@@ -108,7 +108,7 @@ export default function ProductGallery({
       ) : null;
 
   const panelClass =
-    "relative flex min-h-[430px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-forest-950 via-forest to-forest-800 p-5 sm:min-h-[520px] sm:p-8";
+    "relative flex min-h-[460px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-forest-950 via-forest to-forest-800 p-5 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
   const glow = (
     <div
       className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/20 blur-[90px]"
@@ -131,7 +131,7 @@ export default function ProductGallery({
             >
               <ProductVisual
                 product={product}
-                className="relative mx-auto h-[360px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover/image:scale-[1.02] sm:h-[440px]"
+                className="relative mx-auto h-[400px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover/image:scale-[1.02] sm:h-[560px] lg:h-[620px]"
               />
               <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-black/55 px-3 py-2 text-xs font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
                 <Maximize2 className="h-4 w-4" aria-hidden="true" />
@@ -141,7 +141,7 @@ export default function ProductGallery({
           ) : (
             <ProductVisual
               product={product}
-              className="relative mx-auto h-[360px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] sm:h-[440px]"
+              className="relative mx-auto h-[400px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] sm:h-[560px] lg:h-[620px]"
             />
           )}
         </div>
