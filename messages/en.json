@@ -401,6 +401,7 @@
         "banner": "Full-width image",
         "feature": "Feature (heading + text, optional image)",
         "cardGrid": "Image card grid",
+        "showcase": "Showcase carousel (swipeable cards)",
         "imageText": "Image + text row",
         "video": "Video section"
       },
@@ -415,6 +416,8 @@
         "caption": "Caption",
         "captionOptional": "Caption (optional)",
         "cardImageUrl": "Card {number} image URL",
+        "cardTitle": "Card title",
+        "cardText": "Card text",
         "groupTitle": "Group title",
         "rowLabel": "Row {number} — label",
         "value": "Value",

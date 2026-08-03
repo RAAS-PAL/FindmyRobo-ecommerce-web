@@ -43,6 +43,13 @@ export type PageBlock =
       heading?: LocalizedText;
       cards: { image: string; caption: LocalizedText }[];
     }
+  | {
+      /** Horizontal, swipeable cards (image + title + body) — e.g. a feature
+       *  walkthrough. Scrolls left/right on the product page. */
+      type: "showcase";
+      heading?: LocalizedText;
+      cards: { image: string; title: LocalizedText; body: LocalizedText }[];
+    }
   | { type: "imageText"; image: string; body: LocalizedText; imageSide: "left" | "right" }
   | { type: "video"; heading?: LocalizedText; url: string; caption?: LocalizedText };
 
@@ -50,6 +57,7 @@ export const PAGE_BLOCK_TYPES = [
   "banner",
   "feature",
   "cardGrid",
+  "showcase",
   "imageText",
   "video",
 ] as const;
