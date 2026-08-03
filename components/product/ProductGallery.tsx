@@ -250,11 +250,12 @@ export default function ProductGallery({
         </dialog>
       ) : null;
 
+  // Light mode: soft grey studio backdrop. Dark mode: near-black gradient.
   const panelClass =
-    "relative flex min-h-[460px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-forest-950 via-forest to-forest-800 p-5 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
+    "relative flex min-h-[460px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-100 via-neutral-200 to-neutral-300 p-5 dark:from-forest-950 dark:via-forest dark:to-forest-800 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
   const glow = (
     <div
-      className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/20 blur-[90px]"
+      className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/10 blur-[90px] dark:bg-gold/25"
       aria-hidden="true"
     />
   );

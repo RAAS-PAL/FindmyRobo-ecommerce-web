@@ -18,6 +18,7 @@ import SpecTable from "@/components/product/SpecTable";
 import BoxContents from "@/components/product/BoxContents";
 import FaqSection from "@/components/product/FaqSection";
 import ProductReviews from "@/components/product/ProductReviews";
+import PaymentMethods from "@/components/product/PaymentMethods";
 import {
   formatBaht,
   SERVICE_CATEGORY,
@@ -166,6 +167,7 @@ export default async function ProductPage({
             <p className="mt-4 text-center text-[12px] text-ink-muted sm:text-left">
               {t("returnsNote")}
             </p>
+            <PaymentMethods className="mt-4 justify-center sm:justify-start" />
 
             {/* features */}
             <div className="mt-10 rounded-2xl bg-cloud p-6 sm:p-8">

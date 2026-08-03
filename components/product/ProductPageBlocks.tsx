@@ -1,5 +1,6 @@
 import FadeIn from "@/components/ui/FadeIn";
 import VideoEmbed from "@/components/product/VideoEmbed";
+import ShowcaseCarousel from "@/components/product/ShowcaseCarousel";
 import type { Locale, PageBlock } from "@/data/products";
 
 /**
@@ -86,6 +87,17 @@ export default function ProductPageBlocks({
                     ))}
                   </div>
                 </section>
+              </FadeIn>
+            );
+
+          case "showcase":
+            return (
+              <FadeIn key={i}>
+                <ShowcaseCarousel
+                  heading={block.heading ? pick(block.heading, locale) : undefined}
+                  cards={block.cards}
+                  locale={locale}
+                />
               </FadeIn>
             );
 
