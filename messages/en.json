@@ -797,6 +797,8 @@
     "galleryOpenFullscreen": "View full screen",
     "galleryCloseFullscreen": "Close full-screen image",
     "galleryImageCount": "Image {current} of {total}",
+    "galleryZoomIn": "Zoom in",
+    "galleryZoomOut": "Zoom out",
     "specLabels": {
       "area": "Coverage Area",
       "slope": "Max Slope",
