@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Bot,
   Calendar,
   ChevronDown,
   Menu,
@@ -288,8 +287,8 @@ export default function Navbar() {
                               </span>
                             </>
                           );
-                          // Coming-soon categories still drive the preview on
-                          // hover/focus, but aren't links — nothing to shop yet.
+                          // Coming-soon categories are inert labels — no hover,
+                          // focus, or click reaction, and nothing to shop yet.
                           return category.available ? (
                             <Link
                               key={category.slug}
@@ -306,18 +305,13 @@ export default function Navbar() {
                               {inner}
                             </Link>
                           ) : (
-                            <button
+                            <span
                               key={category.slug}
-                              type="button"
                               aria-disabled="true"
-                              onMouseEnter={() => setPreviewCategory(category.slug)}
-                              onFocus={() => setPreviewCategory(category.slug)}
-                              className={`block w-full cursor-default rounded-xl px-3.5 py-3 text-left text-ink-muted/70 transition-colors ${
-                                active ? "bg-cloud" : "hover:bg-cloud"
-                              }`}
+                              className="block cursor-default select-none rounded-xl px-3.5 py-3 text-left text-ink-muted/50"
                             >
                               {inner}
-                            </button>
+                            </span>
                           );
                         })}
                       </div>
@@ -345,46 +339,77 @@ export default function Navbar() {
                           )}
                         </div>
 
-                        {products.some((product) => product.category === previewCategory) ? (
-                          <div className="grid grid-cols-3 gap-3">
-                            {products
-                              .filter((product) => product.category === previewCategory)
-                              .slice(0, 3)
-                              .map((product) => (
-                                <Link
-                                  key={product.id}
-                                  href={`/products/${product.id}`}
-                                  onClick={() => setDesktopMenu(null)}
-                                  className="group/card overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3 transition hover:-translate-y-0.5 hover:border-gold-600/40 hover:shadow-md"
+                        {(() => {
+                          const available =
+                            categories.find((c) => c.slug === previewCategory)?.available ?? false;
+                          const catProducts = products
+                            .filter((product) => product.category === previewCategory)
+                            .slice(0, 3);
+
+                          // Available category → normal clickable product cards.
+                          if (available) {
+                            return (
+                              <div className="grid grid-cols-3 gap-3">
+                                {catProducts.map((product) => (
+                                  <Link
+                                    key={product.id}
+                                    href={`/products/${product.id}`}
+                                    onClick={() => setDesktopMenu(null)}
+                                    className="group/card overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3 transition hover:-translate-y-0.5 hover:border-gold-600/40 hover:shadow-md"
+                                  >
+                                    <div className="flex h-28 items-center justify-center">
+                                      <ProductVisual product={product} preferHome className="h-full w-full" />
+                                    </div>
+                                    <p className="mt-2 line-clamp-2 text-xs font-bold leading-snug text-content">
+                                      {product.name}
+                                    </p>
+                                    <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-ink-muted">
+                                      {product.tagline[locale]}
+                                    </p>
+                                  </Link>
+                                ))}
+                              </div>
+                            );
+                          }
+
+                          // Coming-soon category → a blurred, unclickable teaser (real
+                          // cards where they exist, skeletons filling the rest of the
+                          // row). The panel header already carries the "Soon" badge.
+                          const items = [...catProducts, null, null, null].slice(0, 3);
+                          return (
+                            <div
+                              aria-hidden="true"
+                              className="pointer-events-none grid select-none grid-cols-3 gap-3 opacity-70 blur-[3px]"
+                            >
+                              {items.map((product, k) => (
+                                <div
+                                  key={product ? product.id : `soon-${k}`}
+                                  className="overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3"
                                 >
-                                  <div className="flex h-28 items-center justify-center">
-                                    <ProductVisual product={product} preferHome className="h-full w-full" />
-                                  </div>
-                                  <p className="mt-2 line-clamp-2 text-xs font-bold leading-snug text-content">
-                                    {product.name}
-                                  </p>
-                                  <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-ink-muted">
-                                    {product.tagline[locale]}
-                                  </p>
-                                </Link>
+                                  {product ? (
+                                    <>
+                                      <div className="flex h-28 items-center justify-center">
+                                        <ProductVisual product={product} preferHome className="h-full w-full" />
+                                      </div>
+                                      <p className="mt-2 line-clamp-2 text-xs font-bold leading-snug text-content">
+                                        {product.name}
+                                      </p>
+                                      <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-ink-muted">
+                                        {product.tagline[locale]}
+                                      </p>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <div className="h-28 rounded-lg bg-forest-100/70" />
+                                      <div className="mt-2 h-3 w-3/4 rounded bg-forest-100/70" />
+                                      <div className="mt-1.5 h-2.5 w-1/2 rounded bg-forest-100/60" />
+                                    </>
+                                  )}
+                                </div>
                               ))}
-                          </div>
-                        ) : (
-                          <div className="flex h-[230px] flex-col items-center justify-center rounded-xl border border-dashed border-forest-100 bg-cloud/50 px-8 text-center">
-                            <Bot className="h-16 w-16 text-gold-600/70" aria-hidden="true" />
-                            <p className="mt-4 max-w-xs text-sm font-semibold text-content">
-                              {tc(`${previewCategory}.name`)}
-                            </p>
-                            <p className="mt-1 max-w-xs text-xs leading-relaxed text-ink-muted">
-                              {tc(`${previewCategory}.description`)}
-                            </p>
-                            {!categories.find((c) => c.slug === previewCategory)?.available && (
-                              <span className="mt-3">
-                                <SoonBadge label={t("soon")} />
-                              </span>
-                            )}
-                          </div>
-                        )}
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
                   ) : (

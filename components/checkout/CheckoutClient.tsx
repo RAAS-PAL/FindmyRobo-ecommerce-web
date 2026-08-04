@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   ArrowUpRight,
-  Check,
   CircleCheck,
   CreditCard,
   Info,
@@ -31,15 +30,15 @@ import {
   type ShippingInfo,
 } from "@/lib/checkout";
 
-/** One upsell suggestion: a service package that can be attached to a robot. */
-interface UpsellOffer {
-  /** Stable list key for rendering. */
-  key: string;
-  /** The cart line key this maps to (`${serviceId}__for__${robotId}`) — used to
-   *  tell whether it's currently in the cart and to remove it when toggled off. */
-  cartKey: string;
-  service: Product;
+/** A robot in the cart plus every installation tier the shopper can pick for it. */
+interface InstallGroup {
+  /** The robot's cart-line id — used to build each tier's `${tierId}__for__${id}` key. */
+  robotId: string;
   robot: Product;
+  /** All installation tiers, smallest coverage area first. */
+  tiers: Product[];
+  /** Id of the smallest tier that covers the robot's area — badged "Recommended". */
+  recommendedId: string;
 }
 
 /** "5,000 m²" → 5000; NaN when the spec is missing/unparsable. */
@@ -47,38 +46,34 @@ const parseArea = (spec?: string) =>
   spec ? Number(spec.replace(/[^0-9]/g, "")) : NaN;
 
 /**
- * PRD req 11 + #32: recommend the smallest installation tier that covers each
- * robot's area. Demo packages are deliberately NOT offered here — the shopper
- * has already added a robot, and a demo's purpose is to win an undecided buyer
- * before purchase, so it belongs on its own product page, not the checkout
- * upsell. Returns every applicable candidate (NOT filtered by what's already in
- * the cart); the checkout derives each one's checked state from the cart so
- * they render as live toggles above the form.
+ * PRD req 11 + #32: for each robot in the cart, offer professional installation
+ * and let the shopper choose the coverage area themselves — every install tier
+ * is listed, with the smallest one that covers the robot's area flagged as the
+ * recommendation (rather than silently forcing that tier as before). Demo
+ * packages are deliberately NOT offered here — a demo's purpose is to win an
+ * undecided buyer before purchase, so it belongs on its own product page.
  */
-function buildOffers(items: CartLine[], catalog: Product[]): UpsellOffer[] {
+function buildInstallGroups(items: CartLine[], catalog: Product[]): InstallGroup[] {
   const robots = items.filter((l) => l.product.category !== SERVICE_CATEGORY);
   if (robots.length === 0) return [];
 
   const tiers = catalog
     .filter((p) => p.category === SERVICE_CATEGORY && p.variant === "install")
     .sort((a, b) => parseArea(a.specs.area) - parseArea(b.specs.area));
+  if (tiers.length === 0) return [];
 
-  const offers: UpsellOffer[] = [];
-  for (const line of robots) {
+  return robots.slice(0, 4).map((line) => {
     const area = parseArea(line.product.specs.area);
-    const tier =
+    const recommended =
       tiers.find((s) => Number.isNaN(area) || parseArea(s.specs.area) >= area) ??
       tiers[tiers.length - 1];
-    if (tier) {
-      offers.push({
-        key: `${tier.id}__${line.id}`,
-        cartKey: `${tier.id}__for__${line.id}`,
-        service: tier,
-        robot: line.product,
-      });
-    }
-  }
-  return offers.slice(0, 4);
+    return {
+      robotId: line.id,
+      robot: line.product,
+      tiers,
+      recommendedId: recommended.id,
+    };
+  });
 }
 
 type FieldName = ShippingField;
@@ -172,13 +167,25 @@ export default function CheckoutClient() {
   // which payment method the customer picked on the post-order payment screen
   const [payMethod, setPayMethod] = useState<"card" | "promptpay">("card");
 
-  // Recommended service add-ons for the robots in the cart, shown as live
-  // toggles above the form (PRD req 11). Toggling adds/removes the service
-  // straight from the cart, so the order summary reflects the choice at once.
-  const offers = useMemo(() => buildOffers(items, products), [items, products]);
-  const toggleOffer = (offer: UpsellOffer, checked: boolean) => {
-    if (checked) add(offer.service.id, 1, offer.robot.id);
-    else remove(offer.cartKey);
+  // Installation offered per robot in the cart, as a live choice of coverage
+  // area (PRD req 11). Picking a tier adds it to the cart straight away, so the
+  // order summary reflects the choice at once.
+  const installGroups = useMemo(
+    () => buildInstallGroups(items, products),
+    [items, products]
+  );
+  // The install tier currently chosen for a robot, if any (one per robot).
+  const selectedTierId = (group: InstallGroup) =>
+    items.find(
+      (l) => l.forId === group.robotId && l.product.variant === "install"
+    )?.product.id ?? null;
+  // Radio behaviour: picking a tier replaces any other install tier for that
+  // robot; picking "No installation" (tier = null) just clears it.
+  const chooseInstall = (group: InstallGroup, tier: Product | null) => {
+    const current = selectedTierId(group);
+    if (current === (tier?.id ?? null)) return;
+    if (current) remove(`${current}__for__${group.robotId}`);
+    if (tier) add(tier.id, 1, group.robotId);
   };
 
   const setField = (name: FieldName) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -410,7 +417,7 @@ export default function CheckoutClient() {
           </p>
         )}
 
-        {offers.length > 0 && (
+        {installGroups.length > 0 && (
           <FadeIn>
             <section aria-labelledby="addons-heading">
               <h2
@@ -425,56 +432,93 @@ export default function CheckoutClient() {
               <p className="mt-2 text-sm leading-relaxed text-ink-muted">
                 {t("upsell.subtext")}
               </p>
-              <div className="mt-5 space-y-2.5">
-                {offers.map((offer, i) => {
-                  const checked = items.some((l) => l.key === offer.cartKey);
+
+              <div className="mt-5 space-y-4">
+                {installGroups.map((group) => {
+                  const selected = selectedTierId(group);
+                  // tier options, then an explicit opt-out; `null` id = "none"
+                  const options: (Product | null)[] = [...group.tiers, null];
                   return (
-                    <label
-                      key={offer.key}
-                      className={`flex cursor-pointer items-center gap-3.5 rounded-2xl border p-3.5 transition-colors ${
-                        checked
-                          ? "border-gold bg-gold/10"
-                          : "border-forest-100 hover:border-gold/50"
-                      }`}
+                    <div
+                      key={group.robotId}
+                      className="rounded-2xl border border-forest-100 p-4"
                     >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={(e) => toggleOffer(offer, e.target.checked)}
-                        className="sr-only"
-                      />
-                      <span
-                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
-                          checked
-                            ? "border-gold bg-gold text-forest-950"
-                            : "border-forest-200"
-                        }`}
-                        aria-hidden="true"
+                      {/* which robot this installation is for */}
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
+                          <ProductVisual product={group.robot} className="h-full w-auto" />
+                        </span>
+                        <div className="min-w-0">
+                          <p className="truncate text-[13.5px] font-bold text-content">
+                            {t("upsell.installFor", { name: group.robot.name })}
+                          </p>
+                          <p className="text-[12px] text-ink-muted">
+                            {t("upsell.chooseArea")}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* coverage-area choices — one installation per robot */}
+                      <div
+                        role="radiogroup"
+                        aria-label={t("upsell.installFor", { name: group.robot.name })}
+                        className="mt-3 space-y-2"
                       >
-                        {checked && <Check className="h-3.5 w-3.5" />}
-                      </span>
-                      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
-                        <ProductVisual product={offer.service} className="h-full w-auto" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="flex flex-wrap items-center gap-2">
-                          <span className="text-[13.5px] font-bold leading-snug text-content">
-                            {offer.service.name}
-                          </span>
-                          {i === 0 && (
-                            <span className="rounded-full bg-gold/20 px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-wider text-gold-600">
-                              {t("upsell.recommendedBadge")}
-                            </span>
-                          )}
-                        </span>
-                        <span className="mt-0.5 block text-[12px] text-ink-muted">
-                          {t("upsell.installFor", { name: offer.robot.name })}
-                        </span>
-                      </span>
-                      <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
-                        {formatBaht(offer.service.price)}
-                      </span>
-                    </label>
+                        {options.map((tier) => {
+                          const checked = selected === (tier?.id ?? null);
+                          const recommended = !!tier && tier.id === group.recommendedId;
+                          return (
+                            <label
+                              key={tier?.id ?? "none"}
+                              className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-colors ${
+                                checked
+                                  ? "border-gold bg-gold/10"
+                                  : "border-forest-100 hover:border-gold/50"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={`install-${group.robotId}`}
+                                checked={checked}
+                                onChange={() => chooseInstall(group, tier)}
+                                className="sr-only"
+                              />
+                              <span
+                                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                                  checked ? "border-gold" : "border-forest-200"
+                                }`}
+                                aria-hidden="true"
+                              >
+                                {checked && (
+                                  <span className="h-2.5 w-2.5 rounded-full bg-gold" />
+                                )}
+                              </span>
+                              {tier ? (
+                                <>
+                                  <span className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+                                    <span className="text-[13.5px] font-semibold text-content">
+                                      {tier.specs.area}
+                                    </span>
+                                    {recommended && (
+                                      <span className="rounded-full bg-gold/20 px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-wider text-gold-600">
+                                        {t("upsell.recommendedBadge")}
+                                      </span>
+                                    )}
+                                  </span>
+                                  <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
+                                    {formatBaht(tier.price)}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="flex-1 text-[13.5px] font-medium text-ink-muted">
+                                  {t("upsell.noInstall")}
+                                </span>
+                              )}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
                   );
                 })}
               </div>
