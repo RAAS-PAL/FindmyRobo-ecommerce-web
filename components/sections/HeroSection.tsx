@@ -73,7 +73,10 @@ function HeroVideoPlaylist({ urls }: { urls: string[] }) {
           // reads light — a tone lift only. Shown sharp (no blur, per request).
           // In dark mode it's dimmed a little (dark:brightness overrides the
           // light-mode 110%) so the bright hero doesn't glare against dark UI.
-          className={`absolute inset-0 h-full w-full object-cover brightness-110 saturate-[1.05] transition-opacity duration-700 dark:brightness-90 ${
+          // origin-top scale-[1.12] zooms the frame a touch and anchors it to the
+          // top, so the empty grass at the bottom overflows and is clipped by the
+          // section's overflow-hidden — cropping only the lower part of the clip.
+          className={`absolute inset-0 h-full w-full origin-top scale-[1.12] object-cover brightness-110 saturate-[1.05] transition-opacity duration-700 dark:brightness-90 ${
             i === index ? "opacity-100" : "opacity-0"
           }`}
           src={src}
@@ -253,7 +256,7 @@ export default function HeroSection() {
         >
           <span
             className={`font-mono text-[12.5px] font-bold uppercase tracking-[0.35em] ${
-              video ? "hero-legible text-gold" : "text-gold-600"
+              video ? "hero-legible text-white" : "text-gold-600"
             }`}
           >
             {t("categoriesLabel")}
