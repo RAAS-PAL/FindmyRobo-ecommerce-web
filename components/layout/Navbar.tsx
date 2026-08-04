@@ -287,8 +287,8 @@ export default function Navbar() {
                               </span>
                             </>
                           );
-                          // Coming-soon categories still drive the preview on
-                          // hover/focus, but aren't links — nothing to shop yet.
+                          // Coming-soon categories are inert labels — no hover,
+                          // focus, or click reaction, and nothing to shop yet.
                           return category.available ? (
                             <Link
                               key={category.slug}
@@ -305,18 +305,13 @@ export default function Navbar() {
                               {inner}
                             </Link>
                           ) : (
-                            <button
+                            <span
                               key={category.slug}
-                              type="button"
                               aria-disabled="true"
-                              onMouseEnter={() => setPreviewCategory(category.slug)}
-                              onFocus={() => setPreviewCategory(category.slug)}
-                              className={`block w-full cursor-default rounded-xl px-3.5 py-3 text-left text-ink-muted/70 transition-colors ${
-                                active ? "bg-cloud" : "hover:bg-cloud"
-                              }`}
+                              className="block cursor-default select-none rounded-xl px-3.5 py-3 text-left text-ink-muted/50"
                             >
                               {inner}
-                            </button>
+                            </span>
                           );
                         })}
                       </div>
