@@ -649,6 +649,8 @@
       "subtext": "Add professional installation before you check out.",
       "recommendedBadge": "Recommended",
       "installFor": "Installation for {name}",
+      "chooseArea": "Choose the coverage area for your property",
+      "noInstall": "No installation",
       "demoFor": "Demo for {name}",
       "addAndContinue": "Add & continue",
       "skip": "No thanks, continue to payment"
