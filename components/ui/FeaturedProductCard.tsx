@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -41,12 +41,30 @@ export default function FeaturedProductCard({
   const cardImage = product.homeImage ?? product.imageUrl;
   const hoverVideo = product.hoverVideo ?? DEMO_HOVER_VIDEO[product.variant];
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [active, setActive] = useState(false);
+  const touchedRef = useRef(false);
+  const wasActiveRef = useRef(false);
   const playVideo = () => videoRef.current?.play().catch(() => undefined);
   const stopVideo = () => {
+    setActive(false);
     const el = videoRef.current;
     if (!el) return;
     el.pause();
     el.currentTime = 0;
+  };
+  // Touch devices have no hover: the first tap plays the clip in place, and a
+  // second tap opens the product — so a tap isn't wasted on the preview.
+  const onTouchStart = () => {
+    touchedRef.current = true;
+    wasActiveRef.current = active;
+    if (!active) {
+      setActive(true);
+      playVideo();
+    }
+  };
+  const onLinkClick = (e: React.MouseEvent) => {
+    if (touchedRef.current && !wasActiveRef.current) e.preventDefault();
+    touchedRef.current = false;
   };
 
   return (
@@ -59,9 +77,10 @@ export default function FeaturedProductCard({
       onMouseLeave={stopVideo}
       onFocus={playVideo}
       onBlur={stopVideo}
+      onTouchStart={onTouchStart}
       className="group relative aspect-[4/5] w-[340px] shrink-0 snap-start overflow-hidden rounded-3xl border border-forest-100 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.4)] transition-shadow duration-300 hover:shadow-[0_28px_60px_-20px_rgba(0,0,0,0.5)] sm:w-[400px]"
     >
-      <Link href={`/products/${product.id}`} className="block h-full w-full">
+      <Link href={`/products/${product.id}`} onClick={onLinkClick} className="block h-full w-full">
         {/* full-bleed background: home photo (or product render), else the
             variant illustration */}
         {cardImage ? (
@@ -88,7 +107,9 @@ export default function FeaturedProductCard({
             playsInline
             preload="none"
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100"
+            className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100 ${
+              active ? "opacity-100" : "opacity-0"
+            }`}
           />
         )}
 

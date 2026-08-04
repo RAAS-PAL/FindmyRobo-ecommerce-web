@@ -76,7 +76,7 @@ function HeroVideoPlaylist({ urls }: { urls: string[] }) {
           // origin-top scale-[1.12] zooms the frame a touch and anchors it to the
           // top, so the empty grass at the bottom overflows and is clipped by the
           // section's overflow-hidden — cropping only the lower part of the clip.
-          className={`absolute inset-0 h-full w-full origin-top scale-[1.12] object-cover brightness-110 saturate-[1.05] transition-opacity duration-700 dark:brightness-90 ${
+          className={`absolute inset-0 h-full w-full origin-top scale-[1.2] object-cover brightness-110 saturate-[1.05] transition-opacity duration-700 dark:brightness-90 ${
             i === index ? "opacity-100" : "opacity-0"
           }`}
           src={src}
