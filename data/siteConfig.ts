@@ -57,8 +57,8 @@ export const siteConfig = {
     // quality-per-byte) + ac_none (drop the audio track — the hero is muted).
     // So they stay high quality, load fast, and don't use Vercel bandwidth.
     // Swap these URLs (keeping the q_auto/ac_none prefix) to change the hero.
-    "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/ac_none/v1785654768/0802_haja8d.mp4",
-    "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/ac_none/v1785655421/0802_2_siatdr.mp4",
+    "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/ac_none/v1785773065/0803_1_bkaoz9.mp4",
+    "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/ac_none/v1785770343/0803_rgjdz9.mp4",
   ] as string[],
   heroVideoPoster: "/videos/hero-poster.jpg" as string | null,
 
@@ -105,29 +105,36 @@ export const siteConfig = {
    */
   videoGallery: [
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491333/0731_3_ch5yoi.mp4", // your Short link
-      poster: "/posters/youtubelubamini21000.jpg",           // optional custom image
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785810911/0804_le3wbx.mp4", // your Short link
+      poster: "/posters/lubaback1.png",           // optional custom image
       title: "Enjoy Every Moment",
       author: "",                         // optional
-      tag: "LUBA mini 2 AWD 1000",                                  // optional
+      tag: "LUBA 3 AWD",                                  // optional
     },
     {
       url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491668/0731_5_yzbrty.mp4", // your Short link
       poster: "/posters/onebangkok1.webp",           // optional custom image
-      title: "One Bangkok",
+      title: "Obstacle Avoidance Footage",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1500",                                  // optional
+    },
+    {
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491668/0731_5_yzbrty.mp4", // your Short link
+      poster: "/posters/luba32.png",           // optional custom image
+      title: "Obstacle Avoidance Footage",
+      author: "",                         // optional
+      tag: "LUBA 3 AWD",                                  // optional
     },
     {
       url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491948/0731_6_odc3mj.mp4", // your Short link
-      poster: "/posters/onebangkok2.webp",           // optional custom image
+      poster: "/posters/lubamini21500.png",           // optional custom image
       title: "One Bangkok",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1500",                                  // optional
     },
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785484132/0731_1_vm2dm2.mp4", // your Short link
-      poster: "/posters/onebangkok2.webp",           // optional custom image
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785811377/20260714_123412_zn9qe3.mp4", // your Short link
+      poster: "/posters/lubamini21500onebangkok.png",           // optional custom image
       title: "One Bangkok",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1500",                                  // optional

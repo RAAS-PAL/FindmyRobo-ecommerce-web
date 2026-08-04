@@ -40,18 +40,18 @@ export default function ShowcaseCarousel({
         {cards.map((card, i) => (
           <article
             key={i}
-            className="flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-forest-900 to-forest-950 sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+            className="flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#34363d] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={card.image}
               alt={pick(card.title)}
               loading="lazy"
-              className="aspect-square w-full bg-black object-cover"
+              className="aspect-[4/5] w-full bg-[#34363d] object-contain p-3 sm:p-4"
             />
             <div className="p-5 sm:p-6">
               <h3 className="font-display text-lg font-bold text-white">{pick(card.title)}</h3>
-              <p className="mt-2.5 whitespace-pre-line text-[13.5px] leading-relaxed text-white/65">
+              <p className="mt-2.5 whitespace-pre-line text-[13.5px] leading-relaxed text-white/70">
                 {pick(card.body)}
               </p>
             </div>
@@ -59,7 +59,8 @@ export default function ShowcaseCarousel({
         ))}
       </div>
 
-      {cards.length > 1 && (
+      {/* Arrows only when the cards overflow the 3-across desktop row. */}
+      {cards.length > 3 && (
         <div className="mt-6 flex justify-center gap-2">
           <button
             type="button"
