@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { Bot } from "lucide-react";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import {
   FacebookIcon,
@@ -31,9 +31,13 @@ export default function Footer() {
           {/* brand */}
           <div>
             <Link href="/" className="flex items-center gap-2.5" aria-label="RoboStore TH home">
-              <span className="flex h-10 w-10 items-center justify-center rounded-md bg-gold text-forest-950">
-                <Bot className="h-5.5 w-5.5" aria-hidden="true" />
-              </span>
+              <Image
+                src="/logo-r-gold.png"
+                alt="RoboStore TH"
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-full object-cover"
+              />
               <span className="font-display text-xl font-extrabold tracking-tight">
                 RoboStore<span className="text-gold"> TH</span>
               </span>
