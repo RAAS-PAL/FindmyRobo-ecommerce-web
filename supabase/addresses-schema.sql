@@ -1,4 +1,4 @@
--- RoboStore TH — saved customer delivery addresses.
+-- RoboMart TH — saved customer delivery addresses.
 -- Run once in Supabase Dashboard -> SQL Editor. Safe to re-run.
 
 create table if not exists public.addresses (
