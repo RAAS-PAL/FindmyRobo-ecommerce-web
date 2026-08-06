@@ -25,13 +25,13 @@ export default async function AdminProtectedLayout({
             <Link href="/admin" className="flex items-center gap-2.5">
               <Image
                 src="/logo-r-gold.png"
-                alt="RoboStore TH"
+                alt="RoboMart TH"
                 width={32}
                 height={32}
                 className="h-8 w-8 rounded-full object-cover"
               />
               <span className="hidden font-display text-base font-extrabold tracking-tight text-white sm:inline">
-                RoboStore TH <span className="text-gold">{t("adminLabel")}</span>
+                RoboMart TH <span className="text-gold">{t("adminLabel")}</span>
               </span>
             </Link>
             <AdminTabs />
