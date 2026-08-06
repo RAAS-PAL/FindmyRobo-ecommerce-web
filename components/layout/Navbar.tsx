@@ -193,17 +193,17 @@ export default function Navbar() {
         {/* left group: logo + primary links, kept together on the left edge */}
         <div className="flex items-center gap-6 xl:gap-9">
         {/* logo */}
-        <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="RoboStore TH home">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="RoboMart TH home">
           <Image
             src="/logo-r-gold.png"
-            alt="RoboStore TH"
+            alt="RoboMart TH"
             width={36}
             height={36}
             priority
             className="h-9 w-9 rounded-full object-cover"
           />
           <span className="font-display text-lg font-extrabold tracking-tight text-content">
-            RoboStore<span className="text-gold-600"> TH</span>
+            RoboMart<span className="text-gold-600"> TH</span>
           </span>
         </Link>
 
@@ -515,13 +515,13 @@ export default function Navbar() {
                 <span className="flex items-center gap-2.5">
                   <Image
                     src="/logo-r-gold.png"
-                    alt="RoboStore TH"
+                    alt="RoboMart TH"
                     width={32}
                     height={32}
                     className="h-8 w-8 rounded-full object-cover"
                   />
                   <span className="font-display text-base font-extrabold text-content">
-                    RoboStore<span className="text-gold-600"> TH</span>
+                    RoboMart<span className="text-gold-600"> TH</span>
                   </span>
                 </span>
                 <button

@@ -20,13 +20,13 @@ export default async function AdminLoginPage() {
         <div className="mb-8 flex items-center justify-center gap-2.5">
           <Image
             src="/logo-r-gold.png"
-            alt="RoboStore TH"
+            alt="RoboMart TH"
             width={40}
             height={40}
             className="h-10 w-10 rounded-full object-cover"
           />
           <span className="font-display text-lg font-extrabold tracking-tight text-content">
-            RoboStore TH <span className="text-gold-600">{t("adminLabel")}</span>
+            RoboMart TH <span className="text-gold-600">{t("adminLabel")}</span>
           </span>
         </div>
         <div className="rounded-3xl border border-forest-100 bg-surface p-8 shadow-[0_16px_40px_-20px_rgba(10,46,31,0.25)]">

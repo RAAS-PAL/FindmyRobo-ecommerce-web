@@ -1,4 +1,4 @@
--- RoboStore TH — auth schema
+-- RoboMart TH — auth schema
 -- Run this once in the Supabase dashboard: SQL Editor → New query → paste → Run.
 -- Safe to re-run (uses IF NOT EXISTS / OR REPLACE where possible).
 

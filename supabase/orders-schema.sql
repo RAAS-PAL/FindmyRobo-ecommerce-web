@@ -1,4 +1,4 @@
--- RoboStore TH — orders schema (first-time setup)
+-- RoboMart TH — orders schema (first-time setup)
 -- Run this once in the Supabase dashboard: SQL Editor → New query → paste → Run.
 -- Safe to re-run (IF NOT EXISTS / OR REPLACE).
 

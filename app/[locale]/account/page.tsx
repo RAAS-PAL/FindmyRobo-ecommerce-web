@@ -22,7 +22,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "auth.account" });
-  return { title: `${t("title")} — RoboStore TH` };
+  return { title: `${t("title")} — RoboMart TH` };
 }
 
 export default async function AccountPage({

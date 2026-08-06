@@ -5,7 +5,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* RoboStore TH palette — fresh garden: light surfaces, forest green + yellow
+  /* RoboMart TH palette — fresh garden: light surfaces, forest green + yellow
      (CEO rebrand 2026-07-08: lighter look, green + yellow, premium)
 
      DARK MODE: the palette below is the LIGHT theme. The .dark block further
