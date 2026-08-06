@@ -90,7 +90,7 @@
   components/ui/BrandIcons.tsx)
 - `npm run build` passes; verified visually at 1440px and
   375px via headless Edge screenshots
-- Placeholder brand "RoboStore TH" used everywhere —
+- Placeholder brand "RoboMart TH" used everywhere —
   search-replace when real brand name is decided
 
 ## Current Status
@@ -104,7 +104,7 @@
 2. Candidate next steps (ask user which):
    - Product detail page (/products/[id])
    - Real product images to replace SVG illustrations
-   - Brand name finalization → replace "RoboStore TH"
+   - Brand name finalization → replace "RoboMart TH"
    - Blog/news listing page
    - Contact / Book-a-demo form page
 
@@ -115,7 +115,7 @@
   until real pages exist
 
 ## Important Decisions
-- Brand name: [PLACEHOLDER "RoboStore TH"] — not decided yet
+- Brand name: [PLACEHOLDER "RoboMart TH"] — not decided yet
 - Omise payment: POSTPONED — no payment code until Phase 2
 - Reference site: robomate.com.au (PDF in docs/)
 - SCOPE: general robotics store, NOT mower-only. Launch categories

@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       sourceId: source.id,
       orderId: order.id,
       returnUri: paymentReturnUrl(request, order.id, locale),
-      description: `RoboStore TH ${order.id}`,
+      description: `RoboMart TH ${order.id}`,
     });
 
     const qrImage = scannableQrUri(charge);

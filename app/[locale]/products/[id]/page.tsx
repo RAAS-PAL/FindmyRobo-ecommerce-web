@@ -42,7 +42,7 @@ export async function generateMetadata({
   const { id } = await params;
   const product = await getProductById(id);
   if (!product || product.visible === false) return {};
-  return { title: `${product.name} — RoboStore TH` };
+  return { title: `${product.name} — RoboMart TH` };
 }
 
 export default async function ProductPage({

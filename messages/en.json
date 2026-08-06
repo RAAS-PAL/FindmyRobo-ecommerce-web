@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "RoboStore TH — The Ultimate Robotic Lawn Mowers for Thai Gardens",
+    "title": "RoboMart TH — The Ultimate Robotic Lawn Mowers for Thai Gardens",
     "description": "Premium robot lawn mowers for Thai gardens — wire-free, all-weather cutting that handles slopes and the rainy season. In-home demos in Bangkok with local Thai support."
   },
   "announcement": {
@@ -9,7 +9,7 @@
   },
   "nav": {
     "shop": "Products",
-    "tv": "RoboStore TV",
+    "tv": "RoboMart TV",
     "about": "About",
     "aboutStory": "Our Story",
     "aboutWhyUs": "Why Us",
@@ -38,18 +38,18 @@
   "auth": {
     "login": {
       "title": "Welcome back",
-      "sub": "Sign in to your RoboStore account",
+      "sub": "Sign in to your RoboMart account",
       "email": "Email",
       "password": "Password",
       "submit": "Sign In",
-      "noAccount": "New to RoboStore?",
+      "noAccount": "New to RoboMart?",
       "signupLink": "Create an account",
       "error": "Wrong email or password.",
       "unconfirmed": "Please confirm your email first — check your inbox."
     },
     "signup": {
       "title": "Create your account",
-      "sub": "Join RoboStore TH to track orders and check out faster",
+      "sub": "Join RoboMart TH to track orders and check out faster",
       "fullName": "Full name",
       "email": "Email",
       "password": "Password",
@@ -137,7 +137,7 @@
   },
   "admin": {
     "meta": {
-      "title": "Admin — RoboStore TH"
+      "title": "Admin — RoboMart TH"
     },
     "navigation": {
       "adminLabel": "Admin",
@@ -521,7 +521,7 @@
       "compareNow": "Compare now ({count})"
     },
     "page": {
-      "metaTitle": "Compare Robots — RoboStore TH",
+      "metaTitle": "Compare Robots — RoboMart TH",
       "eyebrow": "Side by Side",
       "heading": "Robot Comparison",
       "sub": "Specs, features, and prices side by side — so you can pick the right robot with confidence.",
@@ -554,7 +554,7 @@
     "demoRobotHint": "Pick the robot you'd like to see working on your own lawn — no purchase needed."
   },
   "contactSales": {
-    "metaTitle": "Contact Sales — RoboStore TH",
+    "metaTitle": "Contact Sales — RoboMart TH",
     "eyebrow": "Sales Team",
     "heading": "Talk to Our Sales Team",
     "sub": "Questions about which robot fits your garden, pool, or business? Our specialists reply fast — call, email, or chat with us on LINE.",
@@ -611,7 +611,7 @@
     }
   },
   "checkout": {
-    "metaTitle": "Checkout — RoboStore TH",
+    "metaTitle": "Checkout — RoboMart TH",
     "eyebrow": "Checkout",
     "heading": "Almost There",
     "sub": "Tell us where to deliver your robot and our team will take care of the rest",
@@ -735,7 +735,7 @@
     "comingSoonTitle": "Coming soon to Thailand",
     "comingSoonBody": "We are working with our partners to bring this category to you. Book a demo to hear about it first.",
     "backToShop": "Browse all robots",
-    "metaTitle": "Shop Robots — RoboStore TH"
+    "metaTitle": "Shop Robots — RoboMart TH"
   },
   "search": {
     "eyebrow": "Catalog Search",
@@ -747,8 +747,8 @@
     "noResultsTitle": "No matching products",
     "noResultsBody": "We couldn’t find anything matching “{query}”. Try a model name, robot type, or a broader term.",
     "browseAll": "Browse all products",
-    "metaTitle": "Search Products — RoboStore TH",
-    "metaTitleQuery": "Search: {query} — RoboStore TH"
+    "metaTitle": "Search Products — RoboMart TH",
+    "metaTitleQuery": "Search: {query} — RoboMart TH"
   },
   "reviews": {
     "heading": "Customer Reviews",
@@ -841,7 +841,7 @@
   },
   "news": {
     "eyebrow": "Latest Updates",
-    "heading": "RoboStore TH News",
+    "heading": "RoboMart TH News",
     "sub": "Check out what is going on in our world",
     "viewMore": "View more",
     "items": [
@@ -868,12 +868,12 @@
     ]
   },
   "youtube": {
-    "heading": "Subscribe to RoboStore TV",
+    "heading": "Subscribe to RoboMart TV",
     "sub": "The best place to learn about robots and watch in-depth reviews of the latest products.",
     "button": "Subscribe on YouTube"
   },
   "footer": {
-    "copyright": "© 2026 RoboStore TH Thailand. All rights reserved.",
+    "copyright": "© 2026 RoboMart TH Thailand. All rights reserved.",
     "policiesTitle": "Policies",
     "policies": [
       "Refunds and Returns",
