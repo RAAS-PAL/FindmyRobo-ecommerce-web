@@ -24,7 +24,7 @@ export async function generateMetadata({
   const { locale, category } = await params;
   if (!categories.some((c) => c.slug === category)) return {};
   const tc = await getTranslations({ locale, namespace: "categories" });
-  return { title: `${tc(`${category}.name`)} — RoboMart TH` };
+  return { title: `${tc(`${category}.name`)} — FindMyRobo` };
 }
 
 export default async function CategoryPage({

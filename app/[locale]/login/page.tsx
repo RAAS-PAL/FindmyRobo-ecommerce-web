@@ -12,7 +12,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "auth.login" });
-  return { title: `${t("title")} — RoboMart TH` };
+  return { title: `${t("title")} — FindMyRobo` };
 }
 
 export default async function LoginPage({
