@@ -193,18 +193,23 @@ export default function Navbar() {
         {/* left group: logo + primary links, kept together on the left edge */}
         <div className="flex items-center gap-6 xl:gap-9">
         {/* logo */}
-        <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="FindMyRobo home">
+        <Link href="/" className="flex shrink-0 items-center" aria-label="FindMyRobo home">
           <Image
-            src="/logo-r-gold.png"
+            src="/main-logo-light.png"
             alt="FindMyRobo"
-            width={36}
-            height={36}
+            width={1200}
+            height={320}
             priority
-            className="h-9 w-9 rounded-full object-cover"
+            className="h-9 w-auto dark:hidden"
           />
-          <span className="font-display text-lg font-extrabold tracking-tight text-content">
-            FindMy<span className="text-gold-600">Robo</span>
-          </span>
+          <Image
+            src="/main-logo-dark.png"
+            alt="FindMyRobo"
+            width={1200}
+            height={320}
+            priority
+            className="hidden h-9 w-auto dark:block"
+          />
         </Link>
 
         {/* desktop links */}
@@ -512,17 +517,21 @@ export default function Navbar() {
               aria-label="Menu"
             >
               <div className="flex items-center justify-between border-b border-forest-100 px-5 py-4">
-                <span className="flex items-center gap-2.5">
+                <span className="flex items-center">
                   <Image
-                    src="/logo-r-gold.png"
+                    src="/main-logo-light.png"
                     alt="FindMyRobo"
-                    width={32}
-                    height={32}
-                    className="h-8 w-8 rounded-full object-cover"
+                    width={1200}
+                    height={320}
+                    className="h-8 w-auto dark:hidden"
                   />
-                  <span className="font-display text-base font-extrabold text-content">
-                    FindMy<span className="text-gold-600">Robo</span>
-                  </span>
+                  <Image
+                    src="/main-logo-dark.png"
+                    alt="FindMyRobo"
+                    width={1200}
+                    height={320}
+                    className="hidden h-8 w-auto dark:block"
+                  />
                 </span>
                 <button
                   type="button"

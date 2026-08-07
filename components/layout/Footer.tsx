@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import {
   FacebookIcon,
@@ -8,6 +9,7 @@ import {
   TikTokIcon,
   YouTubeIcon,
 } from "@/components/ui/BrandIcons";
+import { salesMapUrl, siteConfig } from "@/data/siteConfig";
 
 const payments = ["PromptPay", "Visa", "Mastercard", "Bank Transfer"];
 
@@ -23,24 +25,22 @@ export default function Footer() {
   const t = useTranslations("footer");
   const policies = t.raw("policies") as string[];
   const about = t.raw("about") as string[];
+  const { phone, email, addressLines } = siteConfig.salesContact;
 
   return (
     <footer id="contact" className="bg-forest-950 text-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-3">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* brand */}
           <div>
             <Link href="/" className="flex items-center gap-2.5" aria-label="FindMyRobo home">
               <Image
-                src="/logo-r-gold.png"
+                src="/main-logo-dark.png"
                 alt="FindMyRobo"
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-full object-cover"
+                width={1200}
+                height={320}
+                className="h-9 w-auto"
               />
-              <span className="font-display text-xl font-extrabold tracking-tight">
-                FindMy<span className="text-gold">Robo</span>
-              </span>
             </Link>
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-white/50">
               {t("copyright")}
@@ -97,6 +97,55 @@ export default function Footer() {
               ))}
             </ul>
           </nav>
+
+          {/* contact — this block is the #contact anchor the nav links to, and
+              the visible business address Omise's merchant review and PDPA's
+              data-controller notice both expect to find. */}
+          <section aria-labelledby="footer-contact-heading">
+            <h3
+              id="footer-contact-heading"
+              className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold"
+            >
+              {t("contactTitle")}
+            </h3>
+            <ul className="mt-5 space-y-3 text-sm text-white/70">
+              <li>
+                <a
+                  href={`tel:${phone.replace(/\s/g, "")}`}
+                  className="inline-flex items-center gap-2.5 py-0.5 transition-colors hover:text-gold"
+                >
+                  <Phone className="h-4 w-4 shrink-0 text-gold/70" aria-hidden="true" />
+                  {phone}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`mailto:${email}`}
+                  className="inline-flex items-center gap-2.5 break-all py-0.5 transition-colors hover:text-gold"
+                >
+                  <Mail className="h-4 w-4 shrink-0 text-gold/70" aria-hidden="true" />
+                  {email}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={salesMapUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex gap-2.5 py-0.5 leading-relaxed transition-colors hover:text-gold"
+                >
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold/70" aria-hidden="true" />
+                  <address className="not-italic">
+                    {addressLines.map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </address>
+                </a>
+              </li>
+            </ul>
+          </section>
         </div>
 
         {/* payment row — visual placeholders only, Omise integration comes in Phase 2 */}

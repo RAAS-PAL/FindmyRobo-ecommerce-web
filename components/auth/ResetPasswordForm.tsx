@@ -2,36 +2,39 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { LoaderCircle, LogIn } from "lucide-react";
-import { Link, useRouter } from "@/i18n/navigation";
+import { LoaderCircle, ShieldCheck } from "lucide-react";
+import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const inputClass =
   "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
 
-export default function LoginForm() {
-  const t = useTranslations("auth.login");
+export default function ResetPasswordForm() {
+  const t = useTranslations("auth.resetPassword");
   const router = useRouter();
   const supabase = createClient();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  const mismatch = confirm.length > 0 && password !== confirm;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (password !== confirm) {
+      setError(t("mismatch"));
+      return;
+    }
     setBusy(true);
     setError(null);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    // The recovery token was already exchanged for a session by /auth/confirm,
+    // so this updates the currently signed-in user.
+    const { error: updateError } = await supabase.auth.updateUser({ password });
 
-    if (signInError) {
-      setError(
-        signInError.code === "email_not_confirmed" ? t("unconfirmed") : t("error")
-      );
+    if (updateError) {
+      setError(t("error"));
       setBusy(false);
       return;
     }
@@ -43,39 +46,18 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="mb-1.5 block text-[13px] font-semibold text-content">
-          {t("email")}
+        <label
+          htmlFor="password"
+          className="mb-1.5 block text-[13px] font-semibold text-content"
+        >
+          {t("password")}
         </label>
-        <input
-          id="email"
-          type="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            setError(null);
-          }}
-          className={inputClass}
-        />
-      </div>
-      <div>
-        <div className="mb-1.5 flex items-baseline justify-between gap-3">
-          <label htmlFor="password" className="text-[13px] font-semibold text-content">
-            {t("password")}
-          </label>
-          <Link
-            href="/forgot-password"
-            className="text-[12px] font-semibold text-gold-600 hover:underline"
-          >
-            {t("forgotLink")}
-          </Link>
-        </div>
         <input
           id="password"
           type="password"
-          autoComplete="current-password"
+          autoComplete="new-password"
           required
+          minLength={8}
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
@@ -83,6 +65,32 @@ export default function LoginForm() {
           }}
           className={inputClass}
         />
+        <p className="mt-1 text-[11.5px] text-ink-muted">{t("passwordHint")}</p>
+      </div>
+      <div>
+        <label
+          htmlFor="confirm"
+          className="mb-1.5 block text-[13px] font-semibold text-content"
+        >
+          {t("confirm")}
+        </label>
+        <input
+          id="confirm"
+          type="password"
+          autoComplete="new-password"
+          required
+          minLength={8}
+          value={confirm}
+          onChange={(e) => {
+            setConfirm(e.target.value);
+            setError(null);
+          }}
+          aria-invalid={mismatch}
+          className={inputClass}
+        />
+        {mismatch && (
+          <p className="mt-1 text-[11.5px] font-medium text-red-600">{t("mismatch")}</p>
+        )}
       </div>
       {error && (
         <p role="alert" className="text-[12.5px] font-medium text-red-600">
@@ -91,22 +99,16 @@ export default function LoginForm() {
       )}
       <button
         type="submit"
-        disabled={busy || !email || !password}
+        disabled={busy || password.length < 8 || password !== confirm}
         className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {busy ? (
           <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
         ) : (
-          <LogIn className="h-4 w-4" aria-hidden="true" />
+          <ShieldCheck className="h-4 w-4" aria-hidden="true" />
         )}
         {t("submit")}
       </button>
-      <p className="pt-1 text-center text-[13px] text-ink-muted">
-        {t("noAccount")}{" "}
-        <Link href="/signup" className="font-semibold text-gold-600 hover:underline">
-          {t("signupLink")}
-        </Link>
-      </p>
     </form>
   );
 }

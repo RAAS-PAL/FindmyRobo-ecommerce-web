@@ -24,14 +24,14 @@ export default async function AdminProtectedLayout({
           <div className="flex items-center gap-3 sm:gap-6">
             <Link href="/admin" className="flex items-center gap-2.5">
               <Image
-                src="/logo-r-gold.png"
+                src="/main-logo-dark.png"
                 alt="FindMyRobo"
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-full object-cover"
+                width={1200}
+                height={320}
+                className="h-7 w-auto"
               />
-              <span className="hidden font-display text-base font-extrabold tracking-tight text-white sm:inline">
-                FindMyRobo <span className="text-gold">{t("adminLabel")}</span>
+              <span className="hidden font-display text-base font-extrabold tracking-tight text-gold sm:inline">
+                {t("adminLabel")}
               </span>
             </Link>
             <AdminTabs />
