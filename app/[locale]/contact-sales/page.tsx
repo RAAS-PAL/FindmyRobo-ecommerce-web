@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Calendar, Mail, MessageCircle, Phone, QrCode } from "lucide-react";
+import { Calendar, Mail, MapPin, MessageCircle, Phone, QrCode } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import FadeIn from "@/components/ui/FadeIn";
-import { siteConfig } from "@/data/siteConfig";
+import { salesMapUrl, siteConfig } from "@/data/siteConfig";
 
 export async function generateMetadata({
   params,
@@ -23,7 +23,7 @@ export default async function ContactSalesPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("contactSales");
-  const { phone, email, lineId, lineQrImage } = siteConfig.salesContact;
+  const { phone, email, lineId, lineQrImage, addressLines } = siteConfig.salesContact;
 
   return (
     <main className="bg-cloud">
@@ -94,6 +94,32 @@ export default async function ContactSalesPage({
                   </span>
                 </div>
               </div>
+
+              <a
+                href={salesMapUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/20">
+                  <MapPin className="h-5 w-5 text-gold-600" aria-hidden="true" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[13px] font-semibold text-ink-muted">
+                    {t("addressLabel")}
+                  </span>
+                  <span className="mt-0.5 block text-[14.5px] font-semibold leading-relaxed text-content">
+                    {addressLines.map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </span>
+                  <span className="mt-0.5 block text-[12px] text-ink-muted">
+                    {t("addressHint")}
+                  </span>
+                </span>
+              </a>
 
               <p className="flex flex-wrap items-baseline gap-x-2 pt-2 text-sm text-ink-muted">
                 {t("demoNote")}

@@ -19,14 +19,21 @@ export default async function AdminLoginPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 flex items-center justify-center gap-2.5">
           <Image
-            src="/logo-r-gold.png"
+            src="/main-logo-light.png"
             alt="FindMyRobo"
-            width={40}
-            height={40}
-            className="h-10 w-10 rounded-full object-cover"
+            width={1200}
+            height={320}
+            className="h-8 w-auto dark:hidden"
           />
-          <span className="font-display text-lg font-extrabold tracking-tight text-content">
-            FindMyRobo <span className="text-gold-600">{t("adminLabel")}</span>
+          <Image
+            src="/main-logo-dark.png"
+            alt="FindMyRobo"
+            width={1200}
+            height={320}
+            className="hidden h-8 w-auto dark:block"
+          />
+          <span className="font-display text-lg font-extrabold tracking-tight text-gold-600">
+            {t("adminLabel")}
           </span>
         </div>
         <div className="rounded-3xl border border-forest-100 bg-surface p-8 shadow-[0_16px_40px_-20px_rgba(10,46,31,0.25)]">
