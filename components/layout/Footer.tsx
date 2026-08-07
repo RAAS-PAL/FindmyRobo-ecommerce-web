@@ -30,16 +30,16 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-3">
           {/* brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2.5" aria-label="RoboMart TH home">
+            <Link href="/" className="flex items-center gap-2.5" aria-label="FindMyRobo home">
               <Image
                 src="/logo-r-gold.png"
-                alt="RoboMart TH"
+                alt="FindMyRobo"
                 width={40}
                 height={40}
                 className="h-10 w-10 rounded-full object-cover"
               />
               <span className="font-display text-xl font-extrabold tracking-tight">
-                RoboMart<span className="text-gold"> TH</span>
+                FindMy<span className="text-gold">Robo</span>
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-white/50">

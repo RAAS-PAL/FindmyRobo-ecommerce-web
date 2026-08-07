@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       token,
       orderId: order.id,
       returnUri: paymentReturnUrl(request, order.id, locale),
-      description: `RoboMart TH ${order.id}`,
+      description: `FindMyRobo ${order.id}`,
     });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Charge failed";
