@@ -565,6 +565,8 @@
     "lineLabel": "Chat on LINE",
     "lineHint": "Scan the QR with your phone, or add us by ID",
     "qrComingSoon": "QR code coming soon — add us by LINE ID instead",
+    "addressLabel": "Visit us",
+    "addressHint": "Open in Google Maps",
     "demoNote": "Prefer to see a robot in action first?",
     "demoCta": "Book an in-home demo"
   },
@@ -874,6 +876,7 @@
   },
   "footer": {
     "copyright": "© 2026 FindMyRobo Thailand. All rights reserved.",
+    "contactTitle": "Contact",
     "policiesTitle": "Policies",
     "policies": [
       "Refunds and Returns",

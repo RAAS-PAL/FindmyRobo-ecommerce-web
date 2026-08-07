@@ -155,5 +155,20 @@ export const siteConfig = {
     // "coming soon" QR frame (lineQrImage null) until the real one is issued.
     lineId: "@raaspal",
     lineQrImage: null as string | null,
+    /**
+     * Registered office. Rendered on /contact-sales and in the footer.
+     * This is not decoration: a visible business address is what Omise's
+     * merchant review looks for, and PDPA requires the data controller to be
+     * reachable. Keep it in sync with the company registration document.
+     */
+    addressLines: [
+      "99/40 Software Park Building Moo 4,",
+      "Chaengwattana rd., Khlong Kluea, Pak Kret, Nonthaburi Thailand 11120",
+    ],
   },
 };
+
+/** Google Maps link built from the office address, so there is one source of truth. */
+export const salesMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  siteConfig.salesContact.addressLines.join(" ")
+)}`;
