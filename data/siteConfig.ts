@@ -119,21 +119,21 @@ export const siteConfig = {
       tag: "LUBA mini 2 AWD 1500",                                  // optional
     },
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491668/0731_5_yzbrty.mp4", // your Short link
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785812434/0804_1_f4vev2.mp4", // your Short link
       poster: "/posters/luba32.png",           // optional custom image
       title: "Obstacle Avoidance Footage",
       author: "",                         // optional
       tag: "LUBA 3 AWD",                                  // optional
     },
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491948/0731_6_odc3mj.mp4", // your Short link
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785811377/20260714_123412_zn9qe3.mp4", // your Short link
       poster: "/posters/lubamini21500.png",           // optional custom image
       title: "One Bangkok",
       author: "",                         // optional
       tag: "LUBA mini 2 AWD 1500",                                  // optional
     },
     {
-      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785811377/20260714_123412_zn9qe3.mp4", // your Short link
+      url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1786096962/0731_7_atlvly.mp4", // your Short link
       poster: "/posters/lubamini21500onebangkok.png",           // optional custom image
       title: "One Bangkok",
       author: "",                         // optional

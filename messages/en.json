@@ -45,7 +45,27 @@
       "noAccount": "New to FindMyRobo?",
       "signupLink": "Create an account",
       "error": "Wrong email or password.",
-      "unconfirmed": "Please confirm your email first — check your inbox."
+      "unconfirmed": "Please confirm your email first — check your inbox.",
+      "forgotLink": "Forgot password?"
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "sub": "We'll email you a link to set a new one",
+      "email": "Email",
+      "submit": "Send reset link",
+      "backToLogin": "Back to sign in",
+      "checkEmailTitle": "Check your email",
+      "checkEmailBody": "If an account exists for {email}, we've sent a link to reset your password. The link expires in one hour."
+    },
+    "resetPassword": {
+      "title": "Set a new password",
+      "sub": "Choose a password you haven't used before",
+      "password": "New password",
+      "passwordHint": "At least 8 characters",
+      "confirm": "Confirm new password",
+      "mismatch": "Passwords do not match.",
+      "submit": "Update password",
+      "error": "Could not update your password. Your reset link may have expired — request a new one."
     },
     "signup": {
       "title": "Create your account",

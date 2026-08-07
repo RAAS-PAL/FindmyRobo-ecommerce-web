@@ -35,15 +35,12 @@ export default function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-2.5" aria-label="FindMyRobo home">
               <Image
-                src="/logo-r-gold.png"
+                src="/main-logo-dark.png"
                 alt="FindMyRobo"
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-full object-cover"
+                width={1200}
+                height={320}
+                className="h-9 w-auto"
               />
-              <span className="font-display text-xl font-extrabold tracking-tight">
-                FindMy<span className="text-gold">Robo</span>
-              </span>
             </Link>
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-white/50">
               {t("copyright")}
