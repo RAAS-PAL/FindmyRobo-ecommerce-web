@@ -643,6 +643,28 @@
     "demoNote": "Prefer to see a robot in action first?",
     "demoCta": "Book an in-home demo"
   },
+  "emails": {
+    "salesAlert": {
+      "subject": "New order {orderId} — {name}",
+      "eyebrow": "New order",
+      "callNow": "Call the customer",
+      "total": "Total",
+      "deliverTo": "Deliver to",
+      "note": "Customer note",
+      "openAdmin": "Open in admin"
+    },
+    "orderConfirmation": {
+      "subject": "We received your order {orderId}",
+      "heading": "Thank you for your order",
+      "intro": "Hi {name}, we've received your order and reserved it for you.",
+      "orderNumber": "Order number",
+      "nextTitle": "What happens next",
+      "nextBody": "Our team will call you on {phone} within 24 hours to confirm the details, arrange payment, and book your delivery. Nothing is charged until then.",
+      "total": "Total",
+      "deliverTo": "Deliver to",
+      "helpTitle": "Questions about your order?"
+    }
+  },
   "payment": {
     "heading": "Payment",
     "sub": "Order {orderId} — pay securely to confirm.",

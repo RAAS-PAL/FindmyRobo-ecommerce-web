@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowUpRight,
   CircleCheck,
@@ -153,6 +153,7 @@ export default function CheckoutClient() {
   const t = useTranslations("checkout");
   const tc = useTranslations("cart");
   const tp = useTranslations("payment");
+  const locale = useLocale();
   const { items, subtotal, clear, add, remove } = useCart();
   const { products } = useProducts();
   // Absent until the Omise keys are added; the order still gets created and the
@@ -213,6 +214,8 @@ export default function CheckoutClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           shipping: form,
+          // Decides which language the confirmation email is written in.
+          locale,
           items: lines.map((l) => ({
             id: l.id,
             qty: l.qty,
