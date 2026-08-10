@@ -11,6 +11,9 @@ import { formatBaht } from "@/data/products";
 import FadeIn from "@/components/ui/FadeIn";
 import SignOutButton from "@/components/auth/SignOutButton";
 import AddressManager from "@/components/account/AddressManager";
+import ProfileSettings from "@/components/account/ProfileSettings";
+import SecuritySettings from "@/components/account/SecuritySettings";
+import DeleteAccount from "@/components/account/DeleteAccount";
 import AccountHistory, { type PurchaseHistoryItem } from "@/components/account/AccountHistory";
 
 export const dynamic = "force-dynamic";
@@ -152,12 +155,10 @@ export default async function AccountPage({
                 <h2 id="profile-heading" className="mt-1 font-display text-xl font-extrabold text-content">
                   {t("profileHeading")}
                 </h2>
+                {/* Facts the customer cannot change. Email moved to the
+                    security section, which is where it can be edited. */}
                 <dl className="mt-5 divide-y divide-forest-100">
                   <div className="flex justify-between gap-4 py-3 first:pt-0">
-                    <dt className="text-xs text-ink-muted">{t("email")}</dt>
-                    <dd className="truncate text-right text-sm font-semibold text-content">{profile.email}</dd>
-                  </div>
-                  <div className="flex justify-between gap-4 py-3">
                     <dt className="text-xs text-ink-muted">{t("role")}</dt>
                     <dd className="text-sm font-semibold text-content">{isAdmin ? t("roleAdmin") : t("roleUser")}</dd>
                   </div>
@@ -168,13 +169,28 @@ export default async function AccountPage({
                 </dl>
               </section>
             </FadeIn>
+            <FadeIn delay={0.12}>
+              <ProfileSettings
+                initial={{
+                  fullName: profile.full_name ?? "",
+                  phone: profile.phone ?? "",
+                  marketingOptIn: profile.marketing_opt_in ?? false,
+                }}
+              />
+            </FadeIn>
             <FadeIn delay={0.14}>
+              <SecuritySettings currentEmail={profile.email ?? ""} />
+            </FadeIn>
+            <FadeIn delay={0.16}>
               <AddressManager
                 initialAddresses={addressResult.addresses}
                 setupRequired={addressResult.setupRequired}
                 profileEmail={profile.email ?? ""}
                 profileName={profile.full_name ?? ""}
               />
+            </FadeIn>
+            <FadeIn delay={0.18}>
+              <DeleteAccount email={profile.email ?? ""} />
             </FadeIn>
           </div>
 
