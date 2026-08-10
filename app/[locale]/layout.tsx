@@ -5,6 +5,7 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google";
 import "../globals.css";
 import { routing } from "@/i18n/routing";
+import { siteUrl } from "@/lib/siteUrl";
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -54,9 +55,34 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
+  const path = locale === routing.defaultLocale ? "/" : `/${locale}`;
+
   return {
+    // Without metadataBase, Next cannot turn the relative OG image path into
+    // the absolute URL that LINE, Facebook, and Messenger require — link
+    // previews render with no image at all.
+    metadataBase: new URL(siteUrl),
     title: t("title"),
     description: t("description"),
+    alternates: {
+      canonical: path,
+      languages: { th: "/", en: "/en" },
+    },
+    openGraph: {
+      type: "website",
+      siteName: "FindMyRobo",
+      url: path,
+      title: t("title"),
+      description: t("description"),
+      locale: locale === "th" ? "th_TH" : "en_US",
+      images: [{ url: "/main-logo-dark.png", alt: "FindMyRobo" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("description"),
+      images: ["/main-logo-dark.png"],
+    },
   };
 }
 

@@ -100,6 +100,61 @@ export async function listOrders(): Promise<Order[]> {
   return (data ?? []).map(rowToOrder);
 }
 
+/**
+ * Guest order lookup: an order id ALONE is never enough.
+ *
+ * Ids are semi-predictable (RP-YYYYMMDD-XXXX with four random characters), so
+ * requiring the email address that placed the order is what stops someone
+ * enumerating ids and reading other people's names, addresses, and purchases.
+ * The comparison is case-insensitive because people capitalise inconsistently.
+ */
+export async function getOrderForLookup(
+  id: string,
+  email: string
+): Promise<Order | undefined> {
+  const order = await getOrderById(id.trim().toUpperCase());
+  if (!order) return undefined;
+  const onOrder = (order.shipping.email ?? "").trim().toLowerCase();
+  return onOrder === email.trim().toLowerCase() ? order : undefined;
+}
+
+/**
+ * Attaches past guest orders to an account.
+ *
+ * Someone who checked out as a guest and later registers with the same address
+ * would otherwise never see those orders. Only rows with a null user_id are
+ * touched, so an order already owned by someone else can never be reassigned.
+ *
+ * Safe because the email comes from the verified Supabase session, not from
+ * user input — claiming someone else's orders would mean controlling their
+ * confirmed inbox first.
+ *
+ * Returns how many orders were claimed.
+ */
+export async function claimGuestOrders(
+  userId: string,
+  email: string
+): Promise<number> {
+  const normalized = email.trim().toLowerCase();
+  if (!normalized) return 0;
+
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .update({ user_id: userId })
+    .is("user_id", null)
+    .ilike("shipping->>email", normalized)
+    .select("id");
+
+  if (error) {
+    // Never break the account page over this — the orders simply stay guest
+    // orders and can be claimed on the next visit.
+    console.error(`[orders] claim failed for ${userId}:`, error.message);
+    return 0;
+  }
+  return data?.length ?? 0;
+}
+
 /** Customer-facing order history, always scoped to the authenticated profile id. */
 export async function listOrdersByUser(userId: string): Promise<Order[]> {
   const supabase = createServiceClient();

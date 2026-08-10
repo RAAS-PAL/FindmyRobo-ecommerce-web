@@ -4,8 +4,12 @@ import {
   createOwnAddress,
   parseAddressInput,
 } from "@/lib/addressStore";
+import { enforce, MINUTE } from "@/lib/rateLimit";
 
 export async function POST(request: Request) {
+  const limited = enforce(request, "addresses", 30, 10 * MINUTE);
+  if (limited) return limited;
+
   let body: unknown;
   try {
     body = await request.json();

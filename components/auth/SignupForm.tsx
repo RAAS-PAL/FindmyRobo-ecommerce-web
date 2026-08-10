@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { LoaderCircle, MailCheck, UserPlus } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
+import Turnstile, { captchaEnabled } from "@/components/auth/Turnstile";
 
 const inputClass =
   "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
@@ -18,6 +19,7 @@ export default function SignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,6 +32,9 @@ export default function SignupForm() {
       options: {
         data: { full_name: fullName },
         emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        // Omitted entirely when no site key is configured, so signup still
+        // works before Turnstile is set up in the Supabase dashboard.
+        ...(captchaToken ? { captchaToken } : {}),
       },
     });
 
@@ -108,6 +113,7 @@ export default function SignupForm() {
         />
         <p className="mt-1 text-[11.5px] text-ink-muted">{t("passwordHint")}</p>
       </div>
+      <Turnstile onToken={setCaptchaToken} />
       {error && (
         <p role="alert" className="text-[12.5px] font-medium text-red-600">
           {error}
@@ -115,7 +121,13 @@ export default function SignupForm() {
       )}
       <button
         type="submit"
-        disabled={busy || !fullName || !email || password.length < 8}
+        disabled={
+          busy ||
+          !fullName ||
+          !email ||
+          password.length < 8 ||
+          (captchaEnabled && !captchaToken)
+        }
         className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {busy ? (
