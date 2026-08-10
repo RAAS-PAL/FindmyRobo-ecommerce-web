@@ -180,7 +180,7 @@ export default function Navbar() {
           : "border-forest-100/70 bg-surface"
       }`}
     >
-      <nav className="relative flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
+      <nav className="relative flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6 xl:px-10">
         {/* soft grey wedge over the left half (light mode only): a subtle panel
             that ends in an angled edge near the middle; the rest stays white.
             -z-10 keeps it behind the bar content; dark mode hides it. */}
@@ -191,7 +191,7 @@ export default function Navbar() {
         />
 
         {/* left group: logo + primary links, kept together on the left edge */}
-        <div className="flex items-center gap-6 xl:gap-9">
+        <div className="flex items-center gap-4 xl:gap-9">
         {/* logo */}
         <Link href="/" className="flex shrink-0 items-center" aria-label="FindMyRobo home">
           <Image
@@ -200,7 +200,7 @@ export default function Navbar() {
             width={1200}
             height={320}
             priority
-            className="h-9 w-auto dark:hidden"
+            className="h-8 w-auto dark:hidden"
           />
           <Image
             src="/main-logo-dark.png"
@@ -208,12 +208,12 @@ export default function Navbar() {
             width={1200}
             height={320}
             priority
-            className="hidden h-9 w-auto dark:block"
+            className="hidden h-8 w-auto dark:block"
           />
         </Link>
 
         {/* desktop links */}
-        <ul className="hidden items-center gap-6 xl:flex">
+        <ul className="hidden items-center gap-4 lg:flex xl:gap-6">
           {navLinks.map((link, linkIndex) => (
             <li
               key={link.label}
@@ -441,14 +441,14 @@ export default function Navbar() {
           {/* Collapsed to a magnifier button; the field slides open on hover
               (group-hover) or when focused/clicked (focus). */}
           <CatalogSearch
-            className="group hidden lg:block"
+            className="group hidden xl:block"
             inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-60 group-hover:cursor-text group-hover:pr-4 focus:w-60 focus:cursor-text focus:pr-4 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
             dropdownClassName="right-0 w-[360px]"
           />
 
           <Link
             href="/products/request-a-demo"
-            className="hidden min-h-[44px] items-center gap-2 rounded-full bg-gold px-5 text-[13.5px] font-bold text-forest-950 shadow-[0_0_0_0_rgba(245,200,66,0)] transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] active:scale-[0.97] sm:flex"
+            className="hidden min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full bg-gold px-4 text-[13.5px] font-bold text-forest-950 shadow-[0_0_0_0_rgba(245,200,66,0)] transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] active:scale-[0.97] sm:flex xl:px-5"
           >
             <Calendar className="h-4 w-4" aria-hidden="true" />
             {t("bookDemo")}
@@ -483,7 +483,7 @@ export default function Navbar() {
             type="button"
             onClick={() => setOpen(true)}
             aria-label={t("openMenu")}
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud xl:hidden"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud lg:hidden"
           >
             <Menu className="h-6 w-6" aria-hidden="true" />
           </button>
@@ -504,7 +504,7 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-50 bg-forest-950/50 backdrop-blur-sm xl:hidden"
+              className="fixed inset-0 z-50 bg-forest-950/50 backdrop-blur-sm lg:hidden"
               aria-hidden="true"
             />
             <motion.aside
@@ -512,7 +512,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-y-0 right-0 z-50 flex w-[85%] max-w-sm flex-col bg-surface shadow-2xl xl:hidden"
+              className="fixed inset-y-0 right-0 z-50 flex w-[85%] max-w-sm flex-col bg-surface shadow-2xl lg:hidden"
               role="dialog"
               aria-label="Menu"
             >
