@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createOrder } from "@/lib/orderStore";
 import { notifyNewOrder } from "@/lib/notifications";
 import { getAllProducts } from "@/lib/productStore";
+import { enforce, MINUTE } from "@/lib/rateLimit";
 import {
   asShipping,
   makeOrderId,
@@ -40,6 +41,11 @@ function asCartItems(raw: unknown): CartItemInput[] {
  * The order is created `pending_payment`; the payment routes settle it.
  */
 export async function POST(request: Request) {
+  // Ten orders in ten minutes from one address is already abnormal, and each
+  // one now costs two emails against the Resend quota.
+  const limited = enforce(request, "checkout", 10, 10 * MINUTE);
+  if (limited) return limited;
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();

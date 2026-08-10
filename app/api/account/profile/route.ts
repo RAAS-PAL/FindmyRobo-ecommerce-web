@@ -1,9 +1,13 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { parseProfileInput, updateOwnProfile } from "@/lib/auth";
+import { enforce, MINUTE } from "@/lib/rateLimit";
 
 /** Update the signed-in customer's own name, phone, and marketing consent. */
 export async function PATCH(request: Request) {
+  const limited = enforce(request, "profile", 20, 10 * MINUTE);
+  if (limited) return limited;
+
   let body: unknown;
   try {
     body = await request.json();
