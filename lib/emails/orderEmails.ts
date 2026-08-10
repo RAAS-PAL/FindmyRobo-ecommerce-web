@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { formatBaht } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
+import { siteUrl } from "@/lib/siteUrl";
 import type { Order } from "@/lib/checkout";
 
 /**
@@ -123,6 +124,9 @@ export async function buildCustomerConfirmation(
 ): Promise<{ subject: string; html: string }> {
   const t = await getTranslations({ locale, namespace: "emails.orderConfirmation" });
   const { phone, email } = siteConfig.salesContact;
+  // Guests have no account page, so the tracking link in this email is the
+  // only way back to their order.
+  const trackUrl = `${siteUrl}${locale === "th" ? "" : `/${locale}`}/order-status`;
 
   const html = shell(`
 <tr><td style="background:${FOREST};padding:24px 28px;text-align:center;">
@@ -158,6 +162,10 @@ export async function buildCustomerConfirmation(
 <tr><td style="padding:6px 28px 0;">
   <div style="font-size:12px;color:${MUTED};text-transform:uppercase;letter-spacing:1px;">${esc(t("deliverTo"))}</div>
   <div style="margin-top:4px;font-size:14px;color:${INK};line-height:1.6;">${esc(order.shipping.fullName)}<br>${addressBlock(order)}</div>
+</td></tr>
+
+<tr><td style="padding:22px 28px 0;">
+  <a href="${trackUrl}" style="display:inline-block;background:${GOLD};color:${FOREST};font-size:14px;font-weight:bold;text-decoration:none;padding:13px 26px;border-radius:999px;">${esc(t("trackCta"))}</a>
 </td></tr>
 
 <tr><td style="padding:24px 28px 28px;">

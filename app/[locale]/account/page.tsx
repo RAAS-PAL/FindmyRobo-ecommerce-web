@@ -5,7 +5,7 @@ import { MapPin, PackageCheck, ShieldCheck, ShoppingBag, UserRound } from "lucid
 import { redirect } from "@/i18n/navigation";
 import { getProfile } from "@/lib/auth";
 import { listOwnAddresses } from "@/lib/addressStore";
-import { listOrdersByUser } from "@/lib/orderStore";
+import { claimGuestOrders, listOrdersByUser } from "@/lib/orderStore";
 import { getAllProducts } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
 import FadeIn from "@/components/ui/FadeIn";
@@ -41,6 +41,12 @@ export default async function AccountPage({
     redirect({ href: "/login", locale });
     return null;
   }
+
+  // Adopt any orders this person placed as a guest with the same address
+  // before listing them, so they appear on the first visit rather than the
+  // next one. Runs ahead of the fetch below on purpose; it is a no-op once
+  // there is nothing left to claim.
+  await claimGuestOrders(profile.id, profile.email ?? "");
 
   const [addressResult, orders, catalog] = await Promise.all([
     listOwnAddresses(),

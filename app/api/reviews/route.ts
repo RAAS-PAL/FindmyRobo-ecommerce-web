@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getProductById } from "@/lib/productStore";
+import { enforce, MINUTE } from "@/lib/rateLimit";
 import {
   getReviewSummary,
   getUserReview,
@@ -85,6 +86,9 @@ export async function GET(request: Request) {
 
 /** Create or edit the signed-in customer's review for a product. */
 export async function POST(request: Request) {
+  const limited = enforce(request, "reviews", 5, 10 * MINUTE);
+  if (limited) return limited;
+
   const viewer = await getViewer();
   if (!viewer) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
