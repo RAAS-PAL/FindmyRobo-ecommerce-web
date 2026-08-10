@@ -1,7 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
+import { routing } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
 import { createOrder } from "@/lib/orderStore";
+import { notifyNewOrder } from "@/lib/notifications";
 import { getAllProducts } from "@/lib/productStore";
+import { enforce, MINUTE } from "@/lib/rateLimit";
 import {
   asShipping,
   makeOrderId,
@@ -38,6 +41,11 @@ function asCartItems(raw: unknown): CartItemInput[] {
  * The order is created `pending_payment`; the payment routes settle it.
  */
 export async function POST(request: Request) {
+  // Ten orders in ten minutes from one address is already abnormal, and each
+  // one now costs two emails against the Resend quota.
+  const limited = enforce(request, "checkout", 10, 10 * MINUTE);
+  if (limited) return limited;
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();
@@ -96,6 +104,14 @@ export async function POST(request: Request) {
     // auth unavailable — proceed as a guest order
   }
 
+  // The confirmation email should be in the language the customer was
+  // shopping in; fall back to the site default rather than guessing.
+  const locale =
+    typeof body.locale === "string" &&
+    (routing.locales as readonly string[]).includes(body.locale)
+      ? body.locale
+      : routing.defaultLocale;
+
   try {
     const order = await createOrder({
       id: makeOrderId(),
@@ -105,6 +121,12 @@ export async function POST(request: Request) {
       subtotal,
       total,
     });
+
+    // Runs after the response is sent, so the customer isn't kept waiting on
+    // two email round-trips. `after` keeps the serverless function alive for
+    // it — a bare floating promise would be killed once the response returns.
+    after(() => notifyNewOrder(order, locale));
+
     return NextResponse.json(
       { orderId: order.id, total: order.total, items: order.items },
       { status: 201 }
