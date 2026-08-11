@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import CategoryTabs from "@/components/ui/CategoryTabs";
 import FadeIn from "@/components/ui/FadeIn";
 import ProductCard from "@/components/ui/ProductCard";
+import { collapseInstallTiers, isInstallTier } from "@/lib/installTiers";
 import { categories, type CategorySlug } from "@/data/categories";
 import { getProductsByCategory } from "@/lib/productStore";
 
@@ -63,8 +64,15 @@ export default async function CategoryPage({
 
         {cat.available && items.length > 0 ? (
           <div className="mt-10 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {items.map((product, i) => (
-              <ProductCard key={product.id} product={product} index={i} />
+            {collapseInstallTiers(items).map((product, i) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={i}
+                {...(isInstallTier(product)
+                  ? { displayName: t("installCardName"), displayTagline: t("installCardTagline") }
+                  : {})}
+              />
             ))}
           </div>
         ) : (
