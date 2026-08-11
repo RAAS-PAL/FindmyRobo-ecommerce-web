@@ -154,6 +154,8 @@ export default function Navbar() {
       label: t("about"),
       href: "/#about",
       children: [
+        // The full page first; the three below are still homepage anchors.
+        { label: t("aboutUs"), href: "/about" },
         { label: t("aboutStory"), href: "/#about" },
         { label: t("aboutWhyUs"), href: "/#support" },
         { label: t("aboutPartners"), href: "/#about" },

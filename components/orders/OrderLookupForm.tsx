@@ -43,6 +43,14 @@ export default function OrderLookupForm() {
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<LookupResult | null>(null);
 
+  // In quotation mode "Pending payment" is wrong — nothing has been quoted, so
+  // nothing is owed. Only that one status needs rewording; paid, cancelled and
+  // refunded read correctly either way.
+  const statusLabel = (status: OrderStatus) =>
+    !siteConfig.showPrices && status === "pending_payment"
+      ? ts("pending_quotation")
+      : ts(status);
+
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     setBusy(true);
@@ -151,7 +159,7 @@ export default function OrderLookupForm() {
             <span
               className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider ${statusTone[order.status]}`}
             >
-              {ts(order.status)}
+              {statusLabel(order.status)}
             </span>
           </div>
 
