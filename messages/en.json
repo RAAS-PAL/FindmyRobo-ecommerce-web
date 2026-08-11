@@ -690,8 +690,7 @@
       "total": "Total",
       "deliverTo": "Deliver to",
       "note": "Customer note",
-      "openAdmin": "Open in admin",
-      "indicative": "List prices — indicative only. Confirm the final figure in the quotation."
+      "openAdmin": "Open in admin"
     },
     "orderConfirmation": {
       "subject": "We received your order {orderId}",
@@ -706,7 +705,8 @@
       "total": "Total",
       "deliverTo": "Deliver to",
       "trackCta": "Track your order",
-      "helpTitle": "Questions about your order?"
+      "helpTitle": "Questions about your order?",
+      "introQuote": "Hi {name}, we have received your request and our team is preparing your quotation."
     }
   },
   "payment": {
