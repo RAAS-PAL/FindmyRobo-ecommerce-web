@@ -10,6 +10,7 @@ import FloatingAddToCart from "@/components/cart/FloatingAddToCart";
 import CompareToggleButton from "@/components/compare/CompareToggleButton";
 import ServicePurchasePanel from "@/components/cart/ServicePurchasePanel";
 import DemoPurchasePanel from "@/components/cart/DemoPurchasePanel";
+import InstallPurchasePanel from "@/components/cart/InstallPurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
 import ProductGallery from "@/components/product/ProductGallery";
 import ProductPageBlocks from "@/components/product/ProductPageBlocks";
@@ -69,6 +70,9 @@ export default async function ProductPage({
   // Demo packages price by area, so the price is chosen inside DemoPurchasePanel
   // (per selected area band) rather than shown as a single fixed number here.
   const isDemo = isService && product.variant === "demo";
+  // Installation also prices by area, and the coverage band is chosen inside
+  // InstallPurchasePanel rather than by browsing to a different tier product.
+  const isInstall = isService && product.variant === "install";
   const related = allProducts
     .filter((p) => p.id !== product.id)
     .sort((a, b) =>
@@ -132,7 +136,9 @@ export default async function ProductPage({
               {product.description[locale as Locale] ?? product.description.en}
             </p>
 
-            {!isDemo && (
+            {/* Demo and installation both price by coverage band, so the figure
+                belongs in their panel rather than as one number up here. */}
+            {!isDemo && !isInstall && (
               <div className="mt-6">
                 <PriceOrQuote
                   amount={product.price}
@@ -154,6 +160,8 @@ export default async function ProductPage({
               {isService ? (
                 isDemo ? (
                   <DemoPurchasePanel currentId={product.id} />
+                ) : isInstall ? (
+                  <InstallPurchasePanel currentId={product.id} />
                 ) : (
                   <ServicePurchasePanel serviceId={product.id} />
                 )

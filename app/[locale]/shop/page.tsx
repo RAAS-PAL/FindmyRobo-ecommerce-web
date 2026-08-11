@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import CategoryTabs from "@/components/ui/CategoryTabs";
 import FadeIn from "@/components/ui/FadeIn";
 import ProductCard from "@/components/ui/ProductCard";
+import { collapseInstallTiers, isInstallTier } from "@/lib/installTiers";
 import { getAllProducts } from "@/lib/productStore";
 
 export async function generateMetadata({
@@ -43,8 +44,15 @@ export default async function ShopPage({
         </div>
 
         <div className="mt-10 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
+          {collapseInstallTiers(products).map((product, i) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              index={i}
+              {...(isInstallTier(product)
+                ? { displayName: t("installCardName"), displayTagline: t("installCardTagline") }
+                : {})}
+            />
           ))}
         </div>
       </div>
