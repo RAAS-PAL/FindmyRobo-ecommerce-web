@@ -34,7 +34,8 @@
     "switchLocale": "ไทย",
     "account": "Account",
     "signIn": "Sign in",
-    "quotationLabel": "Quotation list, {count} items"
+    "quotationLabel": "Quotation list, {count} items",
+    "aboutUs": "About Us"
   },
   "auth": {
     "login": {
