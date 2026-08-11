@@ -197,7 +197,8 @@
         "failed": "Payment failed",
         "expired": "Expired",
         "cancelled": "Cancelled",
-        "refunded": "Refunded"
+        "refunded": "Refunded",
+        "pending_quotation": "Awaiting quotation"
       },
       "shipment": {
         "tracking": "Tracking:",
@@ -672,7 +673,7 @@
     "orderIdHint": "It's in your confirmation email, starting with RP-",
     "email": "Email used at checkout",
     "submit": "Find my order",
-    "pendingNote": "Our team will call you to confirm the details and arrange payment. Nothing is charged until then.",
+    "pendingNote": "Our team will call you to check your property size and installation needs, then send your full quotation. There is no obligation and nothing to pay.",
     "tracking": "Tracking",
     "total": "Total",
     "errors": {
