@@ -34,7 +34,8 @@
     "switchLocale": "EN",
     "account": "บัญชีของฉัน",
     "signIn": "เข้าสู่ระบบ",
-    "quotationLabel": "รายการขอใบเสนอราคา {count} รายการ"
+    "quotationLabel": "รายการขอใบเสนอราคา {count} รายการ",
+    "aboutUs": "เกี่ยวกับเรา"
   },
   "auth": {
     "login": {
