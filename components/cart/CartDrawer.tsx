@@ -7,9 +7,13 @@ import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
 import { useCart } from "@/components/cart/CartProvider";
 import { formatBaht } from "@/data/products";
+import { siteConfig } from "@/data/siteConfig";
 
 export default function CartDrawer() {
   const t = useTranslations("cart");
+  const tq = useTranslations("quotation");
+  // In quotation mode the drawer is a list of things to be quoted, not a cart.
+  const drawerTitle = siteConfig.showPrices ? t("title") : tq("listTitle");
   const { items, count, subtotal, remove, setQty, drawerOpen, closeDrawer } = useCart();
 
   return (
@@ -32,7 +36,7 @@ export default function CartDrawer() {
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             className="fixed inset-y-0 right-0 z-50 flex w-[92%] max-w-md flex-col bg-forest-950 shadow-2xl"
             role="dialog"
-            aria-label={t("title")}
+            aria-label={drawerTitle}
           >
             {/* header */}
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
@@ -41,7 +45,7 @@ export default function CartDrawer() {
                   <ShoppingCart className="h-4.5 w-4.5" aria-hidden="true" />
                 </span>
                 <span className="font-display text-base font-extrabold text-white">
-                  {t("title")}
+                  {drawerTitle}
                   {count > 0 && (
                     <span className="ml-2 font-mono text-sm font-semibold text-gold">
                       ({count})
@@ -114,9 +118,11 @@ export default function CartDrawer() {
                             {t("forRobot", { name: item.forProduct.name })}
                           </p>
                         )}
-                        <p className="mt-0.5 text-[12px] text-white/50">
-                          {formatBaht(item.product.price)}
-                        </p>
+                        {siteConfig.showPrices && (
+                          <p className="mt-0.5 text-[12px] text-white/50">
+                            {formatBaht(item.product.price)}
+                          </p>
+                        )}
                         <div className="mt-auto flex items-center justify-between pt-2">
                           <div className="flex items-center gap-1 rounded-full border border-white/15">
                             <button
@@ -139,9 +145,11 @@ export default function CartDrawer() {
                               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                             </button>
                           </div>
-                          <span className="font-mono text-[15px] font-semibold tabular-nums text-gold">
-                            {formatBaht(item.qty * item.product.price)}
-                          </span>
+                          {siteConfig.showPrices && (
+                            <span className="font-mono text-[15px] font-semibold tabular-nums text-gold">
+                              {formatBaht(item.qty * item.product.price)}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </li>
@@ -150,21 +158,31 @@ export default function CartDrawer() {
 
                 {/* footer */}
                 <div className="border-t border-white/10 p-5">
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-sm font-medium text-white/70">
-                      {t("subtotal")}
-                    </span>
-                    <span className="font-mono text-xl font-semibold tabular-nums text-white">
-                      {formatBaht(subtotal)}
-                    </span>
-                  </div>
-                  <p className="mt-1.5 text-[12px] text-white/40">{t("shippingNote")}</p>
+                  {siteConfig.showPrices ? (
+                    <>
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-sm font-medium text-white/70">
+                          {t("subtotal")}
+                        </span>
+                        <span className="font-mono text-xl font-semibold tabular-nums text-white">
+                          {formatBaht(subtotal)}
+                        </span>
+                      </div>
+                      <p className="mt-1.5 text-[12px] text-white/40">{t("shippingNote")}</p>
+                    </>
+                  ) : (
+                    // Quotation mode: a subtotal would imply a price we have not
+                    // quoted yet, so state what actually happens next instead.
+                    <p className="text-[12.5px] leading-relaxed text-white/50">
+                      {tq("totalPending")}
+                    </p>
+                  )}
                   <Link
                     href="/checkout"
                     onClick={closeDrawer}
                     className="mt-4 flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
                   >
-                    {t("checkout")}
+                    {siteConfig.showPrices ? t("checkout") : tq("submitCta")}
                     <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
                   </Link>
                 </div>

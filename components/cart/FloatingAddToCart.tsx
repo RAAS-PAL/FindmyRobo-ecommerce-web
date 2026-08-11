@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check, ShoppingCart } from "lucide-react";
 import { useCart } from "@/components/cart/CartProvider";
-import { formatBaht } from "@/data/products";
+import PriceOrQuote from "@/components/ui/PriceOrQuote";
 
 /**
  * Sticky Add-to-Cart bar for the product page. It stays hidden while the primary
@@ -79,9 +79,11 @@ export default function FloatingAddToCart({
           <p className="truncate text-[13px] font-bold text-content sm:text-sm">
             {name}
           </p>
-          <p className="font-mono text-sm font-semibold tabular-nums text-content">
-            {formatBaht(price)}
-          </p>
+          <PriceOrQuote
+            amount={price}
+            className="block font-mono text-sm font-semibold tabular-nums text-content"
+            quoteClassName="block text-[12.5px] font-semibold text-gold-600"
+          />
         </div>
         <button
           type="button"

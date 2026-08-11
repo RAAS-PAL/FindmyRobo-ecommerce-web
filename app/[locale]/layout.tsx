@@ -124,7 +124,10 @@ export default async function LocaleLayout({
                   <AnnouncementBar />
                   <Navbar />
                   {children}
-                  <Footer />
+                  {/* Products are already loaded here for ProductsProvider —
+                      passing them down avoids a second query per page render,
+                      since getAllProducts is not cached. */}
+                  <Footer products={products} />
                   <CartDrawer />
                   <FloatingCompareButton />
                 </CompareProvider>

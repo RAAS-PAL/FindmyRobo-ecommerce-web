@@ -19,12 +19,13 @@ import BoxContents from "@/components/product/BoxContents";
 import FaqSection from "@/components/product/FaqSection";
 import ProductReviews from "@/components/product/ProductReviews";
 import PaymentMethods from "@/components/product/PaymentMethods";
+import PriceOrQuote from "@/components/ui/PriceOrQuote";
 import {
-  formatBaht,
   SERVICE_CATEGORY,
   type Locale,
   type PageBlock,
 } from "@/data/products";
+import { siteConfig } from "@/data/siteConfig";
 import { getAllProducts, getProductById } from "@/lib/productStore";
 
 export async function generateStaticParams() {
@@ -59,6 +60,7 @@ export default async function ProductPage({
 
   const t = await getTranslations("productDetail");
   const tc = await getTranslations("categories");
+  const tq = await getTranslations("quotation");
 
   const features = product.features[locale as Locale] ?? product.features.en;
   const page = product.page;
@@ -131,9 +133,18 @@ export default async function ProductPage({
             </p>
 
             {!isDemo && (
-              <p className="mt-6 font-mono text-3xl font-semibold tabular-nums text-content">
-                {formatBaht(product.price)}
-              </p>
+              <div className="mt-6">
+                <PriceOrQuote
+                  amount={product.price}
+                  className="font-mono text-3xl font-semibold tabular-nums text-content"
+                  quoteClassName="font-display text-2xl font-extrabold text-content"
+                />
+                {!siteConfig.showPrices && (
+                  <p className="mt-2 max-w-md text-[13px] leading-relaxed text-ink-muted">
+                    {tq("note")}
+                  </p>
+                )}
+              </div>
             )}
             {product.preorder && (
               <p className="mt-2 text-[13px] font-medium text-gold-600">{t("preorderNote")}</p>
