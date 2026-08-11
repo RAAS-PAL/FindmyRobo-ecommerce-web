@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { LoaderCircle, PackageSearch, Truck } from "lucide-react";
 import { formatBaht } from "@/data/products";
+import { siteConfig } from "@/data/siteConfig";
 import type { OrderLine, OrderStatus } from "@/lib/checkout";
 
 const inputClass =
@@ -186,17 +187,21 @@ export default function OrderLookupForm() {
                   )}
                 </span>
                 <span className="shrink-0 text-ink-muted">×{line.qty}</span>
-                <span className="shrink-0 font-medium text-content">
-                  {formatBaht(line.qty * line.unitPrice)}
-                </span>
+                {siteConfig.showPrices && (
+                  <span className="shrink-0 font-medium text-content">
+                    {formatBaht(line.qty * line.unitPrice)}
+                  </span>
+                )}
               </li>
             ))}
           </ul>
 
-          <div className="flex justify-between gap-4 border-t border-forest-100 pt-3 text-sm font-bold text-content">
-            <span>{t("total")}</span>
-            <span className="font-mono">{formatBaht(order.total)}</span>
-          </div>
+          {siteConfig.showPrices && (
+            <div className="flex justify-between gap-4 border-t border-forest-100 pt-3 text-sm font-bold text-content">
+              <span>{t("total")}</span>
+              <span className="font-mono">{formatBaht(order.total)}</span>
+            </div>
+          )}
         </div>
       )}
     </div>

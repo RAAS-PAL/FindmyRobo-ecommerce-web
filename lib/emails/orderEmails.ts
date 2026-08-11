@@ -40,15 +40,20 @@ ${bodyHtml}
 </body></html>`;
 }
 
-function itemRows(order: Order): string {
+/**
+ * `withPrices` is passed explicitly rather than read from siteConfig, because
+ * the two emails differ: sales always sees money (it is the starting point for
+ * the quotation) while the customer only does once prices are published.
+ */
+function itemRows(order: Order, withPrices: boolean): string {
   return order.items
     .map(
       (line) => `<tr>
 <td style="padding:10px 0;border-bottom:1px solid ${BORDER};font-size:14px;color:${INK};">
   ${esc(line.name)}${line.forName ? `<br><span style="font-size:12px;color:${MUTED};">↳ ${esc(line.forName)}</span>` : ""}
 </td>
-<td style="padding:10px 0;border-bottom:1px solid ${BORDER};font-size:14px;color:${MUTED};text-align:center;white-space:nowrap;">×${line.qty}</td>
-<td style="padding:10px 0;border-bottom:1px solid ${BORDER};font-size:14px;color:${INK};text-align:right;white-space:nowrap;">${formatBaht(line.qty * line.unitPrice)}</td>
+<td style="padding:10px 0;border-bottom:1px solid ${BORDER};font-size:14px;color:${MUTED};text-align:${withPrices ? "center" : "right"};white-space:nowrap;">×${line.qty}</td>
+${withPrices ? `<td style="padding:10px 0;border-bottom:1px solid ${BORDER};font-size:14px;color:${INK};text-align:right;white-space:nowrap;">${formatBaht(line.qty * line.unitPrice)}</td>` : ""}
 </tr>`
     )
     .join("");
@@ -88,12 +93,13 @@ export async function buildSalesAlert(
 
 <tr><td style="padding:16px 28px 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-    ${itemRows(order)}
+    ${itemRows(order, true)}
     <tr>
       <td colspan="2" style="padding:12px 0;font-size:15px;font-weight:bold;color:${INK};">${esc(t("total"))}</td>
       <td style="padding:12px 0;font-size:18px;font-weight:bold;color:${INK};text-align:right;">${formatBaht(order.total)}</td>
     </tr>
   </table>
+  ${siteConfig.showPrices ? "" : `<p style="margin:10px 0 0;font-size:12px;color:${MUTED};">${esc(t("indicative"))}</p>`}
 </td></tr>
 
 <tr><td style="padding:8px 28px 0;">
@@ -134,7 +140,7 @@ export async function buildCustomerConfirmation(
 </td></tr>
 
 <tr><td style="padding:28px 28px 0;">
-  <h1 style="margin:0;font-size:22px;color:${INK};">${esc(t("heading"))}</h1>
+  <h1 style="margin:0;font-size:22px;color:${INK};">${esc(t(siteConfig.showPrices ? "heading" : "headingQuote"))}</h1>
   <p style="margin:10px 0 0;font-size:15px;color:${INK};line-height:1.6;">${esc(t("intro", { name: order.shipping.fullName }))}</p>
   <div style="margin-top:16px;padding:12px 16px;background:#f9fafb;border-radius:8px;">
     <span style="font-size:12px;color:${MUTED};">${esc(t("orderNumber"))}</span><br>
@@ -145,17 +151,25 @@ export async function buildCustomerConfirmation(
 <tr><td style="padding:20px 28px 0;">
   <div style="padding:16px;border:1px solid ${GOLD};border-radius:8px;background:#fffbeb;">
     <div style="font-size:14px;font-weight:bold;color:${INK};">${esc(t("nextTitle"))}</div>
-    <div style="margin-top:6px;font-size:13.5px;color:${INK};line-height:1.7;">${esc(t("nextBody", { phone: order.shipping.phone }))}</div>
+    <div style="margin-top:6px;font-size:13.5px;color:${INK};line-height:1.7;">${esc(
+      t(siteConfig.showPrices ? "nextBody" : "nextBodyQuote", {
+        phone: order.shipping.phone,
+      })
+    )}</div>
   </div>
 </td></tr>
 
 <tr><td style="padding:22px 28px 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-    ${itemRows(order)}
-    <tr>
+    ${itemRows(order, siteConfig.showPrices)}
+    ${
+      siteConfig.showPrices
+        ? `<tr>
       <td colspan="2" style="padding:12px 0;font-size:15px;font-weight:bold;color:${INK};">${esc(t("total"))}</td>
       <td style="padding:12px 0;font-size:18px;font-weight:bold;color:${INK};text-align:right;">${formatBaht(order.total)}</td>
-    </tr>
+    </tr>`
+        : ""
+    }
   </table>
 </td></tr>
 
@@ -177,7 +191,9 @@ export async function buildCustomerConfirmation(
 </td></tr>`);
 
   return {
-    subject: t("subject", { orderId: order.id }),
+    subject: t(siteConfig.showPrices ? "subject" : "subjectQuote", {
+      orderId: order.id,
+    }),
     html,
   };
 }

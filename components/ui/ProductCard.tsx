@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
-import { formatBaht, type Locale, type Product } from "@/data/products";
+import { type Locale, type Product } from "@/data/products";
+import PriceOrQuote from "@/components/ui/PriceOrQuote";
 
 /**
  * TEMPORARY demo clips so the hover-to-play effect is visible locally before
@@ -122,8 +123,12 @@ export default function ProductCard({
           <span className="text-[13px] leading-relaxed text-ink-muted">
             {product.tagline[locale]}
           </span>
-          <span className="mt-auto pt-3 font-mono text-lg font-semibold tabular-nums text-content">
-            {formatBaht(product.price)}
+          <span className="mt-auto pt-3">
+            <PriceOrQuote
+              amount={product.price}
+              className="font-mono text-lg font-semibold tabular-nums text-content"
+              quoteClassName="text-[13.5px] font-bold text-gold-600"
+            />
           </span>
         </span>
       </Link>

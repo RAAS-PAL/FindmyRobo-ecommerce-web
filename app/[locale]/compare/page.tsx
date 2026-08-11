@@ -6,8 +6,8 @@ import FadeIn from "@/components/ui/FadeIn";
 import ProductVisual from "@/components/ui/ProductVisual";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { getAllProducts } from "@/lib/productStore";
+import PriceOrQuote from "@/components/ui/PriceOrQuote";
 import {
-  formatBaht,
   SERVICE_CATEGORY,
   SPEC_KEYS,
   type Locale,
@@ -119,9 +119,11 @@ export default async function ComparePage({
                           {robot.name}
                         </Link>
                       </p>
-                      <p className="mt-1 font-mono text-xl font-semibold tabular-nums text-content">
-                        {formatBaht(robot.price)}
-                      </p>
+                      <PriceOrQuote
+                        amount={robot.price}
+                        className="mt-1 block font-mono text-xl font-semibold tabular-nums text-content"
+                        quoteClassName="mt-1 block text-sm font-bold text-gold-600"
+                      />
                       {robot.preorder && (
                         <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-gold-600">
                           {t("preorder")}

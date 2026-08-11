@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { ChevronDown, Clock3, PackageCheck, ShoppingBag, Truck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
+import { siteConfig } from "@/data/siteConfig";
 import { formatBaht, type Product } from "@/data/products";
 import type { Order, OrderLine, OrderStatus } from "@/lib/checkout";
 
@@ -81,7 +82,7 @@ export default function AccountHistory({
                     <span className={`rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-wider ${statusClass[order.status]}`}>
                       {t(`status.${order.status}`)}
                     </span>
-                    <span className="mt-2 block font-mono text-sm font-bold text-content">{formatBaht(order.total)}</span>
+                    {siteConfig.showPrices && (<span className="mt-2 block font-mono text-sm font-bold text-content">{formatBaht(order.total)}</span>)}
                   </span>
                   <ChevronDown className="h-4 w-4 shrink-0 text-ink-muted transition-transform group-open:rotate-180" aria-hidden="true" />
                 </summary>
@@ -90,7 +91,7 @@ export default function AccountHistory({
                     <span className={`rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-wider ${statusClass[order.status]}`}>
                       {t(`status.${order.status}`)}
                     </span>
-                    <span className="font-mono text-sm font-bold text-content">{formatBaht(order.total)}</span>
+                    {siteConfig.showPrices && (<span className="font-mono text-sm font-bold text-content">{formatBaht(order.total)}</span>)}
                   </div>
                   <ul className="space-y-2">
                     {order.items.map((item, index) => (
@@ -99,7 +100,7 @@ export default function AccountHistory({
                           {item.name} <span className="text-ink-muted">× {item.qty}</span>
                           {item.forName && <span className="mt-0.5 block text-[11px] text-ink-muted">{t("forProduct", { name: item.forName })}</span>}
                         </span>
-                        <span className="shrink-0 font-mono font-semibold text-content">{formatBaht(item.unitPrice * item.qty)}</span>
+                        {siteConfig.showPrices && (<span className="shrink-0 font-mono font-semibold text-content">{formatBaht(item.unitPrice * item.qty)}</span>)}
                       </li>
                     ))}
                   </ul>
@@ -114,7 +115,7 @@ export default function AccountHistory({
                     </div>
                     <div className="sm:text-right">
                       <p className="text-ink-muted">{t("orderTotal")}</p>
-                      <p className="mt-1 font-mono text-lg font-bold text-content">{formatBaht(order.total)}</p>
+                      {siteConfig.showPrices && (<p className="mt-1 font-mono text-lg font-bold text-content">{formatBaht(order.total)}</p>)}
                     </div>
                   </div>
 

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check, ShoppingCart } from "lucide-react";
 import { useCart } from "@/components/cart/CartProvider";
+import { siteConfig } from "@/data/siteConfig";
 
 export default function AddToCartButton({
   productId,
@@ -16,6 +17,7 @@ export default function AddToCartButton({
   disabled?: boolean;
 }) {
   const t = useTranslations("cart");
+  const tq = useTranslations("quotation");
   const { add, openDrawer } = useCart();
   const [added, setAdded] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -50,7 +52,7 @@ export default function AddToCartButton({
       ) : (
         <>
           <ShoppingCart className="h-4.5 w-4.5" aria-hidden="true" />
-          {t("addToCart")}
+          {siteConfig.showPrices ? t("addToCart") : tq("addToList")}
         </>
       )}
     </button>
