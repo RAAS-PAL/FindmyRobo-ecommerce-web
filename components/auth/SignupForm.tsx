@@ -20,6 +20,7 @@ export default function SignupForm() {
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,7 +40,11 @@ export default function SignupForm() {
     });
 
     if (signUpError) {
+      console.error("[signup] signUp failed:", signUpError);
       setError(t("error"));
+      // Single-use token spent on that attempt — reissue for any retry.
+      setCaptchaToken(null);
+      setCaptchaKey((k) => k + 1);
       setBusy(false);
       return;
     }
@@ -113,7 +118,7 @@ export default function SignupForm() {
         />
         <p className="mt-1 text-[11.5px] text-ink-muted">{t("passwordHint")}</p>
       </div>
-      <Turnstile onToken={setCaptchaToken} />
+      <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />
       {error && (
         <p role="alert" className="text-[12.5px] font-medium text-red-600">
           {error}

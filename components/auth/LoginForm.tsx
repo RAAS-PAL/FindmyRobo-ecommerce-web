@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { LoaderCircle, LogIn } from "lucide-react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
+import Turnstile, { captchaEnabled } from "@/components/auth/Turnstile";
 
 const inputClass =
   "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
@@ -17,21 +18,31 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setBusy(true);
     setError(null);
 
+    // Supabase's captcha protection covers sign-in, not just signup — without a
+    // token here every login is rejected once it is switched on.
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
+      ...(captchaToken ? { options: { captchaToken } } : {}),
     });
 
     if (signInError) {
+      console.error("[login] signInWithPassword failed:", signInError);
       setError(
         signInError.code === "email_not_confirmed" ? t("unconfirmed") : t("error")
       );
+      // The token was spent on that attempt; issue a fresh challenge so a retry
+      // isn't rejected for a reason the customer can't see.
+      setCaptchaToken(null);
+      setCaptchaKey((k) => k + 1);
       setBusy(false);
       return;
     }
@@ -84,6 +95,7 @@ export default function LoginForm() {
           className={inputClass}
         />
       </div>
+      <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />
       {error && (
         <p role="alert" className="text-[12.5px] font-medium text-red-600">
           {error}
@@ -91,7 +103,7 @@ export default function LoginForm() {
       )}
       <button
         type="submit"
-        disabled={busy || !email || !password}
+        disabled={busy || !email || !password || (captchaEnabled && !captchaToken)}
         className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {busy ? (

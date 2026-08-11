@@ -6,6 +6,7 @@ import { Check, KeyRound, LoaderCircle, LogOut, Mail } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import AccountSection from "@/components/account/AccountSection";
+import Turnstile, { captchaEnabled } from "@/components/auth/Turnstile";
 
 const inputClass =
   "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
@@ -35,6 +36,8 @@ export default function SecuritySettings({
   const [pwDone, setPwDone] = useState(false);
 
   const [signOutBusy, setSignOutBusy] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0);
 
   const mismatch = confirm.length > 0 && next !== confirm;
 
@@ -75,12 +78,18 @@ export default function SecuritySettings({
     // Supabase has no "verify password" call, so re-authenticating with the
     // current one is how we prove the person at the keyboard is the account
     // owner rather than someone using a session left open on a shared machine.
+    // This is a sign-in call, so it sits behind Supabase's captcha protection
+    // alongside login and password recovery.
     const { error: reauthError } = await supabase.auth.signInWithPassword({
       email: currentEmail,
       password: current,
+      ...(captchaToken ? { options: { captchaToken } } : {}),
     });
     if (reauthError) {
+      console.error("[security] re-auth failed:", reauthError);
       setPwError(t("errors.wrongPassword"));
+      setCaptchaToken(null);
+      setCaptchaKey((k) => k + 1);
       setPwBusy(false);
       return;
     }
@@ -232,6 +241,7 @@ export default function SecuritySettings({
             />
             <p className="mt-1 text-[11.5px] text-ink-muted">{t("passwordHint")}</p>
           </div>
+          <Turnstile onToken={setCaptchaToken} resetKey={captchaKey} />
           {pwError && (
             <p role="alert" className="text-[12.5px] font-medium text-red-600">
               {pwError}
@@ -248,7 +258,13 @@ export default function SecuritySettings({
           )}
           <button
             type="submit"
-            disabled={pwBusy || !current || next.length < 8 || next !== confirm}
+            disabled={
+              pwBusy ||
+              !current ||
+              next.length < 8 ||
+              next !== confirm ||
+              (captchaEnabled && !captchaToken)
+            }
             className={buttonClass}
           >
             {pwBusy ? (
