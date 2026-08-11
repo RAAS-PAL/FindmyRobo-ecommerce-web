@@ -1,4 +1,4 @@
-import { salesAlertRecipient, sendEmail } from "@/lib/email";
+import { salesAlertRecipients, salesReplyTo, sendEmail } from "@/lib/email";
 import { buildCustomerConfirmation, buildSalesAlert } from "@/lib/emails/orderEmails";
 import type { Order } from "@/lib/checkout";
 
@@ -19,7 +19,7 @@ export async function notifyNewOrder(order: Order, locale: string): Promise<void
     (async () => {
       const { subject, html } = await buildSalesAlert(order, locale);
       return sendEmail({
-        to: salesAlertRecipient,
+        to: salesAlertRecipients,
         subject,
         html,
         // Replying to the alert reaches the customer directly, which is what
@@ -33,7 +33,7 @@ export async function notifyNewOrder(order: Order, locale: string): Promise<void
         to: order.shipping.email,
         subject,
         html,
-        replyTo: salesAlertRecipient,
+        replyTo: salesReplyTo,
       });
     })(),
   ]);

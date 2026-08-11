@@ -17,9 +17,24 @@ import { siteConfig } from "@/data/siteConfig";
 /** Verified sending domain — see supabase/../DNS notes; must match Resend. */
 const FROM = process.env.EMAIL_FROM ?? "FindMyRobo <noreply@send.findmyrobo.com>";
 
-/** Where new-order alerts go. Overridable without a deploy. */
-export const salesAlertRecipient =
-  process.env.SALES_ALERT_EMAIL ?? siteConfig.salesContact.email;
+/**
+ * Where new-order alerts go. Comma-separate SALES_ALERT_EMAIL for several
+ * people — changing who is notified is then an env var edit, not a deploy.
+ *
+ *   SALES_ALERT_EMAIL=sales@raaspal.com, chris@raaspal.com, ops@raaspal.com
+ *
+ * All recipients are on `to` rather than bcc: this is an internal alert, and
+ * the team seeing who else was notified is useful, not a leak.
+ */
+export const salesAlertRecipients = (
+  process.env.SALES_ALERT_EMAIL ?? siteConfig.salesContact.email
+)
+  .split(",")
+  .map((address) => address.trim())
+  .filter(Boolean);
+
+/** First recipient — used as the customer-facing Reply-To. */
+export const salesReplyTo = salesAlertRecipients[0] ?? siteConfig.salesContact.email;
 
 export const emailConfigured = Boolean(process.env.RESEND_API_KEY);
 

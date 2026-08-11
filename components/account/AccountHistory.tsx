@@ -31,6 +31,12 @@ export default function AccountHistory({
   purchases: PurchaseHistoryItem[];
 }) {
   const t = useTranslations("auth.account");
+  // Quotation mode: "Pending payment" implies money is owed before anything has
+  // been quoted. Only that status needs rewording.
+  const statusLabel = (status: OrderStatus) =>
+    !siteConfig.showPrices && status === "pending_payment"
+      ? t("status.pending_quotation")
+      : t(`status.${status}`);
   const locale = useLocale();
   const date = (value: string) =>
     new Intl.DateTimeFormat(locale === "th" ? "th-TH" : "en-GB", {
@@ -80,7 +86,7 @@ export default function AccountHistory({
                   </span>
                   <span className="hidden text-right sm:block">
                     <span className={`rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-wider ${statusClass[order.status]}`}>
-                      {t(`status.${order.status}`)}
+                      {statusLabel(order.status)}
                     </span>
                     {siteConfig.showPrices && (<span className="mt-2 block font-mono text-sm font-bold text-content">{formatBaht(order.total)}</span>)}
                   </span>
@@ -89,7 +95,7 @@ export default function AccountHistory({
                 <div className="border-t border-forest-100 px-4 py-4">
                   <div className="mb-4 flex items-center justify-between sm:hidden">
                     <span className={`rounded-full px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-wider ${statusClass[order.status]}`}>
-                      {t(`status.${order.status}`)}
+                      {statusLabel(order.status)}
                     </span>
                     {siteConfig.showPrices && (<span className="font-mono text-sm font-bold text-content">{formatBaht(order.total)}</span>)}
                   </div>
