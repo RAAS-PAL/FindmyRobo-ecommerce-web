@@ -2,7 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
+import { ArrowUpRight, Minus, Plus, Trash2, X } from "lucide-react";
+import CartIcon from "@/components/cart/CartIcon";
 import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
 import { useCart } from "@/components/cart/CartProvider";
@@ -42,7 +43,7 @@ export default function CartDrawer() {
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <span className="flex items-center gap-2.5">
                 <span className="flex h-8 w-8 items-center justify-center rounded-md bg-gold text-forest-950">
-                  <ShoppingCart className="h-4.5 w-4.5" aria-hidden="true" />
+                  <CartIcon className="h-4.5 w-4.5" />
                 </span>
                 <span className="font-display text-base font-extrabold text-white">
                   {drawerTitle}
@@ -67,7 +68,7 @@ export default function CartDrawer() {
               /* empty state */
               <div className="flex flex-1 flex-col items-center justify-center gap-5 px-8 text-center">
                 <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/5">
-                  <ShoppingCart className="h-7 w-7 text-white/30" aria-hidden="true" />
+                  <CartIcon className="h-7 w-7 text-white/30" />
                 </span>
                 <p className="text-sm leading-relaxed text-white/60">{t("empty")}</p>
                 <Link

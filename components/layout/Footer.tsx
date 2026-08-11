@@ -17,6 +17,13 @@ const payments = ["PromptPay", "Visa", "Mastercard", "Bank Transfer"];
 /** Keeps the products column from running longer than the other three. */
 const MAX_FOOTER_PRODUCTS = 8;
 
+/**
+ * Destinations for footer.about, positional — index 0 is the first label in the
+ * translated array. Keep this in step with the `about` array in
+ * messages/{en,th}.json; adding a label without a href here falls back to "#".
+ */
+const ABOUT_HREFS = ["/about", "/#contact", "/#support", "/shop"];
+
 const socials = [
   { label: "Facebook", Icon: FacebookIcon },
   { label: "Instagram", Icon: InstagramIcon },
@@ -125,14 +132,14 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
               {t("aboutTitle")}
             </h3>
             <ul className="mt-5 space-y-3">
-              {about.map((item) => (
+              {about.map((item, index) => (
                 <li key={item}>
-                  <a
-                    href="#"
+                  <Link
+                    href={ABOUT_HREFS[index] ?? "#"}
                     className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-gold"
                   >
                     {item}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

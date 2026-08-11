@@ -1,0 +1,310 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import {
+  ArrowUpRight,
+  BadgeCheck,
+  Headset,
+  Home,
+  MapPin,
+  Shield,
+  Wrench,
+} from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import FadeIn from "@/components/ui/FadeIn";
+import { about } from "@/data/about";
+import { salesMapUrl, siteConfig } from "@/data/siteConfig";
+import type { Locale } from "@/data/products";
+
+const ICONS = {
+  shield: Shield,
+  home: Home,
+  wrench: Wrench,
+  headset: Headset,
+} as const;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "about" });
+  return { title: t("metaTitle") };
+}
+
+export default async function AboutPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("about");
+  const l = locale as Locale;
+  const { addressLines } = siteConfig.salesContact;
+
+  return (
+    <main className="flex-1 bg-cloud">
+      {/* hero */}
+      <section className="bg-forest-950 py-16 sm:py-24">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+          <FadeIn>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
+              {t("eyebrow")}
+            </p>
+            <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+              {t("heading")}
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70">
+              {about.hero.intro[l]}
+            </p>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* stats */}
+      {about.stats.length > 0 && (
+        <section className="border-b border-forest-100 bg-surface">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-10 sm:px-6 lg:grid-cols-4">
+            {about.stats.map((stat) => (
+              <FadeIn key={stat.label.en}>
+                <div className="text-center">
+                  <p className="font-mono text-2xl font-extrabold text-content sm:text-3xl">
+                    {stat.value}
+                  </p>
+                  <p className="mt-1 text-[12.5px] leading-snug text-ink-muted">
+                    {stat.label[l]}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* story */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <FadeIn>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+              {t("storyEyebrow")}
+            </p>
+            <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
+              {t("storyHeading")}
+            </h2>
+            <div className="mt-5 space-y-4">
+              {about.story.body[l].map((paragraph) => (
+                <p key={paragraph} className="text-[15px] leading-relaxed text-ink-muted">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-forest-950">
+              <Image
+                src={about.story.image}
+                alt=""
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* official partner — hidden entirely when `partner` is null */}
+      {about.partner && (
+        <section className="bg-surface py-14 sm:py-20">
+          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+            <FadeIn>
+              <span className="inline-flex items-center gap-2 rounded-full bg-gold/15 px-4 py-1.5">
+                <BadgeCheck className="h-4 w-4 text-gold-600" aria-hidden="true" />
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-600">
+                  {t("partnerEyebrow")}
+                </span>
+              </span>
+              <h2 className="mt-5 font-display text-2xl font-extrabold text-content sm:text-3xl">
+                {about.partner.name}
+              </h2>
+              <p className="mt-2 text-[15px] font-semibold text-gold-600">
+                {about.partner.status[l]}
+              </p>
+              <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-muted">
+                {about.partner.body[l]}
+              </p>
+            </FadeIn>
+          </div>
+        </section>
+      )}
+
+      {/* values */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <FadeIn>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+            {t("valuesEyebrow")}
+          </p>
+          <h2 className="mt-3 max-w-2xl font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
+            {t("valuesHeading")}
+          </h2>
+        </FadeIn>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {about.values.map((value, index) => {
+            const Icon = ICONS[value.icon];
+            return (
+              <FadeIn key={value.title.en} delay={index * 0.05}>
+                <div className="h-full rounded-2xl border border-forest-100 bg-surface p-6">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-forest-950 text-gold">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <h3 className="mt-4 font-display text-lg font-bold text-content">
+                    {value.title[l]}
+                  </h3>
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-ink-muted">
+                    {value.body[l]}
+                  </p>
+                </div>
+              </FadeIn>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* milestones */}
+      {about.milestones.length > 0 && (
+        <section className="bg-surface py-16 sm:py-24">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6">
+            <FadeIn>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+                {t("milestonesEyebrow")}
+              </p>
+              <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
+                {t("milestonesHeading")}
+              </h2>
+            </FadeIn>
+            <ol className="mt-10 space-y-0">
+              {about.milestones.map((milestone, index) => (
+                <FadeIn key={milestone.when + milestone.title.en} delay={index * 0.05}>
+                  <li className="relative border-l-2 border-forest-100 pb-8 pl-8 last:border-transparent last:pb-0">
+                    <span className="absolute -left-[9px] top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-gold bg-surface" />
+                    <p className="font-mono text-sm font-bold text-gold-600">
+                      {milestone.when}
+                    </p>
+                    <h3 className="mt-1 font-display text-lg font-bold text-content">
+                      {milestone.title[l]}
+                    </h3>
+                    <p className="mt-1 text-[13.5px] leading-relaxed text-ink-muted">
+                      {milestone.body[l]}
+                    </p>
+                  </li>
+                </FadeIn>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {/* team */}
+      {about.team.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+          <FadeIn>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+              {t("teamEyebrow")}
+            </p>
+            <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
+              {t("teamHeading")}
+            </h2>
+          </FadeIn>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {about.team.map((member, index) => (
+              <FadeIn key={member.name + index} delay={index * 0.05}>
+                <div className="rounded-2xl border border-forest-100 bg-surface p-6 text-center">
+                  <span className="mx-auto flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-forest-950">
+                    {member.photo ? (
+                      <Image
+                        src={member.photo}
+                        alt={member.name}
+                        width={80}
+                        height={80}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="font-display text-2xl font-extrabold text-gold">
+                        {member.name.trim().charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </span>
+                  <h3 className="mt-4 font-display text-base font-bold text-content">
+                    {member.name}
+                  </h3>
+                  <p className="mt-0.5 text-[13px] text-ink-muted">{member.role[l]}</p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* visit + CTA */}
+      <section className="bg-forest-950 py-16 sm:py-24">
+        <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-2">
+          <FadeIn>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
+              {t("visitEyebrow")}
+            </p>
+            <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+              {t("visitHeading")}
+            </h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-white/60">
+              {t("visitBody")}
+            </p>
+            <a
+              href={salesMapUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-flex items-start gap-3 text-[14px] leading-relaxed text-white/80 transition-colors hover:text-gold"
+            >
+              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-gold" aria-hidden="true" />
+              <address className="not-italic">
+                {addressLines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+                <span className="mt-1 block font-semibold text-gold">{t("viewMap")}</span>
+              </address>
+            </a>
+          </FadeIn>
+
+          <FadeIn delay={0.1}>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+              <h2 className="font-display text-2xl font-extrabold tracking-tight text-white">
+                {t("ctaHeading")}
+              </h2>
+              <p className="mt-3 text-[15px] leading-relaxed text-white/60">
+                {t("ctaBody")}
+              </p>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/products/request-a-demo"
+                  className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-gold px-6 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+                >
+                  {t("ctaDemo")}
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/contact-sales"
+                  className="flex min-h-[50px] flex-1 items-center justify-center rounded-full border border-white/20 px-6 text-[14px] font-bold text-white transition-colors hover:border-gold hover:text-gold"
+                >
+                  {t("ctaSales")}
+                </Link>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+    </main>
+  );
+}
