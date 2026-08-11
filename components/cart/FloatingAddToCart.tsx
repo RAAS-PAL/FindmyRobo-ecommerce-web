@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Check, ShoppingCart } from "lucide-react";
+import { Check } from "lucide-react";
+import CartIcon from "@/components/cart/CartIcon";
 import { useCart } from "@/components/cart/CartProvider";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
 
@@ -98,7 +99,7 @@ export default function FloatingAddToCart({
             </>
           ) : (
             <>
-              <ShoppingCart className="h-4.5 w-4.5" aria-hidden="true" />
+              <CartIcon className="h-4.5 w-4.5" />
               {t("addToCart")}
             </>
           )}

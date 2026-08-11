@@ -7,16 +7,17 @@ import {
   Calendar,
   ChevronDown,
   Menu,
-  ShoppingCart,
   User,
   X,
 } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { categories, categoryHref } from "@/data/categories";
+import { siteConfig } from "@/data/siteConfig";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import { useCart } from "@/components/cart/CartProvider";
+import CartIcon from "@/components/cart/CartIcon";
 import { useProducts } from "@/components/ProductsProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
 import CatalogSearch from "@/components/layout/CatalogSearch";
@@ -468,10 +469,13 @@ export default function Navbar() {
           <button
             type="button"
             onClick={openDrawer}
-            aria-label={t("cartLabel", { count })}
+            aria-label={t(
+              siteConfig.showPrices ? "cartLabel" : "quotationLabel",
+              { count }
+            )}
             className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
           >
-            <ShoppingCart className="h-5 w-5" aria-hidden="true" />
+            <CartIcon className="h-5 w-5" />
             {count > 0 && (
               <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-0.5 font-mono text-[10px] font-bold text-forest-950">
                 {count}
