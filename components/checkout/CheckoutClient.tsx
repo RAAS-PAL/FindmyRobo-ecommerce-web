@@ -22,6 +22,7 @@ import PromptPayForm from "@/components/checkout/PromptPayForm";
 import { useCart, type CartLine } from "@/components/cart/CartProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import { formatBaht, SERVICE_CATEGORY, type Product } from "@/data/products";
+import { siteConfig } from "@/data/siteConfig";
 import {
   EMPTY_SHIPPING,
   validateShipping,
@@ -139,12 +140,16 @@ function SummaryLine({ item, forLabel }: { item: CartLine; forLabel?: string }) 
           </span>
         )}
         <span className="block text-[12px] text-ink-muted">
-          {formatBaht(item.product.price)} × {item.qty}
+          {siteConfig.showPrices
+            ? `${formatBaht(item.product.price)} × ${item.qty}`
+            : `× ${item.qty}`}
         </span>
       </span>
-      <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
-        {formatBaht(item.qty * item.product.price)}
-      </span>
+      {siteConfig.showPrices && (
+        <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
+          {formatBaht(item.qty * item.product.price)}
+        </span>
+      )}
     </li>
   );
 }
@@ -153,6 +158,7 @@ export default function CheckoutClient() {
   const t = useTranslations("checkout");
   const tc = useTranslations("cart");
   const tp = useTranslations("payment");
+  const tq = useTranslations("quotation");
   const locale = useLocale();
   const { items, subtotal, clear, add, remove } = useCart();
   const { products } = useProducts();
@@ -359,18 +365,26 @@ export default function CheckoutClient() {
                       </span>
                     )}
                   </span>
-                  <span className="font-mono font-semibold tabular-nums text-content">
-                    {formatBaht(item.qty * item.unitPrice)}
-                  </span>
+                  {siteConfig.showPrices && (
+                    <span className="font-mono font-semibold tabular-nums text-content">
+                      {formatBaht(item.qty * item.unitPrice)}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
-            <div className="mt-4 flex items-baseline justify-between border-t border-forest-100 pt-4">
-              <span className="text-[13px] font-semibold text-content">{t("total")}</span>
-              <span className="font-mono text-lg font-semibold tabular-nums text-content">
-                {formatBaht(placed.total)}
-              </span>
-            </div>
+            {siteConfig.showPrices ? (
+              <div className="mt-4 flex items-baseline justify-between border-t border-forest-100 pt-4">
+                <span className="text-[13px] font-semibold text-content">{t("total")}</span>
+                <span className="font-mono text-lg font-semibold tabular-nums text-content">
+                  {formatBaht(placed.total)}
+                </span>
+              </div>
+            ) : (
+              <p className="mt-4 border-t border-forest-100 pt-4 text-[12.5px] leading-relaxed text-ink-muted">
+                {tq("totalPending")}
+              </p>
+            )}
           </div>
 
           <Link
@@ -508,9 +522,11 @@ export default function CheckoutClient() {
                                       </span>
                                     )}
                                   </span>
-                                  <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
-                                    {formatBaht(tier.price)}
-                                  </span>
+                                  {siteConfig.showPrices && (
+                                    <span className="font-mono text-[14px] font-semibold tabular-nums text-content">
+                                      {formatBaht(tier.price)}
+                                    </span>
+                                  )}
                                 </>
                               ) : (
                                 <span className="flex-1 text-[13.5px] font-medium text-ink-muted">
@@ -666,6 +682,13 @@ export default function CheckoutClient() {
               ))}
             </ul>
 
+            {!siteConfig.showPrices ? (
+              // Quotation mode: no subtotal, shipping, or total — none of them
+              // are known until the property has been assessed and quoted.
+              <p className="border-t border-forest-100 pt-4 text-[13px] leading-relaxed text-ink-muted">
+                {tq("totalPending")}
+              </p>
+            ) : (
             <dl className="space-y-2.5 border-t border-forest-100 pt-4 text-[13.5px]">
               <div className="flex items-baseline justify-between">
                 <dt className="text-ink-muted">{t("subtotal")}</dt>
@@ -686,6 +709,7 @@ export default function CheckoutClient() {
                 </dd>
               </div>
             </dl>
+            )}
 
             <button
               type="submit"
@@ -696,7 +720,7 @@ export default function CheckoutClient() {
                 <LoaderCircle className="h-4.5 w-4.5 animate-spin" aria-hidden="true" />
               ) : (
                 <>
-                  {t("placeOrder")}
+                  {siteConfig.showPrices ? t("placeOrder") : tq("submitCta")}
                   <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
                 </>
               )}

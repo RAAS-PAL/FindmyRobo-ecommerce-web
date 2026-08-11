@@ -643,6 +643,19 @@
     "demoNote": "Prefer to see a robot in action first?",
     "demoCta": "Book an in-home demo"
   },
+  "quotation": {
+    "onRequest": "Price on request",
+    "note": "Final price is confirmed in your quotation, after we check your property size and installation needs.",
+    "requestCta": "Request a Quotation",
+    "addToList": "Add to quotation",
+    "inList": "In your quotation",
+    "listTitle": "Quotation list",
+    "listEmpty": "Your quotation list is empty",
+    "submitCta": "Request quotation",
+    "itemCount": "{count, plural, one {# item} other {# items}}",
+    "totalPending": "Your quotation will include the full price and any installation costs.",
+    "quotedSeparately": "Quoted separately"
+  },
   "orderStatus": {
     "metaTitle": "Track your order — FindMyRobo",
     "eyebrow": "Order status",
@@ -670,11 +683,15 @@
       "total": "Total",
       "deliverTo": "Deliver to",
       "note": "Customer note",
-      "openAdmin": "Open in admin"
+      "openAdmin": "Open in admin",
+      "indicative": "List prices — indicative only. Confirm the final figure in the quotation."
     },
     "orderConfirmation": {
       "subject": "We received your order {orderId}",
+      "subjectQuote": "We received your quotation request {orderId}",
       "heading": "Thank you for your order",
+      "headingQuote": "Thank you for your request",
+      "nextBodyQuote": "Our team will call you on {phone} within 24 hours to check your property size and installation needs, then send your full quotation. There is no obligation and nothing to pay.",
       "intro": "Hi {name}, we've received your order and reserved it for you.",
       "orderNumber": "Order number",
       "nextTitle": "What happens next",
@@ -992,14 +1009,17 @@
   "footer": {
     "copyright": "© 2026 FindMyRobo Thailand. All rights reserved.",
     "contactTitle": "Contact",
-    "policiesTitle": "Policies",
-    "policies": [
+    "productsTitle": "Products",
+    "viewAll": "View all robots →",
+    "supportTitle": "Support and Service",
+    "support": [
+      "Support",
+      "Warranty",
       "Refunds and Returns",
-      "Privacy Policy",
-      "Terms and Conditions",
       "Shipping",
       "Payment and Finance Options",
-      "Warranty"
+      "Privacy Policy",
+      "Terms and Conditions"
     ],
     "aboutTitle": "About",
     "about": ["About Us", "Contact", "Support", "Blog", "Find My Robot"],

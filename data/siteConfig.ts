@@ -51,6 +51,18 @@ export interface ShowcaseFeature {
 }
 
 export const siteConfig = {
+  /**
+   * Customer-facing price visibility.
+   *
+   * false = quotation mode: no price is rendered anywhere a customer can see.
+   * Prices are still read from the catalogue, still priced server-side at
+   * checkout, and still shown to sales in the alert email and the admin panel —
+   * they are the starting point for the quotation, not a published offer.
+   *
+   * Set back to true when card payment goes live and the site sells directly.
+   */
+  showPrices: false,
+
   heroVideoUrls: [
     // Hero background clips, played in order then looped. Hosted on Cloudinary
     // and served through its CDN with q_auto (auto-compress to the best

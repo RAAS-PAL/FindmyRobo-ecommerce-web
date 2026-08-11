@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import RobotIllustration from "@/components/ui/RobotIllustration";
-import { formatBaht, type Locale, type Product } from "@/data/products";
+import { type Locale, type Product } from "@/data/products";
+import PriceOrQuote from "@/components/ui/PriceOrQuote";
 
 /**
  * Large, image-forward product card for the home carousel (Mammotion-style):
@@ -145,9 +146,11 @@ export default function FeaturedProductCard({
             </span>
           </span>
 
-          <span className="font-mono text-xl font-bold tabular-nums text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-2xl">
-            {formatBaht(product.price)}
-          </span>
+          <PriceOrQuote
+            amount={product.price}
+            className="font-mono text-xl font-bold tabular-nums text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-2xl"
+            quoteClassName="text-base font-bold text-gold drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-lg"
+          />
         </span>
       </Link>
     </motion.article>

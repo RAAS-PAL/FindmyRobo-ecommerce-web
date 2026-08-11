@@ -8,6 +8,7 @@ import { listOwnAddresses } from "@/lib/addressStore";
 import { claimGuestOrders, listOrdersByUser } from "@/lib/orderStore";
 import { getAllProducts } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
+import { siteConfig } from "@/data/siteConfig";
 import FadeIn from "@/components/ui/FadeIn";
 import SignOutButton from "@/components/auth/SignOutButton";
 import AddressManager from "@/components/account/AddressManager";
@@ -139,15 +140,19 @@ export default async function AccountPage({
                 <p className="text-xs text-ink-muted">{t("completedOrders")}</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 rounded-xl border border-forest-100 bg-surface p-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/15 text-gold-600">
-                <ShoppingBag className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <div>
-                <p className="font-mono text-xl font-bold text-content">{formatBaht(totalSpent)}</p>
-                <p className="text-xs text-ink-muted">{t("totalSpent")}</p>
+            {/* Total spent is meaningless while prices are quoted rather than
+                published — the stored totals are indicative, not agreed. */}
+            {siteConfig.showPrices && (
+              <div className="flex items-center gap-4 rounded-xl border border-forest-100 bg-surface p-4">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/15 text-gold-600">
+                  <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <div>
+                  <p className="font-mono text-xl font-bold text-content">{formatBaht(totalSpent)}</p>
+                  <p className="text-xs text-ink-muted">{t("totalSpent")}</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </FadeIn>
 

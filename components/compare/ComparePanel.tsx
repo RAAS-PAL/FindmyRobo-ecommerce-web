@@ -8,7 +8,8 @@ import { useRouter } from "@/i18n/navigation";
 import { useProducts } from "@/components/ProductsProvider";
 import { useCompare, COMPARE_MAX } from "@/components/compare/CompareProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
-import { formatBaht, SERVICE_CATEGORY } from "@/data/products";
+import { SERVICE_CATEGORY } from "@/data/products";
+import PriceOrQuote from "@/components/ui/PriceOrQuote";
 
 /**
  * The robot picker behind the floating compare button (PRD #30): choose 2–3
@@ -110,9 +111,11 @@ export default function ComparePanel({
                       <span className="block truncate text-sm font-bold text-content">
                         {robot.name}
                       </span>
-                      <span className="block font-mono text-[12px] tabular-nums text-ink-muted">
-                        {formatBaht(robot.price)}
-                      </span>
+                      <PriceOrQuote
+                        amount={robot.price}
+                        className="block font-mono text-[12px] tabular-nums text-ink-muted"
+                        quoteClassName="block text-[11.5px] font-semibold text-gold-600"
+                      />
                     </span>
                     <span
                       className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-colors ${

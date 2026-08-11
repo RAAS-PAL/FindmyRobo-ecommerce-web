@@ -10,8 +10,12 @@ import {
   YouTubeIcon,
 } from "@/components/ui/BrandIcons";
 import { salesMapUrl, siteConfig } from "@/data/siteConfig";
+import { SERVICE_CATEGORY, type Product } from "@/data/products";
 
 const payments = ["PromptPay", "Visa", "Mastercard", "Bank Transfer"];
+
+/** Keeps the products column from running longer than the other three. */
+const MAX_FOOTER_PRODUCTS = 8;
 
 const socials = [
   { label: "Facebook", Icon: FacebookIcon },
@@ -21,18 +25,26 @@ const socials = [
   { label: "LinkedIn", Icon: LinkedInIcon },
 ];
 
-export default function Footer() {
+export default function Footer({ products = [] }: { products?: Product[] }) {
   const t = useTranslations("footer");
-  const policies = t.raw("policies") as string[];
+  const support = t.raw("support") as string[];
   const about = t.raw("about") as string[];
   const { phone, email, addressLines } = siteConfig.salesContact;
+
+  // Installation packages are add-ons bought alongside a robot, not something
+  // anyone browses to from a footer.
+  const footerProducts = products
+    .filter((product) => product.category !== SERVICE_CATEGORY)
+    .slice(0, MAX_FOOTER_PRODUCTS);
 
   return (
     <footer id="contact" className="bg-forest-950 text-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+        {/* 12-col on desktop so the brand and contact blocks get more room than
+            the three link lists, which stay narrow. */}
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
           {/* brand */}
-          <div>
+          <div className="lg:col-span-3">
             <Link href="/" className="flex items-center gap-2.5" aria-label="FindMyRobo home">
               <Image
                 src="/main-logo-dark.png"
@@ -60,13 +72,41 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* policies */}
-          <nav aria-label={t("policiesTitle")}>
+          {/* products — the only list here with real destinations; the rest
+              stay "#" until their pages exist. */}
+          <nav aria-label={t("productsTitle")} className="lg:col-span-2">
             <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-              {t("policiesTitle")}
+              {t("productsTitle")}
             </h3>
             <ul className="mt-5 space-y-3">
-              {policies.map((item) => (
+              {footerProducts.map((product) => (
+                <li key={product.id}>
+                  <Link
+                    href={`/products/${product.id}`}
+                    className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-gold"
+                  >
+                    {product.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/shop"
+                  className="inline-block py-0.5 text-sm font-semibold text-gold/80 transition-colors hover:text-gold"
+                >
+                  {t("viewAll")}
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          {/* support and service */}
+          <nav aria-label={t("supportTitle")} className="lg:col-span-2">
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+              {t("supportTitle")}
+            </h3>
+            <ul className="mt-5 space-y-3">
+              {support.map((item) => (
                 <li key={item}>
                   <a
                     href="#"
@@ -80,7 +120,7 @@ export default function Footer() {
           </nav>
 
           {/* about */}
-          <nav aria-label={t("aboutTitle")}>
+          <nav aria-label={t("aboutTitle")} className="lg:col-span-2">
             <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
               {t("aboutTitle")}
             </h3>
@@ -101,7 +141,7 @@ export default function Footer() {
           {/* contact — this block is the #contact anchor the nav links to, and
               the visible business address Omise's merchant review and PDPA's
               data-controller notice both expect to find. */}
-          <section aria-labelledby="footer-contact-heading">
+          <section aria-labelledby="footer-contact-heading" className="lg:col-span-3">
             <h3
               id="footer-contact-heading"
               className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold"

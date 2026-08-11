@@ -6,6 +6,7 @@ import { Bot, Ruler } from "lucide-react";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { useProducts } from "@/components/ProductsProvider";
 import { formatBaht, SERVICE_CATEGORY } from "@/data/products";
+import { siteConfig } from "@/data/siteConfig";
 
 /** "5,000 m²" → 5000; NaN when the spec is missing/unparsable. */
 const parseArea = (spec?: string) => (spec ? Number(spec.replace(/[^0-9]/g, "")) : NaN);
@@ -61,7 +62,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
   return (
     <div className="flex flex-col gap-5">
       {/* price of the selected area band */}
-      {selected && (
+      {selected && siteConfig.showPrices && (
         <p className="font-mono text-3xl font-semibold tabular-nums text-content">
           {formatBaht(selected.price)}
         </p>
@@ -106,9 +107,11 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
                       {tier.specs.area}
                     </span>
                   </span>
-                  <span className="font-mono text-[13.5px] font-semibold tabular-nums text-content">
-                    {formatBaht(tier.price)}
-                  </span>
+                  {siteConfig.showPrices && (
+                    <span className="font-mono text-[13.5px] font-semibold tabular-nums text-content">
+                      {formatBaht(tier.price)}
+                    </span>
+                  )}
                 </label>
               );
             })}
