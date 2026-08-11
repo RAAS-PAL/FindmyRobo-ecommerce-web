@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Check, ShoppingCart } from "lucide-react";
+import { Check } from "lucide-react";
+import CartIcon from "@/components/cart/CartIcon";
 import { useCart } from "@/components/cart/CartProvider";
 import { siteConfig } from "@/data/siteConfig";
 
@@ -10,11 +11,17 @@ export default function AddToCartButton({
   productId,
   forId,
   disabled = false,
+  label,
+  icon,
 }: {
   productId: string;
   /** For service products: the robot this service is attached to. */
   forId?: string;
   disabled?: boolean;
+  /** Overrides the default cart/quotation wording — e.g. "Book Now" for a demo. */
+  label?: string;
+  /** Overrides the cart icon when the action isn't really "add to cart". */
+  icon?: React.ReactNode;
 }) {
   const t = useTranslations("cart");
   const tq = useTranslations("quotation");
@@ -51,8 +58,8 @@ export default function AddToCartButton({
         </>
       ) : (
         <>
-          <ShoppingCart className="h-4.5 w-4.5" aria-hidden="true" />
-          {siteConfig.showPrices ? t("addToCart") : tq("addToList")}
+          {icon ?? <CartIcon className="h-4.5 w-4.5" />}
+          {label ?? (siteConfig.showPrices ? t("addToCart") : tq("addToList"))}
         </>
       )}
     </button>

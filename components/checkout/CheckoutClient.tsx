@@ -10,11 +10,11 @@ import {
   LoaderCircle,
   MapPin,
   QrCode,
-  ShoppingCart,
   Sparkles,
   UserRound,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import CartIcon from "@/components/cart/CartIcon";
 import FadeIn from "@/components/ui/FadeIn";
 import ProductVisual from "@/components/ui/ProductVisual";
 import CardPaymentForm from "@/components/checkout/CardPaymentForm";
@@ -404,7 +404,7 @@ export default function CheckoutClient() {
     return (
       <FadeIn className="mx-auto flex max-w-md flex-col items-center gap-6 py-16 text-center">
         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-forest/5">
-          <ShoppingCart className="h-7 w-7 text-content/30" aria-hidden="true" />
+          <CartIcon className="h-7 w-7 text-content/30" />
         </span>
         <p className="text-sm leading-relaxed text-ink-muted">{t("empty")}</p>
         <Link

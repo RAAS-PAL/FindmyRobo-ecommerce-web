@@ -66,8 +66,11 @@ const METHODS: Method[] = [
 
 export default function PaymentMethods({ className = "" }: { className?: string }) {
   return (
+    // Faded while card payment is still off and orders are settled by phone —
+    // these read as "accepted later", not "pay with these now". Drop the
+    // opacity classes when Omise goes live.
     <div
-      className={`flex flex-wrap items-center gap-2 ${className}`}
+      className={`flex flex-wrap items-center gap-2 opacity-55 transition-opacity duration-300 hover:opacity-100 ${className}`}
       role="img"
       aria-label="Accepted payment methods"
     >
@@ -75,7 +78,7 @@ export default function PaymentMethods({ className = "" }: { className?: string 
         <span
           key={label}
           title={label}
-          className="inline-flex h-7 items-center justify-center rounded-md border border-forest-100 bg-white px-2.5"
+          className="inline-flex h-7 items-center justify-center rounded-md border border-forest-100 bg-white px-2.5 grayscale-[35%]"
         >
           {img ? (
             // eslint-disable-next-line @next/next/no-img-element

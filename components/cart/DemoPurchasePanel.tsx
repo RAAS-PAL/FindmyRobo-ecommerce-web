@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Bot, Ruler } from "lucide-react";
+import { Bot, Calendar, Ruler } from "lucide-react";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { useProducts } from "@/components/ProductsProvider";
 import { formatBaht, SERVICE_CATEGORY } from "@/data/products";
@@ -154,6 +154,10 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
           productId={tierId}
           forId={robotId}
           disabled={!robotId || !tierId}
+          // A demo is an appointment, not a purchase — "add to cart" reads
+          // wrong even though it uses the same cart mechanics underneath.
+          label={t("bookNow")}
+          icon={<Calendar className="h-4.5 w-4.5" aria-hidden="true" />}
         />
       </div>
     </div>
