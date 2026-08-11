@@ -627,7 +627,9 @@
     "demoAreaHint": "The demo fee depends on the size of the area we'll cover.",
     "demoRobotLabel": "Which robot would you like to demo?",
     "demoRobotHint": "Pick the robot you'd like to see working on your own lawn — no purchase needed.",
-    "bookNow": "Book Now"
+    "bookNow": "Book Now",
+    "selectAreaLabel": "Coverage area",
+    "recommendedForRobot": "Recommended for your robot"
   },
   "contactSales": {
     "metaTitle": "Contact Sales — FindMyRobo",
@@ -872,7 +874,9 @@
     "comingSoonTitle": "Coming soon to Thailand",
     "comingSoonBody": "We are working with our partners to bring this category to you. Book a demo to hear about it first.",
     "backToShop": "Browse all robots",
-    "metaTitle": "Shop Robots — FindMyRobo"
+    "metaTitle": "Shop Robots — FindMyRobo",
+    "installCardName": "Installation Service",
+    "installCardTagline": "Professional on-site setup — choose your coverage area on the next page."
   },
   "search": {
     "eyebrow": "Catalog Search",

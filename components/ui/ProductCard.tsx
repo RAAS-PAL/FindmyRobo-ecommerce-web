@@ -25,11 +25,21 @@ export default function ProductCard({
   product,
   index,
   size = "default",
+  displayName,
+  displayTagline,
 }: {
   product: Product;
   index: number;
   /** "lg" (~1.3×) is used in the home carousel; grids keep "default". */
   size?: "default" | "lg";
+  /**
+   * Overrides the catalogue name/tagline for cards that stand in for a group of
+   * products — the installation tiers collapse to one card, so its own name
+   * ("…— Up to 1,000 m²") would misdescribe what the card links to. The product
+   * itself is untouched; this is presentation only.
+   */
+  displayName?: string;
+  displayTagline?: string;
 }) {
   const big = size === "lg";
   const t = useTranslations("products");
@@ -118,10 +128,10 @@ export default function ProductCard({
             {tc(`${product.category}.name`)}
           </span>
           <span className="font-display text-[15px] font-bold leading-snug text-content">
-            {product.name}
+            {displayName ?? product.name}
           </span>
           <span className="text-[13px] leading-relaxed text-ink-muted">
-            {product.tagline[locale]}
+            {displayTagline ?? product.tagline[locale]}
           </span>
           <span className="mt-auto pt-3">
             <PriceOrQuote
