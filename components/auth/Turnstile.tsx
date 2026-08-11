@@ -67,9 +67,16 @@ function loadScript(): Promise<void> {
 
 export default function Turnstile({
   onToken,
+  resetKey = 0,
 }: {
   /** Called with the token, or null when it expires or fails. */
   onToken: (token: string | null) => void;
+  /**
+   * Change this to force a fresh challenge. Turnstile tokens are single-use, so
+   * after a failed submit the old token is spent — without a reset the customer
+   * retries with a stale token and fails again for a reason nothing explains.
+   */
+  resetKey?: number;
 }) {
   const container = useRef<HTMLDivElement>(null);
   // Kept in a ref so re-renders from the parent form don't re-run the effect
@@ -103,7 +110,7 @@ export default function Turnstile({
       cancelled = true;
       if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
     };
-  }, []);
+  }, [resetKey]);
 
   if (!captchaEnabled) return null;
   return <div ref={container} className="flex justify-center" />;
