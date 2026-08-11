@@ -56,7 +56,8 @@
       "submit": "Send reset link",
       "backToLogin": "Back to sign in",
       "checkEmailTitle": "Check your email",
-      "checkEmailBody": "If an account exists for {email}, we've sent a link to reset your password. The link expires in one hour."
+      "checkEmailBody": "If an account exists for {email}, we've sent a link to reset your password. The link expires in one hour.",
+      "rateLimited": "Too many attempts. Please wait a few minutes and try again."
     },
     "resetPassword": {
       "title": "Set a new password",
