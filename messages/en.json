@@ -480,7 +480,8 @@
         "cardGrid": "Image card grid",
         "showcase": "Showcase carousel (swipeable cards)",
         "imageText": "Image + text row",
-        "video": "Video section"
+        "video": "Video section",
+        "anatomy": "Under the hood (interactive robot anatomy)"
       },
       "fields": {
         "imageUrl": "Image URL",
@@ -690,8 +691,7 @@
       "total": "Total",
       "deliverTo": "Deliver to",
       "note": "Customer note",
-      "openAdmin": "Open in admin",
-      "indicative": "List prices — indicative only. Confirm the final figure in the quotation."
+      "openAdmin": "Open in admin"
     },
     "orderConfirmation": {
       "subject": "We received your order {orderId}",
@@ -706,7 +706,8 @@
       "total": "Total",
       "deliverTo": "Deliver to",
       "trackCta": "Track your order",
-      "helpTitle": "Questions about your order?"
+      "helpTitle": "Questions about your order?",
+      "introQuote": "Hi {name}, we have received your request and our team is preparing your quotation."
     }
   },
   "payment": {
@@ -1060,5 +1061,10 @@
     "ctaBody": "Book a demo and we will bring one to your garden, or ask our team for a quotation.",
     "ctaDemo": "Book a demo",
     "ctaSales": "Talk to sales"
+  },
+  "techAnatomy": {
+    "eyebrow": "Under the hood",
+    "heading": "The technology doing the work",
+    "sub": "Select a part of the robot to see what it does and why it matters."
   }
 }

@@ -41,9 +41,9 @@ ${bodyHtml}
 }
 
 /**
- * `withPrices` is passed explicitly rather than read from siteConfig, because
- * the two emails differ: sales always sees money (it is the starting point for
- * the quotation) while the customer only does once prices are published.
+ * Kept as a parameter rather than reading siteConfig directly so the two emails
+ * can diverge again without restructuring — at one point the sales alert showed
+ * indicative list prices while the customer's did not.
  */
 function itemRows(order: Order, withPrices: boolean): string {
   return order.items
@@ -93,13 +93,16 @@ export async function buildSalesAlert(
 
 <tr><td style="padding:16px 28px 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-    ${itemRows(order, true)}
-    <tr>
+    ${itemRows(order, siteConfig.showPrices)}
+    ${
+      siteConfig.showPrices
+        ? `<tr>
       <td colspan="2" style="padding:12px 0;font-size:15px;font-weight:bold;color:${INK};">${esc(t("total"))}</td>
       <td style="padding:12px 0;font-size:18px;font-weight:bold;color:${INK};text-align:right;">${formatBaht(order.total)}</td>
-    </tr>
+    </tr>`
+        : ""
+    }
   </table>
-  ${siteConfig.showPrices ? "" : `<p style="margin:10px 0 0;font-size:12px;color:${MUTED};">${esc(t("indicative"))}</p>`}
 </td></tr>
 
 <tr><td style="padding:8px 28px 0;">
@@ -141,7 +144,11 @@ export async function buildCustomerConfirmation(
 
 <tr><td style="padding:28px 28px 0;">
   <h1 style="margin:0;font-size:22px;color:${INK};">${esc(t(siteConfig.showPrices ? "heading" : "headingQuote"))}</h1>
-  <p style="margin:10px 0 0;font-size:15px;color:${INK};line-height:1.6;">${esc(t("intro", { name: order.shipping.fullName }))}</p>
+  <p style="margin:10px 0 0;font-size:15px;color:${INK};line-height:1.6;">${esc(
+    t(siteConfig.showPrices ? "intro" : "introQuote", {
+      name: order.shipping.fullName,
+    })
+  )}</p>
   <div style="margin-top:16px;padding:12px 16px;background:#f9fafb;border-radius:8px;">
     <span style="font-size:12px;color:${MUTED};">${esc(t("orderNumber"))}</span><br>
     <strong style="font-size:17px;color:${INK};letter-spacing:0.5px;">${esc(order.id)}</strong>

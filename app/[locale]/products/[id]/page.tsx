@@ -19,6 +19,7 @@ import SpecTable from "@/components/product/SpecTable";
 import BoxContents from "@/components/product/BoxContents";
 import FaqSection from "@/components/product/FaqSection";
 import ProductReviews from "@/components/product/ProductReviews";
+import TechAnatomy from "@/components/sections/TechAnatomy";
 import PaymentMethods from "@/components/product/PaymentMethods";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
 import {
@@ -228,6 +229,7 @@ export default async function ProductPage({
                 blocks={blocks}
                 locale={locale as Locale}
                 productName={product.name}
+                variant={product.variant}
               />
             </div>
           ) : null;
