@@ -5,39 +5,47 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import FadeIn from "@/components/ui/FadeIn";
-import { techAnatomy, views } from "@/data/techAnatomy";
-import type { Locale } from "@/data/products";
+import { anatomyByVariant } from "@/data/techAnatomy";
+import type { Locale, RobotVariant } from "@/data/products";
 
 /**
  * "Under the hood" — the product renders with numbered hotspots. Selecting a
- * component switches to the view that actually shows it, then zooms in on it.
+ * component switches to the view that shows it, then zooms in on it.
  *
  * Because the photo changes as you explore, it reads like an object being
  * turned — without a 3D model, a turntable sequence, or a WebGL dependency.
  *
- * The zoom is a CSS transform on the image layer:
- *   translate moves the focus point to the centre, then scale magnifies about
- *   that centre. Markers live inside the same layer so they travel with the
- *   image, and carry an inverse scale so they stay a constant size on screen.
+ * The zoom is a CSS transform on the image layer: translate moves the focus
+ * point to the centre, then scale magnifies about that centre. Markers live
+ * inside the same layer so they travel with the image, and carry an inverse
+ * scale so they stay a constant size on screen.
+ *
+ * Renders nothing for a variant with no anatomy defined, so it can be dropped
+ * onto every product page unconditionally.
  */
-export default function TechAnatomy() {
+export default function TechAnatomy({ variant }: { variant: RobotVariant }) {
   const t = useTranslations("techAnatomy");
   const locale = useLocale() as Locale;
-  const [activeId, setActiveId] = useState(techAnatomy[0].id);
+  const set = anatomyByVariant[variant];
+  const [activeId, setActiveId] = useState(set?.hotspots[0]?.id ?? "");
 
-  const active = techAnatomy.find((h) => h.id === activeId) ?? techAnatomy[0];
-  const view = views[active.view];
-  // Only the markers belonging to the visible view are drawn.
-  const markers = techAnatomy.filter((h) => h.view === active.view);
+  if (!set || set.hotspots.length === 0) return null;
+
+  const active = set.hotspots.find((h) => h.id === activeId) ?? set.hotspots[0];
+  const view = set.views[active.view];
+  if (!view) return null;
+
+  // Only markers belonging to the visible view are drawn.
+  const markers = set.hotspots.filter((h) => h.view === active.view);
 
   return (
-    <section id="technology" className="bg-forest-950 py-20 sm:py-28">
+    <section id="technology" className="bg-forest-950 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
-            {t("eyebrow")}
+            {t("eyebrow")} — {set.model}
           </p>
-          <h2 className="mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+          <h2 className="mt-3 max-w-2xl font-display text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
             {t("heading")}
           </h2>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/60">
@@ -45,7 +53,7 @@ export default function TechAnatomy() {
           </p>
         </FadeIn>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
+        <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
           {/* viewer */}
           <FadeIn>
             <div className="relative aspect-square overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-forest-900 to-forest-950">
@@ -55,29 +63,48 @@ export default function TechAnatomy() {
                   transform: `scale(${active.zoom}) translate(${50 - active.x}%, ${50 - active.y}%)`,
                 }}
               >
-                <AnimatePresence mode="wait">
+                {/* Every view is mounted and cross-faded rather than swapped, so
+                    switching never waits on a fresh network request. There are
+                    only two or three per robot, all WebP under 200 KB. */}
+                {Object.entries(set.views).map(([id, v]) => (
                   <motion.div
-                    key={active.view}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                    key={id}
+                    initial={false}
+                    animate={{ opacity: id === active.view ? 1 : 0 }}
                     transition={{ duration: 0.35 }}
                     className="absolute inset-0"
+                    style={{ pointerEvents: "none" }}
                   >
-                    <Image
-                      src={view.src}
-                      alt={view.label[locale]}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 60vw"
-                      className="object-contain"
-                      priority={false}
-                    />
+                    {/^https?:\/\//.test(v.src) ? (
+                      // Remote (Cloudinary): served as-is. next/image would
+                      // re-encode an already-optimised file, and a second lossy
+                      // pass is what softened these at 3x zoom. Put the
+                      // transform in the URL instead (f_auto,q_auto:best).
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={v.src}
+                        alt={v.label[locale]}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-contain"
+                      />
+                    ) : (
+                      <Image
+                        src={v.src}
+                        alt={v.label[locale]}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 60vw"
+                        // Default is 75. These get magnified up to ~3x, so
+                        // ordinary compression artefacts become visible.
+                        quality={92}
+                        className="object-contain"
+                      />
+                    )}
                   </motion.div>
-                </AnimatePresence>
+                ))}
 
                 {markers.map((spot) => {
                   const isActive = spot.id === activeId;
-                  const index = techAnatomy.findIndex((h) => h.id === spot.id);
+                  const index = set.hotspots.findIndex((h) => h.id === spot.id);
                   return (
                     <button
                       key={spot.id}
@@ -85,7 +112,7 @@ export default function TechAnatomy() {
                       onClick={() => setActiveId(spot.id)}
                       aria-label={spot.title[locale]}
                       aria-pressed={isActive}
-                      className="absolute z-10 flex items-center justify-center rounded-full font-mono text-[11px] font-bold transition-colors"
+                      className="absolute z-10 flex items-center justify-center rounded-full font-mono text-[11px] font-bold"
                       style={{
                         left: `${spot.x}%`,
                         top: `${spot.y}%`,
@@ -97,7 +124,7 @@ export default function TechAnatomy() {
                       }}
                     >
                       <span
-                        className={`flex h-full w-full items-center justify-center rounded-full border-2 ${
+                        className={`flex h-full w-full items-center justify-center rounded-full border-2 transition-colors ${
                           isActive
                             ? "border-gold bg-gold text-forest-950"
                             : "border-gold/70 bg-forest-950/80 text-gold backdrop-blur-sm hover:bg-gold/30"
@@ -110,7 +137,6 @@ export default function TechAnatomy() {
                 })}
               </div>
 
-              {/* which angle we are looking at */}
               <span className="pointer-events-none absolute bottom-4 left-4 rounded-full bg-forest-950/70 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white/70 backdrop-blur-sm">
                 {view.label[locale]}
               </span>
@@ -121,7 +147,7 @@ export default function TechAnatomy() {
           <div className="flex flex-col gap-5">
             <FadeIn>
               <ul className="flex flex-wrap gap-2">
-                {techAnatomy.map((spot, index) => {
+                {set.hotspots.map((spot, index) => {
                   const isActive = spot.id === activeId;
                   return (
                     <li key={spot.id}>
@@ -175,7 +201,7 @@ export default function TechAnatomy() {
 
             <FadeIn>
               <p className="text-[11.5px] leading-relaxed text-white/40">
-                {t("footnote")}
+                {set.footnote[locale]}
               </p>
             </FadeIn>
           </div>

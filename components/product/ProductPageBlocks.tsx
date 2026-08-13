@@ -1,7 +1,8 @@
 import FadeIn from "@/components/ui/FadeIn";
 import VideoEmbed from "@/components/product/VideoEmbed";
 import ShowcaseCarousel from "@/components/product/ShowcaseCarousel";
-import type { Locale, PageBlock } from "@/data/products";
+import TechAnatomy from "@/components/sections/TechAnatomy";
+import type { Locale, PageBlock, RobotVariant } from "@/data/products";
 
 /**
  * Renders the admin-built content sections of a product detail page, in
@@ -16,15 +17,31 @@ export default function ProductPageBlocks({
   blocks,
   locale,
   productName,
+  variant,
 }: {
   blocks: PageBlock[];
   locale: Locale;
   productName: string;
+  /** Decides which anatomy an "anatomy" block renders, if any. */
+  variant: RobotVariant;
 }) {
   return (
     <div className="space-y-16 sm:space-y-20">
       {blocks.map((block, i) => {
         switch (block.type) {
+          case "anatomy":
+            // Full-bleed: the section is a dark band, but blocks render inside
+            // the page's max-w container. <main> has overflow-x-clip, so the
+            // 100vw break-out can't introduce sideways scroll.
+            return (
+              <div
+                key={i}
+                className="relative left-1/2 right-1/2 -mx-[50vw] w-screen"
+              >
+                <TechAnatomy variant={variant} />
+              </div>
+            );
+
           case "banner":
             return (
               <FadeIn key={i}>
