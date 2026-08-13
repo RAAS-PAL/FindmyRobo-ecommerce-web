@@ -83,7 +83,7 @@ const LUBA3_URLS: Record<ViewId, string> = {
 
 const MINI2_URLS: Record<ViewId, string> = {
   frontLeft: cld("v1785747825/3e91f791-5c40-42bd-aa9c-9b9860eceff8_nzlyly.png"),
-  top: cld("v1785747758/97f9e0fa-5403-4f76-881e-8ac7524fa03e_raxxym.png"),
+  top: cld("v1786597489/luba-robot-background-removed_uxb1ub.png"),
   sideLeft: cld("v1785747683/2_k6bkaj.png"),
   sideRight: cld("v1785669635/7952672d-c8f4-4f5c-8e03-02f3d123fca3_uefwx2.png"),
   under: cld("v1785669962/f425735b-d975-4a6b-bf79-12aab8bae15c_gfwjrt.png"),
@@ -270,8 +270,8 @@ const lubaMini2: AnatomySet = {
       // "Positioning & Navigation: 360° LiDAR & AI Vision"
       id: "lidar",
       view: "top",
-      x: 52,
-      y: 43,
+      x: 50,
+      y: 42,
       zoom: 1.6,
       title: { en: "360° LiDAR and AI vision", th: "LiDAR 360° และ AI วิชัน" },
       body: {
@@ -285,8 +285,8 @@ const lubaMini2: AnatomySet = {
       // manual parts diagram #3 Rain Sensor + 5.3 Rain Detection
       id: "rain",
       view: "top",
-      x: 51,
-      y: 54,
+      x: 50,
+      y: 55,
       zoom: 1.6,
       title: { en: "Rain sensor", th: "เซ็นเซอร์ตรวจจับฝน" },
       body: {
@@ -301,7 +301,7 @@ const lubaMini2: AnatomySet = {
       id: "bumper",
       view: "top",
       x: 50,
-      y: 15,
+      y: 9,
       zoom: 1.6,
       title: { en: "Physical bumper", th: "กันชนกลไก" },
       body: {
@@ -315,8 +315,8 @@ const lubaMini2: AnatomySet = {
       // manual parts diagram #10 Omni Wheel — visibly a barrel-roller wheel
       id: "omni",
       view: "top",
-      x: 29,
-      y: 29,
+      x: 25.3,
+      y: 26,
       zoom: 2,
       title: { en: "Omni wheel", th: "ล้อออมนิ" },
       body: {
@@ -330,8 +330,8 @@ const lubaMini2: AnatomySet = {
       // manual — "GPS Theft Tracking: YES", "Geo-fence Alarm: YES" (5.4)
       id: "tracking",
       view: "top",
-      x: 51,
-      y: 77,
+      x: 50,
+      y: 80,
       zoom: 1.7,
       title: { en: "GPS theft tracking", th: "ติดตามตำแหน่งป้องกันการโจรกรรม" },
       body: {
