@@ -1060,5 +1060,11 @@
     "ctaBody": "Book a demo and we will bring one to your garden, or ask our team for a quotation.",
     "ctaDemo": "Book a demo",
     "ctaSales": "Talk to sales"
+  },
+  "techAnatomy": {
+    "eyebrow": "Under the hood",
+    "heading": "The technology doing the work",
+    "sub": "Three navigation systems, four driven wheels, and blades you can replace with a screwdriver. Select a part to see it up close.",
+    "footnote": "Figures shown are for LUBA 3 AWD 3000 and 5000. Cutting and battery figures quote the 5000; the 3000 differs. Specifications are subject to confirmation with the supplier."
   }
 }
