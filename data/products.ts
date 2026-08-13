@@ -51,7 +51,14 @@ export type PageBlock =
       cards: { image: string; title: LocalizedText; body: LocalizedText }[];
     }
   | { type: "imageText"; image: string; body: LocalizedText; imageSide: "left" | "right" }
-  | { type: "video"; heading?: LocalizedText; url: string; caption?: LocalizedText };
+  | { type: "video"; heading?: LocalizedText; url: string; caption?: LocalizedText }
+  | {
+      /** The interactive "under the hood" anatomy. Carries no configuration —
+       *  its content is chosen from the product's `variant` (see
+       *  data/techAnatomy.ts), so the block only decides WHERE on the page it
+       *  appears. Renders nothing for a variant with no anatomy defined. */
+      type: "anatomy";
+    };
 
 export const PAGE_BLOCK_TYPES = [
   "banner",
@@ -60,6 +67,7 @@ export const PAGE_BLOCK_TYPES = [
   "showcase",
   "imageText",
   "video",
+  "anatomy",
 ] as const;
 
 /** One group in the detailed specifications table (e.g. "Cutting System"). */

@@ -304,6 +304,7 @@ const BLOCK_LABEL_KEYS = {
   showcase: "blocks.showcase",
   imageText: "blocks.imageText",
   video: "blocks.video",
+  anatomy: "blocks.anatomy",
 } as const satisfies Record<PageBlock["type"], string>;
 
 function BlockEditor({

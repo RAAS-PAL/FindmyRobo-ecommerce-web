@@ -93,7 +93,11 @@ export function parsePage(raw: unknown): ProductPage | undefined | string {
       const heading = asLocalized(b.heading);
       const body = asLocalized(b.body);
 
-      if (type === "banner" && image) {
+      if (type === "anatomy") {
+        // No configuration: the content comes from the product's variant, so
+        // the block only records its position among the others.
+        blocks.push({ type });
+      } else if (type === "banner" && image) {
         blocks.push({ type, image });
       } else if (type === "feature" && heading && body) {
         blocks.push({ type, heading, body, ...(image ? { image } : {}) });
