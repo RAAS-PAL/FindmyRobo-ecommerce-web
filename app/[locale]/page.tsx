@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import HeroSection from "@/components/sections/HeroSection";
 import ProductGrid from "@/components/sections/ProductGrid";
 import FeatureShowcase from "@/components/sections/FeatureShowcase";
+import TechAnatomy from "@/components/sections/TechAnatomy";
 import VideoShowcase from "@/components/sections/VideoShowcase";
 import TrustSection from "@/components/sections/TrustSection";
 import WhyUsSection from "@/components/sections/WhyUsSection";
@@ -21,6 +22,7 @@ export default async function Home({
       <HeroSection />
       <ProductGrid />
       <FeatureShowcase />
+      <TechAnatomy />
       <VideoShowcase />
       <TrustSection />
       <WhyUsSection />

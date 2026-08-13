@@ -61,7 +61,7 @@ export const about = {
   // REPLACE all four. Use numbers you can defend if a customer asks.
   // Delete any you cannot substantiate — three honest stats beat four vague ones.
   stats: [
-    { value: "2019", label: { en: "Serving Thailand since", th: "ให้บริการในไทยตั้งแต่ปี" } },
+    { value: "2021", label: { en: "Serving Thailand since", th: "ให้บริการในไทยตั้งแต่ปี" } },
     { value: "500+", label: { en: "Robots deployed", th: "หุ่นยนต์ที่ติดตั้งแล้ว" } },
     { value: "77", label: { en: "Provinces covered", th: "จังหวัดที่ให้บริการ" } },
     { value: "24h", label: { en: "Response time", th: "เวลาตอบกลับ" } },
@@ -156,8 +156,10 @@ export const about = {
   // REPLACE with real dates, or set to [] to hide the section.
   milestones: [
     {
-      when: "2019",
+      when: "2021",
       title: { en: "Company founded", th: "ก่อตั้งบริษัท" },
+      // CONFIRMED: founding year is 2021. The body below is still draft —
+      // replace with what the company actually did first.
       body: {
         en: "Started importing outdoor robotics for Thai homes and estates.",
         th: "เริ่มนำเข้าหุ่นยนต์สำหรับพื้นที่กลางแจ้งสำหรับบ้านและโครงการในไทย",
