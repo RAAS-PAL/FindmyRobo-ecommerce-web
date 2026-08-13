@@ -30,8 +30,11 @@ export default function ShowcaseCarousel({
 
   return (
     <section>
+      {/* Fixed light-on-dark rather than theme tokens: this block always sits
+          on a dark band (see ProductPageBlocks), so `text-content` would be
+          dark-on-dark in light mode. */}
       {heading && (
-        <h2 className="mb-8 text-center font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
+        <h2 className="mb-8 text-center font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
           {heading}
         </h2>
       )}
@@ -66,7 +69,7 @@ export default function ShowcaseCarousel({
             type="button"
             onClick={() => scrollBy(-1)}
             aria-label={tp("scrollLeft")}
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-forest-100 text-content transition-colors hover:border-gold hover:bg-gold/10"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-gold hover:bg-white/10 hover:text-gold"
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -74,7 +77,7 @@ export default function ShowcaseCarousel({
             type="button"
             onClick={() => scrollBy(1)}
             aria-label={tp("scrollRight")}
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-forest-100 text-content transition-colors hover:border-gold hover:bg-gold/10"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-gold hover:bg-white/10 hover:text-gold"
           >
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
