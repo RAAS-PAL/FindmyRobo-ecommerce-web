@@ -106,24 +106,40 @@ export default async function ProductPage({
           <span className="font-medium text-content">{product.name}</span>
         </nav>
 
-        {/* top: gallery + info */}
-        <div className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-12">
-          {/* gallery */}
-          <FadeIn>
-            <ProductGallery
-              product={product}
-              labels={{
-                previous: t("galleryPrevious"),
-                next: t("galleryNext"),
-                thumbnail: t("galleryThumbnail"),
-                openFullscreen: t("galleryOpenFullscreen"),
-                closeFullscreen: t("galleryCloseFullscreen"),
-                imageCount: t("galleryImageCount", { current: "#current#", total: "#total#" }),
-                zoomIn: t("galleryZoomIn"),
-                zoomOut: t("galleryZoomOut"),
-              }}
-            />
-          </FadeIn>
+        {/* top: gallery + info.
+            lg:items-start matters — grid children stretch to the row height by
+            default, and a stretched item has nowhere to stick, so the sticky
+            gallery below would silently do nothing. */}
+        <div className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-start lg:gap-12">
+          {/* gallery — pinned while the taller info column scrolls past it, so
+              the robot stays visible through the whole spec read. Native
+              position:sticky rather than intercepting scroll: the page never
+              stops responding to the wheel, and it simply doesn't apply on
+              mobile where the two columns stack.
+
+              The sticky wrapper sits OUTSIDE FadeIn on purpose — framer-motion
+              leaves a transform on the element it animates, and a transformed
+              ancestor becomes the containing block, which breaks sticky. */}
+          <div className="lg:sticky lg:top-24">
+            <FadeIn>
+              <ProductGallery
+                product={product}
+                labels={{
+                  previous: t("galleryPrevious"),
+                  next: t("galleryNext"),
+                  thumbnail: t("galleryThumbnail"),
+                  openFullscreen: t("galleryOpenFullscreen"),
+                  closeFullscreen: t("galleryCloseFullscreen"),
+                  imageCount: t("galleryImageCount", {
+                    current: "#current#",
+                    total: "#total#",
+                  }),
+                  zoomIn: t("galleryZoomIn"),
+                  zoomOut: t("galleryZoomOut"),
+                }}
+              />
+            </FadeIn>
+          </div>
 
           {/* info */}
           <FadeIn delay={0.1} className="flex flex-col">

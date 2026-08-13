@@ -12,6 +12,13 @@ import type { Locale, PageBlock, RobotVariant } from "@/data/products";
 
 const pick = (t: { en: string; th: string }, locale: Locale) => t[locale] || t.en;
 
+/**
+ * Blocks that render as a full-bleed dark band. Two of them in a row are joined
+ * rather than spaced — add any future dark-band block type here.
+ */
+const isDarkBand = (block?: PageBlock) =>
+  block?.type === "anatomy" || block?.type === "showcase";
+
 /* eslint-disable @next/next/no-img-element -- admin-entered URLs, any host */
 export default function ProductPageBlocks({
   blocks,
@@ -25,10 +32,8 @@ export default function ProductPageBlocks({
   /** Decides which anatomy an "anatomy" block renders, if any. */
   variant: RobotVariant;
 }) {
-  return (
-    <div className="space-y-16 sm:space-y-20">
-      {blocks.map((block, i) => {
-        switch (block.type) {
+  const renderBlock = (block: PageBlock, i: number) => {
+    switch (block.type) {
           case "anatomy":
             // Full-bleed: the section is a dark band, but blocks render inside
             // the page's max-w container. <main> has overflow-x-clip, so the
@@ -108,14 +113,25 @@ export default function ProductPageBlocks({
             );
 
           case "showcase":
+            // Full-bleed dark band. The cards are fixed dark in both themes, so
+            // on a light page they read as a floating slab with hard edges —
+            // running the background edge to edge makes it deliberate. Same
+            // break-out as the anatomy block; <main> has overflow-x-clip.
             return (
-              <FadeIn key={i}>
-                <ShowcaseCarousel
-                  heading={block.heading ? pick(block.heading, locale) : undefined}
-                  cards={block.cards}
-                  locale={locale}
-                />
-              </FadeIn>
+              <div
+                key={i}
+                className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-forest-950 py-14 sm:py-20"
+              >
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                  <FadeIn>
+                    <ShowcaseCarousel
+                      heading={block.heading ? pick(block.heading, locale) : undefined}
+                      cards={block.cards}
+                      locale={locale}
+                    />
+                  </FadeIn>
+                </div>
+              </div>
             );
 
           case "imageText":
@@ -158,7 +174,22 @@ export default function ProductPageBlocks({
                 </section>
               </FadeIn>
             );
-        }
+    }
+  };
+
+  return (
+    <div>
+      {blocks.map((block, i) => {
+        // Spacing lives on a per-block wrapper rather than space-y on the
+        // container, so it can be dropped between two full-bleed dark bands.
+        // With a gap they read as two separate sections split by a light
+        // stripe; without one they run together as a single dark passage.
+        const joinsPrevious = isDarkBand(block) && isDarkBand(blocks[i - 1]);
+        return (
+          <div key={i} className={i === 0 || joinsPrevious ? undefined : "mt-16 sm:mt-20"}>
+            {renderBlock(block, i)}
+          </div>
+        );
       })}
     </div>
   );
