@@ -50,10 +50,10 @@ export interface Milestone {
 export const about = {
   /* ------------------------------------------------------------------ hero */
   hero: {
-    // REPLACE: one sentence on what the company actually is.
+    // Wording reviewed and approved by the Thai team (Aug 2026 copy pass).
     intro: {
-      en: "We bring professional robotic lawn mowers to Thailand — supplied, installed, and serviced locally, with a warranty you can actually claim.",
-      th: "เรานำหุ่นยนต์ตัดหญ้าระดับมืออาชีพมาสู่ประเทศไทย พร้อมบริการติดตั้งและดูแลหลังการขายในประเทศ และการรับประกันที่เคลมได้จริง",
+      en: "We bring professional robotic lawn mowers to Thailand — with local supply, professional installation, reliable after-sales service, and warranty support you can count on.",
+      th: "เรานำหุ่นยนต์ตัดหญ้าระดับมืออาชีพมาสู่ประเทศไทย พร้อมดูแลครบตั้งแต่การจัดจำหน่าย ติดตั้ง บริการหลังการขาย ไปจนถึงการรับประกันที่คุณมั่นใจได้",
     },
   },
 
@@ -116,69 +116,71 @@ export const about = {
 
   /* ---------------------------------------------------------------- values */
   // These four are the real argument for buying from you rather than importing.
-  // REPLACE the wording so it matches what you actually promise.
+  // Wording reviewed and approved by the Thai team (Aug 2026 copy pass) — they
+  // deliberately shortened each body to one line, so keep new entries as tight.
   values: [
     {
       icon: "shield",
-      title: { en: "Thai warranty", th: "รับประกันในประเทศไทย" },
+      title: { en: "Warranty in Thailand", th: "รับประกันในประเทศไทย" },
       body: {
-        en: "Claim it here, in Thai, without shipping anything abroad.",
-        th: "เคลมได้ในไทย เป็นภาษาไทย ไม่ต้องส่งเครื่องไปต่างประเทศ",
+        en: "Warranty claims and service are handled locally — no need to send the robot overseas.",
+        th: "เคลมและรับบริการได้ในประเทศ ไม่ต้องส่งเครื่องไปต่างประเทศ",
       },
     },
     {
       icon: "home",
-      title: { en: "In-home demo", th: "เดโมถึงบ้าน" },
+      title: { en: "Try Before You Decide", th: "ทดลองก่อนตัดสินใจ" },
       body: {
-        en: "We bring the robot to your garden so you can see it work on your grass before deciding.",
-        th: "เรานำหุ่นยนต์ไปสาธิตที่สวนของคุณ ให้เห็นการทำงานจริงบนสนามของคุณก่อนตัดสินใจ",
+        en: "Test the robot in your own space before making a decision.",
+        th: "ทดสอบการใช้งานจริงในพื้นที่ของคุณ",
       },
     },
     {
       icon: "wrench",
-      title: { en: "Professional installation", th: "ติดตั้งโดยทีมมืออาชีพ" },
+      title: { en: "Professional Installation", th: "ติดตั้งโดยทีมผู้เชี่ยวชาญ" },
       body: {
-        en: "Our team maps your garden, sets the boundaries, and hands it over working.",
-        th: "ทีมงานของเราสำรวจพื้นที่ ตั้งค่าขอบเขต และส่งมอบเครื่องที่พร้อมใช้งาน",
+        en: "Site survey, installation, and setup — ready to use.",
+        th: "สำรวจ ติดตั้ง และตั้งค่าให้พร้อมใช้งาน",
       },
     },
     {
       icon: "headset",
-      title: { en: "Local support", th: "ซัพพอร์ตในประเทศ" },
+      title: { en: "After-Sales Service", th: "บริการหลังการขาย" },
       body: {
-        en: "Thai-speaking support and parts held in country, not a queue in another timezone.",
-        th: "ทีมซัพพอร์ตภาษาไทยและอะไหล่ในประเทศ ไม่ต้องรอคิวข้ามโซนเวลา",
+        en: "Local support team ready to advise and assist you throughout your ownership.",
+        th: "ทีมซัพพอร์ตในประเทศ พร้อมให้คำแนะนำและดูแลต่อเนื่อง",
       },
     },
   ] as AboutValue[],
 
   /* ------------------------------------------------------------- milestones */
-  // REPLACE with real dates, or set to [] to hide the section.
+  // Wording reviewed and approved by the Thai team (Aug 2026 copy pass).
+  // The 2024 entry is the one still to verify — confirm the year the coverage
+  // actually widened before this goes out.
   milestones: [
     {
       when: "2021",
-      title: { en: "Company founded", th: "ก่อตั้งบริษัท" },
-      // CONFIRMED: founding year is 2021. The body below is still draft —
-      // replace with what the company actually did first.
+      // CONFIRMED: founding year is 2021.
+      title: { en: "Company Founded", th: "ก่อตั้งบริษัท" },
       body: {
-        en: "Started importing outdoor robotics for Thai homes and estates.",
-        th: "เริ่มนำเข้าหุ่นยนต์สำหรับพื้นที่กลางแจ้งสำหรับบ้านและโครงการในไทย",
+        en: "Started importing outdoor robotics for use in Thailand.",
+        th: "เริ่มนำเข้าหุ่นยนต์สำหรับงานกลางแจ้ง เพื่อรองรับการใช้งานในประเทศไทย",
       },
     },
     {
       when: "2024",
-      title: { en: "Service network expanded", th: "ขยายเครือข่ายบริการ" },
+      title: { en: "Service Network Expanded", th: "ขยายเครือข่ายบริการ" },
       body: {
-        en: "Installation and service coverage extended beyond Bangkok.",
-        th: "ขยายพื้นที่การติดตั้งและบริการออกนอกกรุงเทพฯ",
+        en: "Installation and after-sales service coverage expanded beyond Bangkok.",
+        th: "เพิ่มพื้นที่ให้บริการด้านการติดตั้งและดูแลหลังการขาย ครอบคลุมมากกว่ากรุงเทพฯ",
       },
     },
     {
       when: "2026",
-      title: { en: "FindMyRobo launched", th: "เปิดตัว FindMyRobo" },
+      title: { en: "FindMyRobo Launched", th: "เปิดตัว FindMyRobo" },
       body: {
-        en: "Our online store opened, making demos and quotations easy to request.",
-        th: "เปิดร้านค้าออนไลน์ ให้ขอเดโมและใบเสนอราคาได้สะดวกยิ่งขึ้น",
+        en: "FindMyRobo launched as an online platform that makes it easier to discover and choose the right robot.",
+        th: "ช่องทางออนไลน์ที่ช่วยให้ค้นหาและเลือกหุ่นยนต์ได้ง่ายยิ่งขึ้น",
       },
     },
   ] as Milestone[],
