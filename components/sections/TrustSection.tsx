@@ -7,7 +7,8 @@ import AnimatedCounter from "@/components/ui/AnimatedCounter";
 export default function TrustSection() {
   const t = useTranslations("trust");
   const stats = [
-    { value: 1900, suffix: "+", label: t("stat1") },
+    // Keep in sync with the same figure on the About page (data/about.ts stats).
+    { value: 1600, suffix: "+", label: t("stat1") },
     { value: 4.7, decimals: 1, suffix: "★", label: t("stat2") },
     { value: 40, suffix: "+", label: t("stat3") },
   ];

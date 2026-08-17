@@ -6,8 +6,27 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import RobotIllustration from "@/components/ui/RobotIllustration";
-import { type Locale, type Product } from "@/data/products";
+import { type Locale, type Product, type SpecKey } from "@/data/products";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
+
+/**
+ * Which quick specs to surface on the card, best-differentiator first. Only the
+ * first few a product actually has are shown, so a pool cleaner (no slope)
+ * falls through to filtration rather than rendering a gap.
+ *
+ * Specs rather than `features`: these are short, and every robot states them in
+ * the same unit, so a visitor can line two cards up and read the difference.
+ * `features` is prose written per product — it compares badly at a glance.
+ */
+const CARD_SPECS: SpecKey[] = [
+  "area",
+  "slope",
+  "runtime",
+  "cuttingWidth",
+  "filtration",
+  "connectivity",
+];
+const MAX_CARD_SPECS = 3;
 
 /**
  * Large, image-forward product card for the home carousel (Mammotion-style):
@@ -35,7 +54,12 @@ export default function FeaturedProductCard({
   index: number;
 }) {
   const t = useTranslations("products");
+  const td = useTranslations("productDetail");
   const locale = useLocale() as Locale;
+  const specs = CARD_SPECS.filter((key) => product.specs?.[key]).slice(
+    0,
+    MAX_CARD_SPECS
+  );
 
   // Home card prefers a dedicated lifestyle photo; falls back to the product
   // render used everywhere else.
@@ -146,11 +170,35 @@ export default function FeaturedProductCard({
             </span>
           </span>
 
-          <PriceOrQuote
-            amount={product.price}
-            className="font-mono text-xl font-bold tabular-nums text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-2xl"
-            quoteClassName="text-base font-bold text-gold drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-lg"
-          />
+          <span className="flex flex-col items-start gap-3.5">
+            {/* Key specs — the at-a-glance comparison between models. Hidden
+                entirely when a product has none, rather than leaving an empty
+                strip: a card with no band reads as a different card, a card
+                with a blank band reads as broken. */}
+            {specs.length > 0 && (
+              <span className="flex w-full flex-wrap gap-1.5">
+                {specs.map((key) => (
+                  <span
+                    key={key}
+                    className="flex min-w-0 flex-1 basis-[28%] flex-col gap-0.5 rounded-xl border border-white/15 bg-black/35 px-2.5 py-2 backdrop-blur-sm"
+                  >
+                    <span className="truncate font-mono text-[12.5px] font-bold leading-none text-white">
+                      {product.specs[key]}
+                    </span>
+                    <span className="truncate text-[9.5px] font-medium leading-tight text-white/60">
+                      {td(`specLabels.${key}`)}
+                    </span>
+                  </span>
+                ))}
+              </span>
+            )}
+
+            <PriceOrQuote
+              amount={product.price}
+              className="font-mono text-xl font-bold tabular-nums text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-2xl"
+              quoteClassName="text-base font-bold text-gold drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-lg"
+            />
+          </span>
         </span>
       </Link>
     </motion.article>
