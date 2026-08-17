@@ -155,18 +155,21 @@ export const siteConfig = {
 
   /**
    * Sales team contacts, shown on /contact-sales (PRD req 13 + 19).
-   * REPLACE the placeholder phone/email/LINE id with the real ones.
-   * lineQrImage — drop the LINE official-account QR into /public
-   * (e.g. "/line-qr.png") and set the path; a "coming soon" frame
-   * shows while it is null.
+   * lineQrImage — the LINE official-account QR in /public; a "coming soon"
+   * frame shows while it is null.
    */
   salesContact: {
     phone: "02-576-5555",
     email: "sales@raaspal.com",
-    // LINE official account still pending — keep the placeholder id and the
-    // "coming soon" QR frame (lineQrImage null) until the real one is issued.
     lineId: "@raaspal",
-    lineQrImage: null as string | null,
+    lineQrImage: "/contact/contact_lineQR.png" as string | null,
+    /**
+     * The add-friend link the QR above encodes, so the card is tappable on
+     * phones (nobody can scan a QR shown on the screen they are holding).
+     * If the QR is ever regenerated, re-read it and update this to match —
+     * a link pointing at a different account than the QR is worse than none.
+     */
+    lineUrl: "https://lin.ee/kDaB03I",
     /**
      * Registered office. Rendered on /contact-sales and in the footer.
      * This is not decoration: a visible business address is what Omise's
