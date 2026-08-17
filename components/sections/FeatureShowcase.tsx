@@ -36,9 +36,16 @@ export default function FeatureShowcase() {
     <section
       ref={sectionRef}
       className="relative bg-forest-950"
-      style={{ height: `${features.length * 100}vh` }}
+      // svh, not vh: on mobile `vh` resolves to the viewport with the browser
+      // bars *hidden*, so a 100vh panel is taller than what you can actually
+      // see whenever the address bar and toolbar are showing, and the bottom of
+      // the section gets cut off. `svh` is the smallest (bars visible) case, so
+      // the panel fits either way. Deliberately not `dvh` — that one changes as
+      // the bars collapse during scroll, which would resize this panel
+      // mid-animation.
+      style={{ height: `${features.length * 100}svh` }}
     >
-      <div className="sticky top-0 flex h-screen flex-col items-center justify-center px-4 py-14 sm:px-6">
+      <div className="sticky top-0 flex h-[100svh] flex-col items-center justify-center px-4 py-14 sm:px-6">
         {/* section heading */}
         <div className="text-center">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
@@ -62,7 +69,13 @@ export default function FeatureShowcase() {
                 key={i}
                 src={f.image}
                 alt=""
-                className={`block max-h-[42vh] w-auto max-w-full rounded-3xl object-contain transition-opacity duration-500 lg:max-h-[68vh] ${
+                // Capped in svh (see the section element) because the whole
+                // thing is one screen-height sticky panel: heading, image,
+                // caption and dots all have to fit together, with the browser
+                // bars showing. The phone value is the tightest — there the
+                // caption stacks *below* the image rather than sitting inside
+                // it, so it needs its own share of the height.
+                className={`block max-h-[30svh] w-auto max-w-full rounded-3xl object-contain transition-opacity duration-500 sm:max-h-[35svh] lg:max-h-[49svh] ${
                   i === active
                     ? "opacity-100"
                     : "absolute inset-0 h-full w-full opacity-0"
