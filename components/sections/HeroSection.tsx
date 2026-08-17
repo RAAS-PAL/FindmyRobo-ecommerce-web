@@ -347,9 +347,13 @@ export default function HeroSection() {
           </Link>
           <Link
             href="/products/request-a-demo"
+            // Over the video this is white-on-footage: the outline alone left
+            // it competing with whatever frame was playing behind it, so it
+            // carries a translucent white fill to sit the label on a
+            // consistent ground without becoming a second solid button.
             className={`flex min-h-[52px] items-center gap-2 rounded-full border-2 px-8 text-[15px] font-semibold transition-all duration-300 hover:scale-105 active:scale-[0.97] ${
               video
-                ? "border-white/40 text-white hover:border-gold hover:text-gold"
+                ? "border-white/40 bg-white/20 text-white backdrop-blur-[2px] hover:border-gold hover:bg-white/30 hover:text-gold"
                 : "border-content/25 text-content hover:border-gold-600 hover:text-gold-600"
             }`}
           >
