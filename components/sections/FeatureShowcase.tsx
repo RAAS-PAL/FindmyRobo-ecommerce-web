@@ -49,16 +49,20 @@ export default function FeatureShowcase() {
           </h2>
         </div>
 
-        {/* centred image (~80% of the screen) with the caption stacked on it */}
+        {/* The wrapper shrinks to the image on desktop (lg:block makes the
+            active <img> set its width), which is what lets the caption be
+            positioned against the *photo's* edge rather than the section's.
+            On phones it stays a flex column and the caption stacks underneath,
+            where a 340px overlay would blanket the whole frame. */}
         <div className="mt-8 flex w-full justify-center">
-          <div className="relative">
+          <div className="relative flex w-full max-w-[1600px] flex-col items-center gap-6 lg:block lg:w-auto lg:gap-0">
             {features.map((f, i) => (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={i}
                 src={f.image}
                 alt=""
-                className={`block max-h-[58vh] w-auto max-w-[88vw] rounded-3xl object-contain transition-opacity duration-500 lg:max-w-[80vw] ${
+                className={`block max-h-[42vh] w-auto max-w-full rounded-3xl object-contain transition-opacity duration-500 lg:max-h-[68vh] ${
                   i === active
                     ? "opacity-100"
                     : "absolute inset-0 h-full w-full opacity-0"
@@ -66,17 +70,17 @@ export default function FeatureShowcase() {
               />
             ))}
 
-            {/* caption box — a bottom bar on phones (so it doesn't cover the
-                product), an overlay on the right on larger screens */}
-            <div className="absolute bottom-3 left-3 right-3 sm:bottom-auto sm:left-auto sm:right-8 sm:top-1/2 sm:max-w-md sm:-translate-y-1/2">
-              <div className="rounded-2xl border border-white/10 bg-black/55 p-5 backdrop-blur-md sm:p-7">
-                <h3 className="font-display text-lg font-bold text-white sm:text-2xl">
-                  {text(features[active].heading)}
-                </h3>
-                <p className="mt-2.5 text-[13.5px] leading-relaxed text-white/80 sm:text-[15px]">
-                  {text(features[active].body)}
-                </p>
-              </div>
+            {/* Caption, inset into the photo's right edge on desktop. It sits
+                hard right with a small margin so it stays clear of the subject,
+                which is centre-left in every showcase image — an earlier version
+                centred this box over the frame and covered the product. */}
+            <div className="w-full rounded-2xl border border-white/10 bg-black/55 p-5 backdrop-blur-md sm:p-7 lg:absolute lg:right-6 lg:top-1/2 lg:z-10 lg:w-[340px] lg:-translate-y-1/2">
+              <h3 className="font-display text-lg font-bold text-white sm:text-2xl">
+                {text(features[active].heading)}
+              </h3>
+              <p className="mt-2.5 text-[13.5px] leading-relaxed text-white/80 sm:text-[15px]">
+                {text(features[active].body)}
+              </p>
             </div>
           </div>
         </div>

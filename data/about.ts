@@ -62,7 +62,8 @@ export const about = {
   // Delete any you cannot substantiate — three honest stats beat four vague ones.
   stats: [
     { value: "2021", label: { en: "Serving Thailand since", th: "ให้บริการในไทยตั้งแต่ปี" } },
-    { value: "500+", label: { en: "Robots deployed", th: "หุ่นยนต์ที่ติดตั้งแล้ว" } },
+    // Keep in sync with the same figure on the home page (TrustSection.tsx).
+    { value: "1,600+", label: { en: "Robots deployed", th: "หุ่นยนต์ที่ติดตั้งแล้ว" } },
     { value: "77", label: { en: "Provinces covered", th: "จังหวัดที่ให้บริการ" } },
     { value: "24h", label: { en: "Response time", th: "เวลาตอบกลับ" } },
   ] as AboutStat[],
