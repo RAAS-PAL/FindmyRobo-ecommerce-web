@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 import type { LocalizedText, PageBlock, ProductPage } from "@/data/products";
+import { useConfirm } from "@/components/admin/ConfirmProvider";
 
 /**
  * Admin editor for a product's rich detail page: intro video, ordered content
@@ -315,7 +316,22 @@ function BlockEditor({
   onChange: (next: DraftBlock) => void;
 }) {
   const t = useTranslations("admin.pageBuilder");
+  const confirm = useConfirm();
   const set = (patch: Partial<DraftBlock>) => onChange({ ...block, ...patch });
+
+  /** Runs the removal only once the admin confirms it. */
+  const confirmRemove = async (
+    messageKey: string,
+    number: number,
+    remove: () => void
+  ) => {
+    const ok = await confirm({
+      title: t("confirm.removeTitle"),
+      message: t(`confirm.${messageKey}`, { number }),
+      confirmLabel: t("confirm.removeButton"),
+    });
+    if (ok) remove();
+  };
 
   return (
     <div className="space-y-3">
@@ -472,7 +488,11 @@ function BlockEditor({
                 </div>
                 <IconButton
                   label={t("actions.removeCard", { number: i + 1 })}
-                  onClick={() => set({ cards: block.cards.filter((_, j) => j !== i) })}
+                  onClick={() =>
+                    confirmRemove("card", i + 1, () =>
+                      set({ cards: block.cards.filter((_, j) => j !== i) })
+                    )
+                  }
                 >
                   <Trash2 className="h-4 w-4" aria-hidden="true" />
                 </IconButton>
@@ -503,7 +523,22 @@ export default function PageBuilder({
   onChange: (next: DraftPage) => void;
 }) {
   const t = useTranslations("admin.pageBuilder");
+  const confirm = useConfirm();
   const set = (patch: Partial<DraftPage>) => onChange({ ...draft, ...patch });
+
+  /** Runs the removal only once the admin confirms it. */
+  const confirmRemove = async (
+    messageKey: string,
+    number: number,
+    remove: () => void
+  ) => {
+    const ok = await confirm({
+      title: t("confirm.removeTitle"),
+      message: t(`confirm.${messageKey}`, { number }),
+      confirmLabel: t("confirm.removeButton"),
+    });
+    if (ok) remove();
+  };
 
   const move = <T,>(arr: T[], from: number, dir: -1 | 1): T[] => {
     const to = from + dir;
@@ -551,7 +586,11 @@ export default function PageBuilder({
                 </IconButton>
                 <IconButton
                   label={t("actions.removeSection", { number: i + 1 })}
-                  onClick={() => set({ blocks: draft.blocks.filter((_, j) => j !== i) })}
+                  onClick={() =>
+                    confirmRemove("section", i + 1, () =>
+                      set({ blocks: draft.blocks.filter((_, j) => j !== i) })
+                    )
+                  }
                 >
                   <Trash2 className="h-4 w-4" aria-hidden="true" />
                 </IconButton>
@@ -614,7 +653,9 @@ export default function PageBuilder({
                 <IconButton
                   label={t("actions.removeGroup", { number: gi + 1 })}
                   onClick={() =>
-                    set({ specGroups: draft.specGroups.filter((_, j) => j !== gi) })
+                    confirmRemove("group", gi + 1, () =>
+                      set({ specGroups: draft.specGroups.filter((_, j) => j !== gi) })
+                    )
                   }
                 >
                   <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -684,14 +725,16 @@ export default function PageBuilder({
                   </div>
                   <IconButton
                     label={t("actions.removeRow", { number: ri + 1 })}
-                    onClick={() => {
-                      const specGroups = [...draft.specGroups];
-                      specGroups[gi] = {
-                        ...group,
-                        rows: group.rows.filter((_, j) => j !== ri),
-                      };
-                      set({ specGroups });
-                    }}
+                    onClick={() =>
+                      confirmRemove("row", ri + 1, () => {
+                        const specGroups = [...draft.specGroups];
+                        specGroups[gi] = {
+                          ...group,
+                          rows: group.rows.filter((_, j) => j !== ri),
+                        };
+                        set({ specGroups });
+                      })
+                    }
                   >
                     <Trash2 className="h-4 w-4" aria-hidden="true" />
                   </IconButton>
@@ -759,7 +802,9 @@ export default function PageBuilder({
                 <IconButton
                   label={t("actions.removeBoxItem", { number: i + 1 })}
                   onClick={() =>
-                    set({ boxItems: draft.boxItems.filter((_, j) => j !== i) })
+                    confirmRemove("boxItem", i + 1, () =>
+                      set({ boxItems: draft.boxItems.filter((_, j) => j !== i) })
+                    )
                   }
                 >
                   <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -851,7 +896,11 @@ export default function PageBuilder({
                 </IconButton>
                 <IconButton
                   label={t("actions.removeFaq", { number: i + 1 })}
-                  onClick={() => set({ faqs: draft.faqs.filter((_, j) => j !== i) })}
+                  onClick={() =>
+                    confirmRemove("faq", i + 1, () =>
+                      set({ faqs: draft.faqs.filter((_, j) => j !== i) })
+                    )
+                  }
                 >
                   <Trash2 className="h-4 w-4" aria-hidden="true" />
                 </IconButton>
