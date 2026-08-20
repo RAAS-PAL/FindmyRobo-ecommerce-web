@@ -50,6 +50,17 @@ export interface ShowcaseFeature {
   body: { en: string; th: string };
 }
 
+/**
+ * Platforms the footer knows how to render an icon for. A key here does not
+ * mean an account exists — see siteConfig.socials for the ones that do.
+ */
+export type SocialPlatform =
+  | "facebook"
+  | "instagram"
+  | "youtube"
+  | "tiktok"
+  | "linkedin";
+
 export const siteConfig = {
   /**
    * Customer-facing price visibility.
@@ -181,6 +192,17 @@ export const siteConfig = {
       "Chaengwattana rd., Khlong Kluea, Pak Kret, Nonthaburi Thailand 11120",
     ],
   },
+
+  /**
+   * Public social profiles. Only platforms listed here are rendered — the
+   * footer used to show five icons that all pointed at "#", which reads as a
+   * broken site rather than as a company without a TikTok. Add a key when the
+   * account actually exists; remove it if the account goes away.
+   */
+  socials: {
+    facebook: "https://www.facebook.com/findmyrobo",
+    youtube: "https://www.youtube.com/@FindmyRobo",
+  } as Partial<Record<SocialPlatform, string>>,
 };
 
 /** Google Maps link built from the office address, so there is one source of truth. */

@@ -4,9 +4,15 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
 import { YouTubeIcon } from "@/components/ui/BrandIcons";
+import { siteConfig } from "@/data/siteConfig";
 
 export default function YouTubeCTA() {
   const t = useTranslations("youtube");
+  // Points at the channel, not youtube.com. Without an account configured the
+  // whole section is pointless, so it hides rather than sending people to
+  // YouTube's front page.
+  const channelUrl = siteConfig.socials.youtube;
+  if (!channelUrl) return null;
   return (
     <section
       id="youtube"
@@ -39,7 +45,7 @@ export default function YouTubeCTA() {
           {t("sub")}
         </p>
         <motion.a
-          href="https://www.youtube.com"
+          href={channelUrl}
           target="_blank"
           rel="noopener noreferrer"
           whileHover={{ scale: 1.05 }}

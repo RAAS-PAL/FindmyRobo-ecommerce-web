@@ -7,6 +7,7 @@ import { isAdminAuthenticated } from "@/lib/adminAuth";
 import LogoutButton from "@/components/admin/LogoutButton";
 import AdminLanguageSwitcher from "@/components/admin/AdminLanguageSwitcher";
 import AdminTabs from "@/components/admin/AdminTabs";
+import ConfirmProvider from "@/components/admin/ConfirmProvider";
 import { ThemeToggleButton } from "@/components/layout/ThemeToggle";
 import { getAdminLocale } from "@/lib/adminLocale";
 
@@ -18,7 +19,8 @@ export default async function AdminProtectedLayout({
   const t = await getTranslations({ locale, namespace: "admin.navigation" });
 
   return (
-    <>
+    // Every destructive action in the panel goes through this one dialog.
+    <ConfirmProvider>
       <header className="sticky top-0 z-40 border-b border-white/10 bg-forest-950">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3 sm:gap-6">
@@ -61,6 +63,6 @@ export default async function AdminProtectedLayout({
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
         {children}
       </main>
-    </>
+    </ConfirmProvider>
   );
 }
