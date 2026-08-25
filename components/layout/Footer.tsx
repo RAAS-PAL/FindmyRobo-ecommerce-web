@@ -4,8 +4,6 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import {
   FacebookIcon,
-  InstagramIcon,
-  LinkedInIcon,
   TikTokIcon,
   YouTubeIcon,
 } from "@/components/ui/BrandIcons";
@@ -32,20 +30,12 @@ const ABOUT_HREFS = ["/about", "/#contact", "/#support", "/shop"];
  */
 const SOCIAL_META: Record<SocialPlatform, { label: string; Icon: typeof FacebookIcon }> = {
   facebook: { label: "Facebook", Icon: FacebookIcon },
-  instagram: { label: "Instagram", Icon: InstagramIcon },
   youtube: { label: "YouTube", Icon: YouTubeIcon },
   tiktok: { label: "TikTok", Icon: TikTokIcon },
-  linkedin: { label: "LinkedIn", Icon: LinkedInIcon },
 };
 
 /** Fixed display order, independent of the key order in siteConfig. */
-const SOCIAL_ORDER: SocialPlatform[] = [
-  "facebook",
-  "instagram",
-  "youtube",
-  "tiktok",
-  "linkedin",
-];
+const SOCIAL_ORDER: SocialPlatform[] = ["facebook", "youtube", "tiktok"];
 
 export default function Footer({ products = [] }: { products?: Product[] }) {
   const t = useTranslations("footer");

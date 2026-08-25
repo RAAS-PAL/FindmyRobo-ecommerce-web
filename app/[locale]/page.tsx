@@ -5,7 +5,6 @@ import FeatureShowcase from "@/components/sections/FeatureShowcase";
 import VideoShowcase from "@/components/sections/VideoShowcase";
 import TrustSection from "@/components/sections/TrustSection";
 import WhyUsSection from "@/components/sections/WhyUsSection";
-import NewsSection from "@/components/sections/NewsSection";
 import YouTubeCTA from "@/components/sections/YouTubeCTA";
 
 export default async function Home({
@@ -24,7 +23,10 @@ export default async function Home({
       <VideoShowcase />
       <TrustSection />
       <WhyUsSection />
-      <NewsSection />
+      {/* NewsSection is hidden for launch — the items in messages/*.json "news"
+          are placeholder posts about Mammotion, not FindMyRobo's own news. The
+          component and its copy are still in the repo: re-import it and drop
+          <NewsSection /> back here once there are real posts to show. */}
       <YouTubeCTA />
     </main>
   );

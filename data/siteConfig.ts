@@ -54,12 +54,7 @@ export interface ShowcaseFeature {
  * Platforms the footer knows how to render an icon for. A key here does not
  * mean an account exists — see siteConfig.socials for the ones that do.
  */
-export type SocialPlatform =
-  | "facebook"
-  | "instagram"
-  | "youtube"
-  | "tiktok"
-  | "linkedin";
+export type SocialPlatform = "facebook" | "youtube" | "tiktok";
 
 export const siteConfig = {
   /**
@@ -202,6 +197,10 @@ export const siteConfig = {
   socials: {
     facebook: "https://www.facebook.com/findmyrobo",
     youtube: "https://www.youtube.com/@FindmyRobo",
+    // TikTok account is coming — paste the profile URL here and the icon
+    // appears in the footer on its own. Left commented rather than set to an
+    // empty string so it stays a no-op until there is a real link.
+    // tiktok: "https://www.tiktok.com/@...",
   } as Partial<Record<SocialPlatform, string>>,
 };
 
