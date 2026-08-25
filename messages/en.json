@@ -365,7 +365,9 @@
       "confirm": "Delete \"{name}\"? This cannot be undone.",
       "failed": "Could not delete product.",
       "network": "Could not reach the server.",
-      "label": "Delete {name}"
+      "label": "Delete {name}",
+      "confirmTitle": "Delete this product?",
+      "confirmButton": "Delete"
     },
     "visibility": {
       "failed": "Could not update visibility.",
@@ -560,7 +562,20 @@
       "placeholders": {
         "url": "https://…",
         "youtubeUrl": "https://www.youtube.com/watch?v=…"
+      },
+      "confirm": {
+        "removeTitle": "Remove this?",
+        "removeButton": "Remove",
+        "card": "Card {number} will be removed from this section. The change takes effect when you save the product.",
+        "section": "Section {number} and everything inside it will be removed from the product page. The change takes effect when you save the product.",
+        "group": "Specification group {number} and all of its rows will be removed. The change takes effect when you save the product.",
+        "row": "Row {number} will be removed from this specification group. The change takes effect when you save the product.",
+        "boxItem": "Item {number} will be removed from what's in the box. The change takes effect when you save the product.",
+        "faq": "Question {number} will be removed. The change takes effect when you save the product."
       }
+    },
+    "confirmDialog": {
+      "cancel": "Cancel"
     }
   },
   "cart": {

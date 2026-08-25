@@ -4,12 +4,10 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import {
   FacebookIcon,
-  InstagramIcon,
-  LinkedInIcon,
   TikTokIcon,
   YouTubeIcon,
 } from "@/components/ui/BrandIcons";
-import { salesMapUrl, siteConfig } from "@/data/siteConfig";
+import { salesMapUrl, siteConfig, type SocialPlatform } from "@/data/siteConfig";
 import { SERVICE_CATEGORY, type Product } from "@/data/products";
 
 const payments = ["PromptPay", "Visa", "Mastercard", "Bank Transfer"];
@@ -24,19 +22,30 @@ const MAX_FOOTER_PRODUCTS = 8;
  */
 const ABOUT_HREFS = ["/about", "/#contact", "/#support", "/shop"];
 
-const socials = [
-  { label: "Facebook", Icon: FacebookIcon },
-  { label: "Instagram", Icon: InstagramIcon },
-  { label: "YouTube", Icon: YouTubeIcon },
-  { label: "TikTok", Icon: TikTokIcon },
-  { label: "LinkedIn", Icon: LinkedInIcon },
-];
+/**
+ * Icon + accessible name per platform. What actually renders is the
+ * intersection of this and siteConfig.socials, so a platform with no account
+ * simply produces no icon — previously all five rendered and every one linked
+ * to "#", which looks like the site is broken.
+ */
+const SOCIAL_META: Record<SocialPlatform, { label: string; Icon: typeof FacebookIcon }> = {
+  facebook: { label: "Facebook", Icon: FacebookIcon },
+  youtube: { label: "YouTube", Icon: YouTubeIcon },
+  tiktok: { label: "TikTok", Icon: TikTokIcon },
+};
+
+/** Fixed display order, independent of the key order in siteConfig. */
+const SOCIAL_ORDER: SocialPlatform[] = ["facebook", "youtube", "tiktok"];
 
 export default function Footer({ products = [] }: { products?: Product[] }) {
   const t = useTranslations("footer");
   const support = t.raw("support") as string[];
   const about = t.raw("about") as string[];
   const { phone, email, addressLines } = siteConfig.salesContact;
+  const socialLinks = SOCIAL_ORDER.flatMap((platform) => {
+    const href = siteConfig.socials[platform];
+    return href ? [{ platform, href, ...SOCIAL_META[platform] }] : [];
+  });
 
   // Installation packages are add-ons bought alongside a robot, not something
   // anyone browses to from a footer.
@@ -64,19 +73,23 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-white/50">
               {t("copyright")}
             </p>
-            <ul className="mt-6 flex gap-2">
-              {socials.map(({ label, Icon }) => (
-                <li key={label}>
-                  <a
-                    href="#"
-                    aria-label={label}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:border-gold hover:text-gold"
-                  >
-                    <Icon className="h-4.5 w-4.5" />
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {socialLinks.length > 0 && (
+              <ul className="mt-6 flex gap-2">
+                {socialLinks.map(({ platform, label, Icon, href }) => (
+                  <li key={platform}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer me"
+                      aria-label={label}
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:border-gold hover:text-gold"
+                    >
+                      <Icon className="h-4.5 w-4.5" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* products — the only list here with real destinations; the rest

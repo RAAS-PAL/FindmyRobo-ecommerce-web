@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoaderCircle, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useConfirm } from "@/components/admin/ConfirmProvider";
 
 export default function DeleteProductButton({
   id,
@@ -14,10 +15,16 @@ export default function DeleteProductButton({
 }) {
   const router = useRouter();
   const t = useTranslations("admin.deleteProduct");
+  const confirm = useConfirm();
   const [busy, setBusy] = useState(false);
 
   const handleDelete = async () => {
-    if (!window.confirm(t("confirm", { name }))) return;
+    const ok = await confirm({
+      title: t("confirmTitle"),
+      message: t("confirm", { name }),
+      confirmLabel: t("confirmButton"),
+    });
+    if (!ok) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
