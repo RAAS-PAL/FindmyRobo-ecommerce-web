@@ -16,6 +16,43 @@ const payments = ["PromptPay", "Visa", "Mastercard", "Bank Transfer"];
 const MAX_FOOTER_PRODUCTS = 8;
 
 /**
+ * Footer "Support and Service" column — THE RESTORE LIST.
+ *
+ * All seven of these shipped pointing at "#": seven dead links on every page.
+ * They are kept here in order, each with the page it is waiting on, so putting
+ * one back is a matter of filling in its href — nothing else needs editing.
+ *
+ * Labels are NOT here; they stay in messages/{en,th}.json under footer.support
+ * and are matched to this array BY INDEX, so both languages keep working. Do
+ * not reorder one without the other.
+ *
+ *   0  Support                      /support hub, or /contact-sales as a stopgap
+ *                                   (that page is real today: phone, LINE, map)
+ *   1  Warranty                     needs warranty length + what it covers,
+ *                                   and whether it differs per model
+ *   2  Refunds and Returns          docs/ReturnNRefundPolicy.docx may already
+ *                                   hold this; Omise merchant review expects it
+ *   3  Shipping                     needs delivery times + real coverage area
+ *   4  Payment and Finance Options  needs the confirmed payment methods; the
+ *                                   site is in quotation mode until Omise is live
+ *   5  Privacy Policy               REQUIRED by Thai PDPA before launch — must
+ *                                   name the data controller
+ *   6  Terms and Conditions         expected by Omise merchant review
+ *
+ * A row left null renders nothing, and the whole column disappears while every
+ * row is null — an empty heading is worse than no column.
+ */
+const SUPPORT_HREFS: (string | null)[] = [
+  null, // Support
+  null, // Warranty
+  null, // Refunds and Returns
+  null, // Shipping
+  null, // Payment and Finance Options
+  null, // Privacy Policy
+  null, // Terms and Conditions
+];
+
+/**
  * Destinations for footer.about, positional — index 0 is the first label in the
  * translated array. Keep this in step with the `about` array in
  * messages/{en,th}.json; adding a label without a href here falls back to "#".
@@ -42,6 +79,13 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
   const support = t.raw("support") as string[];
   const about = t.raw("about") as string[];
   const { phone, email, addressLines } = siteConfig.salesContact;
+  const supportLinks = support.flatMap((label, index) => {
+    const href = SUPPORT_HREFS[index];
+    return href ? [{ label, href }] : [];
+  });
+  // Keeps the 12-column row full when the support column is not rendered.
+  const contactSpan = supportLinks.length > 0 ? "lg:col-span-3" : "lg:col-span-5";
+
   const socialLinks = SOCIAL_ORDER.flatMap((platform) => {
     const href = siteConfig.socials[platform];
     return href ? [{ platform, href, ...SOCIAL_META[platform] }] : [];
@@ -120,24 +164,27 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
             </ul>
           </nav>
 
-          {/* support and service */}
-          <nav aria-label={t("supportTitle")} className="lg:col-span-2">
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-              {t("supportTitle")}
-            </h3>
-            <ul className="mt-5 space-y-3">
-              {support.map((item) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-gold"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          {/* support and service — hidden while every entry in SUPPORT_HREFS
+              is still null. See that list for what each one is waiting on. */}
+          {supportLinks.length > 0 && (
+            <nav aria-label={t("supportTitle")} className="lg:col-span-2">
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+                {t("supportTitle")}
+              </h3>
+              <ul className="mt-5 space-y-3">
+                {supportLinks.map(({ label, href }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-gold"
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
 
           {/* about */}
           <nav aria-label={t("aboutTitle")} className="lg:col-span-2">
@@ -161,7 +208,10 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
           {/* contact — this block is the #contact anchor the nav links to, and
               the visible business address Omise's merchant review and PDPA's
               data-controller notice both expect to find. */}
-          <section aria-labelledby="footer-contact-heading" className="lg:col-span-3">
+          <section
+            aria-labelledby="footer-contact-heading"
+            className={contactSpan}
+          >
             <h3
               id="footer-contact-heading"
               className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold"
