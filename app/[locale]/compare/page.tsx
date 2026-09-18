@@ -13,6 +13,7 @@ import {
   type Locale,
   type Product,
 } from "@/data/products";
+import { pageAlternates } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +42,11 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "compare.page" });
   // Ephemeral, selection-specific URLs — not for search indexes.
-  return { title: t("metaTitle"), robots: { index: false, follow: false } };
+  return {
+    title: t("metaTitle"),
+    robots: { index: false, follow: false },
+    alternates: pageAlternates(locale, "/compare"),
+  };
 }
 
 export default async function ComparePage({

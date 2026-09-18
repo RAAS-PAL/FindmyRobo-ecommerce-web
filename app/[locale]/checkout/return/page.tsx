@@ -4,6 +4,7 @@ import FadeIn from "@/components/ui/FadeIn";
 import PaymentResult from "@/components/checkout/PaymentResult";
 import { getOrderById, updateOrderPayment } from "@/lib/orderStore";
 import { chargeToOrderStatus, getCharge, omiseConfigured } from "@/lib/omise";
+import { pageAlternates } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "payment" });
-  return { title: t("heading"), robots: { index: false, follow: false } };
+  return {
+    title: t("heading"),
+    robots: { index: false, follow: false },
+    alternates: pageAlternates(locale, "/checkout/return"),
+  };
 }
 
 /**

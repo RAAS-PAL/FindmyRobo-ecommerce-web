@@ -29,6 +29,9 @@ import {
 } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
 import { getAllProducts, getProductById } from "@/lib/productStore";
+import { pageAlternates } from "@/lib/seo";
+import { breadcrumbJsonLd, productJsonLd } from "@/lib/structuredData";
+import JsonLd from "@/components/seo/JsonLd";
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
@@ -42,10 +45,13 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { locale, id } = await params;
   const product = await getProductById(id);
   if (!product || product.visible === false) return {};
-  return { title: `${product.name} — FindMyRobo` };
+  return {
+    title: `${product.name} — FindMyRobo`,
+    alternates: pageAlternates(locale, `/products/${id}`),
+  };
 }
 
 export default async function ProductPage({
@@ -81,8 +87,22 @@ export default async function ProductPage({
     )
     .slice(0, 3);
 
+  // Structured data mirrors the visible breadcrumb and product card exactly —
+  // same names, same order — because Google checks the two against each other.
+  const categoryName = tc(`${product.category}.name`);
+  const l = locale as Locale;
+
   return (
     <>
+    <JsonLd data={productJsonLd(product, l, categoryName)} />
+    <JsonLd
+      data={breadcrumbJsonLd(l, [
+        { name: t("home"), path: "/" },
+        { name: t("shop"), path: "/shop" },
+        { name: categoryName, path: `/shop/${product.category}` },
+        { name: product.name, path: `/products/${product.id}` },
+      ])}
+    />
     {/* overflow-x-clip contains ExpandOnScroll's full-bleed w-screen panel */}
     <main className="overflow-x-clip bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">

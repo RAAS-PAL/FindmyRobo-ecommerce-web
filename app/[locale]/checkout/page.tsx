@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import FadeIn from "@/components/ui/FadeIn";
 import CheckoutClient from "@/components/checkout/CheckoutClient";
+import { pageAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -10,7 +11,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "checkout" });
-  return { title: t("metaTitle") };
+  return { title: t("metaTitle"), alternates: pageAlternates(locale, "/checkout") };
 }
 
 export default async function CheckoutPage({

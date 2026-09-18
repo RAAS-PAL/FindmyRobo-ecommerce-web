@@ -2,17 +2,10 @@ import type { MetadataRoute } from "next";
 import { categories } from "@/data/categories";
 import { routing } from "@/i18n/routing";
 import { getAllProducts } from "@/lib/productStore";
-import { siteUrl } from "@/lib/siteUrl";
+import { localizedUrl as localizedPath } from "@/lib/seo";
 
-/** localePrefix is "as-needed": Thai lives at "/", English at "/en". */
-const localizedPath = (locale: string, path: string) => {
-  const clean = path === "/" ? "" : path;
-  return locale === routing.defaultLocale
-    ? `${siteUrl}${clean || "/"}`
-    : `${siteUrl}/${locale}${clean}`;
-};
-
-/** hreflang alternates, so Google serves the right language per visitor. */
+/** hreflang alternates, so Google serves the right language per visitor.
+ *  Same URL builder the page metadata uses, so sitemap and <head> agree. */
 const alternates = (path: string) => ({
   languages: Object.fromEntries(
     routing.locales.map((locale) => [locale, localizedPath(locale, path)])
@@ -28,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/compare", priority: 0.5, changeFrequency: "monthly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
     { path: "/contact-sales", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/refund-policy", priority: 0.5, changeFrequency: "monthly" },
     { path: "/order-status", priority: 0.3, changeFrequency: "monthly" },
   ];
 

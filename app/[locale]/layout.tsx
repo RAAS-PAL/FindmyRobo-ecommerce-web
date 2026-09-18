@@ -55,7 +55,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
-  const path = locale === routing.defaultLocale ? "/" : `/${locale}`;
 
   return {
     // Without metadataBase, Next cannot turn the relative OG image path into
@@ -64,14 +63,16 @@ export async function generateMetadata({
     metadataBase: new URL(siteUrl),
     title: t("title"),
     description: t("description"),
-    alternates: {
-      canonical: path,
-      languages: { th: "/", en: "/en" },
-    },
+    // No `alternates` and no `openGraph.url` here, deliberately. A layout only
+    // knows the locale, not the route, so anything path-shaped it emits is
+    // the homepage's value stamped onto every page beneath it — which is
+    // exactly what used to happen: every product page declared itself a
+    // duplicate of "/". Each page sets its own via pageAlternates() in
+    // lib/seo.ts. A page that forgets gets no canonical (Google infers the
+    // URL itself), never a wrong one.
     openGraph: {
       type: "website",
       siteName: "FindMyRobo",
-      url: path,
       title: t("title"),
       description: t("description"),
       locale: locale === "th" ? "th_TH" : "en_US",

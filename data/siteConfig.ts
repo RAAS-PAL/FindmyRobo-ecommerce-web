@@ -186,6 +186,34 @@ export const siteConfig = {
       "99/40 Software Park Building Moo 4,",
       "Chaengwattana rd., Khlong Kluea, Pak Kret, Nonthaburi Thailand 11120",
     ],
+    /**
+     * The same address, split into the fields schema.org's PostalAddress
+     * wants — Google reads structure, not prose. This is the source for the
+     * Organization structured data (lib/structuredData.ts). If the office
+     * moves, change BOTH this and addressLines above; they are one address
+     * written two ways.
+     */
+    postalAddress: {
+      streetAddress: "99/40 Software Park Building Moo 4, Chaengwattana Rd., Khlong Kluea",
+      addressLocality: "Pak Kret",
+      addressRegion: "Nonthaburi",
+      postalCode: "11120",
+      addressCountry: "TH",
+    },
+  },
+
+  /**
+   * The company behind the site, for the Organization structured data and the
+   * legal disclosures. Trading name and legal entity differ on purpose: Google
+   * shows `name` in the brand panel; `legalName` is what appears on the DBD
+   * certificate (source: docs/legal-pages-information.xlsx, rows 1–2).
+   */
+  organization: {
+    name: "FindMyRobo",
+    legalName: "Raas Pal Company Limited",
+    legalNameTh: "ราส พอล จำกัด",
+    /** Logo for search results — the light-background variant, on white. */
+    logo: "/main-logo-light.png",
   },
 
   /**

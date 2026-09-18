@@ -16,6 +16,7 @@ import ProfileSettings from "@/components/account/ProfileSettings";
 import SecuritySettings from "@/components/account/SecuritySettings";
 import DeleteAccount from "@/components/account/DeleteAccount";
 import AccountHistory, { type PurchaseHistoryItem } from "@/components/account/AccountHistory";
+import { pageAlternates } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "auth.account" });
-  return { title: `${t("title")} — FindMyRobo` };
+  return { title: `${t("title")} — FindMyRobo`, alternates: pageAlternates(locale, "/account") };
 }
 
 export default async function AccountPage({

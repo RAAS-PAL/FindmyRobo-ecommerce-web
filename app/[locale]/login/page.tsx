@@ -4,6 +4,7 @@ import { redirect } from "@/i18n/navigation";
 import { getProfile } from "@/lib/auth";
 import AuthShell from "@/components/auth/AuthShell";
 import LoginForm from "@/components/auth/LoginForm";
+import { pageAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -12,7 +13,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "auth.login" });
-  return { title: `${t("title")} — FindMyRobo` };
+  return { title: `${t("title")} — FindMyRobo`, alternates: pageAlternates(locale, "/login") };
 }
 
 export default async function LoginPage({

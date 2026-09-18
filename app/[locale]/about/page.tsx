@@ -15,6 +15,7 @@ import FadeIn from "@/components/ui/FadeIn";
 import { about } from "@/data/about";
 import { salesMapUrl, siteConfig } from "@/data/siteConfig";
 import type { Locale } from "@/data/products";
+import { pageAlternates } from "@/lib/seo";
 
 const ICONS = {
   shield: Shield,
@@ -30,7 +31,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "about" });
-  return { title: t("metaTitle") };
+  return { title: t("metaTitle"), alternates: pageAlternates(locale, "/about") };
 }
 
 export default async function AboutPage({

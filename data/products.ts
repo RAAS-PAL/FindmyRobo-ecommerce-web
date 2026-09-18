@@ -162,6 +162,14 @@ export interface Product {
    * pushed. Services (installation, demos) are never shipped and carry no SKU.
    */
   sku?: string;
+  /**
+   * Manufacturer, e.g. "Mammotion". Emitted as `brand` in the product page's
+   * structured data, where Google can verify it — so it is stored per product
+   * rather than assumed. Absent means the database default applies (see
+   * supabase/add-product-brand.sql); the storefront treats absent as
+   * DEFAULT_BRAND below.
+   */
+  brand?: string;
   specs: Partial<Record<SpecKey, string>>;
   tagline: LocalizedText;
   description: LocalizedText;
@@ -189,5 +197,12 @@ export const ROBOT_VARIANTS: RobotVariant[] = [
 
 /** Category whose products are services (installation, demos) rather than robots. */
 export const SERVICE_CATEGORY = "services" as const;
+
+/**
+ * Brand assumed when a product row predates add-product-brand.sql or the admin
+ * left the field blank. Mirrors the column default in that migration — keep
+ * the two in step. Every robot in the launch lineup is Mammotion.
+ */
+export const DEFAULT_BRAND = "Mammotion";
 
 export const formatBaht = (price: number) => `฿${price.toLocaleString("en-US")}`;

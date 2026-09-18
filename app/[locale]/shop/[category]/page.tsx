@@ -10,6 +10,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import { collapseInstallTiers, isInstallTier } from "@/lib/installTiers";
 import { categories, type CategorySlug } from "@/data/categories";
 import { getProductsByCategory } from "@/lib/productStore";
+import { pageAlternates } from "@/lib/seo";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -25,7 +26,10 @@ export async function generateMetadata({
   const { locale, category } = await params;
   if (!categories.some((c) => c.slug === category)) return {};
   const tc = await getTranslations({ locale, namespace: "categories" });
-  return { title: `${tc(`${category}.name`)} — FindMyRobo` };
+  return {
+    title: `${tc(`${category}.name`)} — FindMyRobo`,
+    alternates: pageAlternates(locale, `/shop/${category}`),
+  };
 }
 
 export default async function CategoryPage({

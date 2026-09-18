@@ -423,7 +423,8 @@
         "englishFeatureBullets": "Feature bullets — one per line",
         "thaiTagline": "Tagline (Thai)",
         "thaiDescription": "Description (Thai)",
-        "thaiFeatureBullets": "Feature bullets (Thai) — one per line"
+        "thaiFeatureBullets": "Feature bullets (Thai) — one per line",
+        "brand": "Brand"
       },
       "variants": {
         "luba": "Large mower",
@@ -449,7 +450,8 @@
         "gallery": "Extra angles for the product page gallery, shown after the main image in this order. Leave empty for a single photo.",
         "placeholderArt": "Placeholder art until real product photos land.",
         "visible": "Hide it to keep working on it without listing it in the shop, or to pull it from sale without deleting it.",
-        "sku": "The code Sokochan's warehouse uses for this product. Required to ship it — leave blank for services."
+        "sku": "The code Sokochan's warehouse uses for this product. Required to ship it — leave blank for services.",
+        "brand": "The manufacturer, as Google should see it in the product’s structured data. Defaults to Mammotion — only change it for a robot from another maker."
       },
       "actions": {
         "uploading": "Uploading…",
@@ -818,7 +820,8 @@
       "orderLabel": "Order number",
       "itemsHeading": "Your items",
       "continueShopping": "Continue Shopping"
-    }
+    },
+    "refundPolicyLink": "Read our Return, Exchange, Claim & Refund Policy"
   },
   "categories": {
     "robot-mowers": {
@@ -1081,5 +1084,10 @@
     "eyebrow": "Under the hood",
     "heading": "The technology doing the work",
     "sub": "Select a part of the robot to see what it does and why it matters."
+  },
+  "refundPolicy": {
+    "metaTitle": "Return, Exchange, Claim & Refund Policy — FindMyRobo",
+    "eyebrow": "Policy",
+    "thaiOnlyNotice": "This policy is published in Thai, which is the version with legal force. An English translation is not yet available. If you would like it explained in English, please contact our customer service team."
   }
 }

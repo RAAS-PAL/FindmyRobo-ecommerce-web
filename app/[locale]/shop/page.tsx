@@ -5,6 +5,7 @@ import FadeIn from "@/components/ui/FadeIn";
 import ProductCard from "@/components/ui/ProductCard";
 import { collapseInstallTiers, isInstallTier } from "@/lib/installTiers";
 import { getAllProducts } from "@/lib/productStore";
+import { pageAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -13,7 +14,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "shop" });
-  return { title: t("metaTitle") };
+  return { title: t("metaTitle"), alternates: pageAlternates(locale, "/shop") };
 }
 
 export default async function ShopPage({

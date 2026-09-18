@@ -7,6 +7,7 @@ import FadeIn from "@/components/ui/FadeIn";
 import { getAllProducts } from "@/lib/productStore";
 import { searchProducts } from "@/lib/productSearch";
 import type { Locale } from "@/data/products";
+import { pageAlternates } from "@/lib/seo";
 
 type SearchParams = Promise<{ q?: string | string[] }>;
 
@@ -23,7 +24,10 @@ export async function generateMetadata({
   const { locale } = await params;
   const query = queryValue((await searchParams).q);
   const t = await getTranslations({ locale, namespace: "search" });
-  return { title: query ? t("metaTitleQuery", { query }) : t("metaTitle") };
+  return {
+    title: query ? t("metaTitleQuery", { query }) : t("metaTitle"),
+    alternates: pageAlternates(locale, "/search"),
+  };
 }
 
 export default async function SearchPage({

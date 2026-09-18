@@ -4,6 +4,7 @@ import { redirect } from "@/i18n/navigation";
 import { getProfile } from "@/lib/auth";
 import AuthShell from "@/components/auth/AuthShell";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
+import { pageAlternates } from "@/lib/seo";
 
 // The recovery session is established per-request by /auth/confirm, so this
 // page must never be served from the static cache.
@@ -16,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "auth.resetPassword" });
-  return { title: `${t("title")} — FindMyRobo` };
+  return { title: `${t("title")} — FindMyRobo`, alternates: pageAlternates(locale, "/reset-password") };
 }
 
 export default async function ResetPasswordPage({

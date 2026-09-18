@@ -4,6 +4,7 @@ import { Calendar, Mail, MapPin, MessageCircle, Phone, QrCode } from "lucide-rea
 import { Link } from "@/i18n/navigation";
 import FadeIn from "@/components/ui/FadeIn";
 import { salesMapUrl, siteConfig } from "@/data/siteConfig";
+import { pageAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -12,7 +13,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "contactSales" });
-  return { title: t("metaTitle") };
+  return { title: t("metaTitle"), alternates: pageAlternates(locale, "/contact-sales") };
 }
 
 export default async function ContactSalesPage({

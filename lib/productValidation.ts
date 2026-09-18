@@ -283,6 +283,11 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   // blank stays undefined so services and un-mapped products carry no SKU.
   const sku = asText(body.sku).slice(0, 60);
 
+  // Manufacturer for the product's structured data. Blank falls through to the
+  // DB default (Mammotion) rather than being stored as "", so a row never
+  // carries an empty brand that would emit `"brand": ""` to Google.
+  const brand = asText(body.brand).slice(0, 60);
+
   return {
     id,
     name,
@@ -296,6 +301,7 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
     ...(body.preorder ? { preorder: true } : {}),
     visible,
     ...(sku ? { sku } : {}),
+    ...(brand ? { brand } : {}),
     specs,
     tagline: { en: taglineEn, th: taglineTh },
     description: { en: descriptionEn, th: descriptionTh },

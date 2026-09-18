@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PackageSearch } from "lucide-react";
 import FadeIn from "@/components/ui/FadeIn";
 import OrderLookupForm from "@/components/orders/OrderLookupForm";
+import { pageAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -11,7 +12,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "orderStatus" });
-  return { title: t("metaTitle") };
+  return { title: t("metaTitle"), alternates: pageAlternates(locale, "/order-status") };
 }
 
 export default async function OrderStatusPage({

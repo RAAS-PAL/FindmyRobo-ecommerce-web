@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { ImagePlus, LoaderCircle, Save } from "lucide-react";
 import { categories } from "@/data/categories";
 import {
+  DEFAULT_BRAND,
   ROBOT_VARIANTS,
   SPEC_KEYS,
   type Product,
@@ -282,6 +283,20 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             className={`${inputClass} font-mono`}
           />
           <p className={hintClass}>{t("hints.sku")}</p>
+        </div>
+        <div>
+          <label htmlFor="brand" className={labelClass}>
+            {t("fields.brand")}
+          </label>
+          <input
+            id="brand"
+            name="brand"
+            maxLength={60}
+            defaultValue={initial?.brand ?? DEFAULT_BRAND}
+            placeholder={DEFAULT_BRAND}
+            className={inputClass}
+          />
+          <p className={hintClass}>{t("hints.brand")}</p>
         </div>
         <div>
           <label htmlFor="artChoice" className={labelClass}>
