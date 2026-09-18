@@ -187,24 +187,16 @@ export const about = {
   ] as Milestone[],
 
   /* ------------------------------------------------------------------ team */
-  // REPLACE with real people, or set to [] to hide the section.
-  // Real names and faces matter a lot at this price point — an anonymous
-  // company asking for ฿300,000 is a harder sell than three named people.
-  team: [
-    {
-      name: "REPLACE — full name",
-      role: { en: "Managing Director", th: "กรรมการผู้จัดการ" },
-      photo: null,
-    },
-    {
-      name: "REPLACE — full name",
-      role: { en: "Head of Sales", th: "หัวหน้าฝ่ายขาย" },
-      photo: null,
-    },
-    {
-      name: "REPLACE — full name",
-      role: { en: "Service Manager", th: "ผู้จัดการฝ่ายบริการ" },
-      photo: null,
-    },
-  ] as TeamMember[],
+  // Empty on purpose: the section is hidden until there are real people to
+  // name. It previously shipped three "REPLACE — full name" placeholders,
+  // which published a fake leadership team.
+  //
+  // To bring it back, add entries here — the About page renders the section
+  // automatically once the array is non-empty. The roles that were drafted:
+  // Managing Director (กรรมการผู้จัดการ), Head of Sales (หัวหน้าฝ่ายขาย),
+  // Service Manager (ผู้จัดการฝ่ายบริการ).
+  //
+  // Worth doing eventually: real names and faces matter at this price point —
+  // an anonymous company asking for ฿300,000 is a harder sell.
+  team: [] as TeamMember[],
 };

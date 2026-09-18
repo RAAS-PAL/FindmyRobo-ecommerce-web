@@ -72,8 +72,13 @@ export async function GET(request: Request) {
       viewer: { loggedIn: !!viewer },
       yourReview,
     });
-  } catch {
-    // Degrade to an empty state — e.g. before the reviews table migration is run.
+  } catch (error) {
+    // Degrade to an empty state so the product page still renders — but say
+    // so. This block ran silently for months while the reviews table did not
+    // exist: every product showed "no reviews yet", returned 200, and nothing
+    // was logged, so nobody knew the feature was dead. A degraded fallback is
+    // fine; an invisible one is how a missing table hides in production.
+    console.error(`[reviews] falling back to empty state for ${productId}:`, error);
     return NextResponse.json({
       summary: { average: 0, count: 0, distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } },
       reviews: [],

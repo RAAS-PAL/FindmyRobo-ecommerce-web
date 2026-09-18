@@ -45,7 +45,7 @@ const MAX_FOOTER_PRODUCTS = 8;
 const SUPPORT_HREFS: (string | null)[] = [
   null, // Support
   null, // Warranty
-  null, // Refunds and Returns
+  "/refund-policy", // Refunds and Returns — published, Thai legal text
   null, // Shipping
   null, // Payment and Finance Options
   null, // Privacy Policy

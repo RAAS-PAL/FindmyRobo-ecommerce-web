@@ -128,9 +128,10 @@ Vercel builds `main` automatically. Environment variables are set in the Vercel
 project — **changing one requires a redeploy**, it does not apply to a running
 deployment.
 
-Product data lives in Supabase but the storefront is statically generated, so
-catalogue edits made in the admin panel do not appear publicly until the next
-build.
+The storefront is statically generated, but the admin product routes call
+`revalidatePath` on every save, so catalogue edits publish immediately — no
+redeploy needed. Content that lives in `data/*.ts` or `messages/*.json` is the
+opposite: it is compiled in, and changing it does require a deploy.
 
 ## Conventions
 

@@ -730,6 +730,19 @@ export default function CheckoutClient() {
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold-600" aria-hidden="true" />
               {t("paymentNote")}
             </p>
+
+            {/* The return/refund terms have to be reachable *before* the order
+                is placed, not only from the footer — it is the point where the
+                customer is committing, and it is what a payment provider's
+                merchant review looks for. */}
+            <p className="mt-2 text-[12px] leading-relaxed text-ink-muted">
+              <Link
+                href="/refund-policy"
+                className="underline underline-offset-2 transition-colors hover:text-gold-600"
+              >
+                {t("refundPolicyLink")}
+              </Link>
+            </p>
           </div>
         </aside>
       </FadeIn>
