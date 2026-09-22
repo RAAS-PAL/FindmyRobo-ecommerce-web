@@ -11,9 +11,9 @@ Repo: `RAAS-PAL/FindmyRobo-ecommerce-web`
 ## Quick start
 
 ```bash
-npm install
+pnpm install
 cp .env.example .env.local     # then fill in the Supabase values
-npm run dev                    # http://localhost:3000
+pnpm dev                       # http://localhost:3000
 ```
 
 Only the three Supabase variables are required to boot. Every other
@@ -23,10 +23,10 @@ the whole site locally without Resend, Omise or Sokochan credentials — see
 
 | Script | What it does |
 | --- | --- |
-| `npm run dev` | Dev server (Turbopack) |
-| `npm run build` | Production build |
-| `npm start` | Serve a production build |
-| `npm run lint` | ESLint |
+| `pnpm dev` | Dev server (Turbopack) |
+| `pnpm build` | Production build |
+| `pnpm start` | Serve a production build |
+| `pnpm lint` | ESLint |
 
 ## Stack
 

@@ -1,0 +1,15 @@
+# Not a monorepo — this file exists because pnpm >= 10 reads its settings from
+# here rather than from package.json.
+
+# pnpm refuses to run a dependency's install script unless it is allowed here.
+# These four are Next.js essentials, and without their scripts the framework
+# silently degrades: sharp powers next/image optimisation, @swc/core is the
+# compiler, @parcel/watcher is dev-server file watching, unrs-resolver is
+# module resolution. Committed so Vercel and every teammate make the same call.
+# (Written by `pnpm approve-builds`; the key name changed across pnpm majors,
+# so let that command edit it rather than hand-typing.)
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  sharp: true
+  unrs-resolver: true
