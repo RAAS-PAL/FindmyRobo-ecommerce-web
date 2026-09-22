@@ -97,10 +97,14 @@ export const about = {
   // page renders fine without it.
   partner: {
     name: "Mammotion",
-    // REPLACE with the exact wording you are entitled to use.
+    // "Authorised partner" is a claim about Mammotion — it needs Mammotion's
+    // own written confirmation, a dealer agreement, or a listing on their
+    // site before it can go back up. Until then this says only what RAAS PAL
+    // can prove about its own supply chain, which needs nothing from them.
+    // Swap back to a partnership claim the moment that confirmation exists.
     status: {
-      en: "Authorised partner in Thailand",
-      th: "พาร์ทเนอร์อย่างเป็นทางการในประเทศไทย",
+      en: "Genuine Mammotion Robots",
+      th: "หุ่นยนต์ Mammotion แท้",
     },
     body: {
       en: "Every robot we sell is sourced through official channels, arrives with genuine parts, and is covered by a warranty we honour here in Thailand.",
