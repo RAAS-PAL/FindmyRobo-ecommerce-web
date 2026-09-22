@@ -9,14 +9,9 @@ import { pageAlternates } from "@/lib/seo";
 /**
  * Return, Exchange, Claim & Refund policy — the published legal text.
  *
- * The body is rendered straight from data/returnPolicy.ts, which is a verbatim
- * transcription of the company's signed Thai document. Nothing on this page
- * rewords it.
- *
- * Thai is the only language the policy exists in, so the English route shows
- * the same Thai body beneath a notice saying Thai governs. Publishing a
- * machine translation of a binding policy would create a second, unreviewed
- * set of promises in a language the company never agreed to.
+ * Each locale renders its own version from data/returnPolicy.ts, a verbatim
+ * transcription of the company's Thai and English documents. Nothing on this
+ * page rewords either one; the page only lays them out.
  */
 
 export async function generateMetadata({
@@ -37,7 +32,7 @@ export default async function RefundPolicyPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("refundPolicy");
-  const isThai = (locale as Locale) === "th";
+  const policy = returnPolicy[locale as Locale] ?? returnPolicy.th;
 
   return (
     <main className="flex-1 bg-cloud">
@@ -47,36 +42,18 @@ export default async function RefundPolicyPage({
             {t("eyebrow")}
           </p>
           <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-4xl">
-            {isThai ? returnPolicy.title.th : returnPolicy.title.en}
+            {policy.title}
           </h1>
-          {/* On /en the Thai title still needs to appear: it is the heading of
-              the document that actually binds, and a reader comparing the two
-              should be able to see they are the same policy. */}
-          {!isThai && (
-            <p className="mt-2 text-[15px] font-medium text-ink-muted">
-              {returnPolicy.title.th}
-            </p>
-          )}
         </FadeIn>
-
-        {/* Language notice — English readers are told plainly that what follows
-            is Thai and that Thai is the version with legal force. */}
-        {!isThai && (
-          <FadeIn delay={0.05}>
-            <p className="mt-8 rounded-2xl border border-gold/40 bg-gold/10 p-5 text-[14px] leading-relaxed text-content">
-              {t("thaiOnlyNotice")}
-            </p>
-          </FadeIn>
-        )}
 
         <FadeIn delay={0.1}>
           <p className="mt-8 text-[15px] leading-relaxed text-ink-muted">
-            {returnPolicy.intro}
+            {policy.intro}
           </p>
         </FadeIn>
 
         <div className="mt-12 space-y-10">
-          {returnPolicy.sections.map((section, i) => (
+          {policy.sections.map((section, i) => (
             <FadeIn key={section.heading} delay={Math.min(i, 6) * 0.03}>
               <section>
                 <h2 className="font-display text-lg font-bold text-content sm:text-xl">
@@ -101,6 +78,17 @@ export default async function RefundPolicyPage({
                             </li>
                           ))}
                         </ul>
+                      );
+                    }
+
+                    if (block.type === "subheading") {
+                      return (
+                        <h3
+                          key={j}
+                          className="pt-2 text-[15.5px] font-bold text-content"
+                        >
+                          {block.text}
+                        </h3>
                       );
                     }
 
