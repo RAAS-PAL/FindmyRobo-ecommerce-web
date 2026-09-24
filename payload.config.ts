@@ -94,6 +94,11 @@ export default buildConfig({
       // PAYLOAD_MEDIA_STORAGE=local keeps uploads on disk — for offline tests
       // against a throwaway database only. Everywhere else, Supabase Storage.
       enabled: process.env.PAYLOAD_MEDIA_STORAGE !== "local",
+      // The plugin adds columns to the media table (_objectKey, prefix) — but
+      // only while enabled, unless this is on. Without it, a migration made
+      // with storage off (offline tests) lacked them, and the first upload in
+      // production failed. Keeps the schema identical either way.
+      alwaysInsertFields: true,
       collections: {
         media: { adapter: supabaseStorage, disableLocalStorage: true, disablePayloadAccessControl: true },
       },

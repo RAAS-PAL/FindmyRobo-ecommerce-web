@@ -7,7 +7,15 @@ import { seedContent } from "../seed";
  * schema — globals that were already published are left untouched.
  */
 export async function up({ payload, req }: MigrateUpArgs): Promise<void> {
-  await seedContent(payload, req);
+  try {
+    await seedContent(payload, req);
+  } catch (error) {
+    // Printed directly: Payload's own logger writes from a worker thread, and
+    // the failing migrate exits before it flushes — the first production
+    // failure left no error in the build log at all.
+    console.error("[cms] content seed failed:", error);
+    throw error;
+  }
 }
 
 /** Nothing to undo: rolling back the schema (initial migration) removes the data. */
