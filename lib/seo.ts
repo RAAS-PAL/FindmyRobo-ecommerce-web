@@ -51,3 +51,24 @@ export function pageAlternates(
     },
   };
 }
+
+/**
+ * Trim body copy down to a search-result snippet.
+ *
+ * Google renders roughly 155-160 characters of a meta description before
+ * cutting it off mid-sentence, so anything longer is wasted — and a snippet
+ * that ends mid-word reads as broken. Cuts at the last space inside the limit
+ * so the snippet ends on a whole word.
+ *
+ * Thai has no spaces between words, but it does put them between phrases, so
+ * the same rule lands on a phrase boundary rather than splitting a word. If a
+ * passage has no space at all to cut at, it is truncated hard — an ugly break
+ * beats spilling the entire description into the tag.
+ */
+export function metaDescription(text: string, max = 160): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const slice = clean.slice(0, max - 1);
+  const lastSpace = slice.lastIndexOf(" ");
+  return (lastSpace > max * 0.6 ? slice.slice(0, lastSpace) : slice).trimEnd() + "…";
+}

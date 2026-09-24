@@ -1,13 +1,23 @@
-import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import { pick, type AnnouncementContent } from "@/data/siteContent";
 
-export default function AnnouncementBar() {
-  const t = useTranslations("announcement");
-  const messages = [t("msg1"), t("msg2")];
-  // Content duplicated once so the -50% marquee loop is seamless
-  const strip = [...messages, ...messages, ...messages];
+/** Messages come from Admin → Content → Announcement bar. */
+export default function AnnouncementBar({ content }: { content: AnnouncementContent }) {
+  const locale = useLocale();
+  const messages = content.messages.map((message) => pick(message, locale)).filter(Boolean);
+  if (!content.enabled || messages.length === 0) return null;
+
+  // The strip is repeated until it is comfortably wider than a desktop screen,
+  // then the whole thing is doubled so the -50% marquee loop is seamless. With
+  // one short message, three copies was not enough and the loop showed a gap.
+  const repeats = Math.max(3, Math.ceil(6 / messages.length));
+  const strip = Array.from({ length: repeats }, () => messages).flat();
+  // globals.css runs the loop in 70s for the original six items; scaling it
+  // keeps the reading speed the same however many messages there are.
+  const duration = `${Math.round((70 * strip.length) / 6)}s`;
   return (
     <div className="overflow-hidden bg-gold text-forest-950" role="region" aria-label="Announcements">
-      <div className="animate-marquee flex w-max">
+      <div className="animate-marquee flex w-max" style={{ animationDuration: duration }}>
         {[0, 1].map((copy) => (
           <div key={copy} className="flex items-center" aria-hidden={copy === 1}>
             {strip.map((msg, i) => (

@@ -7,7 +7,8 @@ create table if not exists public.profiles (
   id         uuid primary key references auth.users(id) on delete cascade,
   email      text,
   full_name  text,
-  role       text not null default 'user' check (role in ('user', 'admin')),
+  -- 'marketing' was added by add-site-content.sql (Content section only).
+  role       text not null default 'user' check (role in ('user', 'admin', 'marketing')),
   created_at timestamptz not null default now()
 );
 

@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { isAdminAuthenticated } from "@/lib/adminAuth";
+import { getStaffUser } from "@/lib/adminAuth";
 import LogoutButton from "@/components/admin/LogoutButton";
 import AdminLanguageSwitcher from "@/components/admin/AdminLanguageSwitcher";
 import AdminTabs from "@/components/admin/AdminTabs";
@@ -14,7 +14,10 @@ import { getAdminLocale } from "@/lib/adminLocale";
 export default async function AdminProtectedLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  if (!(await isAdminAuthenticated())) redirect("/admin/login");
+  // Admins and the marketing role both get the panel chrome; which sections
+  // each can open is decided by the (admin-only) layout and by AdminTabs.
+  const staff = await getStaffUser();
+  if (!staff) redirect("/admin/login");
   const locale = await getAdminLocale();
   const t = await getTranslations({ locale, namespace: "admin.navigation" });
 
@@ -36,7 +39,7 @@ export default async function AdminProtectedLayout({
                 {t("adminLabel")}
               </span>
             </Link>
-            <AdminTabs />
+            <AdminTabs role={staff.role} />
           </div>
           <div className="flex items-center gap-2">
             <a

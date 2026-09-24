@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google";
 import "../globals.css";
 import { routing } from "@/i18n/routing";
@@ -16,7 +16,10 @@ import CartProvider from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
 import CompareProvider from "@/components/compare/CompareProvider";
 import FloatingCompareButton from "@/components/compare/FloatingCompareButton";
+import SiteContentProvider from "@/components/SiteContentProvider";
 import { getAllProducts } from "@/lib/productStore";
+import { getSiteContent } from "@/lib/siteContentStore";
+import { pick } from "@/data/siteContent";
 
 // Barlow is not a variable font — list the weights the UI uses (body through
 // the extrabold headings). Powers both --font-sans and --font-display.
@@ -54,15 +57,18 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "meta" });
+  // Site title, description and share image are edited in Admin → Content → SEO.
+  const { seo } = await getSiteContent();
+  const title = pick(seo.siteTitle, locale);
+  const description = pick(seo.siteDescription, locale);
 
   return {
     // Without metadataBase, Next cannot turn the relative OG image path into
     // the absolute URL that LINE, Facebook, and Messenger require — link
     // previews render with no image at all.
     metadataBase: new URL(siteUrl),
-    title: t("title"),
-    description: t("description"),
+    title,
+    description,
     // No `alternates` and no `openGraph.url` here, deliberately. A layout only
     // knows the locale, not the route, so anything path-shaped it emits is
     // the homepage's value stamped onto every page beneath it — which is
@@ -73,16 +79,16 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       siteName: "FindMyRobo",
-      title: t("title"),
-      description: t("description"),
+      title,
+      description,
       locale: locale === "th" ? "th_TH" : "en_US",
-      images: [{ url: "/main-logo-dark.png", alt: "FindMyRobo" }],
+      images: [{ url: seo.shareImage, alt: "FindMyRobo" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: t("title"),
-      description: t("description"),
-      images: ["/main-logo-dark.png"],
+      title,
+      description,
+      images: [seo.shareImage],
     },
   };
 }
@@ -99,8 +105,11 @@ export default async function LocaleLayout({
     notFound();
   }
   setRequestLocale(locale);
-  const messages = await getMessages();
-  const products = await getAllProducts();
+  const [messages, products, content] = await Promise.all([
+    getMessages(),
+    getAllProducts(),
+    getSiteContent(),
+  ]);
 
   return (
     // suppressHydrationWarning: themeInitScript sets the .dark class on <html>
@@ -120,19 +129,21 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
             <ProductsProvider products={products}>
-              <CartProvider>
-                <CompareProvider>
-                  <AnnouncementBar />
-                  <Navbar />
-                  {children}
-                  {/* Products are already loaded here for ProductsProvider —
-                      passing them down avoids a second query per page render,
-                      since getAllProducts is not cached. */}
-                  <Footer products={products} />
-                  <CartDrawer />
-                  <FloatingCompareButton />
-                </CompareProvider>
-              </CartProvider>
+              <SiteContentProvider content={{ home: content.home, contact: content.contact }}>
+                <CartProvider>
+                  <CompareProvider>
+                    <AnnouncementBar content={content.announcement} />
+                    <Navbar />
+                    {children}
+                    {/* Products are already loaded here for ProductsProvider —
+                        passing them down avoids a second query per page render,
+                        since getAllProducts is not cached. */}
+                    <Footer products={products} contact={content.contact} />
+                    <CartDrawer />
+                    <FloatingCompareButton />
+                  </CompareProvider>
+                </CartProvider>
+              </SiteContentProvider>
             </ProductsProvider>
           </MotionProvider>
         </NextIntlClientProvider>

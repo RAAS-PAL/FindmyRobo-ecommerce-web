@@ -29,8 +29,9 @@ import {
 } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
 import { getAllProducts, getProductById } from "@/lib/productStore";
-import { pageAlternates } from "@/lib/seo";
+import { localizedUrl, metaDescription, pageAlternates } from "@/lib/seo";
 import { breadcrumbJsonLd, productJsonLd } from "@/lib/structuredData";
+import { getSiteContent } from "@/lib/siteContentStore";
 import JsonLd from "@/components/seo/JsonLd";
 
 export async function generateStaticParams() {
@@ -48,9 +49,35 @@ export async function generateMetadata({
   const { locale, id } = await params;
   const product = await getProductById(id);
   if (!product || product.visible === false) return {};
+
+  // Description and share image come from the product record itself, so every
+  // product — including ones added later — gets its own search snippet and its
+  // own photo in a link preview with no extra data entry. Before this, every
+  // product inherited the generic site description from the layout, and shares
+  // on LINE and Facebook showed the FindMyRobo logo instead of the robot.
+  //
+  // Marketing can override either one per product and per language in
+  // Admin → Content → SEO. A blank override means "automatic", so a product
+  // nobody has touched keeps working exactly as described above.
+  const l = locale as Locale;
+  const override = (await getSiteContent()).seo.products[id];
+  const title = override?.title[l] || `${product.name} — FindMyRobo`;
+  const description =
+    override?.description[l] ||
+    metaDescription(product.description[l] ?? product.description.en);
+  const url = localizedUrl(locale, `/products/${id}`);
+
   return {
-    title: `${product.name} — FindMyRobo`,
+    title,
+    description,
     alternates: pageAlternates(locale, `/products/${id}`),
+    openGraph: {
+      title,
+      description,
+      url,
+      ...(product.imageUrl ? { images: [{ url: product.imageUrl, alt: product.name }] } : {}),
+    },
+    ...(product.imageUrl ? { twitter: { images: [product.imageUrl] } } : {}),
   };
 }
 

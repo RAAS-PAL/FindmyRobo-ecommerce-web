@@ -1,6 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { formatBaht } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
+import { getSiteContent } from "@/lib/siteContentStore";
+import { DEFAULT_CONTENT } from "@/data/siteContent";
 import { siteUrl } from "@/lib/siteUrl";
 import type { Order } from "@/lib/checkout";
 
@@ -132,7 +134,12 @@ export async function buildCustomerConfirmation(
   locale: string
 ): Promise<{ subject: string; html: string }> {
   const t = await getTranslations({ locale, namespace: "emails.orderConfirmation" });
-  const { phone, email } = siteConfig.salesContact;
+  // The same phone and email the site shows (Admin → Content → Contact). If
+  // that read fails, the built-in contact is used — a confirmation email is
+  // worth more than an up-to-date phone number in it.
+  const { phone, email } = await getSiteContent()
+    .then((content) => content.contact)
+    .catch(() => DEFAULT_CONTENT.contact);
   // Guests have no account page, so the tracking link in this email is the
   // only way back to their order.
   const trackUrl = `${siteUrl}${locale === "th" ? "" : `/${locale}`}/order-status`;

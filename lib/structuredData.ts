@@ -1,4 +1,5 @@
 import { siteConfig } from "@/data/siteConfig";
+import type { ContactContent } from "@/data/siteContent";
 import { DEFAULT_BRAND, type Locale, type Product } from "@/data/products";
 import { localizedUrl } from "@/lib/seo";
 import { siteUrl } from "@/lib/siteUrl";
@@ -34,8 +35,9 @@ const e164 = (thaiPhone: string) => "+66" + thaiPhone.replace(/\D/g, "").replace
 /** Shared `Organization` node, referenced by id from the product offers. */
 const ORGANIZATION_ID = `${siteUrl}/#organization`;
 
-export function organizationJsonLd() {
-  const { organization, salesContact, socials } = siteConfig;
+/** `contact` is the Admin → Content copy, so the markup matches the visible footer. */
+export function organizationJsonLd(contact: ContactContent) {
+  const { organization, salesContact } = siteConfig;
   return {
     "@context": SCHEMA,
     "@type": "Organization",
@@ -44,12 +46,12 @@ export function organizationJsonLd() {
     legalName: organization.legalName,
     url: siteUrl,
     logo: absolute(organization.logo),
-    email: salesContact.email,
-    telephone: e164(salesContact.phone),
+    email: contact.email,
+    telephone: e164(contact.phone),
     address: { "@type": "PostalAddress", ...salesContact.postalAddress },
     // Only platforms with a real account — an empty or placeholder URL here
     // would be a broken claim, so the same filter the footer applies.
-    sameAs: Object.values(socials).filter(Boolean),
+    sameAs: Object.values(contact.socials).filter(Boolean),
   };
 }
 

@@ -65,12 +65,21 @@ i18n/                next-intl routing and request config
 
 Content is split on purpose, and it trips people up:
 
-- **`messages/{en,th}.json`** — UI chrome: labels, buttons, headings.
-- **`data/*.ts`** — company content: the About page copy, site config, the
-  product technology anatomy. Bilingual `{ en, th }` pairs inline.
-- **Supabase** — the product catalogue, edited through the admin panel.
+- **Admin → Content** (Supabase `site_content`) — marketing copy that changes:
+  homepage hero, videos, showcase and stats, the announcement bar, the About
+  page, phone/LINE/socials, and SEO titles and descriptions. Saving there
+  publishes immediately. Types and **defaults** are in `data/siteContent.ts`;
+  a section shows its default until it is first saved, and after that editing
+  the default changes nothing live.
+- **Supabase `products`** — the product catalogue, edited in Admin → Products.
+- **`messages/{en,th}.json`** — UI chrome: labels, buttons, section headings.
+- **`data/*.ts`** — what must stay behind a deploy: `siteConfig.ts` (the
+  `showPrices` switch, the registered address and legal name), the refund
+  policy, and the product technology anatomy, where every line traces to a
+  manual.
 
-So a string you can't find in `th.json` is probably in `data/about.ts`.
+So a string you can't find in `th.json` is probably in Admin → Content, or in
+its defaults in `data/siteContent.ts`.
 
 ## Environment
 
@@ -107,6 +116,11 @@ paste → Run). Files are re-runnable. Order matters:
 There is no admin password. Sign up through the normal storefront flow, then
 set your profile row to `role = 'admin'` (step 4 of `schema.sql`). The admin
 panel is at `/admin`.
+
+For marketing staff, use `role = 'marketing'` instead (added by
+`add-site-content.sql`). They sign in at the same `/admin` and see only the
+Content section; products, prices and orders stay admin-only, and every admin
+API route checks the role itself rather than relying on hidden tabs.
 
 Role escalation is blocked at the database: `authenticated` has column-level
 `UPDATE` grants on `profiles` for `full_name`, `phone`, `marketing_opt_in` and

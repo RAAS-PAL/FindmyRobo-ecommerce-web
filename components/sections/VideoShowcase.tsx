@@ -4,14 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Play, Tag } from "lucide-react";
 import FadeIn from "@/components/ui/FadeIn";
-import { siteConfig, type GalleryVideo } from "@/data/siteConfig";
+import { useSiteContent } from "@/components/SiteContentProvider";
+import type { GalleryVideo } from "@/data/siteContent";
 
 /**
  * Home "See It in Action" video gallery. Each card is a lite embed: it shows a
  * poster + play button (no YouTube chrome) and only loads the player on click.
+ * The videos are edited in Admin → Content → Homepage.
  * YouTube links play as a stripped-down privacy iframe (modestbranding, no
- * related videos); mp4 links play in a native player. Set a custom `poster` on
- * each card in siteConfig.videoGallery for the cleanest, non-YouTube look —
+ * related videos); mp4 links play in a native player. Set a custom thumbnail on
+ * each video for the cleanest, non-YouTube look —
  * otherwise it falls back to the video's YouTube thumbnail.
  */
 
@@ -149,7 +151,7 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
 
 export default function VideoShowcase() {
   const t = useTranslations("videoShowcase");
-  const videos = siteConfig.videoGallery;
+  const videos = useSiteContent().home.videoGallery;
 
   return (
     <section className="bg-surface py-20 sm:py-28">

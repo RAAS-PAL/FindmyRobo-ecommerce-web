@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { pageAlternates } from "@/lib/seo";
 import { organizationJsonLd } from "@/lib/structuredData";
+import { getSiteContent } from "@/lib/siteContentStore";
 import JsonLd from "@/components/seo/JsonLd";
 import HeroSection from "@/components/sections/HeroSection";
 import ProductGrid from "@/components/sections/ProductGrid";
@@ -11,7 +12,7 @@ import TrustSection from "@/components/sections/TrustSection";
 import WhyUsSection from "@/components/sections/WhyUsSection";
 import YouTubeCTA from "@/components/sections/YouTubeCTA";
 
-// Title and description come from the layout's "meta" namespace; the homepage
+// Title and description come from the layout (Admin → Content → SEO); the homepage
 // only needs to claim its own canonical, which the layout deliberately no
 // longer sets (see lib/seo.ts for why).
 export async function generateMetadata({
@@ -30,13 +31,14 @@ export default async function Home({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const { contact } = await getSiteContent();
 
   return (
     <main>
       {/* Who runs this site — feeds Google's brand panel and is the seller the
           product pages' offers point back to. Homepage only; one declaration
           per site is the convention. */}
-      <JsonLd data={organizationJsonLd()} />
+      <JsonLd data={organizationJsonLd(contact)} />
       <HeroSection />
       <ProductGrid />
       <FeatureShowcase />

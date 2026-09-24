@@ -7,7 +7,8 @@ import {
   TikTokIcon,
   YouTubeIcon,
 } from "@/components/ui/BrandIcons";
-import { salesMapUrl, siteConfig, type SocialPlatform } from "@/data/siteConfig";
+import { salesMapUrl, siteConfig } from "@/data/siteConfig";
+import type { ContactContent, SocialPlatform } from "@/data/siteContent";
 import { SERVICE_CATEGORY, type Product } from "@/data/products";
 
 const payments = ["PromptPay", "Visa", "Mastercard", "Bank Transfer"];
@@ -61,7 +62,7 @@ const ABOUT_HREFS = ["/about", "/#contact", "/#support", "/shop"];
 
 /**
  * Icon + accessible name per platform. What actually renders is the
- * intersection of this and siteConfig.socials, so a platform with no account
+ * intersection of this and the socials set in Admin → Content, so a platform with no account
  * simply produces no icon — previously all five rendered and every one linked
  * to "#", which looks like the site is broken.
  */
@@ -71,14 +72,23 @@ const SOCIAL_META: Record<SocialPlatform, { label: string; Icon: typeof Facebook
   tiktok: { label: "TikTok", Icon: TikTokIcon },
 };
 
-/** Fixed display order, independent of the key order in siteConfig. */
+/** Fixed display order, independent of the key order in the stored content. */
 const SOCIAL_ORDER: SocialPlatform[] = ["facebook", "youtube", "tiktok"];
 
-export default function Footer({ products = [] }: { products?: Product[] }) {
+export default function Footer({
+  products = [],
+  contact,
+}: {
+  products?: Product[];
+  /** Phone, email and socials from Admin → Content → Contact. */
+  contact: ContactContent;
+}) {
   const t = useTranslations("footer");
   const support = t.raw("support") as string[];
   const about = t.raw("about") as string[];
-  const { phone, email, addressLines } = siteConfig.salesContact;
+  const { phone, email } = contact;
+  // The registered address stays in code: it has to match the company record.
+  const { addressLines } = siteConfig.salesContact;
   const supportLinks = support.flatMap((label, index) => {
     const href = SUPPORT_HREFS[index];
     return href ? [{ label, href }] : [];
@@ -87,7 +97,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
   const contactSpan = supportLinks.length > 0 ? "lg:col-span-3" : "lg:col-span-5";
 
   const socialLinks = SOCIAL_ORDER.flatMap((platform) => {
-    const href = siteConfig.socials[platform];
+    const href = contact.socials[platform];
     return href ? [{ platform, href, ...SOCIAL_META[platform] }] : [];
   });
 

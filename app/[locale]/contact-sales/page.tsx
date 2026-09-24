@@ -4,6 +4,8 @@ import { Calendar, Mail, MapPin, MessageCircle, Phone, QrCode } from "lucide-rea
 import { Link } from "@/i18n/navigation";
 import FadeIn from "@/components/ui/FadeIn";
 import { salesMapUrl, siteConfig } from "@/data/siteConfig";
+import { pick } from "@/data/siteContent";
+import { getSiteContent } from "@/lib/siteContentStore";
 import { pageAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -24,8 +26,12 @@ export default async function ContactSalesPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("contactSales");
-  const { phone, email, lineId, lineUrl, lineQrImage, addressLines } =
-    siteConfig.salesContact;
+  // Phone, email and LINE are edited in Admin → Content → Contact; the
+  // registered address stays in code (data/siteConfig.ts).
+  const { contact } = await getSiteContent();
+  const { phone, email, lineId, lineUrl, lineQrImage } = contact;
+  const phoneHours = pick(contact.phoneHours, locale);
+  const { addressLines } = siteConfig.salesContact;
 
   return (
     <main className="bg-cloud">
@@ -58,7 +64,9 @@ export default async function ContactSalesPage({
                   <span className="block font-mono text-lg font-semibold text-content">
                     {phone}
                   </span>
-                  <span className="block text-[12px] text-ink-muted">{t("phoneHint")}</span>
+                  {phoneHours && (
+                    <span className="block text-[12px] text-ink-muted">{phoneHours}</span>
+                  )}
                 </span>
               </a>
 

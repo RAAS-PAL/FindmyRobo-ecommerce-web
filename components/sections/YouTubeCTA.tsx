@@ -4,14 +4,14 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
 import { YouTubeIcon } from "@/components/ui/BrandIcons";
-import { siteConfig } from "@/data/siteConfig";
+import { useSiteContent } from "@/components/SiteContentProvider";
 
 export default function YouTubeCTA() {
   const t = useTranslations("youtube");
   // Points at the channel, not youtube.com. Without an account configured the
   // whole section is pointless, so it hides rather than sending people to
   // YouTube's front page.
-  const channelUrl = siteConfig.socials.youtube;
+  const channelUrl = useSiteContent().contact.socials.youtube;
   if (!channelUrl) return null;
   return (
     <section

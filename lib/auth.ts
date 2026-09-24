@@ -7,7 +7,7 @@ export interface Profile {
   full_name: string | null;
   phone: string | null;
   marketing_opt_in: boolean;
-  role: "user" | "admin";
+  role: "user" | "admin" | "marketing";
   created_at: string;
 }
 

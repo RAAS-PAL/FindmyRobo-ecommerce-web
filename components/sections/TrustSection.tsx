@@ -1,17 +1,18 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
+import { useSiteContent } from "@/components/SiteContentProvider";
+import { pick } from "@/data/siteContent";
 
 export default function TrustSection() {
   const t = useTranslations("trust");
-  const stats = [
-    // Keep in sync with the same figure on the About page (data/about.ts stats).
-    { value: 1600, suffix: "+", label: t("stat1") },
-    { value: 4.7, decimals: 1, suffix: "★", label: t("stat2") },
-    { value: 40, suffix: "+", label: t("stat3") },
-  ];
+  const locale = useLocale();
+  // Heading, text and stats are edited in Admin → Content → Homepage.
+  // "Robots deployed" also appears on the About page; keep the two in step.
+  const { home } = useSiteContent();
+  const stats = home.trustStats.map((stat) => ({ ...stat, label: pick(stat.label, locale) }));
   return (
     <section id="about" className="bg-cloud py-20 sm:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
@@ -26,10 +27,10 @@ export default function TrustSection() {
             {t("eyebrow")}
           </p>
           <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-5xl">
-            {t("heading")}
+            {pick(home.trustHeading, locale)}
           </h2>
           <p className="mt-6 max-w-lg text-base leading-relaxed text-ink-muted sm:text-lg">
-            {t("body")}
+            {pick(home.trustBody, locale)}
           </p>
           <div className="mt-8 h-1 w-24 rounded-full bg-gold" aria-hidden="true" />
         </motion.div>
@@ -38,7 +39,7 @@ export default function TrustSection() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
           {stats.map((stat, i) => (
             <motion.div
-              key={stat.label}
+              key={`${stat.label}-${i}`}
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
@@ -47,7 +48,7 @@ export default function TrustSection() {
             >
               <AnimatedCounter
                 to={stat.value}
-                decimals={stat.decimals ?? 0}
+                decimals={stat.decimals}
                 suffix={stat.suffix}
                 className="font-mono text-3xl font-semibold tabular-nums text-gold sm:text-4xl"
               />

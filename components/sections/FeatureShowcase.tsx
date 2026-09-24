@@ -3,20 +3,20 @@
 import { useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMotionValueEvent, useScroll } from "framer-motion";
-import { siteConfig, type ShowcaseFeature } from "@/data/siteConfig";
-import type { Locale } from "@/data/products";
+import { useSiteContent } from "@/components/SiteContentProvider";
+import { pick, type Bilingual } from "@/data/siteContent";
 
 /**
  * Scroll-storytelling feature showcase: one large centred product image (~80%
  * of the screen) stays pinned while you scroll through the section; scroll
  * progress swaps the image (cross-fade) and the caption box stacked over it.
  * The section is N×100vh tall so each feature gets a screen of scroll.
- * Content lives in siteConfig.featureShowcase.
+ * Content is edited in Admin → Content → Homepage.
  */
 export default function FeatureShowcase() {
   const t = useTranslations("featureShowcase");
-  const locale = useLocale() as Locale;
-  const features = siteConfig.featureShowcase;
+  const locale = useLocale();
+  const features = useSiteContent().home.featureShowcase;
   const sectionRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -30,7 +30,7 @@ export default function FeatureShowcase() {
   });
 
   if (features.length === 0) return null;
-  const text = (v: ShowcaseFeature["heading"]) => v[locale] || v.en;
+  const text = (v: Bilingual) => pick(v, locale);
 
   return (
     <section

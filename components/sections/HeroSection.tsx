@@ -1,12 +1,13 @@
 "use client";
 
 import { Fragment, useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { GrassIcon } from "@/components/ui/BrandIcons";
-import { siteConfig } from "@/data/siteConfig";
+import { useSiteContent } from "@/components/SiteContentProvider";
+import { pick } from "@/data/siteContent";
 
 /**
  * Robot categories surfaced as hero chips (order = how they read left to right).
@@ -176,12 +177,16 @@ const wordVariants = {
 export default function HeroSection() {
   const t = useTranslations("hero");
   const tCat = useTranslations("hero.cat");
+  const locale = useLocale();
+  // Headline, text and videos are edited in Admin → Content → Homepage.
+  const { home } = useSiteContent();
   // Thai separates phrases (not words) with spaces, so splitting on
-  // spaces gives natural stagger chunks in both languages
-  const mainWords = t("headlineMain").split(" ");
-  const accentWords = t("headlineAccent").split(" ");
+  // spaces gives natural stagger chunks in both languages. filter(Boolean)
+  // drops the empty chunk a double space or an empty second line would make.
+  const mainWords = pick(home.heroHeadline, locale).split(" ").filter(Boolean);
+  const accentWords = pick(home.heroAccent, locale).split(" ").filter(Boolean);
 
-  const videos = siteConfig.heroVideoUrls;
+  const videos = home.heroVideos;
   const video = videos.length > 0;
 
   return (
@@ -199,7 +204,7 @@ export default function HeroSection() {
       }`}
     >
       {video ? (
-        /* ---- video hero: cycles the playlist set in data/siteConfig.ts ---- */
+        /* ---- video hero: cycles the playlist set in Admin → Content ---- */
         <>
           <HeroVideoPlaylist urls={videos} />
           {/* No dark scrim — manager wants the hero light and untinted. All
@@ -329,7 +334,7 @@ export default function HeroSection() {
             video ? "hero-legible text-white" : "text-ink-muted"
           }`}
         >
-          {t("sub")}
+          {pick(home.heroSub, locale)}
         </motion.p>
 
         <motion.div

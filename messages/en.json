@@ -1,12 +1,4 @@
 {
-  "meta": {
-    "title": "FindMyRobo — The Ultimate Robotic Lawn Mowers for Thai Gardens",
-    "description": "Premium robot lawn mowers for Thai gardens — wire-free, all-weather cutting that handles slopes and the rainy season. In-home demos in Bangkok with local Thai support."
-  },
-  "announcement": {
-    "msg1": "🤖 LUBA 3 AWD Now Available in Thailand!",
-    "msg2": "Book your on-site demo now in Thailand"
-  },
   "nav": {
     "shop": "Products",
     "tv": "FindMyRobo TV",
@@ -92,6 +84,7 @@
       "role": "Account type",
       "roleUser": "Customer",
       "roleAdmin": "Admin",
+      "roleMarketing": "Marketing",
       "adminLink": "Open admin panel",
       "signOut": "Sign out",
       "savedAddresses": "Saved addresses",
@@ -228,7 +221,8 @@
       "sections": "Admin sections",
       "tabs": {
         "products": "Products",
-        "orders": "Orders"
+        "orders": "Orders",
+        "content": "Content"
       }
     },
     "login": {
@@ -578,6 +572,251 @@
     },
     "confirmDialog": {
       "cancel": "Cancel"
+    },
+    "content": {
+      "page": {
+        "eyebrow": "Content",
+        "title": "Site content",
+        "intro": "Edit the words, photos and links on the website. Publishing puts a change live straight away — no developer or deploy needed — and every version is kept in History, so anything can be undone.",
+        "setupTitle": "One setup step is still needed",
+        "setupBody": "The site is showing its built-in content, and publishing is switched off until the database table exists. A developer or admin needs to run supabase/add-site-content.sql once in the Supabase SQL Editor.",
+        "sectionsLabel": "Content sections"
+      },
+      "sections": {
+        "home": {
+          "label": "Homepage",
+          "description": "Hero headline and videos, feature showcase, video gallery, and the Who We Are block."
+        },
+        "announcement": {
+          "label": "Announcement bar",
+          "description": "The gold scrolling bar at the top of every page."
+        },
+        "about": {
+          "label": "About page",
+          "description": "Intro, stats, story, partner block, values, milestones and team on /about."
+        },
+        "contact": {
+          "label": "Contact & social",
+          "description": "Phone, email, LINE and social links — used in the footer, the contact page, order emails and Google."
+        },
+        "seo": {
+          "label": "SEO",
+          "description": "What Google and link previews on LINE and Facebook show for the site and each product."
+        }
+      },
+      "fields": {
+        "english": "English",
+        "thai": "Thai",
+        "upload": "Upload image",
+        "uploading": "Uploading…",
+        "clearImage": "Remove image",
+        "uploadFailed": "Upload failed: {reason}"
+      },
+      "list": {
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove",
+        "removeTitle": "Remove {item}?",
+        "removeMessage": "It is removed from this form now, and from the website when you publish.",
+        "max": "Maximum of {max} reached."
+      },
+      "editor": {
+        "publish": "Publish",
+        "viewOnSite": "View on site",
+        "unsaved": "Unpublished changes",
+        "savedLive": "Published — live on the site now",
+        "lastSaved": "Last published {time}",
+        "neverSaved": "Not published yet — the site shows the built-in content",
+        "saveError": "Not published. {reason}",
+        "networkError": "Could not reach the server. Check your connection and try again.",
+        "historyTitle": "History",
+        "historyNote": "Every publish is kept. Restoring puts an earlier version live again as a new version, so a restore can be undone too.",
+        "historyEmpty": "No versions yet. The first publish starts the history.",
+        "current": "Live now",
+        "restore": "Restore",
+        "restoreTitle": "Restore this version?",
+        "restoreMessage": "The version from {time} goes live on the site immediately.",
+        "restoreMessageDirty": "The version from {time} goes live on the site immediately, and the unpublished changes on this page will be lost."
+      },
+      "home": {
+        "hero": {
+          "title": "Hero",
+          "note": "The first screen of the homepage.",
+          "headline": "Headline",
+          "headlineHint": "Shown very large — keep it short.",
+          "accent": "Second line (gold)",
+          "accentHint": "Optional. Always starts on its own line, in gold.",
+          "sub": "Text under the headline",
+          "videos": "Background videos",
+          "videosHint": "Played in order, then looped. With none, the animated lawn scene shows instead. Upload to Cloudinary and put q_auto/ac_none/ right after /upload/ in the link — it compresses the video and drops the sound. A raw phone video will stall on mobile.",
+          "videoItem": "Video {number}",
+          "addVideo": "Add video",
+          "videoUrl": "Video link"
+        },
+        "showcase": {
+          "title": "Feature showcase",
+          "note": "The full-screen section where the photo changes as you scroll. Empty hides it.",
+          "item": "Feature {number}",
+          "add": "Add feature",
+          "image": "Photo",
+          "imageHint": "Give each feature its own photo, or the change is not visible.",
+          "heading": "Heading",
+          "body": "Text"
+        },
+        "gallery": {
+          "title": "Video gallery",
+          "note": "The See It in Action cards. The first two are shown large.",
+          "item": "Video {number}",
+          "add": "Add video",
+          "url": "Video link",
+          "urlHint": "A YouTube or YouTube Shorts link, or a direct .mp4 link.",
+          "poster": "Thumbnail",
+          "posterHint": "Optional, but looks cleaner. Without it, YouTube videos use their YouTube thumbnail.",
+          "videoTitle": "Title",
+          "tag": "Tag",
+          "tagHint": "Small label, e.g. the robot shown.",
+          "author": "Credit",
+          "authorHint": "Optional, e.g. the creator’s handle."
+        },
+        "trust": {
+          "title": "Who We Are",
+          "note": "The block with the three counting stat cards.",
+          "heading": "Heading",
+          "body": "Text",
+          "stats": "Stat cards",
+          "statsHint": "Only numbers you can back up if a customer asks. Robots deployed also appears on the About page — keep the two the same.",
+          "statItem": "Stat {number}",
+          "addStat": "Add stat",
+          "value": "Number",
+          "decimals": "Decimal places",
+          "decimalsHint": "0 for 1,600 — 1 for 4.7",
+          "suffix": "After the number",
+          "suffixHint": "e.g. + or ★",
+          "label": "Label"
+        }
+      },
+      "announcement": {
+        "title": "Announcement bar",
+        "note": "Messages scroll one after another at the top of every page.",
+        "enabled": "Show the announcement bar",
+        "enabledHint": "Switch off to hide the bar everywhere without deleting the messages.",
+        "item": "Message {number}",
+        "add": "Add message",
+        "message": "Message"
+      },
+      "about": {
+        "intro": {
+          "title": "Intro",
+          "label": "Text under the page heading"
+        },
+        "stats": {
+          "title": "Stats",
+          "note": "The row of numbers under the intro. Empty hides the row.",
+          "item": "Stat {number}",
+          "add": "Add stat",
+          "value": "Value",
+          "valueHint": "Shown as typed, e.g. 2021, 1,600+ or 24h. Only what you can back up.",
+          "label": "Label"
+        },
+        "story": {
+          "title": "Our story",
+          "body": "Story",
+          "bodyHint": "Leave an empty line between paragraphs.",
+          "image": "Photo",
+          "imageHint": "A real photo of the team, showroom or an installation works best."
+        },
+        "partner": {
+          "title": "Partner block",
+          "note": "The brand block in the middle of the page.",
+          "enabled": "Show the partner block",
+          "eyebrow": "Small label above",
+          "eyebrowHint": "e.g. Official supply",
+          "name": "Partner name",
+          "status": "Status line",
+          "statusHint": "Words like authorised, official or exclusive are a claim about the partner. Only use one the partner has confirmed in writing, and keep the agreement on file.",
+          "body": "Text",
+          "logo": "Logo",
+          "logoHint": "Optional. Without it, only the name is shown."
+        },
+        "values": {
+          "title": "What You Get",
+          "note": "The four cards explaining why to buy from us.",
+          "item": "Card {number}",
+          "add": "Add card",
+          "icon": "Icon",
+          "icons": {
+            "shield": "Shield — warranty",
+            "home": "House — at home",
+            "wrench": "Wrench — installation",
+            "headset": "Headset — support"
+          },
+          "itemTitle": "Title",
+          "body": "Text"
+        },
+        "milestones": {
+          "title": "Milestones",
+          "item": "Milestone {number}",
+          "add": "Add milestone",
+          "when": "Year",
+          "whenHint": "Shown as typed, e.g. 2024 or 2024 Q3.",
+          "itemTitle": "Title",
+          "body": "Text"
+        },
+        "team": {
+          "title": "Team",
+          "note": "Hidden while empty. Only add people who agreed to be on the website.",
+          "item": "Person {number}",
+          "add": "Add person",
+          "name": "Name",
+          "role": "Role",
+          "photo": "Photo",
+          "photoHint": "Optional. Square photos look best; without one, the first letter of the name is shown."
+        }
+      },
+      "contact": {
+        "main": {
+          "title": "Phone and email",
+          "note": "The company address is not here: it has to match the company registration, so it is changed in code.",
+          "phone": "Phone",
+          "email": "Email",
+          "emailHint": "Shown to customers. New-order alerts go to the addresses set on the server, not to this one.",
+          "hours": "Opening hours",
+          "hoursHint": "Shown under the phone number on the contact page. Leave empty to hide."
+        },
+        "line": {
+          "title": "LINE",
+          "note": "Shown on the contact page.",
+          "id": "LINE ID",
+          "url": "Add-friend link",
+          "qr": "QR code",
+          "qrHint": "If you change the QR code, change the add-friend link to the same account too."
+        },
+        "social": {
+          "title": "Social media",
+          "note": "Leave a platform empty if there is no account — its icon disappears from the footer."
+        }
+      },
+      "seo": {
+        "site": {
+          "title": "Whole site",
+          "note": "The homepage title in Google, and the fallback for any page without its own.",
+          "siteTitle": "Title",
+          "description": "Description",
+          "shareImage": "Share image",
+          "shareImageHint": "Shown when a page without its own photo is shared on LINE or Facebook. 1200 × 630 works best."
+        },
+        "products": {
+          "title": "Products",
+          "note": "Each product gets a title and snippet automatically. Only fill these in to change them.",
+          "empty": "No products yet.",
+          "hidden": "Hidden",
+          "custom": "Custom",
+          "auto": "Automatic",
+          "productTitle": "Title",
+          "description": "Description",
+          "blankHint": "The grey text is what shows now. Leave a field empty to keep it automatic."
+        }
+      }
     }
   },
   "cart": {
@@ -657,7 +896,6 @@
     "heading": "Talk to Our Sales Team",
     "sub": "Questions about which robot fits your garden, pool, or business? Our specialists reply fast — call, email, or chat with us on LINE.",
     "phoneLabel": "Call us",
-    "phoneHint": "Mon–Sat, 9:00–18:00",
     "emailLabel": "Email us",
     "emailHint": "We reply within one business day",
     "lineLabel": "Chat on LINE",
@@ -854,9 +1092,6 @@
       "cleaning-robots": "Cleaning",
       "delivery-robots": "Delivery"
     },
-    "headlineMain": "Let the Robot Mow.",
-    "headlineAccent": "You Stay in the Shade.",
-    "sub": "The best mowing robots you can find in Thailand — operating independently, with no need for constant human supervision.",
     "ctaPrimary": "Explore Our Robots",
     "ctaSecondary": "Book a Demo"
   },
@@ -976,12 +1211,7 @@
     }
   },
   "trust": {
-    "eyebrow": "Who We Are",
-    "heading": "Thai Robot Experts That Care Like a True Friend",
-    "body": "Since 2021, we have been providing robotic solutions for businesses and organizations, backed by a team of experts who support you from consultation and installation to after-sales service—ensuring reliable and efficient operations.",
-    "stat1": "Robots Deployed",
-    "stat2": "Customer Rating",
-    "stat3": "Service Locations"
+    "eyebrow": "Who We Are"
   },
   "whyUs": {
     "eyebrow": "Why Choose Us",
@@ -1064,7 +1294,6 @@
     "heading": "Global Technology. Local Expertise.",
     "storyEyebrow": "Our story",
     "storyHeading": "Why we started",
-    "partnerEyebrow": "Official supply",
     "valuesEyebrow": "What You Get",
     "valuesHeading": "More Confidence When You Buy from Us",
     "milestonesEyebrow": "Milestones",
