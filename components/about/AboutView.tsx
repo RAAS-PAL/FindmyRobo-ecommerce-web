@@ -47,7 +47,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
   return (
     <main className="flex-1 bg-cloud">
       {/* hero */}
-      <section data-cms="about-intro" className="bg-forest-950 py-16 sm:py-24">
+      <section className="bg-forest-950 py-16 sm:py-24">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <FadeIn>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
@@ -65,7 +65,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
 
       {/* stats */}
       {about.stats.length > 0 && (
-        <section data-cms="about-stats" className="border-b border-forest-100 bg-surface">
+        <section className="border-b border-forest-100 bg-surface">
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-10 sm:px-6 lg:grid-cols-4">
             {about.stats.map((stat) => (
               <FadeIn key={`${stat.label.en}-${stat.value}`}>
@@ -84,7 +84,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
       )}
 
       {/* story */}
-      <section data-cms="about-story" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <FadeIn>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
@@ -120,7 +120,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
 
       {/* partner block — switched on and off in Admin → Content → About */}
       {about.partnerEnabled && about.partnerName && (
-        <section data-cms="about-partner" className="bg-surface py-14 sm:py-20">
+        <section className="bg-surface py-14 sm:py-20">
           <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
             <FadeIn>
               <span className="inline-flex items-center gap-2 rounded-full bg-gold/15 px-4 py-1.5">
@@ -156,7 +156,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
       )}
 
       {/* values */}
-      <section data-cms="about-values" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         <FadeIn>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
             {t("valuesEyebrow")}
@@ -189,7 +189,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
 
       {/* milestones */}
       {about.milestones.length > 0 && (
-        <section data-cms="about-milestones" className="bg-surface py-16 sm:py-24">
+        <section className="bg-surface py-16 sm:py-24">
           <div className="mx-auto max-w-4xl px-4 sm:px-6">
             <FadeIn>
               <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
@@ -223,7 +223,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
 
       {/* team */}
       {about.team.length > 0 && (
-        <section data-cms="about-team" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <FadeIn>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
               {t("teamEyebrow")}

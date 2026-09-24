@@ -27,6 +27,9 @@ explicitly told to.
 - Fulfillment: Sokochan REST API
 - Hosting: Vercel
 - Currency: Thai Baht (฿)
+- CMS: Payload 3, embedded in this app at /cms (decided 2026-09-24; replaced
+  a short-lived hand-built editor). Own users (admin/marketing), data in the
+  `payload` schema of the same Supabase Postgres. See README → CMS.
 
 ## Design Rules
 - Use ui-ux-pro-max skill for color/font/layout decisions

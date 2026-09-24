@@ -31,15 +31,14 @@ export default function LoginForm() {
       return;
     }
 
-    // Only staff may enter the panel — verify the role, else sign back out.
-    // Marketing lands on /admin too and is redirected to Content from there.
+    // Only admins may enter the panel — verify the role, else sign back out.
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", data.user.id)
       .single();
 
-    if (profile?.role !== "admin" && profile?.role !== "marketing") {
+    if (profile?.role !== "admin") {
       await supabase.auth.signOut();
       setError(t("errors.noAccess"));
       setBusy(false);

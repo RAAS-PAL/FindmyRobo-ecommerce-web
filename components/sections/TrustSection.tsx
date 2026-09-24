@@ -14,7 +14,7 @@ export default function TrustSection() {
   const { home } = useSiteContent();
   const stats = home.trustStats.map((stat) => ({ ...stat, label: pick(stat.label, locale) }));
   return (
-    <section id="about" data-cms="trust" className="bg-cloud py-20 sm:py-28">
+    <section id="about" className="bg-cloud py-20 sm:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
         {/* copy */}
         <motion.div

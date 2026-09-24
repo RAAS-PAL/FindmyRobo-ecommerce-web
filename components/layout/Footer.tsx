@@ -109,7 +109,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
     .slice(0, MAX_FOOTER_PRODUCTS);
 
   return (
-    <footer id="contact" data-cms="footer" className="bg-forest-950 text-white">
+    <footer id="contact" className="bg-forest-950 text-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         {/* 12-col on desktop so the brand and contact blocks get more room than
             the three link lists, which stay narrow. */}

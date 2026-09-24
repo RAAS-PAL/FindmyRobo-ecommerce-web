@@ -2,23 +2,37 @@
   "name": "ecommerce-raaspal",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/payload-migrate.mjs && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "payload": "payload",
+    "cms:types": "payload generate:types",
+    "cms:importmap": "payload generate:importmap",
+    "cms:migration": "payload migrate:create"
   },
   "dependencies": {
+    "@payloadcms/db-postgres": "3.90.2",
+    "@payloadcms/live-preview": "3.90.2",
+    "@payloadcms/next": "3.90.2",
+    "@payloadcms/plugin-cloud-storage": "3.90.2",
+    "@payloadcms/translations": "3.90.2",
+    "@payloadcms/ui": "3.90.2",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.110.1",
     "framer-motion": "^12.42.2",
+    "graphql": "^16.14.2",
     "lucide-react": "^1.23.0",
-    "next": "16.2.9",
+    "next": "16.3.6",
     "next-intl": "^4.13.1",
+    "payload": "3.90.2",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "resend": "^6.18.1",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,7 +40,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.9",
+    "eslint-config-next": "16.3.6",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

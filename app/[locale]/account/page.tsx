@@ -61,14 +61,7 @@ export default async function AccountPage({
     locale === "th" ? "th-TH" : "en-GB",
     { year: "numeric", month: "long", day: "numeric" }
   );
-  // Marketing staff get the panel link too — it opens on Admin → Content.
-  const isStaff = profile.role === "admin" || profile.role === "marketing";
-  const roleLabel =
-    profile.role === "admin"
-      ? t("roleAdmin")
-      : profile.role === "marketing"
-        ? t("roleMarketing")
-        : t("roleUser");
+  const isAdmin = profile.role === "admin";
   const paidOrders = orders.filter((order) => order.status === "paid");
   const totalSpent = paidOrders.reduce((sum, order) => sum + order.total, 0);
   const catalogById = new Map(catalog.map((product) => [product.id, product]));
@@ -114,7 +107,7 @@ export default async function AccountPage({
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
-              {isStaff && (
+              {isAdmin && (
                 <NextLink
                   href="/admin"
                   className="flex min-h-[46px] items-center gap-2 rounded-full bg-forest-950 px-5 text-[13px] font-bold text-gold transition-colors hover:bg-forest-900"
@@ -179,7 +172,7 @@ export default async function AccountPage({
                 <dl className="mt-5 divide-y divide-forest-100">
                   <div className="flex justify-between gap-4 py-3 first:pt-0">
                     <dt className="text-xs text-ink-muted">{t("role")}</dt>
-                    <dd className="text-sm font-semibold text-content">{roleLabel}</dd>
+                    <dd className="text-sm font-semibold text-content">{isAdmin ? t("roleAdmin") : t("roleUser")}</dd>
                   </div>
                   <div className="flex justify-between gap-4 py-3 last:pb-0">
                     <dt className="text-xs text-ink-muted">{t("memberSince")}</dt>

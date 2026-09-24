@@ -191,7 +191,6 @@ export default function HeroSection() {
 
   return (
     <section
-      data-cms="hero"
       className={`relative overflow-hidden ${
         video
           ? // min-h-[56.25vw] makes the section a 16:9 box the full width of the

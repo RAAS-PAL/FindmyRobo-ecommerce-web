@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { withPayload } from "@payloadcms/next/withPayload";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -23,4 +24,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+// withPayload adds what the embedded CMS (/cms, payload.config.ts) needs from
+// the bundler, on top of the next-intl config.
+export default withPayload(withNextIntl(nextConfig));

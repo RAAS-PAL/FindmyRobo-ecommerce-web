@@ -1,31 +1,47 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { isLivePreviewEvent, mergeData, ready } from "@payloadcms/live-preview";
 import {
   isContentSection,
   type ContentSection,
   type PublicSiteContent,
   type SiteContent,
 } from "@/data/siteContent";
-import { PREVIEW_CONTENT, PREVIEW_PARAM, PREVIEW_READY, PREVIEW_SCROLL } from "@/lib/cmsPreview";
+import { draftFromPayload } from "@/lib/payloadContent";
+import { PREVIEW_PARAM, PREVIEW_SESSION_KEY } from "@/lib/cmsPreview";
 
 interface SiteContentContextValue {
   content: PublicSiteContent;
-  /** Unpublished drafts pushed in by the admin live preview (empty on the real site). */
+  /** Unsaved drafts from the CMS Live Preview (empty on the real site). */
   drafts: Partial<SiteContent>;
 }
 
 const SiteContentContext = createContext<SiteContentContextValue | null>(null);
 
+/** Is this page the CMS's Live Preview frame? (lib/cmsPreview.ts) */
+function inPreviewFrame(): boolean {
+  if (window.self === window.top) return false;
+  try {
+    if (new URLSearchParams(window.location.search).has(PREVIEW_PARAM)) {
+      sessionStorage.setItem(PREVIEW_SESSION_KEY, "1");
+      return true;
+    }
+    return sessionStorage.getItem(PREVIEW_SESSION_KEY) === "1";
+  } catch {
+    return new URLSearchParams(window.location.search).has(PREVIEW_PARAM);
+  }
+}
+
 /**
- * Serves the admin-edited content (Admin → Content) to client components —
- * the hero, showcase, video gallery, stats, announcement bar, footer. It is
- * read on the server once per render (lib/siteContentStore.ts) and handed
- * down here, the same way ProductsProvider serves the catalogue.
+ * Serves the CMS content (Payload, /cms) to client components — the hero,
+ * showcase, video gallery, stats, announcement bar, footer. It is read on the
+ * server once per render (lib/siteContentStore.ts) and handed down here, the
+ * same way ProductsProvider serves the catalogue.
  *
- * It is also the receiving end of the editor's live preview (lib/cmsPreview.ts):
- * inside the editor's frame, drafts posted by the editor replace the published
- * content on the client, so the page updates as marketing types.
+ * It is also the storefront end of Payload's Live Preview: inside the CMS's
+ * frame, the draft the editor is typing replaces the published content here,
+ * so the page updates as they type.
  */
 export default function SiteContentProvider({
   content,
@@ -37,25 +53,41 @@ export default function SiteContentProvider({
   const [drafts, setDrafts] = useState<Partial<SiteContent>>({});
 
   useEffect(() => {
-    // Only inside a frame, and only when the editor asked for a preview.
-    if (window.self === window.top) return;
-    if (!new URLSearchParams(window.location.search).has(PREVIEW_PARAM)) return;
+    if (!inPreviewFrame()) return;
+    const origin = window.location.origin;
+    // Drafts are merged by a request to the CMS (it turns media ids into
+    // URLs); a slow reply must not overwrite a newer one.
+    let latest = 0;
 
-    const onMessage = (event: MessageEvent) => {
-      // Same-origin parent only — see lib/cmsPreview.ts.
-      if (event.origin !== window.location.origin || event.source !== window.parent) return;
-      const data = event.data as { type?: string; section?: string; content?: unknown; target?: string };
-      if (data?.type === PREVIEW_CONTENT && typeof data.section === "string" && isContentSection(data.section)) {
-        const section: ContentSection = data.section;
-        setDrafts((prev) => ({ ...prev, [section]: data.content }));
-      } else if (data?.type === PREVIEW_SCROLL && typeof data.target === "string") {
-        document
-          .querySelector(`[data-cms="${CSS.escape(data.target)}"]`)
-          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const onMessage = async (event: MessageEvent) => {
+      if (event.source !== window.parent || !isLivePreviewEvent(event, origin)) return;
+      const { data, globalSlug, locale } = event.data as {
+        data?: unknown;
+        globalSlug?: string;
+        locale?: string;
+      };
+      if (!globalSlug || !isContentSection(globalSlug)) return;
+      const section: ContentSection = globalSlug;
+      const ticket = ++latest;
+      try {
+        const merged = await mergeData({
+          apiRoute: "/cms-api",
+          depth: 1,
+          globalSlug,
+          incomingData: data as Record<string, unknown>,
+          initialData: {},
+          locale: locale ?? "en",
+          serverURL: origin,
+        });
+        if (ticket !== latest) return;
+        setDrafts((prev) => ({ ...prev, [section]: draftFromPayload(section, merged) }));
+      } catch (error) {
+        console.error("Live Preview: could not apply the draft", error);
       }
     };
+
     window.addEventListener("message", onMessage);
-    window.parent.postMessage({ type: PREVIEW_READY }, window.location.origin);
+    ready({ serverURL: origin });
     return () => window.removeEventListener("message", onMessage);
   }, []);
 
@@ -87,8 +119,8 @@ export function useSiteContent(): PublicSiteContent {
 }
 
 /**
- * For sections a page loads itself on the server (About): the server value,
- * or the editor's draft of it while previewing.
+ * For sections a page loads itself on the server (About): the published
+ * value, or the CMS draft of it while previewing.
  */
 export function useLiveSection<S extends ContentSection>(
   section: S,

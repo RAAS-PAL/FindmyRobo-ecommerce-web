@@ -3,17 +3,16 @@ import { siteConfig } from "@/data/siteConfig";
 import type { Locale } from "@/data/products";
 
 /**
- * EDITABLE SITE CONTENT — what the admin panel's Content section manages.
+ * EDITABLE SITE CONTENT — the shapes the storefront renders, and their defaults.
  *
- * The live values are in Supabase (table `site_content`, one row per section)
- * and are edited at /admin/content by admins and the marketing role. Saving
- * there publishes immediately, with no deploy.
+ * The live content is edited in the Payload CMS at /cms (payload.config.ts) and
+ * mapped to these types by lib/payloadContent.ts. Publishing there updates the
+ * site without a deploy.
  *
- * The values in THIS file are the defaults: what the site shows for a section
- * that has never been saved in the admin panel, and what it shows if
- * supabase/add-site-content.sql has not been run yet. Once a section has been
- * saved, editing it here changes nothing on the live site. Change it in the
- * admin panel instead.
+ * The values in THIS file are the built-in defaults. They are what the site
+ * shows when the CMS is not configured (no DATABASE_URL), and what the CMS was
+ * seeded with on its first deploy (payload/seed.ts). After that, editing them
+ * here changes nothing on the live site — change the content in /cms.
  *
  * Types live here rather than in lib/ because client components need them and
  * must not import the server-only store (lib/siteContentStore.ts).

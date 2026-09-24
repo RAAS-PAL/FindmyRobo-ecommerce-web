@@ -2,14 +2,30 @@
 # here rather than from package.json.
 
 # pnpm refuses to run a dependency's install script unless it is allowed here.
-# These four are Next.js essentials, and without their scripts the framework
-# silently degrades: sharp powers next/image optimisation, @swc/core is the
-# compiler, @parcel/watcher is dev-server file watching, unrs-resolver is
-# module resolution. Committed so Vercel and every teammate make the same call.
+# The first four are Next.js essentials, and without their scripts the framework
+# silently degrades: sharp powers next/image optimisation (and Payload's image
+# handling), @swc/core is the compiler, @parcel/watcher is dev-server file
+# watching, unrs-resolver is module resolution. esbuild is used by the Payload
+# CLI (migrations, type generation). Committed so Vercel and every teammate make
+# the same call.
 # (Written by `pnpm approve-builds`; the key name changed across pnpm majors,
 # so let that command edit it rather than hand-typing.)
 allowBuilds:
   '@parcel/watcher': true
   '@swc/core': true
+  esbuild: true
   sharp: true
   unrs-resolver: true
+# pnpm holds back packages published very recently. Payload 3.90.2 was that new
+# when it was installed, so pnpm recorded these exceptions itself; they can go
+# once the versions are older than pnpm's window.
+minimumReleaseAgeExclude:
+  - '@payloadcms/db-postgres@3.90.2'
+  - '@payloadcms/drizzle@3.90.2'
+  - '@payloadcms/graphql@3.90.2'
+  - '@payloadcms/live-preview@3.90.2'
+  - '@payloadcms/next@3.90.2'
+  - '@payloadcms/plugin-cloud-storage@3.90.2'
+  - '@payloadcms/translations@3.90.2'
+  - '@payloadcms/ui@3.90.2'
+  - payload@3.90.2

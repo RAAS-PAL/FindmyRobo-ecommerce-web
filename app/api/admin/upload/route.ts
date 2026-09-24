@@ -1,17 +1,16 @@
 import { NextResponse } from "next/server";
-import { getStaffUser } from "@/lib/adminAuth";
+import { isAdminAuthenticated } from "@/lib/adminAuth";
 import { createServiceClient } from "@/lib/supabase/service";
 
 /**
- * Photo upload for the admin panel. Takes one file per request and returns
- * its public URL, which the form drops into the image field — so what is
- * stored is still just a URL, exactly as when one is pasted by hand.
+ * Product photo upload for the admin panel. Takes one file per request and
+ * returns its public URL, which the product form drops into the image fields —
+ * so the stored product still just holds URLs, exactly as when they're pasted
+ * by hand.
  *
- * Open to all staff (admin and marketing — the Content editor uploads too),
- * session checked here. Files land in the public `product-photos` bucket via
- * the service key (supabase/add-product-photos-bucket.sql), under
- * `products/` or `content/` depending on who asked, so the two can be told
- * apart when the bucket is tidied.
+ * Uploads are admin-only (session checked here) and land in the public
+ * `product-photos` bucket via the service key; see
+ * supabase/add-product-photos-bucket.sql.
  */
 
 const BUCKET = "product-photos";
@@ -26,16 +25,13 @@ const EXTENSIONS: Record<string, string> = {
 };
 
 export async function POST(request: Request) {
-  if (!(await getStaffUser())) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let file: FormDataEntryValue | null;
-  let folder: "products" | "content";
   try {
-    const form = await request.formData();
-    file = form.get("file");
-    folder = form.get("folder") === "content" ? "content" : "products";
+    file = (await request.formData()).get("file");
   } catch {
     return NextResponse.json({ error: "Invalid upload" }, { status: 400 });
   }
@@ -58,7 +54,7 @@ export async function POST(request: Request) {
   }
 
   // random name: never trust the client's, and it sidesteps collisions
-  const path = `${folder}/${crypto.randomUUID()}.${extension}`;
+  const path = `products/${crypto.randomUUID()}.${extension}`;
   const supabase = createServiceClient();
   const { error } = await supabase.storage
     .from(BUCKET)

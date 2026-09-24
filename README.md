@@ -27,10 +27,17 @@ the whole site locally without Resend, Omise or Sokochan credentials — see
 | `pnpm build` | Production build |
 | `pnpm start` | Serve a production build |
 | `pnpm lint` | ESLint |
+| `pnpm cms:types` | Regenerate `payload-types.ts` after changing a CMS field |
+| `pnpm cms:importmap` | Regenerate the CMS admin's component map after adding a custom admin component |
+| `pnpm cms:migration <name>` | Create a CMS database migration after changing a CMS field |
+
+`pnpm build` runs pending CMS migrations first (`scripts/payload-migrate.mjs`).
 
 ## Stack
 
-- **Next.js 16.2.9** (App Router) · **React 19** · **TypeScript**
+- **Next.js 16.3** (App Router) · **React 19** · **TypeScript** · ESM
+  (`"type": "module"` — Payload requires it)
+- **Payload CMS 3** — embedded in this app at `/cms`; see [CMS](#cms-payload)
 - **Tailwind CSS v4** — design tokens live in `app/globals.css` under `@theme`
   (`forest-*` green scale + `gold`), not in a Tailwind config file
 - **next-intl v4** — Thai is the default at `/`, English at `/en`
@@ -49,7 +56,10 @@ the whole site locally without Resend, Omise or Sokochan credentials — see
 app/
   [locale]/          storefront — home, shop, product, checkout, account, about
   admin/(protected)/ admin panel — products, page builder, orders, fulfilment
+  (payload)/         Payload CMS routes — /cms (editor) and /cms-api
   api/               route handlers (checkout, admin, webhooks, account)
+payload/             CMS: collections, globals, admin components, migrations, seed
+payload.config.ts    CMS configuration
 components/
   sections/          home-page sections (hero, showcase, trust, …)
   product/           gallery, spec table, FAQ, page-builder block renderer
@@ -65,12 +75,12 @@ i18n/                next-intl routing and request config
 
 Content is split on purpose, and it trips people up:
 
-- **Admin → Content** (Supabase `site_content`) — marketing copy that changes:
-  homepage hero, videos, showcase and stats, the announcement bar, the About
-  page, phone/LINE/socials, and SEO titles and descriptions. Saving there
-  publishes immediately. Types and **defaults** are in `data/siteContent.ts`;
-  a section shows its default until it is first saved, and after that editing
-  the default changes nothing live.
+- **The CMS at `/cms`** (Payload) — marketing copy that changes: homepage
+  hero, videos, showcase and stats, the announcement bar, the About page,
+  phone/LINE/socials, SEO titles and descriptions, and their images. The
+  storefront types and built-in **defaults** are in `data/siteContent.ts`: the
+  site shows those when the CMS is not configured, and the CMS was seeded with
+  them. After that, editing the defaults changes nothing live.
 - **Supabase `products`** — the product catalogue, edited in Admin → Products.
 - **`messages/{en,th}.json`** — UI chrome: labels, buttons, section headings.
 - **`data/*.ts`** — what must stay behind a deploy: `siteConfig.ts` (the
@@ -78,8 +88,39 @@ Content is split on purpose, and it trips people up:
   policy, and the product technology anatomy, where every line traces to a
   manual.
 
-So a string you can't find in `th.json` is probably in Admin → Content, or in
-its defaults in `data/siteContent.ts`.
+So a string you can't find in `th.json` is probably in the CMS, or in its
+defaults in `data/siteContent.ts`.
+
+## CMS (Payload)
+
+Payload 3 runs inside this Next.js app — same deployment, same database — so
+there is no separate service to host or pay for.
+
+- **Editor:** `/cms`. API: `/cms-api`. (Not Payload's default `/admin` and
+  `/api` — those belong to the Supabase admin panel and the site's own API.)
+- **Sign-in:** CMS accounts are Payload's own, separate from the site's
+  Supabase accounts. The first account is created on the `/cms` screen the
+  first time it is opened and becomes an **admin**; admins then add people in
+  Settings → Users as **admin** or **marketing**. Marketing edits content and
+  media; only admins manage users or change roles.
+- **What it edits:** five globals — Homepage, Announcement bar, About page,
+  Contact & social, SEO — each with Save Draft / Publish, version history with
+  restore, and **Live Preview** (the real page beside the form, updating as you
+  type). SEO shows a Google result and a LINE/Facebook card instead.
+- **Publishing** regenerates the storefront (`payload/hooks.ts`); drafts never
+  touch the live site.
+- **Data:** the same Supabase Postgres, in its own `payload` schema — Payload's
+  tables can never collide with `products`, `orders` or `profiles`. Media files
+  go to the existing `product-photos` storage bucket under `cms/`, via the
+  service key (`payload/storage/supabase.ts`) — no extra storage account.
+- **Reading:** the storefront reads published content through
+  `lib/siteContentStore.ts` and maps it with `lib/payloadContent.ts`.
+- **Changing a field:** edit the global in `payload/globals/`, then
+  `pnpm cms:types`, `pnpm cms:migration <name>`, and update the mapping in
+  `lib/payloadContent.ts`. Migrations are applied by the next `pnpm build`.
+- **First deploy:** the `seed_content` migration copies the site's current
+  content and images into the CMS (`payload/seed.ts`), so editors start from
+  the live copy. It converts oversized images to WebP on the way in.
 
 ## Environment
 
@@ -95,6 +136,7 @@ reach the browser. Summary:
 | Omise (2 vars) | No | Checkout creates the order and shows "our team will contact you" |
 | Sokochan (2 vars) | No | Admin "Send to warehouse" shows a not-connected state |
 | `NEXT_PUBLIC_SITE_URL` | Production | Payment returns fall back to the request origin |
+| `DATABASE_URL` + `PAYLOAD_SECRET` | For the CMS | CMS off; the site shows its built-in content |
 
 Anything without a `NEXT_PUBLIC_` prefix is server-only. `SUPABASE_SECRET_KEY`
 bypasses row-level security and `OMISE_SECRET_KEY` moves money — neither may
@@ -117,10 +159,8 @@ There is no admin password. Sign up through the normal storefront flow, then
 set your profile row to `role = 'admin'` (step 4 of `schema.sql`). The admin
 panel is at `/admin`.
 
-For marketing staff, use `role = 'marketing'` instead (added by
-`add-site-content.sql`). They sign in at the same `/admin` and see only the
-Content section; products, prices and orders stay admin-only, and every admin
-API route checks the role itself rather than relying on hidden tabs.
+Marketing staff don't need a Supabase admin account: they edit content in the
+CMS at `/cms`, which has its own users and roles (see [CMS](#cms-payload)).
 
 Role escalation is blocked at the database: `authenticated` has column-level
 `UPDATE` grants on `profiles` for `full_name`, `phone`, `marketing_opt_in` and
@@ -144,8 +184,13 @@ deployment.
 
 The storefront is statically generated, but the admin product routes call
 `revalidatePath` on every save, so catalogue edits publish immediately — no
-redeploy needed. Content that lives in `data/*.ts` or `messages/*.json` is the
-opposite: it is compiled in, and changing it does require a deploy.
+redeploy needed. So does publishing in the CMS. Content that lives in
+`data/*.ts` or `messages/*.json` is the opposite: it is compiled in, and
+changing it does require a deploy.
+
+Set `DATABASE_URL` for **Production only** in Vercel: `pnpm build` applies CMS
+migrations, and a preview branch must not migrate the live database. Preview
+deployments then build with the built-in content.
 
 ## Conventions
 

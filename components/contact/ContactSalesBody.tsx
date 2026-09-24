@@ -26,7 +26,7 @@ export default function ContactSalesBody() {
     <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_420px] lg:gap-12">
       {/* contact methods */}
       <FadeIn delay={0.08}>
-        <div data-cms="contact-main" className="space-y-4">
+        <div className="space-y-4">
           <a
             href={`tel:${phone.replace(/\s/g, "")}`}
             className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
@@ -126,10 +126,7 @@ export default function ContactSalesBody() {
 
       {/* LINE QR */}
       <FadeIn delay={0.14}>
-        <div
-          data-cms="contact-line"
-          className="flex flex-col items-center rounded-3xl bg-forest-950 p-8 text-center sm:p-10"
-        >
+        <div className="flex flex-col items-center rounded-3xl bg-forest-950 p-8 text-center sm:p-10">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold">
             LINE
           </p>

@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { getStaffUser } from "@/lib/adminAuth";
+import { isAdminAuthenticated } from "@/lib/adminAuth";
 import LoginForm from "@/components/admin/LoginForm";
 import AdminLanguageSwitcher from "@/components/admin/AdminLanguageSwitcher";
 import { getAdminLocale } from "@/lib/adminLocale";
 
 export default async function AdminLoginPage() {
-  if (await getStaffUser()) redirect("/admin");
+  if (await isAdminAuthenticated()) redirect("/admin");
   const locale = await getAdminLocale();
   const t = await getTranslations({ locale, namespace: "admin.login" });
 

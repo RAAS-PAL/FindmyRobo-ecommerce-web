@@ -1,12 +1,11 @@
 /**
  * ABOUT PAGE CONTENT — DEFAULTS ONLY.
  *
- * The About page is now edited in Admin → Content → About, and the live copy
- * is stored in Supabase. This file is what the page shows until that section
- * is first saved (see data/siteContent.ts). After that, editing here changes
- * nothing on the live site.
+ * The About page is edited in the CMS at /cms (About page), and the live copy
+ * lives there. This file is the built-in default the CMS was first seeded
+ * with (see data/siteContent.ts); editing it now changes nothing live.
  *
- * The notes below still apply to what anyone types in the admin panel.
+ * The notes below still apply to what anyone types in the CMS.
  *
  * ⚠️ EVERY VALUE BELOW IS A DRAFT. Each one is marked REPLACE. Nothing here is
  * a real fact about the company — it is scaffolding so you can see the shape of

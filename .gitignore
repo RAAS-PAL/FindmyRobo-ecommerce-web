@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Payload: uploads from offline tests (PAYLOAD_MEDIA_STORAGE=local)
+/.payload-media
