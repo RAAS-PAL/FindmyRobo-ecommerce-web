@@ -24,8 +24,8 @@ export default function ContactEditor({
   const { value, set } = editor;
 
   return (
-    <EditorShell editor={editor} meta={meta} viewHref="/contact-sales">
-      <Panel title={t("main.title")} note={t("main.note")}>
+    <EditorShell editor={editor} meta={meta} previewPath="/contact-sales">
+      <Panel title={t("main.title")} note={t("main.note")} previewTarget="contact-main">
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             label={t("main.phone")}
@@ -56,7 +56,7 @@ export default function ContactEditor({
         />
       </Panel>
 
-      <Panel title={t("line.title")} note={t("line.note")}>
+      <Panel title={t("line.title")} note={t("line.note")} previewTarget="contact-line">
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             label={t("line.id")}
@@ -84,7 +84,7 @@ export default function ContactEditor({
         />
       </Panel>
 
-      <Panel title={t("social.title")} note={t("social.note")}>
+      <Panel title={t("social.title")} note={t("social.note")} previewTarget="footer">
         {SOCIAL_PLATFORMS.map((platform) => (
           <TextField
             key={platform}

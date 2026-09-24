@@ -35,6 +35,7 @@ export default function FeatureShowcase() {
   return (
     <section
       ref={sectionRef}
+      data-cms="showcase"
       className="relative bg-forest-950"
       // svh, not vh: on mobile `vh` resolves to the viewport with the browser
       // bars *hidden*, so a 100vh panel is taller than what you can actually

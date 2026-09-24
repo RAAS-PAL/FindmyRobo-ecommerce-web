@@ -78,8 +78,8 @@ export default function AboutEditor({ initial, meta }: { initial: AboutContent; 
   const iconId = useId();
 
   return (
-    <EditorShell editor={editor} meta={meta} viewHref="/about">
-      <Panel title={t("intro.title")}>
+    <EditorShell editor={editor} meta={meta} previewPath="/about">
+      <Panel title={t("intro.title")} previewTarget="about-intro">
         <BilingualField
           label={t("intro.label")}
           value={value.intro}
@@ -90,7 +90,7 @@ export default function AboutEditor({ initial, meta }: { initial: AboutContent; 
         />
       </Panel>
 
-      <Panel title={t("stats.title")} note={t("stats.note")} defaultOpen={false}>
+      <Panel title={t("stats.title")} note={t("stats.note")} defaultOpen={false} previewTarget="about-stats">
         <ListEditor<AboutStat>
           items={value.stats}
           onChange={(v) => set("stats", v)}
@@ -122,7 +122,7 @@ export default function AboutEditor({ initial, meta }: { initial: AboutContent; 
         </ListEditor>
       </Panel>
 
-      <Panel title={t("story.title")} defaultOpen={false}>
+      <Panel title={t("story.title")} defaultOpen={false} previewTarget="about-story">
         <ParagraphsField
           label={t("story.body")}
           hint={t("story.bodyHint")}
@@ -138,7 +138,12 @@ export default function AboutEditor({ initial, meta }: { initial: AboutContent; 
         />
       </Panel>
 
-      <Panel title={t("partner.title")} note={t("partner.note")} defaultOpen={false}>
+      <Panel
+        title={t("partner.title")}
+        note={t("partner.note")}
+        defaultOpen={false}
+        previewTarget="about-partner"
+      >
         <Toggle
           label={t("partner.enabled")}
           checked={value.partnerEnabled}
@@ -183,7 +188,7 @@ export default function AboutEditor({ initial, meta }: { initial: AboutContent; 
         />
       </Panel>
 
-      <Panel title={t("values.title")} note={t("values.note")} defaultOpen={false}>
+      <Panel title={t("values.title")} note={t("values.note")} defaultOpen={false} previewTarget="about-values">
         <ListEditor<AboutValue>
           items={value.values}
           onChange={(v) => set("values", v)}
@@ -233,7 +238,7 @@ export default function AboutEditor({ initial, meta }: { initial: AboutContent; 
         </ListEditor>
       </Panel>
 
-      <Panel title={t("milestones.title")} defaultOpen={false}>
+      <Panel title={t("milestones.title")} defaultOpen={false} previewTarget="about-milestones">
         <ListEditor<Milestone>
           items={value.milestones}
           onChange={(v) => set("milestones", v)}
@@ -274,7 +279,7 @@ export default function AboutEditor({ initial, meta }: { initial: AboutContent; 
         </ListEditor>
       </Panel>
 
-      <Panel title={t("team.title")} note={t("team.note")} defaultOpen={false}>
+      <Panel title={t("team.title")} note={t("team.note")} defaultOpen={false} previewTarget="about-team">
         <ListEditor<TeamMember>
           items={value.team}
           onChange={(v) => set("team", v)}

@@ -18,8 +18,8 @@ export default function AnnouncementEditor({
   const { value, set } = editor;
 
   return (
-    <EditorShell editor={editor} meta={meta} viewHref="/">
-      <Panel title={t("title")} note={t("note")}>
+    <EditorShell editor={editor} meta={meta} previewPath="/">
+      <Panel title={t("title")} note={t("note")} previewTarget="announcement">
         <Toggle
           label={t("enabled")}
           checked={value.enabled}

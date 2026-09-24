@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Mail, MapPin, Phone } from "lucide-react";
@@ -8,7 +10,8 @@ import {
   YouTubeIcon,
 } from "@/components/ui/BrandIcons";
 import { salesMapUrl, siteConfig } from "@/data/siteConfig";
-import type { ContactContent, SocialPlatform } from "@/data/siteContent";
+import { useSiteContent } from "@/components/SiteContentProvider";
+import type { SocialPlatform } from "@/data/siteContent";
 import { SERVICE_CATEGORY, type Product } from "@/data/products";
 
 const payments = ["PromptPay", "Visa", "Mastercard", "Bank Transfer"];
@@ -75,14 +78,12 @@ const SOCIAL_META: Record<SocialPlatform, { label: string; Icon: typeof Facebook
 /** Fixed display order, independent of the key order in the stored content. */
 const SOCIAL_ORDER: SocialPlatform[] = ["facebook", "youtube", "tiktok"];
 
-export default function Footer({
-  products = [],
-  contact,
-}: {
-  products?: Product[];
-  /** Phone, email and socials from Admin → Content → Contact. */
-  contact: ContactContent;
-}) {
+/**
+ * A client component so phone, email and socials (Admin → Content → Contact)
+ * update in the editor's live preview.
+ */
+export default function Footer({ products = [] }: { products?: Product[] }) {
+  const contact = useSiteContent().contact;
   const t = useTranslations("footer");
   const support = t.raw("support") as string[];
   const about = t.raw("about") as string[];
@@ -108,7 +109,7 @@ export default function Footer({
     .slice(0, MAX_FOOTER_PRODUCTS);
 
   return (
-    <footer id="contact" className="bg-forest-950 text-white">
+    <footer id="contact" data-cms="footer" className="bg-forest-950 text-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         {/* 12-col on desktop so the brand and contact blocks get more room than
             the three link lists, which stay narrow. */}

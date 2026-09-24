@@ -63,7 +63,9 @@ export default async function AdminProtectedLayout({
           </div>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
+      {/* No max width here: product/order pages get max-w-6xl from the
+          (admin-only) layout, while Content is wider to fit its live preview. */}
+      <main className="w-full flex-1 px-4 py-10 sm:px-6">
         {children}
       </main>
     </ConfirmProvider>

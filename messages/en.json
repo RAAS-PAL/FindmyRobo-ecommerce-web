@@ -622,7 +622,6 @@
       },
       "editor": {
         "publish": "Publish",
-        "viewOnSite": "View on site",
         "unsaved": "Unpublished changes",
         "savedLive": "Published — live on the site now",
         "lastSaved": "Last published {time}",
@@ -816,6 +815,27 @@
           "description": "Description",
           "blankHint": "The grey text is what shows now. Leave a field empty to keep it automatic."
         }
+      },
+      "preview": {
+        "tab": "Preview",
+        "open": "Preview",
+        "close": "Close preview",
+        "paneLabel": "Live preview and history",
+        "thai": "Thai page",
+        "english": "English page",
+        "desktop": "Desktop",
+        "mobile": "Mobile",
+        "reload": "Reload preview",
+        "openLive": "Open the live page in a new tab",
+        "showingDraft": "Preview of your unpublished changes",
+        "showingLive": "Same as the live site",
+        "loading": "Loading preview…",
+        "frameTitle": "Live preview of the page",
+        "seoPage": "Page to preview",
+        "seoHomepage": "Homepage",
+        "seoGoogle": "Google search result",
+        "seoShare": "Shared on LINE or Facebook",
+        "seoNoProductImage": "This product has no main photo, so the site share image is used."
       }
     }
   },

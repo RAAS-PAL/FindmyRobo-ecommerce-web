@@ -187,7 +187,7 @@ export interface SiteContent {
 }
 
 /** What client components receive through SiteContentProvider. */
-export type PublicSiteContent = Pick<SiteContent, "home" | "contact">;
+export type PublicSiteContent = Pick<SiteContent, "home" | "contact" | "announcement">;
 
 /* --------------------------------------------------------------- defaults */
 

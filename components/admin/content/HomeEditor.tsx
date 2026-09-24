@@ -20,8 +20,8 @@ export default function HomeEditor({ initial, meta }: { initial: HomeContent; me
   const { value, set } = editor;
 
   return (
-    <EditorShell editor={editor} meta={meta} viewHref="/">
-      <Panel title={t("hero.title")} note={t("hero.note")}>
+    <EditorShell editor={editor} meta={meta} previewPath="/">
+      <Panel title={t("hero.title")} note={t("hero.note")} previewTarget="hero">
         <BilingualField
           label={t("hero.headline")}
           value={value.heroHeadline}
@@ -75,7 +75,7 @@ export default function HomeEditor({ initial, meta }: { initial: HomeContent; me
         </div>
       </Panel>
 
-      <Panel title={t("showcase.title")} note={t("showcase.note")} defaultOpen={false}>
+      <Panel title={t("showcase.title")} note={t("showcase.note")} defaultOpen={false} previewTarget="showcase">
         <ListEditor<ShowcaseFeature>
           items={value.featureShowcase}
           onChange={(v) => set("featureShowcase", v)}
@@ -114,7 +114,7 @@ export default function HomeEditor({ initial, meta }: { initial: HomeContent; me
         </ListEditor>
       </Panel>
 
-      <Panel title={t("gallery.title")} note={t("gallery.note")} defaultOpen={false}>
+      <Panel title={t("gallery.title")} note={t("gallery.note")} defaultOpen={false} previewTarget="gallery">
         <ListEditor<GalleryVideo>
           items={value.videoGallery}
           onChange={(v) => set("videoGallery", v)}
@@ -170,7 +170,7 @@ export default function HomeEditor({ initial, meta }: { initial: HomeContent; me
         </ListEditor>
       </Panel>
 
-      <Panel title={t("trust.title")} note={t("trust.note")} defaultOpen={false}>
+      <Panel title={t("trust.title")} note={t("trust.note")} defaultOpen={false} previewTarget="trust">
         <BilingualField
           label={t("trust.heading")}
           value={value.trustHeading}

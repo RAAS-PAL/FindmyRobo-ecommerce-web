@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { ChevronDown, ChevronUp, ImagePlus, LoaderCircle, Plus, Trash2 } from "lucide-react";
 import { useConfirm } from "@/components/admin/ConfirmProvider";
 import type { Bilingual } from "@/data/siteContent";
+import type { PreviewTarget } from "@/lib/cmsPreview";
+import { usePreviewTarget } from "./PreviewTarget";
 
 /**
  * Form building blocks for Admin → Content. Same look as ProductForm (the
@@ -22,24 +24,42 @@ export const hintClass = "mt-1 text-[11.5px] leading-relaxed text-ink-muted";
 const smallButtonClass =
   "flex min-h-[38px] cursor-pointer items-center gap-2 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold disabled:cursor-not-allowed disabled:opacity-50";
 
-/** A titled card. Collapsible, so a long section can be skimmed. */
+/**
+ * A titled card. Collapsible, so a long section can be skimmed. With a
+ * `previewTarget`, opening it or working in it scrolls the live preview to
+ * that part of the page.
+ */
 export function Panel({
   title,
   note,
   children,
   defaultOpen = true,
+  previewTarget,
 }: {
   title: string;
   note?: string;
   children: React.ReactNode;
   defaultOpen?: boolean;
+  previewTarget?: PreviewTarget;
 }) {
+  const requestPreview = usePreviewTarget();
   return (
     <details
       open={defaultOpen}
+      onFocusCapture={() => previewTarget && requestPreview?.(previewTarget)}
       className="group rounded-2xl border border-forest-100 bg-surface [&_summary::-webkit-details-marker]:hidden"
     >
-      <summary className="flex cursor-pointer list-none items-start justify-between gap-4 p-6 sm:px-8">
+      <summary
+        // Opening a panel scrolls the preview to it. Deliberately on the click,
+        // not on <details> "toggle": browsers fire toggle for panels that start
+        // open, which would scroll the preview to the last one on page load.
+        // `open` is still the old state here — the click toggles it afterwards.
+        onClick={(e) => {
+          const details = e.currentTarget.parentElement as HTMLDetailsElement;
+          if (previewTarget && !details.open) requestPreview?.(previewTarget, true);
+        }}
+        className="flex cursor-pointer list-none items-start justify-between gap-4 p-6 sm:px-8"
+      >
         <span>
           <span className="block font-display text-lg font-bold text-content">{title}</span>
           {note && <span className="mt-1 block text-[12.5px] text-ink-muted">{note}</span>}

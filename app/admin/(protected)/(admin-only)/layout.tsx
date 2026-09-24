@@ -13,5 +13,5 @@ export default async function AdminOnlyLayout({
   const staff = await getStaffUser();
   if (!staff) redirect("/admin/login");
   if (staff.role !== "admin") redirect("/admin/content");
-  return children;
+  return <div className="mx-auto w-full max-w-6xl">{children}</div>;
 }

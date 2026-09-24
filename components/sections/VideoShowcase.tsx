@@ -154,7 +154,7 @@ export default function VideoShowcase() {
   const videos = useSiteContent().home.videoGallery;
 
   return (
-    <section className="bg-surface py-20 sm:py-28">
+    <section data-cms="gallery" className="bg-surface py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">

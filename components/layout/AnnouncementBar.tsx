@@ -1,9 +1,16 @@
-import { useLocale } from "next-intl";
-import { pick, type AnnouncementContent } from "@/data/siteContent";
+"use client";
 
-/** Messages come from Admin → Content → Announcement bar. */
-export default function AnnouncementBar({ content }: { content: AnnouncementContent }) {
+import { useLocale } from "next-intl";
+import { useSiteContent } from "@/components/SiteContentProvider";
+import { pick } from "@/data/siteContent";
+
+/**
+ * Messages come from Admin → Content → Announcement bar. A client component
+ * so the editor's live preview can swap in a draft.
+ */
+export default function AnnouncementBar() {
   const locale = useLocale();
+  const content = useSiteContent().announcement;
   const messages = content.messages.map((message) => pick(message, locale)).filter(Boolean);
   if (!content.enabled || messages.length === 0) return null;
 
@@ -16,7 +23,12 @@ export default function AnnouncementBar({ content }: { content: AnnouncementCont
   // keeps the reading speed the same however many messages there are.
   const duration = `${Math.round((70 * strip.length) / 6)}s`;
   return (
-    <div className="overflow-hidden bg-gold text-forest-950" role="region" aria-label="Announcements">
+    <div
+      data-cms="announcement"
+      className="overflow-hidden bg-gold text-forest-950"
+      role="region"
+      aria-label="Announcements"
+    >
       <div className="animate-marquee flex w-max" style={{ animationDuration: duration }}>
         {[0, 1].map((copy) => (
           <div key={copy} className="flex items-center" aria-hidden={copy === 1}>

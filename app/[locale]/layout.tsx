@@ -129,16 +129,22 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
             <ProductsProvider products={products}>
-              <SiteContentProvider content={{ home: content.home, contact: content.contact }}>
+              <SiteContentProvider
+                content={{
+                  home: content.home,
+                  contact: content.contact,
+                  announcement: content.announcement,
+                }}
+              >
                 <CartProvider>
                   <CompareProvider>
-                    <AnnouncementBar content={content.announcement} />
+                    <AnnouncementBar />
                     <Navbar />
                     {children}
                     {/* Products are already loaded here for ProductsProvider —
                         passing them down avoids a second query per page render,
                         since getAllProducts is not cached. */}
-                    <Footer products={products} contact={content.contact} />
+                    <Footer products={products} />
                     <CartDrawer />
                     <FloatingCompareButton />
                   </CompareProvider>

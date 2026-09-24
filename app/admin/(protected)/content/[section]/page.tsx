@@ -54,6 +54,7 @@ export default async function ContentSectionPage({
         id: p.id,
         name: p.name,
         hidden: p.visible === false,
+        image: p.imageUrl ?? null,
         autoDescription: {
           en: metaDescription(p.description.en),
           th: metaDescription(p.description.th ?? p.description.en),
@@ -65,7 +66,9 @@ export default async function ContentSectionPage({
   }
 
   return (
-    <>
+    // Wider than the rest of the panel: the form and the live preview sit side
+    // by side on large screens (EditorShell).
+    <div className="mx-auto w-full max-w-[1760px]">
       <div>
         <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
           {t("page.eyebrow")}
@@ -111,6 +114,6 @@ export default async function ContentSectionPage({
       <p className="mb-6 mt-3 text-[12.5px] text-ink-muted">{t(`sections.${section}.description`)}</p>
 
       {editor}
-    </>
+    </div>
   );
 }

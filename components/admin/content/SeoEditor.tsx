@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
 import type { Bilingual, SeoContent, SeoOverride } from "@/data/siteContent";
 import EditorShell, { useContentEditor, type EditorMeta } from "./EditorShell";
 import { BilingualField, emptyBilingual, ImageField, Panel } from "./fields";
+import SeoPreview from "./SeoPreview";
 
 /** What a product's search result shows when nobody has overridden it. */
 export interface SeoProduct {
@@ -12,6 +14,8 @@ export interface SeoProduct {
   name: string;
   /** Snippet generated from the product description (lib/seo.ts metaDescription). */
   autoDescription: Bilingual;
+  /** Main photo — what a shared product link shows. */
+  image: string | null;
   hidden: boolean;
 }
 
@@ -37,38 +41,48 @@ export default function SeoEditor({
   const t = useTranslations("admin.content.seo");
   const editor = useContentEditor("seo", initial);
   const { value, set } = editor;
+  /** Which page the preview shows: a product id, or null for the homepage. */
+  const [previewing, setPreviewing] = useState<string | null>(null);
 
   const setProduct = (id: string, override: SeoOverride) =>
     set("products", { ...value.products, [id]: override });
 
   return (
-    <EditorShell editor={editor} meta={meta} viewHref={null}>
-      <Panel title={t("site.title")} note={t("site.note")}>
-        <BilingualField
-          label={t("site.siteTitle")}
-          value={value.siteTitle}
-          onChange={(v) => set("siteTitle", v)}
-          required
-          maxLength={120}
-          recommended={60}
-        />
-        <BilingualField
-          label={t("site.description")}
-          value={value.siteDescription}
-          onChange={(v) => set("siteDescription", v)}
-          multiline
-          required
-          maxLength={320}
-          recommended={160}
-        />
-        <ImageField
-          label={t("site.shareImage")}
-          value={value.shareImage}
-          onChange={(v) => set("shareImage", v)}
-          required
-          hint={t("site.shareImageHint")}
-        />
-      </Panel>
+    <EditorShell
+      editor={editor}
+      meta={meta}
+      customPreview={
+        <SeoPreview value={value} products={products} selected={previewing} onSelect={setPreviewing} />
+      }
+    >
+      <div onFocusCapture={() => setPreviewing(null)}>
+        <Panel title={t("site.title")} note={t("site.note")}>
+          <BilingualField
+            label={t("site.siteTitle")}
+            value={value.siteTitle}
+            onChange={(v) => set("siteTitle", v)}
+            required
+            maxLength={120}
+            recommended={60}
+          />
+          <BilingualField
+            label={t("site.description")}
+            value={value.siteDescription}
+            onChange={(v) => set("siteDescription", v)}
+            multiline
+            required
+            maxLength={320}
+            recommended={160}
+          />
+          <ImageField
+            label={t("site.shareImage")}
+            value={value.shareImage}
+            onChange={(v) => set("shareImage", v)}
+            required
+            hint={t("site.shareImageHint")}
+          />
+        </Panel>
+      </div>
 
       <Panel title={t("products.title")} note={t("products.note")}>
         {products.length === 0 && <p className="text-[13px] text-ink-muted">{t("products.empty")}</p>}
@@ -79,6 +93,9 @@ export default function SeoEditor({
             return (
               <details
                 key={product.id}
+                // Opening or editing a product switches the preview to it.
+                onToggle={(e) => e.currentTarget.open && setPreviewing(product.id)}
+                onFocusCapture={() => setPreviewing(product.id)}
                 className="group rounded-xl border border-forest-100 [&_summary::-webkit-details-marker]:hidden"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
