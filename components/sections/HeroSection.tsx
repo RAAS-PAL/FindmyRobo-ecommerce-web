@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { GrassIcon } from "@/components/ui/BrandIcons";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import { pick } from "@/data/siteContent";
+import HeroQuoteCard from "@/components/sections/HeroQuoteCard";
 
 /**
  * Robot categories surfaced as hero chips (order = how they read left to right).
@@ -247,17 +248,22 @@ export default function HeroSection() {
 
       {/* copy */}
       <div
-        className={`relative z-10 mx-auto flex max-w-[86rem] flex-col items-center px-4 text-center sm:px-6 ${
-          video ? "min-h-[calc(100svh-100px)] justify-center py-20 sm:py-24" : "pb-56 pt-20 sm:pb-64 sm:pt-28"
+        className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center gap-10 px-4 text-center sm:px-6 lg:flex-row lg:items-center lg:justify-center lg:gap-16 lg:px-8 xl:max-w-7xl xl:gap-20 ${
+          video ? "min-h-[calc(100svh-100px)] justify-center py-16 sm:py-20" : "pb-56 pt-20 sm:pb-64 sm:pt-28"
         }`}
       >
+        <div className="order-2 shrink-0 lg:order-1">
+          <HeroQuoteCard />
+        </div>
+        <div className="order-1 flex flex-col items-center lg:order-2 lg:max-w-2xl lg:items-start lg:text-left">
+
         {/* Category chips: at a glance, what the store sells — and each one is a
             direct link into that category's products. */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8 flex flex-col items-center gap-3"
+          className="mb-6 flex flex-col items-center gap-3 lg:items-start"
         >
           <span
             className={`font-mono text-[12.5px] font-bold uppercase tracking-[0.35em] ${
@@ -298,7 +304,7 @@ export default function HeroSection() {
           initial="hidden"
           animate="visible"
           variants={{ visible: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } } }}
-          className={`font-display text-[42px] font-extrabold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl 2xl:text-[7rem] ${
+          className={`font-display text-[36px] font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.25rem] xl:text-6xl ${
             video ? "hero-legible" : ""
           }`}
         >
@@ -330,7 +336,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className={`mt-7 max-w-2xl text-base font-semibold leading-relaxed sm:text-lg ${
+          className={`mt-6 max-w-xl text-base font-semibold leading-relaxed sm:text-lg ${
             video ? "hero-legible text-white" : "text-ink-muted"
           }`}
         >
@@ -341,7 +347,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.35, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
+          className="mt-8 flex flex-col items-center gap-4 sm:flex-row lg:justify-start"
         >
           <Link
             href="/shop"
@@ -366,6 +372,7 @@ export default function HeroSection() {
             {t("ctaSecondary")}
           </Link>
         </motion.div>
+        </div>
       </div>
 
       {/* ---- animated lawn scene (hidden when a video is configured) ---- */}

@@ -849,6 +849,17 @@
     "ctaPrimary": "Explore Our Robots",
     "ctaSecondary": "Book a Demo"
   },
+  "heroQuote": {
+    "eyebrow": "Get a quote",
+    "sub": "Start with your name. We’ll ask for a phone number, email, and the property address.",
+    "steps": "Name · Phone & email · Address",
+    "successTitle": "Request received",
+    "successBody": "Thanks, {name}. We’ll call {phone} within one business day with your quotation.",
+    "sending": "Sending",
+    "sendError": "We couldn’t send that. Check your connection and try again.",
+    "rateLimited": "Too many attempts. Please wait a few minutes and try again.",
+    "close": "Shrink quote form"
+  },
   "products": {
     "eyebrow": "The Lineup",
     "heading": "Popular Robots for Every Need",
