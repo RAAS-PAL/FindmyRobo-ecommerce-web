@@ -231,26 +231,32 @@ export default function QuoteForm({
       className={
         panel
           ? "text-left"
-          : `relative z-20 max-w-[calc(100vw-2rem)] shrink-0 text-left transition-[width] duration-300 ease-out motion-reduce:transition-none ${
+          : `group relative z-20 max-w-[calc(100vw-2rem)] shrink-0 text-left transition-[width] duration-300 ease-out motion-reduce:transition-none ${
               expanded ? "w-[min(26.5rem,calc(100vw-2rem))]" : "w-[17.5rem]"
             }`
       }
     >
-      {/* pool of gold light under the card — brighter once it's open */}
+      {/* pool of gold light under the card — only on hover and while it's
+          being filled in; at rest the light tracing the edge is enough. The
+          wrapper does the fading, because the pool's own opacity breathes. */}
       {!panel && (
         <div
           aria-hidden="true"
-          className={`animate-pool pointer-events-none absolute inset-x-1 -bottom-10 h-20 rounded-full blur-2xl transition-colors duration-500 ${
-            expanded ? "bg-gold" : "bg-gold/80"
+          className={`pointer-events-none absolute inset-x-1 -bottom-10 h-20 transition-opacity duration-500 ${
+            expanded ? "opacity-100" : "opacity-0 group-hover:opacity-100"
           }`}
-        />
+        >
+          <div className="animate-pool h-full w-full rounded-full bg-gold blur-2xl" />
+        </div>
       )}
       <div
         className={
           panel
             ? ""
-            : `overflow-hidden rounded-2xl border border-black/8 bg-surface/95 shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5),0_0_48px_-10px_rgba(245,200,66,0.6)] backdrop-blur-md dark:border-white/10 ${
-                expanded ? "max-h-[calc(100svh-6.5rem)] overflow-y-auto" : ""
+            : `overflow-hidden rounded-2xl border border-black/8 bg-surface/95 backdrop-blur-md transition-shadow duration-500 dark:border-white/10 ${
+                expanded
+                  ? "max-h-[calc(100svh-6.5rem)] overflow-y-auto shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5),0_0_48px_-10px_rgba(245,200,66,0.6)]"
+                  : "shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5)] group-hover:shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5),0_0_48px_-10px_rgba(245,200,66,0.6)]"
               }`
         }
       >
@@ -548,7 +554,10 @@ export default function QuoteForm({
                         {index > 0 && (
                           <span
                             aria-hidden="true"
-                            className={`absolute top-3.5 right-1/2 -left-1/2 h-px transition-colors duration-300 ${
+                            // from halo edge to halo edge (icon radius 14px
+                            // + 4px ring) — drawn under the icons, the line
+                            // showed through the one to its left
+                            className={`absolute top-3.5 right-[calc(50%_+_1.125rem)] left-[calc(-50%_+_1.125rem)] h-px transition-colors duration-300 ${
                               index === 1 && form.fullName.trim() ? "bg-gold" : "bg-forest-100"
                             }`}
                           />
