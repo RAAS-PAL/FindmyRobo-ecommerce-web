@@ -43,3 +43,10 @@ next-env.d.ts
 
 # Payload: uploads from offline tests (PAYLOAD_MEDIA_STORAGE=local)
 /.payload-media
+
+# internal planning docs stay on your machine — the PRD once held live
+# credentials, and GitHub is no place for either
+/docs/PRD-*.xlsx
+
+# Office lock files (~$name.xlsx), created while a document is open
+~$*
