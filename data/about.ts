@@ -76,19 +76,23 @@ export const about = {
 
   /* ----------------------------------------------------------------- story */
   story: {
-    // REPLACE: the real reason the company started selling these robots.
-    // Specific beats inspirational — "our founder spent every Sunday cutting
-    // 3 rai by hand" lands; "we are passionate about innovation" does not.
+    // The company's own copy (Sep 2026), supplied in both languages.
     body: {
       en: [
-        "Thai lawns are hard on machines. Heat, sudden rain, thick grass that grows back in days, and gardens that run up slopes and around trees rather than sitting flat.",
-        "We started importing robotic mowers because the people buying them here had no one to call when something went wrong. Grey imports arrived with no Thai warranty, no local parts, and manuals in the wrong language.",
-        "So we built the other half of the product: local stock, professional installation, Thai-speaking support, and a warranty honoured here rather than in another country.",
+        "We believe great robotics should do more than showcase technology — it should make everyday life and work genuinely easier.",
+        "The team behind findmyRobo brings years of hands-on experience in applying robotic technology across a wide range of applications, from cleaning and delivery robots to factory and automation solutions. Along the way, we have seen how the right technology can transform repetitive, time-consuming tasks into smarter and more efficient ways of working.",
+        "That experience led us to another area where robotics can make a real difference — lawn and outdoor care.",
+        "That is why we created findmyRobo: a brand focused on discovering and selecting robotic solutions that work in the real world, starting with robotic lawn mowers designed to make lawn maintenance simpler, more consistent, and less time-consuming.",
+        "For us, it is not just about finding a robot. It is about finding the right solution for each space and each user, supported by practical advice, professional setup, and reliable after-sales service.",
+        "findmyRobo — Find the right robot for the way you live.",
       ],
       th: [
-        "สนามหญ้าเมืองไทยไม่ใช่เรื่องง่ายสำหรับเครื่องจักร ทั้งอากาศร้อน ฝนที่ตกกะทันหัน หญ้าที่ขึ้นเร็วภายในไม่กี่วัน และสวนที่มีทั้งทางลาดและต้นไม้ ไม่ได้ราบเรียบเสมอไป",
-        "เราเริ่มนำเข้าหุ่นยนต์ตัดหญ้าเพราะเห็นว่าคนที่ซื้อในไทยไม่มีใครให้ติดต่อเมื่อเครื่องมีปัญหา สินค้านำเข้าแบบไม่เป็นทางการมาโดยไม่มีการรับประกันในไทย ไม่มีอะไหล่ในประเทศ และคู่มือเป็นภาษาที่อ่านไม่ออก",
-        "เราจึงสร้างอีกครึ่งหนึ่งของสินค้าขึ้นมา ทั้งสต็อกในประเทศ การติดตั้งโดยทีมงานมืออาชีพ ทีมซัพพอร์ตที่พูดภาษาไทย และการรับประกันที่เคลมได้ในประเทศไทย ไม่ใช่ที่ต่างประเทศ",
+        "เราเชื่อว่า หุ่นยนต์ที่ดีไม่ควรเป็นเพียงเทคโนโลยีที่น่าสนใจ แต่ต้องช่วยให้ชีวิตและการทำงานง่ายขึ้นได้จริง",
+        "ทีมงานเบื้องหลัง findmyRobo มีประสบการณ์ในการนำเทคโนโลยีหุ่นยนต์ไปประยุกต์ใช้กับงานหลากหลายรูปแบบมาอย่างต่อเนื่อง ตั้งแต่ Cleaning Robot, Delivery Robot ไปจนถึง Factory & Automation Solutions ทำให้เราได้เห็นว่าหุ่นยนต์สามารถเปลี่ยนงานที่ต้องทำซ้ำ ใช้เวลา และพึ่งพาแรงงาน ให้กลายเป็นงานที่ง่ายและมีประสิทธิภาพมากขึ้นได้",
+        "จากประสบการณ์นั้น เรามองเห็นอีกหนึ่งงานที่เทคโนโลยีสามารถเข้ามาช่วยได้อย่างชัดเจน — การดูแลสนามหญ้าและพื้นที่ Outdoor",
+        "จึงเกิดเป็น findmyRobo แบรนด์ที่คัดสรรเทคโนโลยีหุ่นยนต์สำหรับการใช้งานจริง โดยเริ่มต้นจาก Robotic Lawn Mower ที่ช่วยให้การดูแลสนามเป็นเรื่องง่าย ประหยัดเวลา และลดภาระในการดูแลซ้ำ ๆ",
+        "เราไม่ได้มองหาเพียง “หุ่นยนต์” แต่เรามองหาโซลูชันที่เหมาะกับพื้นที่และการใช้งานของแต่ละคน พร้อมการให้คำแนะนำ การติดตั้ง และการดูแลหลังการขาย เพื่อให้เทคโนโลยีสามารถใช้งานได้จริงในระยะยาว",
+        "findmyRobo — Find the right robot for the way you live.",
       ],
     },
     // REPLACE: a real photo of the office, showroom, team, or an installation.
