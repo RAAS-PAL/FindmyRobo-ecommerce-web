@@ -21,6 +21,16 @@ export const siteConfig = {
   showPrices: false,
 
   /**
+   * Whether visitors can build a list in the cart and go through /checkout.
+   *
+   * false = every "add" button opens the quote form instead, with the product
+   * already selected, and the navbar's cart icon opens that form too. /checkout
+   * redirects home. The cart code is all still here — set this back to true
+   * (and showPrices, and the Omise keys) when the site sells online.
+   */
+  cartEnabled: false,
+
+  /**
    * The registered company contact. Phone, LINE and socials are edited in
    * Admin → Content (data/siteContent.ts); these stay in code because they are
    * legal and operational facts, not marketing copy.

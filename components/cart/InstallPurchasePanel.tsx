@@ -35,15 +35,18 @@ export default function InstallPurchasePanel({ currentId }: { currentId: string 
 
   const tiers = useMemo(() => installTiers(products), [products]);
 
-  // Distinct robots in the quotation list — a service can't be installed onto
-  // another service.
+  // Distinct robots in the quotation list — or, with the cart switched off,
+  // every robot in the catalogue. A service can't be installed onto another
+  // service.
   const robots = useMemo(
     () =>
-      items
-        .filter((line) => line.product.category !== SERVICE_CATEGORY)
-        .map((line) => line.product)
-        .filter((p, i, arr) => arr.findIndex((x) => x.id === p.id) === i),
-    [items]
+      siteConfig.cartEnabled
+        ? items
+            .filter((line) => line.product.category !== SERVICE_CATEGORY)
+            .map((line) => line.product)
+            .filter((p, i, arr) => arr.findIndex((x) => x.id === p.id) === i)
+        : products.filter((p) => p.category !== SERVICE_CATEGORY),
+    [items, products]
   );
 
   const [robotId, setRobotId] = useState("");

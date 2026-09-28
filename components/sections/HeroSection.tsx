@@ -8,7 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { GrassIcon } from "@/components/ui/BrandIcons";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import { pick } from "@/data/siteContent";
-import HeroQuoteCard from "@/components/sections/HeroQuoteCard";
+import HeroQuote from "@/components/quote/HeroQuote";
 
 /**
  * Robot categories surfaced as hero chips (order = how they read left to right).
@@ -75,10 +75,11 @@ function HeroVideoPlaylist({ urls }: { urls: string[] }) {
           // reads light — a tone lift only. Shown sharp (no blur, per request).
           // In dark mode it's dimmed a little (dark:brightness overrides the
           // light-mode 110%) so the bright hero doesn't glare against dark UI.
-          // origin-top scale-[1.12] zooms the frame a touch and anchors it to the
-          // top, so the empty grass at the bottom overflows and is clipped by the
+          // origin-top scale-[1.2] zooms the frame a touch and anchors it to the
+          // top, and object-top keeps it there when the hero is wider than 16:9,
+          // so the empty grass at the bottom overflows and is clipped by the
           // section's overflow-hidden — cropping only the lower part of the clip.
-          className={`absolute inset-0 h-full w-full origin-top scale-[1.2] object-cover brightness-110 saturate-[1.05] transition-opacity duration-700 dark:brightness-90 ${
+          className={`absolute inset-0 h-full w-full origin-top scale-[1.2] object-cover object-top brightness-110 saturate-[1.05] transition-opacity duration-700 dark:brightness-90 ${
             i === index ? "opacity-100" : "opacity-0"
           }`}
           src={src}
@@ -194,13 +195,12 @@ export default function HeroSection() {
     <section
       className={`relative overflow-hidden ${
         video
-          ? // min-h-[56.25vw] makes the section a 16:9 box the full width of the
-            // viewport, so the whole video frame shows uncropped (object-cover
-            // then has nothing to crop). On a 16:9 screen that's taller than the
-            // viewport, so the bottom of the hero scrolls off — intended. The
-            // copy is centred within the FIRST screenful (see min-h-svh on the
-            // copy wrapper), not in this whole tall box, so headings stay put.
-            "min-h-[56.25vw] bg-forest-950 text-white"
+          ? // As tall as its content: on desktop that's the copy frame below,
+            // exactly one screenful (100svh minus the header), so the hero ends
+            // at the fold instead of trailing a band of empty footage under it.
+            // The video fills it, anchored to its top. Phones stack the copy
+            // and the quote card, and those set the height.
+            "bg-forest-950 text-white"
           : "bg-gradient-to-b from-surface via-[#f1f8ee] to-[#e4f1e0] text-content dark:via-forest-900 dark:to-forest-800"
       }`}
     >
@@ -246,16 +246,39 @@ export default function HeroSection() {
         </>
       )}
 
-      {/* copy */}
+      {/* Left half of the banner, continuing the nav wedge as a near-vertical
+          cut so the frost stays across that half instead of tapering away.
+          Unlike the nav wedge it stays in dark mode — same blur, dark tint. */}
       <div
-        className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center gap-10 px-4 text-center sm:px-6 lg:flex-row lg:items-center lg:justify-center lg:gap-16 lg:px-8 xl:max-w-7xl xl:gap-20 ${
-          video ? "min-h-[calc(100svh-100px)] justify-center py-16 sm:py-20" : "pb-56 pt-20 sm:pb-64 sm:pt-28"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-1/2 overflow-hidden"
+      >
+        <div
+          className="absolute top-0 left-0 h-full w-full origin-top-left bg-[#eef0f2]/45 backdrop-blur-xl dark:bg-surface/45"
+          style={{ transform: "skewX(-6deg)" }}
+        />
+      </div>
+
+      {/* Two halves: the quote sits in the middle of the frosted left side,
+          the title sits in the middle of the clear right side. On large
+          screens both are anchored to that fixed frame, so the quote can
+          grow without pushing the title. */}
+      <div
+        className={`relative z-10 flex w-full flex-col lg:block ${
+          video ? "lg:h-[calc(100svh-100px)]" : ""
         }`}
       >
-        <div className="order-2 shrink-0 lg:order-1">
-          <HeroQuoteCard />
+        <div className="order-2 flex justify-center px-4 pt-6 pb-14 lg:absolute lg:py-6 lg:inset-y-0 lg:left-0 lg:z-20 lg:w-1/2 lg:items-center lg:px-8">
+          <HeroQuote />
         </div>
-        <div className="order-1 flex flex-col items-center lg:order-2 lg:max-w-2xl lg:items-start lg:text-left">
+        <div
+          className={`order-1 flex justify-center px-4 text-center lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:items-center lg:px-10 lg:text-left ${
+            video
+              ? "min-h-[calc(100svh-100px)] py-16 sm:py-20 lg:min-h-0 lg:py-0"
+              : "pb-56 pt-20 sm:pb-64 sm:pt-28"
+          }`}
+        >
+        <div className="flex max-w-xl flex-col items-center lg:items-start">
 
         {/* Category chips: at a glance, what the store sells — and each one is a
             direct link into that category's products. */}
@@ -372,6 +395,7 @@ export default function HeroSection() {
             {t("ctaSecondary")}
           </Link>
         </motion.div>
+        </div>
         </div>
       </div>
 

@@ -5,8 +5,14 @@ import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
 import CartIcon from "@/components/cart/CartIcon";
 import { useCart } from "@/components/cart/CartProvider";
+import { useQuote } from "@/components/quote/QuoteProvider";
 import { siteConfig } from "@/data/siteConfig";
 
+/**
+ * The product's main "I'm interested" button. With the cart on it adds the
+ * product and opens the cart; with it off (siteConfig.cartEnabled) it opens the
+ * quote form with this product — and its robot, for a service — selected.
+ */
 export default function AddToCartButton({
   productId,
   forId,
@@ -26,6 +32,7 @@ export default function AddToCartButton({
   const t = useTranslations("cart");
   const tq = useTranslations("quotation");
   const { add, openDrawer } = useCart();
+  const { openQuote } = useQuote();
   const [added, setAdded] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -37,6 +44,10 @@ export default function AddToCartButton({
   );
 
   const handleClick = () => {
+    if (!siteConfig.cartEnabled) {
+      openQuote({ productId, forId });
+      return;
+    }
     add(productId, 1, forId);
     openDrawer();
     setAdded(true);
@@ -59,7 +70,12 @@ export default function AddToCartButton({
       ) : (
         <>
           {icon ?? <CartIcon className="h-4.5 w-4.5" />}
-          {label ?? (siteConfig.showPrices ? t("addToCart") : tq("addToList"))}
+          {label ??
+            (!siteConfig.cartEnabled
+              ? tq("requestCta")
+              : siteConfig.showPrices
+                ? t("addToCart")
+                : tq("addToList"))}
         </>
       )}
     </button>

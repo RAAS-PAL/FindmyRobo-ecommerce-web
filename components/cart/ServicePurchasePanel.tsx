@@ -6,7 +6,9 @@ import { Bot } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { useCart } from "@/components/cart/CartProvider";
+import { useProducts } from "@/components/ProductsProvider";
 import { SERVICE_CATEGORY } from "@/data/products";
+import { siteConfig } from "@/data/siteConfig";
 
 /**
  * Purchase panel for service products (installation, demo). PRD #31: the
@@ -14,18 +16,24 @@ import { SERVICE_CATEGORY } from "@/data/products";
  * lists the robots currently in the cart (not the whole catalog). The choice
  * travels with the cart line via `forId`. If there's no robot in the cart yet,
  * we prompt the shopper to add one first instead of letting them attach the
- * service to nothing.
+ * service to nothing. With the cart switched off there is no cart to read, so
+ * the picker lists every robot in the catalogue.
  */
 export default function ServicePurchasePanel({ serviceId }: { serviceId: string }) {
   const t = useTranslations("service");
   const { items } = useCart();
+  const { products } = useProducts();
   const [robotId, setRobotId] = useState("");
 
   // Distinct robots in the cart (a service can't be installed onto a service).
-  const robots = items
-    .filter((line) => line.product.category !== SERVICE_CATEGORY)
-    .map((line) => ({ id: line.product.id, name: line.product.name }))
-    .filter((r, i, arr) => arr.findIndex((x) => x.id === r.id) === i);
+  const robots = siteConfig.cartEnabled
+    ? items
+        .filter((line) => line.product.category !== SERVICE_CATEGORY)
+        .map((line) => ({ id: line.product.id, name: line.product.name }))
+        .filter((r, i, arr) => arr.findIndex((x) => x.id === r.id) === i)
+    : products
+        .filter((p) => p.category !== SERVICE_CATEGORY)
+        .map((p) => ({ id: p.id, name: p.name }));
 
   if (robots.length === 0) {
     return (

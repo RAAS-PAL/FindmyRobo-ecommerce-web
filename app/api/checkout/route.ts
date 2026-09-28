@@ -1,4 +1,5 @@
 import { NextResponse, after } from "next/server";
+import { siteConfig } from "@/data/siteConfig";
 import { routing } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
 import { createOrder } from "@/lib/orderStore";
@@ -41,6 +42,13 @@ function asCartItems(raw: unknown): CartItemInput[] {
  * The order is created `pending_payment`; the payment routes settle it.
  */
 export async function POST(request: Request) {
+  // Cart switched off (siteConfig.cartEnabled): requests go through the quote
+  // form, which emails only the sales team. Closed here too, so a checkout page
+  // left open from before can't place an order or email the customer.
+  if (!siteConfig.cartEnabled) {
+    return NextResponse.json({ error: "Checkout is closed" }, { status: 404 });
+  }
+
   // Ten orders in ten minutes from one address is already abnormal, and each
   // one now costs two emails against the Resend quota.
   const limited = enforce(request, "checkout", 10, 10 * MINUTE);

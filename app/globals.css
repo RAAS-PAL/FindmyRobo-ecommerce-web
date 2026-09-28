@@ -246,6 +246,57 @@
   animation-delay: var(--fly-delay, 0s);
 }
 
+/* Hero quote card: a point of gold light runs round the card's edge — the way
+   a robot mower traces its lawn boundary — over a slow pool of light beneath.
+   The ring is a conic gradient masked down to the border; its glow comes from
+   a drop-shadow on the parent, since a filter here would be masked away. */
+@property --trace-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes trace-around {
+  to {
+    --trace-angle: 360deg;
+  }
+}
+.quote-trace {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--trace-angle),
+    transparent 0turn 0.7turn,
+    var(--color-gold) 0.93turn,
+    #fff4c2 0.985turn,
+    transparent 1turn
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  animation: trace-around 6s linear infinite;
+}
+
+@keyframes pool-breathe {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scaleX(0.88);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1.04);
+  }
+}
+.animate-pool {
+  animation: pool-breathe 5s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee,
   .animate-mow,
@@ -253,8 +304,13 @@
   .animate-wheel,
   .animate-blink,
   .animate-glow,
+  .animate-pool,
   .animate-firefly {
     animation: none;
+  }
+  /* A frozen arc reads as a rendering fault, not a light — drop it. */
+  .quote-trace {
+    display: none;
   }
   .animate-trail {
     width: 60%;

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google";
+import Script from "next/script";
 import "../globals.css";
 import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/siteUrl";
@@ -14,6 +15,9 @@ import { themeInitScript } from "@/components/ThemeProvider";
 import ProductsProvider from "@/components/ProductsProvider";
 import CartProvider from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
+import QuoteProvider from "@/components/quote/QuoteProvider";
+import QuoteDrawer from "@/components/quote/QuoteDrawer";
+import { siteConfig } from "@/data/siteConfig";
 import CompareProvider from "@/components/compare/CompareProvider";
 import FloatingCompareButton from "@/components/compare/FloatingCompareButton";
 import SiteContentProvider from "@/components/SiteContentProvider";
@@ -120,12 +124,12 @@ export default async function LocaleLayout({
       className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        {/* Runs synchronously during body parse (before the page paints) to set
-            the .dark class and avoid a theme flash. Kept out of <head>: React 19
-            owns the head singleton and re-mounts inline scripts placed there on
-            the client, which both fails to run them and logs a "script tag"
-            warning. As a plain body element it hydrates in place instead. */}
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* beforeInteractive is hoisted into the initial HTML outside the React
+            tree, so it still runs before first paint without React warning that
+            a raw <script> inside a component will not execute on the client. */}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
             <ProductsProvider products={products}>
@@ -137,17 +141,20 @@ export default async function LocaleLayout({
                 }}
               >
                 <CartProvider>
-                  <CompareProvider>
-                    <AnnouncementBar />
-                    <Navbar />
-                    {children}
-                    {/* Products are already loaded here for ProductsProvider —
-                        passing them down avoids a second query per page render,
-                        since getAllProducts is not cached. */}
-                    <Footer products={products} />
-                    <CartDrawer />
-                    <FloatingCompareButton />
-                  </CompareProvider>
+                  <QuoteProvider>
+                    <CompareProvider>
+                      <AnnouncementBar />
+                      <Navbar />
+                      {children}
+                      {/* Products are already loaded here for ProductsProvider —
+                          passing them down avoids a second query per page render,
+                          since getAllProducts is not cached. */}
+                      <Footer products={products} />
+                      {siteConfig.cartEnabled && <CartDrawer />}
+                      <QuoteDrawer />
+                      <FloatingCompareButton />
+                    </CompareProvider>
+                  </QuoteProvider>
                 </CartProvider>
               </SiteContentProvider>
             </ProductsProvider>

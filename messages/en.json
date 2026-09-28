@@ -27,7 +27,8 @@
     "account": "Account",
     "signIn": "Sign in",
     "quotationLabel": "Quotation list, {count} items",
-    "aboutUs": "About Us"
+    "aboutUs": "About Us",
+    "getQuote": "Get a quote"
   },
   "auth": {
     "login": {
@@ -642,7 +643,9 @@
     "demoRobotHint": "Pick the robot you'd like to see working on your own lawn — no purchase needed.",
     "bookNow": "Book Now",
     "selectAreaLabel": "Coverage area",
-    "recommendedForRobot": "Recommended for your robot"
+    "recommendedForRobot": "Recommended for your robot",
+    "demoNoRobots": "No robots are in stock for a demo right now. Contact us and we’ll arrange one as soon as a unit arrives.",
+    "demoNoRobotsCta": "Contact us"
   },
   "contactSales": {
     "metaTitle": "Contact Sales — FindMyRobo",
@@ -851,14 +854,61 @@
   },
   "heroQuote": {
     "eyebrow": "Get a quote",
-    "sub": "Start with your name. We’ll ask for a phone number, email, and the property address.",
-    "steps": "Name · Phone & email · Address",
+    "sub": "A few details, and we’ll send your quotation.",
+    "steps": {
+      "name": "Name",
+      "contact": "Phone & email",
+      "robot": "Robot"
+    },
+    "interestLabel": "Which robot are you interested in?",
+    "interestPlaceholder": "Select a robot",
+    "interests": {
+      "lawn-mowing": "Lawn mowing",
+      "pudu-delivery": "Pudu delivery"
+    },
+    "areaLabel": "Lawn area",
+    "areaPlaceholder": "e.g. 800",
+    "venueLabel": "What kind of place will it serve?",
+    "venuePlaceholder": "Select a venue",
+    "venues": {
+      "restaurant": "Restaurant",
+      "hotel": "Hotel",
+      "hospital": "Hospital",
+      "office": "Office",
+      "mall": "Shopping mall",
+      "other": "Other"
+    },
+    "servingLabel": "Tables or rooms to serve",
+    "servingPlaceholder": "e.g. 40",
+    "floorsLabel": "Floors to cover",
+    "floorsPlaceholder": "e.g. 2",
+    "errors": {
+      "area": "Enter the lawn area as a number greater than 0",
+      "count": "Enter a whole number greater than 0"
+    },
     "successTitle": "Request received",
     "successBody": "Thanks, {name}. We’ll call {phone} within one business day with your quotation.",
     "sending": "Sending",
     "sendError": "We couldn’t send that. Check your connection and try again.",
     "rateLimited": "Too many attempts. Please wait a few minutes and try again.",
-    "close": "Shrink quote form"
+    "close": "Shrink quote form",
+    "companyLabel": "Company",
+    "selectionLabel": "You’re asking about",
+    "closePanel": "Close quote form",
+    "reassure": "Free · No obligation · Reply within 1 business day",
+    "promisesLabel": "Why buy from us",
+    "promises": {
+      "warranty": "Warranty in Thailand",
+      "install": "Professional installation",
+      "aftersales": "Local after-sales team"
+    },
+    "chatPrompt": "Prefer to chat?",
+    "lineShowQr": "Show the LINE QR code for {id}",
+    "lineQrAlt": "LINE QR code for {id}",
+    "lineScan": "Scan with the LINE app",
+    "lineOpen": "Open in LINE",
+    "noteLabel": "Note",
+    "notePlaceholder": "Anything else we should know — your garden, timing, or questions"
   },
   "products": {
     "eyebrow": "The Lineup",

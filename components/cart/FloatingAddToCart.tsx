@@ -5,14 +5,17 @@ import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
 import CartIcon from "@/components/cart/CartIcon";
 import { useCart } from "@/components/cart/CartProvider";
+import { useQuote } from "@/components/quote/QuoteProvider";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
+import { siteConfig } from "@/data/siteConfig";
 
 /**
  * Sticky Add-to-Cart bar for the product page. It stays hidden while the primary
  * button is on screen and slides up from the bottom once that button has scrolled
  * out the top of the viewport — so the customer can always add to cart while
  * reading specs, photos, or the detail sections further down. Mirrors
- * AddToCartButton's behaviour (add one, open the drawer, brief "Added" state).
+ * AddToCartButton's behaviour (add one, open the drawer, brief "Added" state —
+ * or, with the cart switched off, open the quote form for this product).
  *
  * `anchorId` is the id of the element wrapping the primary button; visibility is
  * driven by an IntersectionObserver on it, not a scroll listener, so it stays
@@ -30,7 +33,9 @@ export default function FloatingAddToCart({
   anchorId: string;
 }) {
   const t = useTranslations("cart");
+  const tq = useTranslations("quotation");
   const { add, openDrawer } = useCart();
+  const { openQuote } = useQuote();
   const [visible, setVisible] = useState(false);
   const [added, setAdded] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -58,6 +63,10 @@ export default function FloatingAddToCart({
   );
 
   const handleClick = () => {
+    if (!siteConfig.cartEnabled) {
+      openQuote({ productId });
+      return;
+    }
     add(productId, 1);
     openDrawer();
     setAdded(true);
@@ -100,7 +109,7 @@ export default function FloatingAddToCart({
           ) : (
             <>
               <CartIcon className="h-4.5 w-4.5" />
-              {t("addToCart")}
+              {siteConfig.cartEnabled ? t("addToCart") : tq("requestCta")}
             </>
           )}
         </button>

@@ -18,6 +18,7 @@ import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 import ThemeToggle from "@/components/layout/ThemeToggle";
 import { useCart } from "@/components/cart/CartProvider";
 import CartIcon from "@/components/cart/CartIcon";
+import { useQuote } from "@/components/quote/QuoteProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
 import CatalogSearch from "@/components/layout/CatalogSearch";
@@ -91,6 +92,7 @@ export default function Navbar() {
   const locale = useLocale() as Locale;
   const { products } = useProducts();
   const { count, openDrawer } = useCart();
+  const { openQuote } = useQuote();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -468,22 +470,35 @@ export default function Navbar() {
             <User className="h-5 w-5" aria-hidden="true" />
           </Link>
 
-          <button
-            type="button"
-            onClick={openDrawer}
-            aria-label={t(
-              siteConfig.showPrices ? "cartLabel" : "quotationLabel",
-              { count }
-            )}
-            className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
-          >
-            <CartIcon className="h-5 w-5" />
-            {count > 0 && (
-              <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-0.5 font-mono text-[10px] font-bold text-forest-950">
-                {count}
-              </span>
-            )}
-          </button>
+          {siteConfig.cartEnabled ? (
+            <button
+              type="button"
+              onClick={openDrawer}
+              aria-label={t(
+                siteConfig.showPrices ? "cartLabel" : "quotationLabel",
+                { count }
+              )}
+              className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
+            >
+              <CartIcon className="h-5 w-5" />
+              {count > 0 && (
+                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-0.5 font-mono text-[10px] font-bold text-forest-950">
+                  {count}
+                </span>
+              )}
+            </button>
+          ) : (
+            // Cart switched off: the same spot opens the quote form instead.
+            <button
+              type="button"
+              onClick={() => openQuote()}
+              aria-label={t("getQuote")}
+              title={t("getQuote")}
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
+            >
+              <CartIcon className="h-5 w-5" />
+            </button>
+          )}
 
           <button
             type="button"

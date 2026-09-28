@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import FadeIn from "@/components/ui/FadeIn";
 import CheckoutClient from "@/components/checkout/CheckoutClient";
+import { siteConfig } from "@/data/siteConfig";
+import { redirect } from "@/i18n/navigation";
 import { pageAlternates } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -20,6 +22,9 @@ export default async function CheckoutPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  // Cart switched off (siteConfig.cartEnabled): nothing leads here any more,
+  // and an old bookmark or a cart saved in the browser must not reach payment.
+  if (!siteConfig.cartEnabled) redirect({ href: "/", locale });
   setRequestLocale(locale);
   const t = await getTranslations("checkout");
 
