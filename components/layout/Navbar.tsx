@@ -188,11 +188,16 @@ export default function Navbar() {
       <nav className="relative flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6 xl:px-10">
         {/* soft grey wedge over the left half (light mode only): a subtle panel
             that ends in an angled edge near the middle; the rest stays white.
-            -z-10 keeps it behind the bar content; dark mode hides it. */}
+            It leans like the homepage hero's frosted side and its bottom
+            corner sits on --hero-split, where that frost starts, so the two
+            edges form one straight line — and it slides with the frost when
+            that widens. Skewed from the bottom-left corner, so its top leans
+            right; -left-4 keeps the leaning left edge off-screen. -z-10 keeps
+            it behind the bar content; dark mode hides it. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 -z-10 w-[46%] bg-[#eef0f2] dark:hidden"
-          style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 44px) 100%, 0 100%)" }}
+          className="pointer-events-none absolute inset-y-0 -left-4 -z-10 w-[calc(var(--hero-split)+1rem)] origin-bottom-left bg-[#eef0f2] transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none dark:hidden"
+          style={{ transform: "skewX(calc(-1 * var(--hero-lean)))" }}
         />
 
         {/* left group: logo + primary links, kept together on the left edge */}

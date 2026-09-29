@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
 import QuoteForm from "@/components/quote/QuoteForm";
@@ -17,6 +17,14 @@ const PROMISES = ["warranty", "install", "aftersales"] as const;
 export default function HeroQuote() {
   const t = useTranslations("heroQuote");
   const [formOpen, setFormOpen] = useState(false);
+
+  // Widens the hero's frosted half, and the nav wedge lined up with it, while
+  // the card is open (both read --hero-split in globals.css).
+  useEffect(() => {
+    const root = document.documentElement;
+    root.toggleAttribute("data-quote-open", formOpen);
+    return () => root.removeAttribute("data-quote-open");
+  }, [formOpen]);
 
   return (
     <div className="flex flex-col items-center">

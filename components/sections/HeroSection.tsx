@@ -246,29 +246,32 @@ export default function HeroSection() {
         </>
       )}
 
-      {/* Left half of the banner, continuing the nav wedge as a near-vertical
-          cut so the frost stays across that half instead of tapering away.
+      {/* Left side of the banner, continuing the nav wedge as a near-vertical
+          cut so the frost stays across that side instead of tapering away.
+          At rest it's just wide enough for the quote card; it widens to the
+          full half while the card is being filled in (--hero-split).
           Unlike the nav wedge it stays in dark mode — same blur, dark tint. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-1/2 overflow-hidden"
+        className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-(--hero-split) overflow-hidden transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
       >
         <div
           className="absolute top-0 left-0 h-full w-full origin-top-left bg-[#eef0f2]/45 backdrop-blur-xl dark:bg-surface/45"
-          style={{ transform: "skewX(-6deg)" }}
+          style={{ transform: "skewX(calc(-1 * var(--hero-lean)))" }}
         />
       </div>
 
-      {/* Two halves: the quote sits in the middle of the frosted left side,
-          the title sits in the middle of the clear right side. On large
-          screens both are anchored to that fixed frame, so the quote can
-          grow without pushing the title. */}
+      {/* Two sides: the quote sits in the middle of the frosted left side
+          (its column is as wide as the frost is halfway down, so it follows
+          the frost as that widens), the title in the middle of the clear
+          right half. On large screens both are anchored to that fixed frame,
+          so the quote can grow without pushing the title. */}
       <div
         className={`relative z-10 flex w-full flex-col lg:block ${
           video ? "lg:h-[calc(100svh-100px)]" : ""
         }`}
       >
-        <div className="order-2 flex justify-center px-4 pt-6 pb-14 lg:absolute lg:py-6 lg:inset-y-0 lg:left-0 lg:z-20 lg:w-1/2 lg:items-center lg:px-8">
+        <div className="order-2 flex justify-center px-4 pt-6 pb-14 lg:absolute lg:py-6 lg:inset-y-0 lg:left-0 lg:z-20 lg:w-(--hero-split-mid) lg:items-center lg:px-8 lg:transition-[width] lg:duration-700 lg:ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none">
           <HeroQuote />
         </div>
         <div
