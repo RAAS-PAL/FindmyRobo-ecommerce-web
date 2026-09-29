@@ -192,8 +192,12 @@ export default function HeroSection() {
   const video = videos.length > 0;
 
   return (
+    // overflow clip, not hidden: a hidden box is still a scroll container, so
+    // the browser could scroll it (focusing the quote form did, via the
+    // zoomed video's overflow) and hide the headline where no one can scroll
+    // back. Browsers without clip keep hidden.
     <section
-      className={`relative overflow-hidden ${
+      className={`relative overflow-hidden supports-[overflow:clip]:overflow-clip ${
         video
           ? // As tall as its content: on desktop that's the copy frame below,
             // exactly one screenful (100svh minus the header), so the hero ends
@@ -250,10 +254,12 @@ export default function HeroSection() {
           cut so the frost stays across that side instead of tapering away.
           At rest it's just wide enough for the quote card; it widens to the
           full half while the card is being filled in (--hero-split).
-          Unlike the nav wedge it stays in dark mode — same blur, dark tint. */}
+          Unlike the nav wedge it stays in dark mode — same blur, dark tint.
+          Only from lg: below that the hero is one stacked column, and a
+          frosted left half just cut the headline and buttons in two. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-(--hero-split) overflow-hidden transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+        className="pointer-events-none absolute inset-y-0 left-0 z-[1] hidden w-(--hero-split) overflow-hidden transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none lg:block"
       >
         <div
           className="absolute top-0 left-0 h-full w-full origin-top-left bg-[#eef0f2]/45 backdrop-blur-xl dark:bg-surface/45"
@@ -277,7 +283,9 @@ export default function HeroSection() {
         <div
           className={`order-1 flex justify-center px-4 text-center lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:items-center lg:px-10 lg:text-left ${
             video
-              ? "min-h-[calc(100svh-100px)] py-16 sm:py-20 lg:min-h-0 lg:py-0"
+              ? // No full-screen min-height below lg: the stacked quote card
+                // follows the buttons directly instead of a screen of lawn.
+                "pt-14 pb-4 sm:pt-20 sm:pb-6 lg:py-0"
               : "pb-56 pt-20 sm:pb-64 sm:pt-28"
           }`}
         >

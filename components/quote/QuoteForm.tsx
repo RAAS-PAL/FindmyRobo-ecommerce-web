@@ -151,6 +151,40 @@ export default function QuoteForm({
     };
   }, [expanded, panel, setExpanded]);
 
+  // Stacked under the hero (phones, tablets), the card opens mostly below the
+  // fold. Once it has grown, bring it into view: centred when it fits the
+  // visible screen, else its top just under the sticky header, so the field
+  // being typed in stays in sight above the keyboard. Nothing moves when it's
+  // already fully visible, as on desktop.
+  // Only the window scrolls — not scrollIntoView, which also scrolls clipped
+  // ancestors: it shifted the hero's own content up, where no one could
+  // scroll it back.
+  useEffect(() => {
+    if (!expanded || panel) return;
+    const timer = setTimeout(() => {
+      const el = rootRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const view = window.visualViewport;
+      const viewTop = view?.offsetTop ?? 0;
+      const viewBottom = viewTop + (view?.height ?? window.innerHeight);
+      // the header is sticky, so once the page moves it sits at the very top
+      const headerHeight = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+      const visibleTop = viewTop + headerHeight;
+      const visibleHeight = viewBottom - visibleTop;
+      if (rect.top >= visibleTop && rect.bottom <= viewBottom) return;
+      const landAt =
+        rect.height <= visibleHeight
+          ? visibleTop + (visibleHeight - rect.height) / 2
+          : visibleTop + 12;
+      window.scrollBy({
+        top: rect.top - landAt,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      });
+    }, 350); // after the card's 300ms widen and the notes folding away
+    return () => clearTimeout(timer);
+  }, [expanded, panel]);
+
   const setField =
     (name: QuoteField) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
