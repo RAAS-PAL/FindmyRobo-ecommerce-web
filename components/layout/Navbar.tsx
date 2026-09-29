@@ -3,26 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  Calendar,
-  ChevronDown,
-  Menu,
-  User,
-  X,
-} from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { categories, categoryHref } from "@/data/categories";
 import { siteConfig } from "@/data/siteConfig";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
-import ThemeToggle from "@/components/layout/ThemeToggle";
+import ProfileMenu from "@/components/layout/ProfileMenu";
 import { useCart } from "@/components/cart/CartProvider";
 import CartIcon from "@/components/cart/CartIcon";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
 import CatalogSearch from "@/components/layout/CatalogSearch";
-import { createClient } from "@/lib/supabase/client";
 import type { CategorySlug } from "@/data/categories";
 import type { Locale } from "@/data/products";
 
@@ -95,7 +88,6 @@ export default function Navbar() {
   const { openQuote } = useQuote();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [desktopMenu, setDesktopMenu] = useState<number | null>(null);
   const [previewCategory, setPreviewCategory] = useState<CategorySlug>(
     categories[0].slug
@@ -119,16 +111,6 @@ export default function Navbar() {
     []
   );
 
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setLoggedIn(!!data.user));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) =>
-      setLoggedIn(!!session?.user)
-    );
-    return () => subscription.unsubscribe();
-  }, []);
   // index into navLinks; Shop (0) starts expanded in the drawer
   const [expanded, setExpanded] = useState<number | null>(0);
 
@@ -445,34 +427,23 @@ export default function Navbar() {
         </ul>
         </div>
 
-        {/* right cluster */}
-        <div className="flex items-center gap-2.5 sm:gap-3">
+        {/* right cluster — tight on phones, given more air from lg */}
+        <div className="flex items-center gap-2.5 sm:gap-3 lg:gap-4 xl:gap-6">
           {/* Collapsed to a magnifier button; the field slides open on hover
-              (group-hover) or when focused/clicked (focus). */}
+              (group-hover) or when focused/clicked (focus). The extra right
+              margin: it and the language pill are both outlined, so the
+              plain gap between them reads tighter than the gaps between the
+              bare icons that follow. */}
           <CatalogSearch
-            className="group hidden xl:block"
+            className="group hidden xl:mr-5 xl:block"
             inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-60 group-hover:cursor-text group-hover:pr-4 focus:w-60 focus:cursor-text focus:pr-4 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
             dropdownClassName="right-0 w-[360px]"
           />
 
-          <Link
-            href="/products/request-a-demo"
-            className="hidden min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full bg-gold px-4 text-[13.5px] font-bold text-forest-950 shadow-[0_0_0_0_rgba(245,200,66,0)] transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] active:scale-[0.97] sm:flex xl:px-5"
-          >
-            <Calendar className="h-4 w-4" aria-hidden="true" />
-            {t("bookDemo")}
-          </Link>
-
-          <ThemeToggle className="hidden md:flex" />
           <LanguageSwitcher className="hidden md:flex" />
 
-          <Link
-            href={loggedIn ? "/account" : "/login"}
-            aria-label={loggedIn ? t("account") : t("signIn")}
-            className="flex h-11 w-11 items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
-          >
-            <User className="h-5 w-5" aria-hidden="true" />
-          </Link>
+          {/* sign in / account, and the light-dark switch */}
+          <ProfileMenu />
 
           {siteConfig.cartEnabled ? (
             <button
@@ -643,21 +614,10 @@ export default function Navbar() {
                   ))}
                 </ul>
 
+                {/* the light-dark switch is in the profile menu, on the bar */}
                 <div className="mt-6 flex items-center gap-3 border-t border-forest-100 pt-6">
                   <LanguageSwitcher className="w-fit" />
-                  <ThemeToggle />
                 </div>
-              </div>
-
-              <div className="border-t border-forest-100 p-5">
-                <Link
-                  href="/products/request-a-demo"
-                  onClick={() => setOpen(false)}
-                  className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950"
-                >
-                  <Calendar className="h-4 w-4" aria-hidden="true" />
-                  {t("bookDemo")}
-                </Link>
               </div>
             </motion.aside>
           </>

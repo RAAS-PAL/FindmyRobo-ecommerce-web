@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 
@@ -45,17 +44,5 @@ export function ThemeToggleButton({
         <Moon className="h-4.5 w-4.5" aria-hidden="true" />
       )}
     </button>
-  );
-}
-
-/** Storefront toggle — same control, with translated labels. */
-export default function ThemeToggle({ className = "" }: { className?: string }) {
-  const t = useTranslations("nav");
-  return (
-    <ThemeToggleButton
-      toDark={t("themeToDark")}
-      toLight={t("themeToLight")}
-      className={className}
-    />
   );
 }
