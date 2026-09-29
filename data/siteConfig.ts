@@ -65,6 +65,14 @@ export const siteConfig = {
       postalCode: "11120",
       addressCountry: "TH",
     },
+    /**
+     * How Google Maps finds the office: the company's own Google Business
+     * listing, by its name there. The street address alone matches several
+     * "Software Park" places (one of them streets away), while the listing
+     * lands on the named pin with directions and reviews. Update it if the
+     * listing is renamed.
+     */
+    mapsPlace: "บริษัท ราส พอล จำกัด (RAAS PAL : Robot As A Service)",
   },
 
   /**
@@ -82,7 +90,14 @@ export const siteConfig = {
   },
 };
 
-/** Google Maps link built from the office address, so there is one source of truth. */
-export const salesMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  siteConfig.salesContact.addressLines.join(" ")
-)}`;
+const mapsQuery = encodeURIComponent(siteConfig.salesContact.mapsPlace);
+
+/** The office on Google Maps — every "open in Maps" link uses this one place. */
+export const salesMapUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+
+/** Turn-by-turn directions to the office from wherever the visitor is. */
+export const salesDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`;
+
+/** The same place as an embeddable map (no API key needed), labelled in the page's language. */
+export const salesMapEmbedUrl = (locale: string) =>
+  `https://maps.google.com/maps?q=${mapsQuery}&hl=${locale}&z=16&output=embed`;

@@ -169,7 +169,7 @@ export default function Navbar() {
         { label: t("contactSales"), href: "/contact-sales" },
         { label: t("contactTouch"), href: "/#contact" },
         { label: t("contactDemo"), href: "/products/request-a-demo" },
-        { label: t("contactLocations"), href: "/#contact" },
+        { label: t("contactLocations"), href: "/location" },
       ],
     },
     { label: t("support"), href: "/#support" },

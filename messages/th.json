@@ -9,7 +9,7 @@
     "contactSales": "ติดต่อฝ่ายขาย",
     "contactTouch": "ติดต่อทีมงาน",
     "contactDemo": "จองเดโม",
-    "contactLocations": "สาขาและพื้นที่บริการ",
+    "contactLocations": "ที่ตั้งสำนักงาน",
     "support": "ศูนย์ช่วยเหลือ",
     "blog": "บล็อก",
     "searchPlaceholder": "คุณกำลังมองหาอะไร?",
@@ -661,6 +661,21 @@
     "addressHint": "เปิดใน Google Maps",
     "demoNote": "อยากเห็นหุ่นยนต์ทำงานจริงก่อนไหม?",
     "demoCta": "จองเดโมถึงบ้าน"
+  },
+  "location": {
+    "metaTitle": "ที่ตั้งสำนักงาน — FindMyRobo",
+    "eyebrow": "ที่ตั้ง",
+    "heading": "แวะมาหาเราที่ซอฟต์แวร์ปาร์ค",
+    "sub": "สำนักงานของเราอยู่ที่อาคารซอฟต์แวร์ปาร์ค ถนนแจ้งวัฒนะ อำเภอปากเกร็ด จังหวัดนนทบุรี",
+    "mapTitle": "แผนที่สำนักงาน FindMyRobo ที่อาคารซอฟต์แวร์ปาร์ค",
+    "addressLabel": "ที่อยู่",
+    "directions": "นำทาง",
+    "openMaps": "เปิดใน Google Maps",
+    "phoneLabel": "โทรศัพท์",
+    "emailLabel": "อีเมล",
+    "lineLabel": "LINE",
+    "demoNote": "อยากให้เราไปหาคุณแทนไหม?",
+    "demoCta": "จองเดโมถึงสถานที่ของคุณ"
   },
   "quotation": {
     "onRequest": "สอบถามราคา",

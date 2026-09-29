@@ -9,7 +9,7 @@
     "contactSales": "Contact Sales",
     "contactTouch": "Get in Touch",
     "contactDemo": "Book a Demo",
-    "contactLocations": "Locations",
+    "contactLocations": "Location",
     "support": "Support",
     "blog": "Blog",
     "searchPlaceholder": "What are you looking for?",
@@ -661,6 +661,21 @@
     "addressHint": "Open in Google Maps",
     "demoNote": "Prefer to see a robot in action first?",
     "demoCta": "Book an in-home demo"
+  },
+  "location": {
+    "metaTitle": "Location — FindMyRobo",
+    "eyebrow": "Location",
+    "heading": "Find Us at Software Park",
+    "sub": "Our office is in the Software Park Thailand building on Chaeng Watthana Road, Pak Kret, Nonthaburi.",
+    "mapTitle": "Map of the FindMyRobo office at Software Park Thailand",
+    "addressLabel": "Address",
+    "directions": "Get directions",
+    "openMaps": "Open in Google Maps",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "lineLabel": "LINE",
+    "demoNote": "Would you rather we came to you?",
+    "demoCta": "Book an on-site demo"
   },
   "quotation": {
     "onRequest": "Price on request",
