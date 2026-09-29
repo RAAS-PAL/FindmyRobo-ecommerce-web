@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google";
-import Script from "next/script";
 import "../globals.css";
 import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/siteUrl";
@@ -11,7 +10,7 @@ import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MotionProvider from "@/components/MotionProvider";
-import { themeInitScript } from "@/components/ThemeProvider";
+import { ThemeScript } from "@/components/ThemeProvider";
 import ProductsProvider from "@/components/ProductsProvider";
 import CartProvider from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
@@ -124,12 +123,11 @@ export default async function LocaleLayout({
       className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        {/* beforeInteractive is hoisted into the initial HTML outside the React
-            tree, so it still runs before first paint without React warning that
-            a raw <script> inside a component will not execute on the client. */}
-        <Script id="theme-init" strategy="beforeInteractive">
-          {themeInitScript}
-        </Script>
+        {/* Sets the theme before first paint. Not next/script's beforeInteractive:
+            in the app router that is still an inline <script> in this tree, so
+            when switching language remounts this layout in the browser React
+            warns about it, and dark mode was lost. */}
+        <ThemeScript />
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
             <ProductsProvider products={products}>

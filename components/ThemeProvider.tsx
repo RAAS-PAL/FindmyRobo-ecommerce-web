@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useLayoutEffect, useSyncExternalStore } from "react";
 
 export type Theme = "light" | "dark";
 
@@ -15,6 +15,34 @@ const THEME_EVENT = "raaspal-theme-change";
  * so dark mode is opt-in rather than following the OS.
  */
 export const themeInitScript = `(function(){try{var t=localStorage.getItem("${THEME_KEY}");if(t==="dark")document.documentElement.classList.add("dark");}catch(e){}})();`;
+
+const noSubscribe = () => () => {};
+
+/**
+ * themeInitScript as a tag, for a root layout. It's only rendered in the
+ * server HTML (and matched while hydrating): a root layout can also mount in
+ * the browser — switching language swaps the whole [locale] layout — and a
+ * <script> React creates there never runs, and React warns about it. That
+ * swap also rebuilds <html>, wiping the .dark class, so the stored theme is
+ * put back before paint instead.
+ */
+export function ThemeScript() {
+  // true on the server and while hydrating; false for a mount in the browser
+  const fromServer = useSyncExternalStore(noSubscribe, () => false, () => true);
+
+  useLayoutEffect(() => {
+    let stored: string | null = null;
+    try {
+      stored = window.localStorage.getItem(THEME_KEY);
+    } catch {
+      // storage unavailable (private mode) — the default light theme stands
+    }
+    document.documentElement.classList.toggle("dark", stored === "dark");
+    window.dispatchEvent(new Event(THEME_EVENT));
+  }, []);
+
+  return fromServer ? <script dangerouslySetInnerHTML={{ __html: themeInitScript }} /> : null;
+}
 
 /* The <html> class is the source of truth (the init script owns it before React
    exists), so the theme is read as external state rather than mirrored into
