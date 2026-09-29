@@ -151,7 +151,6 @@ export default function Navbar() {
         comingSoon: !c.available,
       })),
     },
-    { label: t("tv"), href: "/#youtube" },
     {
       label: t("about"),
       href: "/#about",
