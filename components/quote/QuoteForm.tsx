@@ -152,36 +152,55 @@ export default function QuoteForm({
   }, [expanded, panel, setExpanded]);
 
   // Stacked under the hero (phones, tablets), the card opens mostly below the
-  // fold. Once it has grown, bring it into view: centred when it fits the
-  // visible screen, else its top just under the sticky header, so the field
-  // being typed in stays in sight above the keyboard. Nothing moves when it's
-  // already fully visible, as on desktop.
+  // fold, so opening it scrolls it into view. Nothing moves when it's already
+  // fully visible, as on desktop.
+  //
+  // Tapping a text field on a touch screen also brings up the keyboard, and
+  // the browser scrolls for that on its own. Scrolling after it (measured
+  // against the keyboard-shrunk visual viewport) pushed the form out of
+  // sight behind the keyboard on phones. So in that case the page jumps once,
+  // straight away, before the keyboard is up: the card's top just under the
+  // sticky header, which keeps the field being typed in near the top, where
+  // the keyboard never needs to scroll for it. Otherwise (mouse, keyboard
+  // Tab) it waits for the card to finish growing and glides it to the
+  // centre, or to the top when it's taller than the screen.
+  //
   // Only the window scrolls — not scrollIntoView, which also scrolls clipped
-  // ancestors: it shifted the hero's own content up, where no one could
-  // scroll it back.
+  // ancestors: it shifted the hero's own content up, out of reach.
   useEffect(() => {
     if (!expanded || panel) return;
-    const timer = setTimeout(() => {
+    const active = document.activeElement;
+    const keyboardComing =
+      window.matchMedia("(pointer: coarse)").matches &&
+      ((active instanceof HTMLInputElement &&
+        !["radio", "checkbox", "button", "submit"].includes(active.type)) ||
+        active instanceof HTMLTextAreaElement);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const bringIntoView = () => {
       const el = rootRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const view = window.visualViewport;
-      const viewTop = view?.offsetTop ?? 0;
-      const viewBottom = viewTop + (view?.height ?? window.innerHeight);
       // the header is sticky, so once the page moves it sits at the very top
-      const headerHeight = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
-      const visibleTop = viewTop + headerHeight;
-      const visibleHeight = viewBottom - visibleTop;
-      if (rect.top >= visibleTop && rect.bottom <= viewBottom) return;
-      const landAt =
-        rect.height <= visibleHeight
-          ? visibleTop + (visibleHeight - rect.height) / 2
-          : visibleTop + 12;
+      const visibleTop = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+      const visibleHeight = window.innerHeight - visibleTop;
+      let landAt = visibleTop + 12;
+      if (!keyboardComing) {
+        if (rect.top >= visibleTop && rect.bottom <= window.innerHeight) return;
+        if (rect.height <= visibleHeight) landAt = visibleTop + (visibleHeight - rect.height) / 2;
+      }
+      if (Math.abs(rect.top - landAt) < 4) return;
       window.scrollBy({
         top: rect.top - landAt,
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        behavior: keyboardComing || reduceMotion ? "instant" : "smooth",
       });
-    }, 350); // after the card's 300ms widen and the notes folding away
+    };
+
+    if (keyboardComing) {
+      const frame = requestAnimationFrame(bringIntoView);
+      return () => cancelAnimationFrame(frame);
+    }
+    const timer = setTimeout(bringIntoView, 350); // after the 300ms widen and the notes folding away
     return () => clearTimeout(timer);
   }, [expanded, panel]);
 
