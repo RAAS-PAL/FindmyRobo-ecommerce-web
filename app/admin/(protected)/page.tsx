@@ -39,7 +39,7 @@ export default async function AdminProductsPage() {
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-content">
@@ -52,14 +52,14 @@ export default async function AdminProductsPage() {
         <div className="flex flex-wrap gap-3">
           <Link
             href="/admin/products/reorder"
-            className="flex min-h-[46px] items-center gap-2 rounded-full border border-forest-100 bg-surface px-5 text-[13.5px] font-semibold text-content transition-colors hover:border-gold hover:text-gold-600"
+            className="flex min-h-[46px] items-center gap-2 rounded-full border border-forest-100 bg-surface px-5 text-[13.5px] font-semibold text-content transition-colors hover:border-accent hover:text-accent-600"
           >
             <GripVertical className="h-4 w-4" aria-hidden="true" />
             {t("reorderProducts")}
           </Link>
           <Link
             href="/admin/products/new"
-            className="flex min-h-[46px] items-center gap-2 rounded-full bg-gold px-6 text-[13.5px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+            className="flex min-h-[46px] items-center gap-2 rounded-full bg-accent px-6 text-[13.5px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)]"
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
             {t("addProduct")}
@@ -71,7 +71,7 @@ export default async function AdminProductsPage() {
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-forest-100 bg-surface p-5">
           <div className="flex items-center gap-2 text-ink-muted">
-            <Users className="h-4 w-4 text-gold-600" aria-hidden="true" />
+            <Users className="h-4 w-4 text-accent-600" aria-hidden="true" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">
               {t("registeredCustomers")}
             </span>
@@ -87,7 +87,7 @@ export default async function AdminProductsPage() {
         </div>
         <div className="rounded-2xl border border-forest-100 bg-surface p-5">
           <div className="flex items-center gap-2 text-ink-muted">
-            <Package className="h-4 w-4 text-gold-600" aria-hidden="true" />
+            <Package className="h-4 w-4 text-accent-600" aria-hidden="true" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">
               {t("productsListed")}
             </span>
@@ -162,7 +162,7 @@ export default async function AdminProductsPage() {
                         </span>
                       )}
                       {product.preorder ? (
-                        <span className="rounded-full bg-gold/15 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-gold-600">
+                        <span className="rounded-full bg-accent/15 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-600">
                           {t("status.preorder")}
                         </span>
                       ) : (
@@ -184,7 +184,7 @@ export default async function AdminProductsPage() {
                       <Link
                         href={`/admin/products/${product.id}/edit`}
                         aria-label={t("editProduct", { name: product.name })}
-                        className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-gold/15 hover:text-gold-600"
+                        className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-accent/15 hover:text-accent-600"
                       >
                         <Pencil className="h-4 w-4" aria-hidden="true" />
                       </Link>

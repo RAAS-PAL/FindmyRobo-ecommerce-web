@@ -80,7 +80,7 @@ export default function ProductCard({
     >
       <Link
         href={`/products/${product.id}`}
-        className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-gold hover:shadow-[0_24px_48px_-16px_rgba(0,0,0,0.25)]"
+        className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-accent hover:shadow-[0_24px_48px_-16px_rgba(0,0,0,0.25)]"
       >
         {/* image area — image at rest, hover reveals a looping clip of the robot */}
         <div
@@ -89,7 +89,7 @@ export default function ProductCard({
           }`}
         >
           {product.preorder && (
-            <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-gold">
+            <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent-300">
               {t("preorder")}
             </span>
           )}
@@ -117,14 +117,14 @@ export default function ProductCard({
           <span className="absolute inset-x-0 bottom-0 z-10 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-focus-within:translate-y-0">
             <span className="flex min-h-[44px] w-full items-center justify-center gap-1.5 bg-forest py-3 text-sm font-semibold text-white">
               {t("viewProduct")}
-              <ArrowUpRight className="h-4 w-4 text-gold" aria-hidden="true" />
+              <ArrowUpRight className="h-4 w-4 text-accent-300" aria-hidden="true" />
             </span>
           </span>
         </div>
 
         {/* details */}
         <span className="flex flex-1 flex-col gap-1.5 p-5">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-gold-600">
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-600">
             {tc(`${product.category}.name`)}
           </span>
           <span className="font-display text-[15px] font-bold leading-snug text-content">
@@ -137,7 +137,7 @@ export default function ProductCard({
             <PriceOrQuote
               amount={product.price}
               className="font-mono text-lg font-semibold tabular-nums text-content"
-              quoteClassName="text-[13.5px] font-bold text-gold-600"
+              quoteClassName="text-[13.5px] font-bold text-accent-600"
             />
           </span>
         </span>

@@ -150,13 +150,13 @@ export default function FloatingCompareButton() {
           className="fixed left-0 top-0 z-40 flex cursor-grab touch-none items-center justify-center rounded-full border border-forest-100 bg-surface/95 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.45)] backdrop-blur-md active:cursor-grabbing"
         >
           {/* concentric AssistiveTouch-style face in brand colors */}
-          <span className="pointer-events-none flex h-10 w-10 items-center justify-center rounded-full bg-gold/20">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gold text-forest-950">
+          <span className="pointer-events-none flex h-10 w-10 items-center justify-center rounded-full bg-accent/20">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-on-accent">
               <ArrowLeftRight className="h-4 w-4" aria-hidden="true" />
             </span>
           </span>
           {count > 0 && (
-            <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-forest-950 px-1 font-mono text-[10px] font-bold text-gold">
+            <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-forest-950 px-1 font-mono text-[10px] font-bold text-accent-300">
               {count}
             </span>
           )}

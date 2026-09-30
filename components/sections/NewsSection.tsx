@@ -35,7 +35,7 @@ export default function NewsSection() {
           className="flex flex-wrap items-end justify-between gap-6"
         >
           <div>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
               {t("eyebrow")}
             </p>
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
@@ -45,7 +45,7 @@ export default function NewsSection() {
           </div>
           <a
             href="#"
-            className="group flex min-h-[44px] items-center gap-2 font-semibold text-content transition-colors hover:text-gold-600"
+            className="group flex min-h-[44px] items-center gap-2 font-semibold text-content transition-colors hover:text-accent-600"
           >
             {t("viewMore")}
             <ArrowRight
@@ -71,10 +71,10 @@ export default function NewsSection() {
               className={`relative flex h-44 items-center justify-center bg-gradient-to-br ${article.banner}`}
             >
               <Bot
-                className="h-12 w-12 text-gold/40 transition-transform duration-500 group-hover:scale-110"
+                className="h-12 w-12 text-accent-300/40 transition-transform duration-500 group-hover:scale-110"
                 aria-hidden="true"
               />
-              <span className="absolute bottom-3 left-4 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">
+              <span className="absolute bottom-3 left-4 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-accent-300">
                 {article.date}
               </span>
             </div>

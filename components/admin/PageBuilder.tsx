@@ -217,9 +217,9 @@ export function draftToPage(draft: DraftPage): Record<string, unknown> {
 /* ---------- small shared UI ---------- */
 
 const inputClass =
-  "min-h-[42px] w-full rounded-xl border border-forest-100 bg-surface px-3.5 text-[13.5px] text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[42px] w-full rounded-xl border border-forest-100 bg-surface px-3.5 text-[13.5px] text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 const textareaClass =
-  "w-full rounded-xl border border-forest-100 bg-surface px-3.5 py-2.5 text-[13.5px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "w-full rounded-xl border border-forest-100 bg-surface px-3.5 py-2.5 text-[13.5px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 const miniLabel = "mb-1 block text-[11.5px] font-semibold text-ink-muted";
 
 function IconButton({
@@ -240,7 +240,7 @@ function IconButton({
       title={label}
       onClick={onClick}
       disabled={disabled}
-      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-gold/15 hover:text-gold-600 disabled:cursor-not-allowed disabled:opacity-30"
+      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-accent/15 hover:text-accent-600 disabled:cursor-not-allowed disabled:opacity-30"
     >
       {children}
     </button>
@@ -502,7 +502,7 @@ function BlockEditor({
           <button
             type="button"
             onClick={() => set({ cards: [...block.cards, emptyCard()] })}
-            className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+            className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             {t("actions.addCard")}
@@ -563,7 +563,7 @@ export default function PageBuilder({
         {draft.blocks.map((block, i) => (
           <div key={i} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-accent-600">
                 {t("content.sectionLabel", {
                   number: i + 1,
                   type: t(BLOCK_LABEL_KEYS[block.type]),
@@ -612,7 +612,7 @@ export default function PageBuilder({
               key={type}
               type="button"
               onClick={() => set({ blocks: [...draft.blocks, emptyBlock(type)] })}
-              className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+              className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
             >
               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
               {t(BLOCK_LABEL_KEYS[type])}
@@ -632,7 +632,7 @@ export default function PageBuilder({
         {draft.specGroups.map((group, gi) => (
           <div key={gi} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-accent-600">
                 {t("specs.groupLabel", { number: gi + 1 })}
               </p>
               <div className="flex items-center">
@@ -747,7 +747,7 @@ export default function PageBuilder({
                   specGroups[gi] = { ...group, rows: [...group.rows, emptyRow()] };
                   set({ specGroups });
                 }}
-                className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+                className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                 {t("actions.addRow")}
@@ -765,7 +765,7 @@ export default function PageBuilder({
               ],
             })
           }
-          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
           {t("actions.addSpecGroup")}
@@ -781,7 +781,7 @@ export default function PageBuilder({
         {draft.boxItems.map((item, i) => (
           <div key={i} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-accent-600">
                 {t("box.itemLabel", { number: i + 1 })}
               </p>
               <div className="flex items-center">
@@ -860,7 +860,7 @@ export default function PageBuilder({
         <button
           type="button"
           onClick={() => set({ boxItems: [...draft.boxItems, emptyBoxItem()] })}
-          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
           {t("actions.addBoxItem")}
@@ -876,7 +876,7 @@ export default function PageBuilder({
         {draft.faqs.map((item, i) => (
           <div key={i} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-accent-600">
                 {t("faq.itemLabel", { number: i + 1 })}
               </p>
               <div className="flex items-center">
@@ -944,7 +944,7 @@ export default function PageBuilder({
         <button
           type="button"
           onClick={() => set({ faqs: [...draft.faqs, emptyFaq()] })}
-          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
           {t("actions.addFaq")}

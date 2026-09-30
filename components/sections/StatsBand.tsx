@@ -23,7 +23,7 @@ export default function StatsBand() {
     <section className="bg-forest-950 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeIn className="text-center">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
             {t("eyebrow")}
           </p>
           <h2 className="mx-auto mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
@@ -37,7 +37,7 @@ export default function StatsBand() {
               <AnimatedCounter
                 to={stat.to}
                 suffix={stat.suffix}
-                className="block font-mono text-[44px] font-bold leading-none tabular-nums text-gold sm:text-6xl"
+                className="block font-mono text-[44px] font-bold leading-none tabular-nums text-accent-300 sm:text-6xl"
               />
               <p className="mt-3 text-[13px] font-semibold uppercase tracking-wide text-white/70 sm:text-sm">
                 {stat.label}

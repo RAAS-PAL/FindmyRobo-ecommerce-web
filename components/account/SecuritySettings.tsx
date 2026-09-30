@@ -9,10 +9,10 @@ import AccountSection from "@/components/account/AccountSection";
 import Turnstile, { captchaEnabled } from "@/components/auth/Turnstile";
 
 const inputClass =
-  "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 
 const buttonClass =
-  "flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-6 text-[13px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50";
+  "flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-6 text-[13px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function SecuritySettings({
   currentEmail,
@@ -288,7 +288,7 @@ export default function SecuritySettings({
             type="button"
             onClick={signOutEverywhere}
             disabled={signOutBusy}
-            className="flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-full border border-forest-100 px-6 text-[13px] font-bold text-content transition-colors hover:border-gold hover:text-gold-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-full border border-forest-100 px-6 text-[13px] font-bold text-content transition-colors hover:border-accent hover:text-accent-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {signOutBusy ? (
               <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />

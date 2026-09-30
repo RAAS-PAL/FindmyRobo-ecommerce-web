@@ -119,7 +119,7 @@ export default function DeleteAccount({ email }: { email: string }) {
                 setError(null);
               }}
               disabled={busy}
-              className="min-h-[46px] cursor-pointer rounded-full border border-forest-100 px-6 text-[13px] font-bold text-content transition-colors hover:border-gold hover:text-gold-600"
+              className="min-h-[46px] cursor-pointer rounded-full border border-forest-100 px-6 text-[13px] font-bold text-content transition-colors hover:border-accent hover:text-accent-600"
             >
               {t("cancel")}
             </button>

@@ -12,7 +12,7 @@ function Stars({ value, className = "h-4 w-4" }: { value: number; className?: st
   const pct = Math.max(0, Math.min(100, (value / 5) * 100));
   const row = (fill: boolean) =>
     Array.from({ length: 5 }, (_, i) => (
-      <Star key={i} className={`${className} ${fill ? "fill-gold text-gold" : "fill-forest-100 text-forest-100"}`} aria-hidden="true" />
+      <Star key={i} className={`${className} ${fill ? "fill-accent text-accent-300" : "fill-forest-100 text-forest-100"}`} aria-hidden="true" />
     ));
   return (
     <span className="relative inline-flex" role="img" aria-label={`${value} out of 5`}>
@@ -44,7 +44,7 @@ function StarInput({ value, onChange, label }: { value: number; onChange: (v: nu
           onClick={() => onChange(n)}
           className="cursor-pointer p-0.5 transition-transform hover:scale-110"
         >
-          <Star className={`h-7 w-7 ${n <= shown ? "fill-gold text-gold" : "fill-forest-100 text-forest-200"}`} aria-hidden="true" />
+          <Star className={`h-7 w-7 ${n <= shown ? "fill-accent text-accent-300" : "fill-forest-100 text-forest-200"}`} aria-hidden="true" />
         </button>
       ))}
     </div>
@@ -162,7 +162,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
       return (
         <Link
           href="/login"
-          className="inline-flex min-h-[46px] items-center justify-center rounded-full border-2 border-forest px-6 text-[14px] font-bold text-content transition-colors hover:border-gold hover:text-gold-600"
+          className="inline-flex min-h-[46px] items-center justify-center rounded-full border-2 border-forest px-6 text-[14px] font-bold text-content transition-colors hover:border-accent hover:text-accent-600"
         >
           {t("loginToReview")}
         </Link>
@@ -172,7 +172,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
       <button
         type="button"
         onClick={openForm}
-        className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-[14px] font-bold text-forest-950 transition-transform duration-300 hover:scale-[1.03]"
+        className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-accent px-6 text-[14px] font-bold text-on-accent transition-transform duration-300 hover:scale-[1.03]"
       >
         {yourReview ? <Pencil className="h-4 w-4" aria-hidden="true" /> : null}
         {yourReview ? t("editReview") : t("writeReview")}
@@ -188,7 +188,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
 
       {loading ? (
         <div className="mt-10 flex justify-center py-12">
-          <LoaderCircle className="h-6 w-6 animate-spin text-gold-600" aria-hidden="true" />
+          <LoaderCircle className="h-6 w-6 animate-spin text-accent-600" aria-hidden="true" />
         </div>
       ) : (
         <>
@@ -211,10 +211,10 @@ export default function ProductReviews({ productId }: { productId: string }) {
                     <div key={star} className="flex items-center gap-3 text-[13px]">
                       <span className="flex w-8 shrink-0 items-center gap-1 tabular-nums text-ink-muted">
                         {star}
-                        <Star className="h-3 w-3 fill-gold text-gold" aria-hidden="true" />
+                        <Star className="h-3 w-3 fill-accent text-accent-300" aria-hidden="true" />
                       </span>
                       <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-forest-100">
-                        <span className="block h-full rounded-full bg-gold" style={{ width: `${pct}%` }} />
+                        <span className="block h-full rounded-full bg-accent" style={{ width: `${pct}%` }} />
                       </span>
                       <span className="w-8 shrink-0 text-right tabular-nums text-ink-muted">{c}</span>
                     </div>
@@ -226,8 +226,8 @@ export default function ProductReviews({ productId }: { productId: string }) {
             </div>
           ) : (
             <div className="mt-10 flex flex-col items-center gap-4 rounded-3xl border border-dashed border-forest-100 bg-cloud/40 px-8 py-12 text-center">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/15">
-                <Star className="h-6 w-6 fill-gold text-gold" aria-hidden="true" />
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/15">
+                <Star className="h-6 w-6 fill-accent text-accent-300" aria-hidden="true" />
               </span>
               <div>
                 <p className="text-[15px] font-bold text-content">{t("emptyTitle")}</p>
@@ -238,7 +238,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
           )}
 
           {thanks && (
-            <p className="mt-4 flex items-center justify-center gap-2 text-[13.5px] font-semibold text-gold-600">
+            <p className="mt-4 flex items-center justify-center gap-2 text-[13.5px] font-semibold text-accent-600">
               <BadgeCheck className="h-4 w-4" aria-hidden="true" />
               {t("thanks")}
             </p>
@@ -272,7 +272,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
                         onChange={(e) => setTitle(e.target.value)}
                         maxLength={120}
                         placeholder={t("titlePlaceholder")}
-                        className="min-h-[46px] w-full rounded-xl border border-forest-100 bg-cloud/40 px-4 text-[14px] text-content placeholder:text-ink-muted/60 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25"
+                        className="min-h-[46px] w-full rounded-xl border border-forest-100 bg-cloud/40 px-4 text-[14px] text-content placeholder:text-ink-muted/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
                       />
                     </div>
                     <div>
@@ -286,7 +286,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
                         maxLength={2000}
                         rows={4}
                         placeholder={t("bodyPlaceholder")}
-                        className="w-full rounded-xl border border-forest-100 bg-cloud/40 px-4 py-3 text-[14px] leading-relaxed text-content placeholder:text-ink-muted/60 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25"
+                        className="w-full rounded-xl border border-forest-100 bg-cloud/40 px-4 py-3 text-[14px] leading-relaxed text-content placeholder:text-ink-muted/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
                       />
                     </div>
                     {formError && (
@@ -298,7 +298,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
                       <button
                         type="submit"
                         disabled={submitting}
-                        className="flex min-h-[48px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[14px] font-bold text-forest-950 transition-transform duration-300 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+                        className="flex min-h-[48px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-transform duration-300 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         {submitting && <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />}
                         {submitting ? t("submitting") : t("submit")}
@@ -306,7 +306,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
                       <button
                         type="button"
                         onClick={() => setFormOpen(false)}
-                        className="flex min-h-[48px] cursor-pointer items-center justify-center rounded-full border border-forest-100 px-6 text-[14px] font-semibold text-content transition-colors hover:border-gold sm:flex-none"
+                        className="flex min-h-[48px] cursor-pointer items-center justify-center rounded-full border border-forest-100 px-6 text-[14px] font-semibold text-content transition-colors hover:border-accent sm:flex-none"
                       >
                         {t("cancel")}
                       </button>
@@ -326,7 +326,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
                   value={sort}
                   onChange={(e) => setSort(e.target.value as ReviewSort)}
                   aria-label={t("sortLabel")}
-                  className="cursor-pointer rounded-lg border border-forest-100 bg-surface px-3 py-1.5 text-[13px] font-medium text-content focus:border-gold focus:outline-none"
+                  className="cursor-pointer rounded-lg border border-forest-100 bg-surface px-3 py-1.5 text-[13px] font-medium text-content focus:border-accent focus:outline-none"
                 >
                   <option value="recent">{t("sortRecent")}</option>
                   <option value="highest">{t("sortHighest")}</option>
@@ -345,9 +345,9 @@ export default function ProductReviews({ productId }: { productId: string }) {
                       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-cloud text-ink-muted">
                         <User className="h-4 w-4" aria-hidden="true" />
                       </span>
-                      <span className="text-[13.5px] font-semibold text-gold-600">{r.authorName}</span>
+                      <span className="text-[13.5px] font-semibold text-accent-600">{r.authorName}</span>
                       {r.verified && (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-gold/15 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide text-gold-600">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-accent/15 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide text-accent-600">
                           <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" />
                           {t("verified")}
                         </span>
@@ -370,7 +370,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
                     type="button"
                     onClick={() => load(reviews.length, true)}
                     disabled={loadingMore}
-                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-gold disabled:opacity-60"
+                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-accent disabled:opacity-60"
                   >
                     {loadingMore && <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />}
                     {t("loadMore")}

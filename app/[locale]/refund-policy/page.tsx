@@ -38,7 +38,7 @@ export default async function RefundPolicyPage({
     <main className="flex-1 bg-cloud">
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
         <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-4xl">
@@ -99,7 +99,7 @@ export default async function RefundPolicyPage({
                           className="flex items-center gap-2.5 rounded-xl bg-surface px-4 py-3 text-[15px] font-semibold text-content"
                         >
                           <Phone
-                            className="h-4 w-4 shrink-0 text-gold-600"
+                            className="h-4 w-4 shrink-0 text-accent-600"
                             aria-hidden="true"
                           />
                           {block.text}

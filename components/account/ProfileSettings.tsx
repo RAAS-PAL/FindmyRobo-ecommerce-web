@@ -6,7 +6,7 @@ import { Check, LoaderCircle, Save } from "lucide-react";
 import AccountSection from "@/components/account/AccountSection";
 
 const inputClass =
-  "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 
 export interface ProfileFormValues {
   fullName: string;
@@ -111,12 +111,12 @@ export default function ProfileSettings({
           <p className="mt-1 text-[11.5px] text-ink-muted">{t("phoneHint")}</p>
         </div>
 
-        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-forest-100 p-4 transition-colors hover:border-gold/50">
+        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-forest-100 p-4 transition-colors hover:border-accent/50">
           <input
             type="checkbox"
             checked={values.marketingOptIn}
             onChange={(e) => set("marketingOptIn", e.target.checked)}
-            className="mt-0.5 h-4 w-4 shrink-0 accent-gold"
+            className="mt-0.5 h-4 w-4 shrink-0 accent-accent"
           />
           <span>
             <span className="block text-[13px] font-semibold text-content">
@@ -138,7 +138,7 @@ export default function ProfileSettings({
           <button
             type="submit"
             disabled={busy || !dirty || !values.fullName.trim()}
-            className="flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-6 text-[13px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-6 text-[13px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {busy ? (
               <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />

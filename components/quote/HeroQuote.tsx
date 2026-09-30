@@ -52,7 +52,7 @@ export default function HeroQuote({
                   key={key}
                   className="flex items-center gap-2.5 text-[13px] leading-snug font-semibold text-content"
                 >
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold text-forest-950">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-on-accent">
                     <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
                   </span>
                   {t(`promises.${key}`)}

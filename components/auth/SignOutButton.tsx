@@ -17,7 +17,7 @@ export default function SignOutButton() {
         router.push("/");
         router.refresh();
       }}
-      className="flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-gold hover:text-gold-600"
+      className="flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-accent hover:text-accent-600"
     >
       <LogOut className="h-4 w-4" aria-hidden="true" />
       {t("signOut")}

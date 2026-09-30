@@ -53,8 +53,8 @@ export default function VisibilityToggle({
       title={visible ? t("hide", { name }) : t("show", { name })}
       className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-colors disabled:opacity-50 ${
         visible
-          ? "text-ink-muted hover:bg-gold/15 hover:text-gold-600"
-          : "text-gold-600 hover:bg-gold/15"
+          ? "text-ink-muted hover:bg-accent/15 hover:text-accent-600"
+          : "text-accent-600 hover:bg-accent/15"
       }`}
     >
       {busy ? (

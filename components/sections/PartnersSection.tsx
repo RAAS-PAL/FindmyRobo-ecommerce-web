@@ -33,7 +33,7 @@ export default function PartnersSection() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto max-w-2xl text-center"
         >
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
@@ -50,7 +50,7 @@ export default function PartnersSection() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.9, delay: 0.25 + i * 0.25 }}
-              className="flex flex-col items-center rounded-2xl border border-forest-100 bg-surface p-10 text-center transition-all duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-[0_20px_44px_-18px_rgba(0,0,0,0.2)]"
+              className="flex flex-col items-center rounded-2xl border border-forest-100 bg-surface p-10 text-center transition-all duration-300 hover:-translate-y-1 hover:border-accent/60 hover:shadow-[0_20px_44px_-18px_rgba(0,0,0,0.2)]"
             >
               <div className="flex h-24 items-center">
                 <span className={partner.wordmarkClass}>{partner.name}</span>

@@ -135,17 +135,17 @@ export default async function ProductPage({
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* breadcrumb */}
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-[13px] text-ink-muted">
-          <Link href="/" className="transition-colors hover:text-gold-600">
+          <Link href="/" className="transition-colors hover:text-accent-600">
             {t("home")}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <Link href="/shop" className="transition-colors hover:text-gold-600">
+          <Link href="/shop" className="transition-colors hover:text-accent-600">
             {t("shop")}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           <Link
             href={`/shop/${product.category}`}
-            className="transition-colors hover:text-gold-600"
+            className="transition-colors hover:text-accent-600"
           >
             {tc(`${product.category}.name`)}
           </Link>
@@ -190,7 +190,7 @@ export default async function ProductPage({
 
           {/* info */}
           <FadeIn delay={0.1} className="flex flex-col">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-600">
               {tc(`${product.category}.name`)}
             </p>
             <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-4xl">
@@ -217,7 +217,7 @@ export default async function ProductPage({
               </div>
             )}
             {product.preorder && (
-              <p className="mt-2 text-[13px] font-medium text-gold-600">{t("preorderNote")}</p>
+              <p className="mt-2 text-[13px] font-medium text-accent-600">{t("preorderNote")}</p>
             )}
 
             <div className="mt-8">
@@ -234,7 +234,7 @@ export default async function ProductPage({
                   <AddToCartButton productId={product.id} />
                   <Link
                     href="/products/request-a-demo"
-                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-gold hover:text-gold-600 dark:border-white/30 dark:hover:border-gold"
+                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-accent hover:text-accent-600 dark:border-white/30 dark:hover:border-accent"
                   >
                     <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
                     {t("ctaDemo")}
@@ -260,8 +260,8 @@ export default async function ProductPage({
               <ul className="mt-4 space-y-3">
                 {features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3 text-sm leading-relaxed text-ink-muted">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/20">
-                      <Check className="h-3 w-3 text-gold-600" aria-hidden="true" />
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/20">
+                      <Check className="h-3 w-3 text-accent-600" aria-hidden="true" />
                     </span>
                     {feature}
                   </li>

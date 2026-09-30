@@ -15,7 +15,7 @@ export interface PurchaseHistoryItem extends OrderLine {
 }
 
 const statusClass: Record<OrderStatus, string> = {
-  pending_payment: "bg-gold/20 text-gold-600",
+  pending_payment: "bg-accent/20 text-accent-600",
   paid: "bg-emerald-100 text-emerald-800",
   failed: "bg-red-100 text-red-700",
   expired: "bg-slate-100 text-slate-600",
@@ -48,7 +48,7 @@ export default function AccountHistory({
   return (
     <>
       <section aria-labelledby="orders-heading" className="rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-gold-600">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-600">
           {t("transactions")}
         </p>
         <div className="mt-1 flex items-end justify-between gap-4">
@@ -63,10 +63,10 @@ export default function AccountHistory({
 
         {orders.length === 0 ? (
           <div className="mt-6 flex flex-col items-center rounded-xl border border-dashed border-forest-100 px-6 py-10 text-center">
-            <ShoppingBag className="h-8 w-8 text-gold-600" aria-hidden="true" />
+            <ShoppingBag className="h-8 w-8 text-accent-600" aria-hidden="true" />
             <p className="mt-3 text-sm font-semibold text-content">{t("noOrders")}</p>
             <p className="mt-1 text-xs text-ink-muted">{t("noOrdersSub")}</p>
-            <Link href="/shop" className="mt-4 flex min-h-11 items-center rounded-full bg-gold px-5 text-xs font-bold text-forest-950">
+            <Link href="/shop" className="mt-4 flex min-h-11 items-center rounded-full bg-accent px-5 text-xs font-bold text-on-accent">
               {t("shopNow")}
             </Link>
           </div>
@@ -75,7 +75,7 @@ export default function AccountHistory({
             {orders.map((order) => (
               <details key={order.id} className="group rounded-xl border border-forest-100 bg-cloud/45 open:bg-cloud/70">
                 <summary className="flex min-h-[76px] cursor-pointer list-none items-center gap-3 px-4 py-3 marker:hidden">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface text-gold-600">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface text-accent-600">
                     <PackageCheck className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1">
@@ -128,7 +128,7 @@ export default function AccountHistory({
                   {order.fulfillment?.status && (
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-cloud/60 px-4 py-3 text-xs">
                       <span className="flex items-center gap-2 font-semibold text-content">
-                        <Truck className="h-4 w-4 text-gold-600" aria-hidden="true" />
+                        <Truck className="h-4 w-4 text-accent-600" aria-hidden="true" />
                         {t(`shipment.status.${order.fulfillment.status}`)}
                       </span>
                       {order.fulfillment.trackingNumber && (
@@ -149,7 +149,7 @@ export default function AccountHistory({
       </section>
 
       <section aria-labelledby="history-heading" className="mt-6 rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-gold-600">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-600">
           {t("yourRobots")}
         </p>
         <h2 id="history-heading" className="mt-1 font-display text-xl font-extrabold text-content">
@@ -159,7 +159,7 @@ export default function AccountHistory({
 
         {purchases.length === 0 ? (
           <div className="mt-6 flex items-center gap-3 rounded-xl border border-dashed border-forest-100 p-5">
-            <Clock3 className="h-6 w-6 shrink-0 text-gold-600" aria-hidden="true" />
+            <Clock3 className="h-6 w-6 shrink-0 text-accent-600" aria-hidden="true" />
             <p className="text-sm text-ink-muted">{t("noHistory")}</p>
           </div>
         ) : (
@@ -182,7 +182,7 @@ export default function AccountHistory({
                     {t("purchasedQty", { count: item.totalQty })}
                   </p>
                   {item.product && (
-                    <Link href={`/products/${item.product.id}`} className="mt-2 inline-flex text-xs font-bold text-gold-600 hover:text-content">
+                    <Link href={`/products/${item.product.id}`} className="mt-2 inline-flex text-xs font-bold text-accent-600 hover:text-content">
                       {t("viewProduct")} →
                     </Link>
                   )}

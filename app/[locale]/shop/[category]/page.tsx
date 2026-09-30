@@ -53,7 +53,7 @@ export default async function CategoryPage({
     <main className="bg-cloud">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
         <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-content sm:text-5xl">
@@ -82,7 +82,7 @@ export default async function CategoryPage({
         ) : (
           <FadeIn className="mt-10">
             <div className="flex flex-col items-center rounded-3xl border border-forest-100 bg-surface px-6 py-20 text-center">
-              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-forest text-gold">
+              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-forest text-accent-300">
                 <Bot className="h-8 w-8" aria-hidden="true" />
               </span>
               <h2 className="mt-6 font-display text-2xl font-extrabold text-content sm:text-3xl">
@@ -94,14 +94,14 @@ export default async function CategoryPage({
               <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
                 <Link
                   href="/products/request-a-demo"
-                  className="flex min-h-[48px] items-center gap-2 rounded-full bg-gold px-7 text-sm font-bold text-forest-950 transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+                  className="flex min-h-[48px] items-center gap-2 rounded-full bg-accent px-7 text-sm font-bold text-on-accent transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)]"
                 >
                   <Calendar className="h-4 w-4" aria-hidden="true" />
                   {tn("bookDemo")}
                 </Link>
                 <Link
                   href="/shop"
-                  className="flex min-h-[48px] items-center rounded-full border border-forest-100 px-7 text-sm font-semibold text-content transition-colors hover:border-gold"
+                  className="flex min-h-[48px] items-center rounded-full border border-forest-100 px-7 text-sm font-semibold text-content transition-colors hover:border-accent"
                 >
                   {t("backToShop")}
                 </Link>

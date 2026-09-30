@@ -69,7 +69,7 @@ export default function ShowcaseCarousel({
             type="button"
             onClick={() => scrollBy(-1)}
             aria-label={tp("scrollLeft")}
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-gold hover:bg-white/10 hover:text-gold"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-accent hover:bg-white/10 hover:text-accent-300"
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -77,7 +77,7 @@ export default function ShowcaseCarousel({
             type="button"
             onClick={() => scrollBy(1)}
             aria-label={tp("scrollRight")}
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-gold hover:bg-white/10 hover:text-gold"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-accent hover:bg-white/10 hover:text-accent-300"
           >
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>

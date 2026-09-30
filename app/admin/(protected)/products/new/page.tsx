@@ -12,7 +12,7 @@ export default async function NewProductPage() {
     <>
       <Link
         href="/admin"
-        className="inline-flex items-center gap-1 text-[13px] font-medium text-ink-muted transition-colors hover:text-gold-600"
+        className="inline-flex items-center gap-1 text-[13px] font-medium text-ink-muted transition-colors hover:text-accent-600"
       >
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         {t("backToProducts")}

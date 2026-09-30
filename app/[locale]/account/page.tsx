@@ -93,11 +93,11 @@ export default async function AccountPage({
         <FadeIn>
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div className="flex items-center gap-4">
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-forest-950 text-gold">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-forest-950 text-accent-300">
                 <UserRound className="h-7 w-7" aria-hidden="true" />
               </span>
               <div>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-600">
                   {t("title")}
                 </p>
                 <h1 className="mt-1 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
@@ -110,7 +110,7 @@ export default async function AccountPage({
               {isAdmin && (
                 <NextLink
                   href="/admin"
-                  className="flex min-h-[46px] items-center gap-2 rounded-full bg-forest-950 px-5 text-[13px] font-bold text-gold transition-colors hover:bg-forest-900"
+                  className="flex min-h-[46px] items-center gap-2 rounded-full bg-forest-950 px-5 text-[13px] font-bold text-accent-300 transition-colors hover:bg-forest-900"
                 >
                   <ShieldCheck className="h-4 w-4" aria-hidden="true" />
                   {t("adminLink")}
@@ -124,7 +124,7 @@ export default async function AccountPage({
         <FadeIn delay={0.06}>
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
             <div className="flex items-center gap-4 rounded-xl border border-forest-100 bg-surface p-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/15 text-gold-600">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent-600">
                 <MapPin className="h-5 w-5" aria-hidden="true" />
               </span>
               <div>
@@ -133,7 +133,7 @@ export default async function AccountPage({
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-xl border border-forest-100 bg-surface p-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/15 text-gold-600">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent-600">
                 <PackageCheck className="h-5 w-5" aria-hidden="true" />
               </span>
               <div>
@@ -145,7 +145,7 @@ export default async function AccountPage({
                 published — the stored totals are indicative, not agreed. */}
             {siteConfig.showPrices && (
               <div className="flex items-center gap-4 rounded-xl border border-forest-100 bg-surface p-4">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/15 text-gold-600">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent-600">
                   <ShoppingBag className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <div>
@@ -161,7 +161,7 @@ export default async function AccountPage({
           <div className="space-y-6">
             <FadeIn delay={0.1}>
               <section aria-labelledby="profile-heading" className="rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-gold-600">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-600">
                   {t("profileEyebrow")}
                 </p>
                 <h2 id="profile-heading" className="mt-1 font-display text-xl font-extrabold text-content">

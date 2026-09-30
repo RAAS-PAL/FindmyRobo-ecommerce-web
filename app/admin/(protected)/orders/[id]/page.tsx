@@ -52,7 +52,7 @@ export default async function AdminOrderDetailPage({
     <div className="mx-auto max-w-4xl">
       <Link
         href="/admin/orders"
-        className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-ink-muted transition-colors hover:text-gold-600"
+        className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-ink-muted transition-colors hover:text-accent-600"
       >
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         {t("detail.back")}
@@ -61,7 +61,7 @@ export default async function AdminOrderDetailPage({
       {/* header */}
       <div className="mt-5 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-600">
             {t("detail.eyebrow")}
           </p>
           <h1 className="mt-2 font-mono text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
@@ -165,7 +165,7 @@ export default async function AdminOrderDetailPage({
         <div className="space-y-6">
           <section className="rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
             <div className="flex items-center gap-2 text-content">
-              <User className="h-4 w-4 text-gold-600" aria-hidden="true" />
+              <User className="h-4 w-4 text-accent-600" aria-hidden="true" />
               <h2 className="font-display text-base font-bold">{t("detail.customer")}</h2>
             </div>
             <p className="mt-3 font-semibold text-content">
@@ -175,7 +175,7 @@ export default async function AdminOrderDetailPage({
               {shipping.email && (
                 <a
                   href={`mailto:${shipping.email}`}
-                  className="flex items-center gap-2 text-ink-muted transition-colors hover:text-gold-600"
+                  className="flex items-center gap-2 text-ink-muted transition-colors hover:text-accent-600"
                 >
                   <Mail className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span className="truncate">{shipping.email}</span>
@@ -184,7 +184,7 @@ export default async function AdminOrderDetailPage({
               {shipping.phone && (
                 <a
                   href={`tel:${shipping.phone.replace(/\s+/g, "")}`}
-                  className="flex items-center gap-2 text-ink-muted transition-colors hover:text-gold-600"
+                  className="flex items-center gap-2 text-ink-muted transition-colors hover:text-accent-600"
                 >
                   <Phone className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   {shipping.phone}
@@ -195,7 +195,7 @@ export default async function AdminOrderDetailPage({
 
           <section className="rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
             <div className="flex items-center gap-2 text-content">
-              <MapPin className="h-4 w-4 text-gold-600" aria-hidden="true" />
+              <MapPin className="h-4 w-4 text-accent-600" aria-hidden="true" />
               <h2 className="font-display text-base font-bold">{t("detail.shipping")}</h2>
             </div>
             <address className="mt-3 text-[13px] not-italic leading-relaxed text-ink-muted">
@@ -213,7 +213,7 @@ export default async function AdminOrderDetailPage({
 
           <section className="rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
             <div className="flex items-center gap-2 text-content">
-              <CreditCard className="h-4 w-4 text-gold-600" aria-hidden="true" />
+              <CreditCard className="h-4 w-4 text-accent-600" aria-hidden="true" />
               <h2 className="font-display text-base font-bold">{t("detail.payment")}</h2>
             </div>
             {hasPayment ? (

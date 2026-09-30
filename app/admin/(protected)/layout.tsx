@@ -32,7 +32,7 @@ export default async function AdminProtectedLayout({
                 height={320}
                 className="h-7 w-auto"
               />
-              <span className="hidden font-display text-base font-extrabold tracking-tight text-gold sm:inline">
+              <span className="hidden font-display text-base font-extrabold tracking-tight text-accent-300 sm:inline">
                 {t("adminLabel")}
               </span>
             </Link>
@@ -45,7 +45,7 @@ export default async function AdminProtectedLayout({
               rel="noreferrer"
               aria-label={t("viewStore")}
               title={t("viewStore")}
-              className="flex min-h-[40px] items-center gap-2 rounded-full px-4 text-[13px] font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-gold"
+              className="flex min-h-[40px] items-center gap-2 rounded-full px-4 text-[13px] font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-accent-300"
             >
               <ExternalLink className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">{t("viewStore")}</span>

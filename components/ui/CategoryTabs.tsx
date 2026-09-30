@@ -23,7 +23,7 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
         className={`${base} ${
           !active
             ? "border-forest bg-forest text-white"
-            : "border-forest-100 bg-surface text-content hover:border-gold hover:bg-gold/10"
+            : "border-forest-100 bg-surface text-content hover:border-accent hover:bg-accent/10"
         }`}
       >
         {t("all")}
@@ -36,7 +36,7 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
             className={`${base} whitespace-nowrap ${
               active === c.slug
                 ? "border-forest bg-forest text-white"
-                : "border-forest-100 bg-surface text-content hover:border-gold hover:bg-gold/10"
+                : "border-forest-100 bg-surface text-content hover:border-accent hover:bg-accent/10"
             }`}
           >
             {tc(`${c.slug}.name`)}
@@ -48,7 +48,7 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
             className={`${base} whitespace-nowrap cursor-default border-forest-100 bg-cloud text-ink-muted/60`}
           >
             {tc(`${c.slug}.name`)}
-            <span className="rounded-full bg-gold/20 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-gold-600">
+            <span className="rounded-full bg-accent/20 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-accent-600">
               {tn("soon")}
             </span>
           </span>

@@ -29,10 +29,10 @@ export default async function OrderStatusPage({
       <div className="mx-auto max-w-xl px-4 py-14 sm:px-6 sm:py-20">
         <FadeIn>
           <div className="mb-8 flex flex-col items-center text-center">
-            <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-forest-950 text-gold">
+            <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-forest-950 text-accent-300">
               <PackageSearch className="h-6 w-6" aria-hidden="true" />
             </span>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
               {t("eyebrow")}
             </p>
             <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">

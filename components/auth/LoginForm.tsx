@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import Turnstile, { captchaEnabled } from "@/components/auth/Turnstile";
 
 const inputClass =
-  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 
 export default function LoginForm() {
   const t = useTranslations("auth.login");
@@ -77,7 +77,7 @@ export default function LoginForm() {
           </label>
           <Link
             href="/forgot-password"
-            className="text-[12px] font-semibold text-gold-600 hover:underline"
+            className="text-[12px] font-semibold text-accent-600 hover:underline"
           >
             {t("forgotLink")}
           </Link>
@@ -104,7 +104,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={busy || !email || !password || (captchaEnabled && !captchaToken)}
-        className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {busy ? (
           <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -115,7 +115,7 @@ export default function LoginForm() {
       </button>
       <p className="pt-1 text-center text-[13px] text-ink-muted">
         {t("noAccount")}{" "}
-        <Link href="/signup" className="font-semibold text-gold-600 hover:underline">
+        <Link href="/signup" className="font-semibold text-accent-600 hover:underline">
           {t("signupLink")}
         </Link>
       </p>

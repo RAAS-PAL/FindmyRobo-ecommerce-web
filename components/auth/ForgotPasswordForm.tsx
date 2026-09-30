@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import Turnstile, { captchaEnabled } from "@/components/auth/Turnstile";
 
 const inputClass =
-  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 
 export default function ForgotPasswordForm() {
   const t = useTranslations("auth.forgotPassword");
@@ -61,8 +61,8 @@ export default function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="flex flex-col items-center gap-4 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold/20">
-          <MailCheck className="h-7 w-7 text-gold-600" aria-hidden="true" />
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-accent/20">
+          <MailCheck className="h-7 w-7 text-accent-600" aria-hidden="true" />
         </span>
         <h2 className="font-display text-xl font-bold text-content">
           {t("checkEmailTitle")}
@@ -72,7 +72,7 @@ export default function ForgotPasswordForm() {
         </p>
         <Link
           href="/login"
-          className="text-[13px] font-semibold text-gold-600 hover:underline"
+          className="text-[13px] font-semibold text-accent-600 hover:underline"
         >
           {t("backToLogin")}
         </Link>
@@ -111,7 +111,7 @@ export default function ForgotPasswordForm() {
       <button
         type="submit"
         disabled={busy || !email || (captchaEnabled && !captchaToken)}
-        className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {busy ? (
           <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -121,7 +121,7 @@ export default function ForgotPasswordForm() {
         {t("submit")}
       </button>
       <p className="pt-1 text-center text-[13px] text-ink-muted">
-        <Link href="/login" className="font-semibold text-gold-600 hover:underline">
+        <Link href="/login" className="font-semibold text-accent-600 hover:underline">
           {t("backToLogin")}
         </Link>
       </p>

@@ -44,13 +44,13 @@ interface NavItem {
   label: string;
   href: string;
   children?: NavChild[];
-  /** The page being viewed belongs to this section — the gold track rests under it. */
+  /** The page being viewed belongs to this section — the accent track rests under it. */
   current?: boolean;
 }
 
 function SoonBadge({ label }: { label: string }) {
   return (
-    <span className="ml-2 shrink-0 rounded-full bg-gold/25 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-gold-600">
+    <span className="ml-2 shrink-0 rounded-full bg-accent/25 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-accent-600">
       {label}
     </span>
   );
@@ -89,7 +89,7 @@ function DropdownChild({
       className="group/item flex items-center gap-3 rounded-lg px-2.5 py-2 text-[13.5px] font-semibold text-content/85 transition-colors hover:bg-cloud hover:text-content"
     >
       {Icon && (
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cloud text-content/60 transition-colors duration-200 group-hover/item:bg-gold/30 group-hover/item:text-gold-600">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cloud text-content/60 transition-colors duration-200 group-hover/item:bg-accent/30 group-hover/item:text-accent-600">
           <Icon className="h-4 w-4" aria-hidden="true" />
         </span>
       )}
@@ -194,7 +194,7 @@ export default function Navbar() {
     { label: t("support"), href: "/#support" },
   ];
 
-  /* The gold track along the bar's bottom edge (styles: .nav-track in
+  /* The accent track along the bar's bottom edge (styles: .nav-track in
      globals.css). It glides to the link under the pointer or keyboard focus,
      stays under a link while its menu is open, and otherwise rests under the
      current section — or fades out where there isn't one. Positioned straight
@@ -317,7 +317,7 @@ export default function Navbar() {
                 >
                   {link.label}
                   <ChevronDown
-                    className={`h-3.5 w-3.5 text-gold-600 transition-transform duration-200 ${
+                    className={`h-3.5 w-3.5 text-accent-600 transition-transform duration-200 ${
                       desktopMenu === linkIndex ? "rotate-180" : ""
                     }`}
                     aria-hidden="true"
@@ -347,7 +347,7 @@ export default function Navbar() {
                       : // Simple dropdowns hang off their own button; pt-4 clears
                         // the rest of the navbar height below the trigger, so
                         // the panel starts right at the bar's bottom edge, under
-                        // the gold track — like the mega-menu.
+                        // the accent track — like the mega-menu.
                         "left-1/2 -translate-x-1/2 pt-4"
                   } ${
                     desktopMenu === linkIndex
@@ -382,8 +382,8 @@ export default function Navbar() {
                               onFocus={() => setPreviewCategory(category.slug)}
                               className={`block rounded-xl px-3.5 py-3 transition-colors ${
                                 active
-                                  ? "bg-cloud text-gold-600"
-                                  : "text-content/85 hover:bg-cloud hover:text-gold-600"
+                                  ? "bg-cloud text-accent-600"
+                                  : "text-content/85 hover:bg-cloud hover:text-accent-600"
                               }`}
                             >
                               {inner}
@@ -414,7 +414,7 @@ export default function Navbar() {
                             <Link
                               href={categoryHref(previewCategory)}
                               onClick={() => setDesktopMenu(null)}
-                              className="shrink-0 text-xs font-semibold text-gold-600 hover:text-content"
+                              className="shrink-0 text-xs font-semibold text-accent-600 hover:text-content"
                             >
                               {t("shop")} →
                             </Link>
@@ -439,7 +439,7 @@ export default function Navbar() {
                                     key={product.id}
                                     href={`/products/${product.id}`}
                                     onClick={() => setDesktopMenu(null)}
-                                    className="group/card overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3 transition hover:-translate-y-0.5 hover:border-gold-600/40 hover:shadow-md"
+                                    className="group/card overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3 transition hover:-translate-y-0.5 hover:border-accent-600/40 hover:shadow-md"
                                   >
                                     <div className="flex h-28 items-center justify-center">
                                       <ProductVisual product={product} className="h-full w-full" />
@@ -524,7 +524,7 @@ export default function Navbar() {
               bare icons that follow. */}
           <CatalogSearch
             className="group hidden xl:mr-5 xl:block"
-            inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-60 group-hover:cursor-text group-hover:pr-4 focus:w-60 focus:cursor-text focus:pr-4 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
+            inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-60 group-hover:cursor-text group-hover:pr-4 focus:w-60 focus:cursor-text focus:pr-4 focus:border-accent-600/60 focus:bg-surface focus:outline-none"
             dropdownClassName="right-0 w-[360px]"
           />
 
@@ -541,23 +541,23 @@ export default function Navbar() {
                 siteConfig.showPrices ? "cartLabel" : "quotationLabel",
                 { count }
               )}
-              className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
+              className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-accent-600"
             >
               <CartIcon className="h-5 w-5" />
               {count > 0 && (
-                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-0.5 font-mono text-[10px] font-bold text-forest-950">
+                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-0.5 font-mono text-[10px] font-bold text-on-accent">
                   {count}
                 </span>
               )}
             </button>
           ) : (
             // Cart switched off: the same spot opens the quote form instead —
-            // the site's one call to action, so it's the one gold thing on the
-            // bar: a labelled pill from sm, a gold disc on phones.
+            // the site's one call to action, so it's the one accent-coloured thing on the
+            // bar: a labelled pill from sm, an accent disc on phones.
             <button
               type="button"
               onClick={() => openQuote()}
-              className="flex h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-3 text-[13.5px] font-bold whitespace-nowrap text-forest-950 shadow-[0_6px_18px_-10px_rgba(245,200,66,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-gold-300 hover:shadow-[0_12px_26px_-10px_rgba(245,200,66,0.95)] active:translate-y-0 active:scale-[0.97] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:px-5"
+              className="flex h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent-gradient px-3 text-[13.5px] font-bold whitespace-nowrap transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:px-5"
             >
               <CartIcon className="h-[18px] w-[18px] shrink-0" />
               <span className="max-sm:sr-only">{t("getQuote")}</span>
@@ -631,7 +631,7 @@ export default function Navbar() {
               <div className="flex-1 overflow-y-auto px-5 py-6">
                 <CatalogSearch
                   className="mb-6 block"
-                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-sm text-content placeholder:text-ink-muted/70 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
+                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-sm text-content placeholder:text-ink-muted/70 focus:border-accent-600/60 focus:bg-surface focus:outline-none"
                   dropdownClassName="inset-x-0 w-full"
                   onNavigate={() => setOpen(false)}
                 />
@@ -649,11 +649,11 @@ export default function Navbar() {
                             type="button"
                             onClick={() => setExpanded(expanded === i ? null : i)}
                             aria-expanded={expanded === i}
-                            className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-[15px] font-bold text-content transition-colors hover:bg-cloud hover:text-gold-600"
+                            className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-[15px] font-bold text-content transition-colors hover:bg-cloud hover:text-accent-600"
                           >
                             {link.label}
                             <ChevronDown
-                              className={`h-4 w-4 text-gold-600 transition-transform duration-200 ${
+                              className={`h-4 w-4 text-accent-600 transition-transform duration-200 ${
                                 expanded === i ? "rotate-180" : ""
                               }`}
                               aria-hidden="true"
@@ -679,7 +679,7 @@ export default function Navbar() {
                                       <Link
                                         href={item.href}
                                         onClick={() => setOpen(false)}
-                                        className="flex min-h-[44px] items-center rounded-lg px-4 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-gold-600"
+                                        className="flex min-h-[44px] items-center rounded-lg px-4 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
                                       >
                                         {item.label}
                                       </Link>
@@ -694,7 +694,7 @@ export default function Navbar() {
                         <Link
                           href={link.href}
                           onClick={() => setOpen(false)}
-                          className="flex min-h-[48px] items-center rounded-xl px-4 text-[15px] font-bold text-content transition-colors hover:bg-cloud hover:text-gold-600"
+                          className="flex min-h-[48px] items-center rounded-xl px-4 text-[15px] font-bold text-content transition-colors hover:bg-cloud hover:text-accent-600"
                         >
                           {link.label}
                         </Link>

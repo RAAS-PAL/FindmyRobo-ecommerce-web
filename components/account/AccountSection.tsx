@@ -24,7 +24,7 @@ export default function AccountSection({
     >
       <p
         className={`font-mono text-[10px] font-semibold uppercase tracking-[0.22em] ${
-          tone === "danger" ? "text-red-600" : "text-gold-600"
+          tone === "danger" ? "text-red-600" : "text-accent-600"
         }`}
       >
         {eyebrow}

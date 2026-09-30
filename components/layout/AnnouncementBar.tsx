@@ -24,7 +24,7 @@ export default function AnnouncementBar() {
   const duration = `${Math.round((70 * strip.length) / 6)}s`;
   return (
     <div
-      className="overflow-hidden bg-gold text-forest-950"
+      className="overflow-hidden bg-accent text-on-accent"
       role="region"
       aria-label="Announcements"
     >

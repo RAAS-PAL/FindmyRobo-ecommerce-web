@@ -65,9 +65,9 @@ export default function ShowcasePhoto({
           captionAt === "top" ? "top-4 sm:top-5" : "bottom-4 sm:bottom-5"
         }`}
       >
-        <Camera className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
+        <Camera className="mt-0.5 h-4 w-4 shrink-0 text-accent-300" aria-hidden="true" />
         <p className="text-[12px] leading-snug">
-          <span className="font-mono text-[10.5px] font-semibold tracking-[0.2em] text-gold uppercase">
+          <span className="font-mono text-[10.5px] font-semibold tracking-[0.2em] text-accent-300 uppercase">
             {t("photoComing")}
           </span>
           <span className="mt-0.5 block">{pick(photo.shot, locale)}</span>

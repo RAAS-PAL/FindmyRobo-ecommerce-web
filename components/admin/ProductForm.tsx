@@ -52,13 +52,13 @@ const slugify = (name: string) =>
     .slice(0, 60);
 
 const inputClass =
-  "min-h-[46px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[46px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 const textareaClass =
-  "w-full rounded-xl border border-forest-100 bg-surface px-4 py-3 text-[14px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "w-full rounded-xl border border-forest-100 bg-surface px-4 py-3 text-[14px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 const labelClass = "mb-1.5 block text-[13px] font-semibold text-content";
 const hintClass = "mt-1 text-[11.5px] text-ink-muted";
 const uploadButtonClass =
-  "mt-2 flex min-h-[42px] cursor-pointer items-center gap-2 rounded-full border border-forest-100 px-4 text-[13px] font-semibold text-content transition-colors hover:border-gold disabled:cursor-not-allowed disabled:opacity-50";
+  "mt-2 flex min-h-[42px] cursor-pointer items-center gap-2 rounded-full border border-forest-100 px-4 text-[13px] font-semibold text-content transition-colors hover:border-accent disabled:cursor-not-allowed disabled:opacity-50";
 
 class UploadStatusError extends Error {
   constructor(readonly status: number) {
@@ -506,7 +506,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             type="checkbox"
             value="1"
             defaultChecked={!!initial?.preorder}
-            className="h-4.5 w-4.5 rounded border-forest-100 accent-[#f5c842]"
+            className="h-4.5 w-4.5 rounded border-forest-100 accent-accent"
           />
           <label htmlFor="preorder" className="text-[13.5px] font-medium text-content">
             {t("fields.preorder")}
@@ -522,7 +522,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
               type="checkbox"
               value="true"
               defaultChecked={initial?.visible ?? true}
-              className="h-4.5 w-4.5 rounded border-forest-100 accent-[#f5c842]"
+              className="h-4.5 w-4.5 rounded border-forest-100 accent-accent"
             />
             <span className="text-[13.5px] font-medium text-content">
               {t("fields.visible")}
@@ -651,14 +651,14 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         <button
           type="button"
           onClick={() => router.push("/admin")}
-          className="flex min-h-[48px] cursor-pointer items-center rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-gold"
+          className="flex min-h-[48px] cursor-pointer items-center rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-accent"
         >
           {t("actions.cancel")}
         </button>
         <button
           type="submit"
           disabled={busy}
-          className="flex min-h-[48px] cursor-pointer items-center gap-2 rounded-full bg-gold px-8 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-h-[48px] cursor-pointer items-center gap-2 rounded-full bg-accent px-8 text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {busy ? (
             <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />

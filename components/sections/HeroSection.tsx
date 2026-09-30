@@ -36,7 +36,7 @@ const subscribeVisibility = (onChange: () => void) => {
  * surface — the photos are landscape, so overlaying copy on a phone would
  * cover the robot.
  *
- * The slides advance on their own. Each tab carries a gold bar that fills over
+ * The slides advance on their own. Each tab carries an accent bar that fills over
  * SLIDE_MS — the next slide comes when it's full. Hovering the copy or tabs
  * (not the photo: on desktop it fills the screen, so the pointer is nearly
  * always over it), focusing anything in the hero, filling in the quote card,
@@ -138,14 +138,14 @@ export default function HeroSection() {
                 transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.16, 1, 0.3, 1] }}
               >
                 <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-ink-muted uppercase lg:text-white/85 [&:lang(th)]:tracking-[0.06em]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
                   {pick(slide.eyebrow, locale)}
                 </p>
                 {/* one slide shows at a time, so there is always exactly one
                     h1 — the server renders the first (the CMS headline) */}
                 <h1 className="mt-3 font-display text-[34px] leading-[1.04] font-extrabold tracking-tight text-content sm:text-5xl lg:text-5xl lg:text-white xl:text-[3.5rem]">
                   {headline}
-                  <span className="block text-gold-600 lg:text-gold">{accent}</span>
+                  <span className="block text-accent-600 lg:text-accent-gradient">{accent}</span>
                 </h1>
                 <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:text-base lg:text-[17px] lg:text-white/85">
                   {sub}
@@ -153,7 +153,7 @@ export default function HeroSection() {
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   <Link
                     href={slide.href}
-                    className="inline-flex min-h-12 items-center gap-2 rounded-full bg-gold px-7 text-[15px] font-bold text-forest-950 transition-colors hover:bg-gold-300"
+                    className="inline-flex min-h-12 items-center gap-2 rounded-full bg-accent-gradient px-7 text-[15px] font-bold"
                   >
                     {t("learnMore")}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -201,7 +201,7 @@ export default function HeroSection() {
                           key={`${s.id}-${index}`}
                           // with reduced motion globals.css drops the fill
                           // animation: the bar just marks the tab on show
-                          className="hero-progress absolute inset-0 origin-left rounded-full bg-gold"
+                          className="hero-progress absolute inset-0 origin-left rounded-full bg-accent"
                           style={{
                             animationDuration: `${SLIDE_MS}ms`,
                             animationPlayState: running && visible ? "running" : "paused",

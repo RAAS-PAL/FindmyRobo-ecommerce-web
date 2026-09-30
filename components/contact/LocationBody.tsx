@@ -65,8 +65,8 @@ export default function LocationBody() {
       <FadeIn delay={0.14}>
         <div className="flex h-full flex-col rounded-3xl border border-forest-100 bg-surface p-6 sm:p-8">
           <div className="flex items-start gap-4">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/20">
-              <MapPin className="h-5 w-5 text-gold-600" aria-hidden="true" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/20">
+              <MapPin className="h-5 w-5 text-accent-600" aria-hidden="true" />
             </span>
             <div className="min-w-0">
               <p className="text-[13px] font-semibold text-ink-muted">{t("addressLabel")}</p>
@@ -91,7 +91,7 @@ export default function LocationBody() {
               href={salesDirectionsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-[15px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_30px_-6px_rgba(245,200,66,0.8)] active:scale-[0.98]"
+              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent px-6 text-[15px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_30px_-6px_rgb(var(--accent-rgb)/0.8)] active:scale-[0.98]"
             >
               <Navigation className="h-4.5 w-4.5" aria-hidden="true" />
               {t("directions")}
@@ -100,7 +100,7 @@ export default function LocationBody() {
               href={salesMapUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-forest-100 px-6 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-gold hover:text-gold-600"
+              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-forest-100 px-6 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-accent hover:text-accent-600"
             >
               <ExternalLink className="h-4.5 w-4.5" aria-hidden="true" />
               {t("openMaps")}
@@ -115,7 +115,7 @@ export default function LocationBody() {
                   {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className="-mx-2 flex items-center gap-4 rounded-xl px-2 py-2.5 transition-colors hover:bg-cloud"
                 >
-                  <Icon className="h-4.5 w-4.5 shrink-0 text-gold-600" aria-hidden="true" />
+                  <Icon className="h-4.5 w-4.5 shrink-0 text-accent-600" aria-hidden="true" />
                   <span className="min-w-0">
                     <span className="block text-[12px] font-semibold text-ink-muted">{label}</span>
                     <span className="block truncate font-mono text-[15px] font-semibold text-content">
@@ -134,7 +134,7 @@ export default function LocationBody() {
               {t("demoNote")}
               <Link
                 href="/products/request-a-demo"
-                className="inline-flex items-center gap-1.5 font-semibold text-gold-600 transition-colors hover:text-content"
+                className="inline-flex items-center gap-1.5 font-semibold text-accent-600 transition-colors hover:text-content"
               >
                 <Calendar className="h-4 w-4" aria-hidden="true" />
                 {t("demoCta")}

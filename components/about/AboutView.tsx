@@ -50,7 +50,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
       <section className="bg-forest-950 py-16 sm:py-24">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <FadeIn>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
               {t("eyebrow")}
             </p>
             <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
@@ -87,7 +87,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <FadeIn>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
               {t("storyEyebrow")}
             </p>
             <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
@@ -123,9 +123,9 @@ export default function AboutView({ published }: { published: AboutContent }) {
         <section className="bg-surface py-14 sm:py-20">
           <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
             <FadeIn>
-              <span className="inline-flex items-center gap-2 rounded-full bg-gold/15 px-4 py-1.5">
-                <BadgeCheck className="h-4 w-4 text-gold-600" aria-hidden="true" />
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-600">
+              <span className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-4 py-1.5">
+                <BadgeCheck className="h-4 w-4 text-accent-600" aria-hidden="true" />
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-600">
                   {text(about.partnerEyebrow)}
                 </span>
               </span>
@@ -143,7 +143,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
                 {about.partnerName}
               </h2>
               {text(about.partnerStatus) && (
-                <p className="mt-2 text-[15px] font-semibold text-gold-600">
+                <p className="mt-2 text-[15px] font-semibold text-accent-600">
                   {text(about.partnerStatus)}
                 </p>
               )}
@@ -158,7 +158,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
       {/* values */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("valuesEyebrow")}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
@@ -171,7 +171,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
             return (
               <FadeIn key={`${value.title.en}-${index}`} delay={index * 0.05}>
                 <div className="h-full rounded-2xl border border-forest-100 bg-surface p-6">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-forest-950 text-gold">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-forest-950 text-accent-300">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <h3 className="mt-4 font-display text-lg font-bold text-content">
@@ -192,7 +192,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
         <section className="bg-surface py-16 sm:py-24">
           <div className="mx-auto max-w-4xl px-4 sm:px-6">
             <FadeIn>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
                 {t("milestonesEyebrow")}
               </p>
               <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
@@ -203,8 +203,8 @@ export default function AboutView({ published }: { published: AboutContent }) {
               {about.milestones.map((milestone, index) => (
                 <FadeIn key={`${milestone.when}-${index}`} delay={index * 0.05}>
                   <li className="relative border-l-2 border-forest-100 pb-8 pl-8 last:border-transparent last:pb-0">
-                    <span className="absolute -left-[9px] top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-gold bg-surface" />
-                    <p className="font-mono text-sm font-bold text-gold-600">
+                    <span className="absolute -left-[9px] top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-accent bg-surface" />
+                    <p className="font-mono text-sm font-bold text-accent-600">
                       {milestone.when}
                     </p>
                     <h3 className="mt-1 font-display text-lg font-bold text-content">
@@ -225,7 +225,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
       {about.team.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <FadeIn>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
               {t("teamEyebrow")}
             </p>
             <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
@@ -248,7 +248,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="font-display text-2xl font-extrabold text-gold">
+                      <span className="font-display text-2xl font-extrabold text-accent-300">
                         {member.name.trim().charAt(0).toUpperCase()}
                       </span>
                     )}
@@ -268,7 +268,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
       <section className="bg-forest-950 py-16 sm:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-2">
           <FadeIn>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
               {t("visitEyebrow")}
             </p>
             <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
@@ -281,16 +281,16 @@ export default function AboutView({ published }: { published: AboutContent }) {
               href={salesMapUrl}
               target="_blank"
               rel="noreferrer"
-              className="mt-5 inline-flex items-start gap-3 text-[14px] leading-relaxed text-white/80 transition-colors hover:text-gold"
+              className="mt-5 inline-flex items-start gap-3 text-[14px] leading-relaxed text-white/80 transition-colors hover:text-accent-300"
             >
-              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-gold" aria-hidden="true" />
+              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent-300" aria-hidden="true" />
               <address className="not-italic">
                 {addressLines.map((line) => (
                   <span key={line} className="block">
                     {line}
                   </span>
                 ))}
-                <span className="mt-1 block font-semibold text-gold">{t("viewMap")}</span>
+                <span className="mt-1 block font-semibold text-accent-300">{t("viewMap")}</span>
               </address>
             </a>
           </FadeIn>
@@ -306,14 +306,14 @@ export default function AboutView({ published }: { published: AboutContent }) {
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/products/request-a-demo"
-                  className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-gold px-6 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+                  className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-accent px-6 text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)]"
                 >
                   {t("ctaDemo")}
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/contact-sales"
-                  className="flex min-h-[50px] flex-1 items-center justify-center rounded-full border border-white/20 px-6 text-[14px] font-bold text-white transition-colors hover:border-gold hover:text-gold"
+                  className="flex min-h-[50px] flex-1 items-center justify-center rounded-full border border-white/20 px-6 text-[14px] font-bold text-white transition-colors hover:border-accent hover:text-accent-300"
                 >
                   {t("ctaSales")}
                 </Link>

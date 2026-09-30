@@ -121,7 +121,7 @@ const inputClass = (hasError: boolean) =>
   `min-h-[48px] w-full rounded-xl border bg-surface px-4 text-[14px] text-content placeholder:text-ink-muted/60 transition-colors focus:outline-none focus:ring-2 ${
     hasError
       ? "border-red-400 focus:ring-red-200"
-      : "border-forest-100 focus:border-gold focus:ring-gold/25"
+      : "border-forest-100 focus:border-accent focus:ring-accent/25"
   }`;
 
 function SummaryLine({ item, forLabel }: { item: CartLine; forLabel?: string }) {
@@ -135,7 +135,7 @@ function SummaryLine({ item, forLabel }: { item: CartLine; forLabel?: string }) 
           {item.product.name}
         </span>
         {forLabel && (
-          <span className="block truncate text-[11.5px] font-medium text-gold-600">
+          <span className="block truncate text-[11.5px] font-medium text-accent-600">
             {forLabel}
           </span>
         )}
@@ -295,7 +295,7 @@ export default function CheckoutClient() {
                     onClick={() => setPayMethod(m)}
                     className={`flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-full text-[13.5px] font-semibold transition-colors ${
                       payMethod === m
-                        ? "bg-gold text-forest-950"
+                        ? "bg-accent text-on-accent"
                         : "text-ink-muted hover:text-content"
                     }`}
                   >
@@ -323,8 +323,8 @@ export default function CheckoutClient() {
             </>
           ) : (
             <>
-              <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold/20">
-                <CircleCheck className="h-8 w-8 text-gold-600" aria-hidden="true" />
+              <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent/20">
+                <CircleCheck className="h-8 w-8 text-accent-600" aria-hidden="true" />
               </span>
               <h1 className="mt-6 font-display text-3xl font-extrabold tracking-tight text-content">
                 {t("success.heading")}
@@ -360,7 +360,7 @@ export default function CheckoutClient() {
                   <span className="font-medium text-content">
                     {item.name} <span className="text-ink-muted">× {item.qty}</span>
                     {item.forName && (
-                      <span className="block text-[11.5px] font-normal text-gold-600">
+                      <span className="block text-[11.5px] font-normal text-accent-600">
                         {tc("forRobot", { name: item.forName })}
                       </span>
                     )}
@@ -389,7 +389,7 @@ export default function CheckoutClient() {
 
           <Link
             href="/shop"
-            className="mt-8 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-8 text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
+            className="mt-8 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-accent px-8 text-[15px] font-bold text-on-accent transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgb(var(--accent-rgb)/0.7)]"
           >
             {t("success.continueShopping")}
             <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
@@ -409,7 +409,7 @@ export default function CheckoutClient() {
         <p className="text-sm leading-relaxed text-ink-muted">{t("empty")}</p>
         <Link
           href="/shop"
-          className="flex min-h-[48px] items-center justify-center gap-1.5 rounded-full bg-gold px-7 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+          className="flex min-h-[48px] items-center justify-center gap-1.5 rounded-full bg-accent px-7 text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)]"
         >
           {t("emptyCta")}
           <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -441,8 +441,8 @@ export default function CheckoutClient() {
                 id="addons-heading"
                 className="flex items-center gap-2.5 font-display text-lg font-bold text-content"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/20">
-                  <Sparkles className="h-4 w-4 text-gold-600" aria-hidden="true" />
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/20">
+                  <Sparkles className="h-4 w-4 text-accent-600" aria-hidden="true" />
                 </span>
                 {t("upsell.heading")}
               </h2>
@@ -489,8 +489,8 @@ export default function CheckoutClient() {
                               key={tier?.id ?? "none"}
                               className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-colors ${
                                 checked
-                                  ? "border-gold bg-gold/10"
-                                  : "border-forest-100 hover:border-gold/50"
+                                  ? "border-accent bg-accent/10"
+                                  : "border-forest-100 hover:border-accent/50"
                               }`}
                             >
                               <input
@@ -502,12 +502,12 @@ export default function CheckoutClient() {
                               />
                               <span
                                 className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
-                                  checked ? "border-gold" : "border-forest-200"
+                                  checked ? "border-accent" : "border-forest-200"
                                 }`}
                                 aria-hidden="true"
                               >
                                 {checked && (
-                                  <span className="h-2.5 w-2.5 rounded-full bg-gold" />
+                                  <span className="h-2.5 w-2.5 rounded-full bg-accent" />
                                 )}
                               </span>
                               {tier ? (
@@ -517,7 +517,7 @@ export default function CheckoutClient() {
                                       {tier.specs.area}
                                     </span>
                                     {recommended && (
-                                      <span className="rounded-full bg-gold/20 px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-wider text-gold-600">
+                                      <span className="rounded-full bg-accent/20 px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-wider text-accent-600">
                                         {t("upsell.recommendedBadge")}
                                       </span>
                                     )}
@@ -551,8 +551,8 @@ export default function CheckoutClient() {
               id="contact-heading"
               className="flex items-center gap-2.5 font-display text-lg font-bold text-content"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/20">
-                <UserRound className="h-4 w-4 text-gold-600" aria-hidden="true" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/20">
+                <UserRound className="h-4 w-4 text-accent-600" aria-hidden="true" />
               </span>
               {t("contactHeading")}
             </h2>
@@ -599,8 +599,8 @@ export default function CheckoutClient() {
               id="shipping-heading"
               className="flex items-center gap-2.5 font-display text-lg font-bold text-content"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/20">
-                <MapPin className="h-4 w-4 text-gold-600" aria-hidden="true" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/20">
+                <MapPin className="h-4 w-4 text-accent-600" aria-hidden="true" />
               </span>
               {t("shippingHeading")}
             </h2>
@@ -698,7 +698,7 @@ export default function CheckoutClient() {
               </div>
               <div className="flex items-baseline justify-between">
                 <dt className="text-ink-muted">{t("shipping")}</dt>
-                <dd className="text-[12.5px] font-medium text-gold-600">
+                <dd className="text-[12.5px] font-medium text-accent-600">
                   {t("shippingTbd")}
                 </dd>
               </div>
@@ -714,7 +714,7 @@ export default function CheckoutClient() {
             <button
               type="submit"
               disabled={busy}
-              className="mt-6 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+              className="mt-6 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[15px] font-bold text-on-accent transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgb(var(--accent-rgb)/0.7)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
             >
               {busy ? (
                 <LoaderCircle className="h-4.5 w-4.5 animate-spin" aria-hidden="true" />
@@ -727,7 +727,7 @@ export default function CheckoutClient() {
             </button>
 
             <p className="mt-4 flex gap-2 text-[12px] leading-relaxed text-ink-muted">
-              <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold-600" aria-hidden="true" />
+              <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-600" aria-hidden="true" />
               {t("paymentNote")}
             </p>
 
@@ -738,7 +738,7 @@ export default function CheckoutClient() {
             <p className="mt-2 text-[12px] leading-relaxed text-ink-muted">
               <Link
                 href="/refund-policy"
-                className="underline underline-offset-2 transition-colors hover:text-gold-600"
+                className="underline underline-offset-2 transition-colors hover:text-accent-600"
               >
                 {t("refundPolicyLink")}
               </Link>

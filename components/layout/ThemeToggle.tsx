@@ -5,9 +5,9 @@ import { useTheme } from "@/components/ThemeProvider";
 
 const SKINS = {
   /** On light page chrome (storefront navbar). */
-  storefront: "border border-forest-100 text-content hover:border-gold hover:text-gold-600",
+  storefront: "border border-forest-100 text-content hover:border-accent hover:text-accent-600",
   /** On a permanently dark bar (admin header stays forest-950 in both themes). */
-  onDark: "text-white/80 hover:bg-white/10 hover:text-gold",
+  onDark: "text-white/80 hover:bg-white/10 hover:text-accent-300",
 } as const;
 
 /**

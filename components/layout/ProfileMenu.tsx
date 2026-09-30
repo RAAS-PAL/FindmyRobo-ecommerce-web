@@ -94,7 +94,7 @@ export default function ProfileMenu() {
   };
 
   const itemClass =
-    "flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[13px] font-semibold text-content/85 transition-colors hover:bg-cloud hover:text-gold-600";
+    "flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[13px] font-semibold text-content/85 transition-colors hover:bg-cloud hover:text-accent-600";
 
   return (
     <div
@@ -130,8 +130,8 @@ export default function ProfileMenu() {
         aria-label={t("profileMenu")}
         aria-expanded={open}
         aria-controls={panelId}
-        className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-cloud hover:text-gold-600 ${
-          open ? "bg-cloud text-gold-600" : "text-content"
+        className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-cloud hover:text-accent-600 ${
+          open ? "bg-cloud text-accent-600" : "text-content"
         }`}
       >
         <User className="h-5 w-5" aria-hidden="true" />
@@ -171,14 +171,14 @@ export default function ProfileMenu() {
                   <Link
                     href="/login"
                     onClick={close}
-                    className="flex min-h-[44px] items-center justify-center rounded-full bg-gold px-5 text-[13.5px] font-bold text-forest-950 transition-colors hover:bg-gold-300"
+                    className="flex min-h-[44px] items-center justify-center rounded-full bg-accent px-5 text-[13.5px] font-bold text-on-accent transition-colors hover:bg-accent-strong"
                   >
                     {t("signIn")}
                   </Link>
                   <Link
                     href="/signup"
                     onClick={close}
-                    className="flex min-h-[44px] items-center justify-center rounded-full border border-forest-100 px-5 text-[13.5px] font-semibold text-content transition-colors hover:border-gold hover:text-gold-600"
+                    className="flex min-h-[44px] items-center justify-center rounded-full border border-forest-100 px-5 text-[13.5px] font-semibold text-content transition-colors hover:border-accent hover:text-accent-600"
                   >
                     {t("createAccount")}
                   </Link>
@@ -201,7 +201,7 @@ export default function ProfileMenu() {
                 <span
                   aria-hidden="true"
                   className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-                    isDark ? "bg-gold" : "bg-forest-100"
+                    isDark ? "bg-accent" : "bg-forest-100"
                   }`}
                 >
                   <span

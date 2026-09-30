@@ -60,7 +60,8 @@ function FamilyCard({ family, size }: { family: RobotFamily; size: "wide" | "hal
             : `max-w-md ${bottom ? "sm:pb-12" : "sm:pt-12"}`
         }`}
       >
-        <p className="font-mono text-[11.5px] font-semibold tracking-[0.28em] text-gold uppercase [&:lang(th)]:tracking-[0.06em]">
+        <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-white/85 uppercase [&:lang(th)]:tracking-[0.06em]">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
           {pick(family.eyebrow, locale)}
         </p>
         <h2
@@ -77,7 +78,7 @@ function FamilyCard({ family, size }: { family: RobotFamily; size: "wide" | "hal
           <button
             type="button"
             onClick={() => openQuote({ interest: family.interest })}
-            className="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-gold px-6 text-[14.5px] font-bold text-forest-950 transition-colors hover:bg-gold-300"
+            className="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-accent-gradient px-6 text-[14.5px] font-bold"
           >
             {t("getQuote")}
           </button>

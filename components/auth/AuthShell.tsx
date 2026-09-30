@@ -14,7 +14,7 @@ export default function AuthShell({
     <main className="flex flex-1 items-center justify-center bg-cloud px-4 py-16">
       <div className="w-full max-w-md">
         <div className="mb-7 flex flex-col items-center text-center">
-          <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-forest-950 text-gold">
+          <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-forest-950 text-accent-300">
             <Bot className="h-5.5 w-5.5" aria-hidden="true" />
           </span>
           <h1 className="font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">

@@ -150,7 +150,7 @@ export default function FeaturedProductCard({
         />
 
         {product.preorder && (
-          <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-gold">
+          <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent-300">
             {t("preorder")}
           </span>
         )}
@@ -196,7 +196,7 @@ export default function FeaturedProductCard({
             <PriceOrQuote
               amount={product.price}
               className="font-mono text-xl font-bold tabular-nums text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-2xl"
-              quoteClassName="text-base font-bold text-gold drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-lg"
+              quoteClassName="text-base font-bold text-accent-300 drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-lg"
             />
           </span>
         </span>

@@ -6,7 +6,7 @@ import type { OrderStatus } from "@/lib/checkout";
  * and dark admin themes. Pure — the translated label is passed in by the caller.
  */
 const STATUS_CLASS: Record<OrderStatus, string> = {
-  pending_payment: "bg-gold/15 text-gold-600 border-gold/30",
+  pending_payment: "bg-accent/15 text-accent-600 border-accent/30",
   paid: "bg-emerald-500/15 text-emerald-600 border-emerald-500/30",
   failed: "bg-red-500/15 text-red-600 border-red-500/30",
   expired: "bg-ink-muted/10 text-ink-muted border-ink-muted/30",

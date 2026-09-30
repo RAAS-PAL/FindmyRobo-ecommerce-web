@@ -92,14 +92,14 @@ export default function FloatingAddToCart({
           <PriceOrQuote
             amount={price}
             className="block font-mono text-sm font-semibold tabular-nums text-content"
-            quoteClassName="block text-[12.5px] font-semibold text-gold-600"
+            quoteClassName="block text-[12.5px] font-semibold text-accent-600"
           />
         </div>
         <button
           type="button"
           onClick={handleClick}
           tabIndex={visible ? 0 : -1}
-          className="flex min-h-[48px] shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-6 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)] sm:px-8"
+          className="flex min-h-[48px] shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-6 text-[14px] font-bold text-on-accent transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgb(var(--accent-rgb)/0.7)] sm:px-8"
         >
           {added ? (
             <>

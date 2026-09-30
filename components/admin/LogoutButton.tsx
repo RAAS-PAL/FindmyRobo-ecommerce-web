@@ -19,7 +19,7 @@ export default function LogoutButton() {
       }}
       aria-label={t("signOut")}
       title={t("signOut")}
-      className="flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full px-4 text-[13px] font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-gold"
+      className="flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full px-4 text-[13px] font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-accent-300"
     >
       <LogOut className="h-4 w-4" aria-hidden="true" />
       <span className="hidden sm:inline">{t("signOut")}</span>

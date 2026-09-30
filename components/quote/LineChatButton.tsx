@@ -84,7 +84,7 @@ export default function LineChatButton() {
               href={lineUrl}
               target="_blank"
               rel="noopener noreferrer"
-              // dark text, like the site's gold buttons: white on LINE green
+              // dark text: white on LINE green
               // is too faint to read at this size
               className="mt-3 flex h-10 items-center justify-center gap-1.5 rounded-full bg-[#06C755] text-[13px] font-bold text-forest-950 transition-opacity hover:opacity-90"
             >

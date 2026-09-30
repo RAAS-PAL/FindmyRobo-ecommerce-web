@@ -29,10 +29,10 @@ export default function ContactSalesBody() {
         <div className="space-y-4">
           <a
             href={`tel:${phone.replace(/\s/g, "")}`}
-            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/20">
-              <Phone className="h-5 w-5 text-gold-600" aria-hidden="true" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/20">
+              <Phone className="h-5 w-5 text-accent-600" aria-hidden="true" />
             </span>
             <span className="min-w-0">
               <span className="block text-[13px] font-semibold text-ink-muted">
@@ -49,10 +49,10 @@ export default function ContactSalesBody() {
 
           <a
             href={`mailto:${email}`}
-            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/20">
-              <Mail className="h-5 w-5 text-gold-600" aria-hidden="true" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/20">
+              <Mail className="h-5 w-5 text-accent-600" aria-hidden="true" />
             </span>
             <span className="min-w-0">
               <span className="block text-[13px] font-semibold text-ink-muted">
@@ -69,7 +69,7 @@ export default function ContactSalesBody() {
             href={lineUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#06C755]/15">
               <MessageCircle className="h-5 w-5 text-[#06C755]" aria-hidden="true" />
@@ -89,10 +89,10 @@ export default function ContactSalesBody() {
             href={salesMapUrl}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/20">
-              <MapPin className="h-5 w-5 text-gold-600" aria-hidden="true" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/20">
+              <MapPin className="h-5 w-5 text-accent-600" aria-hidden="true" />
             </span>
             <span className="min-w-0">
               <span className="block text-[13px] font-semibold text-ink-muted">
@@ -115,7 +115,7 @@ export default function ContactSalesBody() {
             {t("demoNote")}
             <Link
               href="/#contact"
-              className="inline-flex items-center gap-1.5 font-semibold text-gold-600 transition-colors hover:text-content"
+              className="inline-flex items-center gap-1.5 font-semibold text-accent-600 transition-colors hover:text-content"
             >
               <Calendar className="h-4 w-4" aria-hidden="true" />
               {t("demoCta")}
@@ -127,7 +127,7 @@ export default function ContactSalesBody() {
       {/* LINE QR */}
       <FadeIn delay={0.14}>
         <div className="flex flex-col items-center rounded-3xl bg-forest-950 p-8 text-center sm:p-10">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-300">
             LINE
           </p>
           {/* bg-white, not bg-surface: this panel always sits on the dark
@@ -150,7 +150,7 @@ export default function ContactSalesBody() {
               </span>
             )}
           </div>
-          <p className="mt-5 font-mono text-lg font-semibold text-gold">{lineId}</p>
+          <p className="mt-5 font-mono text-lg font-semibold text-accent-300">{lineId}</p>
           <p className="mt-1 max-w-xs text-[12.5px] leading-relaxed text-white/60">
             {t("lineHint")}
           </p>
