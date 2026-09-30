@@ -1,11 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Menu, X } from "lucide-react";
+import {
+  BadgeCheck,
+  BookOpen,
+  Building2,
+  CalendarDays,
+  ChevronDown,
+  Handshake,
+  Headset,
+  MapPin,
+  Menu,
+  MessageCircle,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { categories, categoryHref } from "@/data/categories";
 import { siteConfig } from "@/data/siteConfig";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
@@ -24,12 +37,15 @@ interface NavChild {
   href: string;
   description?: string;
   comingSoon?: boolean;
+  icon?: LucideIcon;
 }
 
 interface NavItem {
   label: string;
   href: string;
   children?: NavChild[];
+  /** The page being viewed belongs to this section — the gold track rests under it. */
+  current?: boolean;
 }
 
 function SoonBadge({ label }: { label: string }) {
@@ -65,16 +81,26 @@ function DropdownChild({
       </span>
     );
   }
+  const Icon = item.icon;
   return (
     <Link
       href={item.href}
       onClick={onNavigate}
-      className="block rounded-lg px-3 py-2.5 text-[13px] text-content/85 transition-colors hover:bg-cloud hover:text-gold-600"
+      className="group/item flex items-center gap-3 rounded-lg px-2.5 py-2 text-[13.5px] font-semibold text-content/85 transition-colors hover:bg-cloud hover:text-content"
     >
-      {item.label}
-      {item.description && (
-        <span className="mt-0.5 block text-[11px] text-ink-muted/70">{item.description}</span>
+      {Icon && (
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cloud text-content/60 transition-colors duration-200 group-hover/item:bg-gold/30 group-hover/item:text-gold-600">
+          <Icon className="h-4 w-4" aria-hidden="true" />
+        </span>
       )}
+      <span>
+        {item.label}
+        {item.description && (
+          <span className="mt-0.5 block text-[11px] font-normal text-ink-muted/70">
+            {item.description}
+          </span>
+        )}
+      </span>
     </Link>
   );
 }
@@ -121,11 +147,20 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Which section the page belongs to (the demo booking lives under /products
+  // but is listed under Contact).
+  const pathname = usePathname();
+  const inContact =
+    pathname === "/contact-sales" ||
+    pathname === "/location" ||
+    pathname.startsWith("/products/request-a-demo");
+
   /* "Shop" is generated from the category data — new categories appear here automatically */
   const navLinks: NavItem[] = [
     {
       label: t("shop"),
       href: "/shop",
+      current: !inContact && (pathname.startsWith("/shop") || pathname.startsWith("/products")),
       children: categories.map((c) => ({
         label: tc(`${c.slug}.name`),
         href: categoryHref(c.slug),
@@ -136,26 +171,67 @@ export default function Navbar() {
     {
       label: t("about"),
       href: "/#about",
+      current: pathname === "/about",
       children: [
         // The full page first; the three below are still homepage anchors.
-        { label: t("aboutUs"), href: "/about" },
-        { label: t("aboutStory"), href: "/#about" },
-        { label: t("aboutWhyUs"), href: "/#support" },
-        { label: t("aboutPartners"), href: "/#about" },
+        { label: t("aboutUs"), href: "/about", icon: Building2 },
+        { label: t("aboutStory"), href: "/#about", icon: BookOpen },
+        { label: t("aboutWhyUs"), href: "/#support", icon: BadgeCheck },
+        { label: t("aboutPartners"), href: "/#about", icon: Handshake },
       ],
     },
     {
       label: t("contact"),
       href: "/#contact",
+      current: inContact,
       children: [
-        { label: t("contactSales"), href: "/contact-sales" },
-        { label: t("contactTouch"), href: "/#contact" },
-        { label: t("contactDemo"), href: "/products/request-a-demo" },
-        { label: t("contactLocations"), href: "/location" },
+        { label: t("contactSales"), href: "/contact-sales", icon: Headset },
+        { label: t("contactTouch"), href: "/#contact", icon: MessageCircle },
+        { label: t("contactDemo"), href: "/products/request-a-demo", icon: CalendarDays },
+        { label: t("contactLocations"), href: "/location", icon: MapPin },
       ],
     },
     { label: t("support"), href: "/#support" },
   ];
+
+  /* The gold track along the bar's bottom edge (styles: .nav-track in
+     globals.css). It glides to the link under the pointer or keyboard focus,
+     stays under a link while its menu is open, and otherwise rests under the
+     current section — or fades out where there isn't one. Positioned straight
+     on the DOM, so following the pointer never re-renders the navbar. */
+  const navRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLSpanElement>(null);
+  const triggerRefs = useRef<(HTMLElement | null)[]>([]);
+  const [pointed, setPointed] = useState<number | null>(null);
+  const currentIndex = navLinks.findIndex((link) => link.current);
+  const trackTarget = pointed ?? desktopMenu ?? (currentIndex >= 0 ? currentIndex : null);
+
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    const track = trackRef.current;
+    if (!nav || !track) return;
+    const place = (glide: boolean) => {
+      const trigger = trackTarget === null ? null : triggerRefs.current[trackTarget];
+      if (!trigger || !trigger.offsetParent) {
+        track.dataset.shown = "false";
+        return;
+      }
+      const n = nav.getBoundingClientRect();
+      const r = trigger.getBoundingClientRect();
+      const left = r.left - n.left;
+      const wasShown = track.dataset.shown === "true";
+      track.dataset.dir = left >= parseFloat(track.style.left || "0") ? "right" : "left";
+      // appearing (or the window resizing): jump into place, don't glide there
+      track.dataset.instant = String(!glide || !wasShown);
+      track.style.left = `${left}px`;
+      track.style.right = `${n.right - r.right}px`;
+      track.dataset.shown = "true";
+    };
+    place(true);
+    const onResize = () => place(false);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [trackTarget, locale]);
 
   return (
     <>
@@ -166,7 +242,11 @@ export default function Navbar() {
           : "border-forest-100/70 bg-surface"
       }`}
     >
-      <nav className="relative flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6 xl:px-10">
+      <nav
+        ref={navRef}
+        className="relative flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6 xl:px-10"
+      >
+        <span ref={trackRef} aria-hidden="true" className="nav-track hidden lg:block" />
         {/* soft grey wedge over the left half (light mode only): a subtle panel
             that ends in an angled edge near the middle; the rest stays white.
             It leans like the homepage hero's frosted side and its bottom
@@ -204,12 +284,22 @@ export default function Navbar() {
         </Link>
 
         {/* desktop links */}
-        <ul className="hidden items-center gap-4 lg:flex xl:gap-6">
+        <ul
+          className="hidden items-center gap-4 lg:flex xl:gap-6"
+          onMouseLeave={() => setPointed(null)}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) setPointed(null);
+          }}
+        >
           {navLinks.map((link, linkIndex) => (
             <li
               key={link.label}
               className={linkIndex === 0 ? "static" : "relative"}
-              onMouseEnter={() => link.children && openMenu(linkIndex)}
+              onMouseEnter={() => {
+                setPointed(linkIndex);
+                if (link.children) openMenu(linkIndex);
+              }}
+              onFocus={() => setPointed(linkIndex)}
               onMouseLeave={() => link.children && scheduleCloseMenu()}
               onBlur={(event) => {
                 if (!event.currentTarget.contains(event.relatedTarget)) {
@@ -225,6 +315,9 @@ export default function Navbar() {
             >
               {link.children ? (
                 <button
+                  ref={(el) => {
+                    triggerRefs.current[linkIndex] = el;
+                  }}
                   type="button"
                   onClick={() => {
                     if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
@@ -232,7 +325,9 @@ export default function Navbar() {
                   }}
                   aria-expanded={desktopMenu === linkIndex}
                   aria-haspopup="menu"
-                  className="nav-underline flex cursor-pointer items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-bold text-content/80 transition-colors hover:text-content"
+                  className={`flex cursor-pointer items-center gap-1 whitespace-nowrap py-2 text-[14px] font-semibold transition-colors hover:text-content ${
+                    link.current || desktopMenu === linkIndex ? "text-content" : "text-content/80"
+                  }`}
                 >
                   {link.label}
                   <ChevronDown
@@ -244,8 +339,13 @@ export default function Navbar() {
                 </button>
               ) : (
                 <Link
+                  ref={(el) => {
+                    triggerRefs.current[linkIndex] = el;
+                  }}
                   href={link.href}
-                  className="nav-underline flex items-center gap-1 whitespace-nowrap py-2 text-[13.5px] font-bold text-content/80 transition-colors hover:text-content"
+                  className={`flex items-center gap-1 whitespace-nowrap py-2 text-[14px] font-semibold transition-colors hover:text-content ${
+                    link.current ? "text-content" : "text-content/80"
+                  }`}
                 >
                   {link.label}
                 </Link>
@@ -258,9 +358,11 @@ export default function Navbar() {
                         // already sits at the navbar's bottom edge — no pt, so the
                         // panel is flush against the bar with no gap.
                         "left-4 right-4 mx-auto w-[920px] max-w-[calc(100%-2rem)]"
-                      : // Simple dropdowns hang off their own button; pt-3 clears
-                        // the rest of the navbar height below the trigger.
-                        "left-1/2 -translate-x-1/2 pt-3"
+                      : // Simple dropdowns hang off their own button; pt-4 clears
+                        // the rest of the navbar height below the trigger, so
+                        // the panel starts right at the bar's bottom edge, under
+                        // the gold track — like the mega-menu.
+                        "left-1/2 -translate-x-1/2 pt-4"
                   } ${
                     desktopMenu === linkIndex
                       ? "visible translate-y-0 opacity-100"
@@ -463,15 +565,16 @@ export default function Navbar() {
               )}
             </button>
           ) : (
-            // Cart switched off: the same spot opens the quote form instead.
+            // Cart switched off: the same spot opens the quote form instead —
+            // the site's one call to action, so it's the one gold thing on the
+            // bar: a labelled pill from sm, a gold disc on phones.
             <button
               type="button"
               onClick={() => openQuote()}
-              aria-label={t("getQuote")}
-              title={t("getQuote")}
-              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
+              className="flex h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-3 text-[13.5px] font-bold whitespace-nowrap text-forest-950 shadow-[0_6px_18px_-10px_rgba(245,200,66,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-gold-300 hover:shadow-[0_12px_26px_-10px_rgba(245,200,66,0.95)] active:translate-y-0 active:scale-[0.97] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:px-5"
             >
-              <CartIcon className="h-5 w-5" />
+              <CartIcon className="h-[18px] w-[18px] shrink-0" />
+              <span className="max-sm:sr-only">{t("getQuote")}</span>
             </button>
           )}
 

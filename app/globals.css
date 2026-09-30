@@ -121,24 +121,58 @@
 }
 
 /* Sliding underline for nav links */
-.nav-underline {
-  position: relative;
+/* Navbar: a gold track along the bar's bottom edge that glides to the link
+   under the pointer (or keyboard focus) and rests under the current section —
+   the way a mower drives its line across a lawn. The end it travels towards
+   leads and the other follows, so it stretches as it moves; a glowing head
+   rides the leading end. Placed by Navbar.tsx (left/right + data-*). */
+.nav-track {
+  position: absolute;
+  bottom: -1.5px;
+  /* over the open menus (z-50), which hang from this same edge */
+  z-index: 60;
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--color-gold);
+  box-shadow: 0 0 10px rgba(245, 200, 66, 0.55);
+  opacity: 0;
+  transform: scaleX(0.3);
+  pointer-events: none;
+  transition-property: left, right, opacity, transform;
+  transition-duration: 420ms, 420ms, 200ms, 320ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
-.nav-underline::after {
+.nav-track[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+/* the trailing edge lags the leading one */
+.nav-track[data-dir="right"] {
+  transition-duration: 460ms, 260ms, 200ms, 320ms;
+}
+.nav-track[data-dir="left"] {
+  transition-duration: 260ms, 460ms, 200ms, 320ms;
+}
+/* appearing, or the window resizing: fade/grow in place, no glide */
+.nav-track[data-instant="true"] {
+  transition-property: opacity, transform;
+  transition-duration: 200ms, 320ms;
+}
+.nav-track::after {
   content: "";
   position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 100%;
-  height: 2px;
-  background: var(--color-gold);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 240ms ease-out;
+  top: 50%;
+  right: -3px;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 9999px;
+  background: #fff4c2;
+  box-shadow: 0 0 8px 2px rgba(245, 200, 66, 0.85);
 }
-.nav-underline:hover::after,
-.nav-underline:focus-visible::after {
-  transform: scaleX(1);
+.nav-track[data-dir="left"]::after {
+  right: auto;
+  left: -3px;
 }
 
 /* ---------- keyframe animations ---------- */
@@ -330,6 +364,14 @@
   /* A frozen arc reads as a rendering fault, not a light — drop it. */
   .quote-trace {
     display: none;
+  }
+  /* the nav track still marks the link, it just doesn't travel */
+  .nav-track,
+  .nav-track[data-dir="right"],
+  .nav-track[data-dir="left"],
+  .nav-track[data-instant="true"] {
+    transition-property: opacity;
+    transition-duration: 150ms;
   }
   .animate-trail {
     width: 60%;
