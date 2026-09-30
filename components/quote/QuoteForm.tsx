@@ -83,7 +83,8 @@ function Field({
  * - "panel": always open, inside the quote panel (QuoteDrawer) that every
  *   "interested" button opens. That button's product comes in as `productId`
  *   (and `forId`, the robot a demo or installation is for) and answers "which
- *   robot", so the lawn-mowing / Pudu choice is skipped.
+ *   robot", so the robot choice is skipped. A homepage banner passes
+ *   `interest` instead, which only preselects that choice.
  *
  * Lawn mowing asks for the lawn area; Pudu delivery asks for the venue it
  * will serve.
@@ -92,11 +93,14 @@ export default function QuoteForm({
   variant = "card",
   productId,
   forId,
+  interest,
   onExpandedChange,
 }: {
   variant?: "card" | "panel";
   productId?: string;
   forId?: string;
+  /** Preselected robot family (a homepage banner's button). */
+  interest?: QuoteRequest["interest"];
   /** Card only: told when it opens or closes, so the page can make room. */
   onExpandedChange?: (expanded: boolean) => void;
 }) {
@@ -126,7 +130,7 @@ export default function QuoteForm({
     productId: product?.id ?? "",
     forId: forProduct?.id ?? "",
     // A mower still needs the lawn area, so it keeps that follow-up.
-    interest: product?.category === "robot-mowers" ? "lawn-mowing" : "",
+    interest: product?.category === "robot-mowers" ? "lawn-mowing" : (interest ?? ""),
   }));
   const [errors, setErrors] = useState<Partial<Record<QuoteField, string>>>({});
   const [busy, setBusy] = useState(false);
@@ -443,7 +447,7 @@ export default function QuoteForm({
                           <div
                             role="radiogroup"
                             aria-labelledby={fieldId("interest")}
-                            className={`flex gap-1 rounded-lg border bg-cloud p-1 ${
+                            className={`grid grid-cols-2 gap-1 rounded-lg border bg-cloud p-1 ${
                               errors.interest ? "border-red-400" : "border-forest-100"
                             }`}
                           >
@@ -456,7 +460,7 @@ export default function QuoteForm({
                                   role="radio"
                                   aria-checked={selected}
                                   onClick={() => chooseInterest(interest)}
-                                  className={`flex h-9 flex-1 cursor-pointer items-center justify-center rounded-md px-2 text-[13px] font-semibold transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-gold/40 ${
+                                  className={`flex min-h-9 cursor-pointer items-center justify-center rounded-md px-2 py-1.5 text-center text-[13px] leading-tight font-semibold transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-gold/40 ${
                                     selected
                                       ? "bg-forest-950 text-white shadow-sm"
                                       : "text-ink-muted hover:text-content"

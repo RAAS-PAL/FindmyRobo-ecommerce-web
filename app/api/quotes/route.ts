@@ -21,7 +21,9 @@ const esc = (value: string) =>
 
 const INTEREST_LABEL: Record<QuoteInterest, string> = {
   "lawn-mowing": "Lawn mowing",
+  "commercial-cleaning": "Gausium Phantas (commercial cleaning)",
   "pudu-delivery": "Pudu delivery",
+  cooking: "T-Chef cooking robot",
 };
 
 const VENUE_LABEL: Record<PuduVenue, string> = {

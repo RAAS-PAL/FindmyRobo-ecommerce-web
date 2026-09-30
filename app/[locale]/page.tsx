@@ -6,7 +6,8 @@ import { getSiteContent } from "@/lib/siteContentStore";
 import JsonLd from "@/components/seo/JsonLd";
 import HeroSection from "@/components/sections/HeroSection";
 import ProductGrid from "@/components/sections/ProductGrid";
-import FeatureShowcase from "@/components/sections/FeatureShowcase";
+import { FamilyBanner, MoreFamilies } from "@/components/sections/RobotShowcase";
+import { featuredFamilies, moreFamilies } from "@/data/homeShowcase";
 import VideoShowcase from "@/components/sections/VideoShowcase";
 import TrustSection from "@/components/sections/TrustSection";
 import WhyUsSection from "@/components/sections/WhyUsSection";
@@ -40,8 +41,15 @@ export default async function Home({
           per site is the convention. */}
       <JsonLd data={organizationJsonLd(contact)} />
       <HeroSection />
+      {/* Priority order (2026-09-30): lawn mowing and Gausium Phantas get the
+          full-width banners, Pudu and T-Chef share a row after them. The
+          mower technology scroll story (FeatureShowcase) left the homepage
+          with the move to several robot families — it suits the mower
+          category page. */}
+      <FamilyBanner family={featuredFamilies[0]} />
       <ProductGrid />
-      <FeatureShowcase />
+      <FamilyBanner family={featuredFamilies[1]} />
+      <MoreFamilies families={moreFamilies} />
       <VideoShowcase />
       <TrustSection />
       <WhyUsSection />

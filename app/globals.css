@@ -102,16 +102,6 @@
 
 /* ---------- utilities ---------- */
 
-/* Hero copy sitting on the autoplaying video. The clips are dark and the dark
-   theme's scrim is navy, so the scrim alone can't be trusted for every frame —
-   this shadow keeps white/gold text readable over any of them, in both themes.
-   Purely a legibility aid; it disappears against the light hero (no video). */
-.hero-legible {
-  text-shadow:
-    0 2px 18px rgba(3, 8, 24, 0.7),
-    0 1px 4px rgba(3, 8, 24, 0.55);
-}
-
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -331,23 +321,26 @@
   animation: pool-breathe 5s ease-in-out infinite;
 }
 
-/* Where the homepage hero's frosted half ends — and where the nav's grey
-   wedge lands, so the two edges read as one line. At rest it just clears the
-   quote card (17.5rem, centred on 25%) and the lean of the frost's edge; while
-   someone is filling the card in, HeroQuote sets data-quote-open and it widens
-   to the full half. The nav and the hero are both full width, so the
-   percentages resolve to the same point in each.
-   --hero-lean is the edge's angle off vertical; the nav wedge leans by the
-   same amount so the two edges form one straight line. --hero-split-mid is
-   where that leaning edge sits halfway down the (one-screen) hero — the
-   quote column centres on it, so the card sits in the middle of the frost. */
-:root {
-  --hero-split: min(50%, 25% + 16rem);
-  --hero-lean: 6deg;
-  --hero-split-mid: calc(var(--hero-split) - (50svh - 50px) * tan(var(--hero-lean)));
+/* Homepage hero: the gold bar on the active slide's tab fills over the slide's
+   time on screen; HeroSection advances when it ends (animationend) and pauses
+   it with animation-play-state. Reduced motion never gets the class. */
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
-:root[data-quote-open] {
-  --hero-split: 50%;
+.hero-progress {
+  animation-name: hero-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-progress {
+    animation: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

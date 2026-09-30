@@ -880,7 +880,9 @@
     "interestPlaceholder": "เลือกหุ่นยนต์",
     "interests": {
       "lawn-mowing": "หุ่นยนต์ตัดหญ้า",
-      "pudu-delivery": "หุ่นยนต์ขนส่ง Pudu"
+      "commercial-cleaning": "หุ่นยนต์ทำความสะอาด Phantas",
+      "pudu-delivery": "หุ่นยนต์ขนส่ง Pudu",
+      "cooking": "หุ่นยนต์ทำอาหาร T-Chef"
     },
     "areaLabel": "พื้นที่สนาม",
     "areaPlaceholder": "เช่น 800",
@@ -925,6 +927,19 @@
     "lineOpen": "เปิดใน LINE",
     "noteLabel": "หมายเหตุ",
     "notePlaceholder": "บอกเราเพิ่มเติมได้ เช่น ลักษณะพื้นที่ ช่วงเวลาที่สะดวก หรือคำถามต่าง ๆ"
+  },
+  "showcase": {
+    "slidesLabel": "หุ่นยนต์แนะนำ",
+    "showSlide": "แสดง {name}",
+    "pause": "หยุดสไลด์",
+    "play": "เล่นสไลด์",
+    "explore": "ดูรายละเอียด",
+    "learnMore": "ดูเพิ่มเติม",
+    "getQuote": "ขอใบเสนอราคา",
+    "bookDemo": "นัดสาธิต",
+    "photoComing": "รูปภาพเร็ว ๆ นี้",
+    "moreHeading": "หุ่นยนต์อื่น ๆ จาก FindMyRobo",
+    "moreSub": "หุ่นยนต์ขนส่งและหุ่นยนต์ครัวสำหรับธุรกิจ พร้อมใบเสนอราคาตามพื้นที่ของคุณ"
   },
   "products": {
     "eyebrow": "รุ่นแนะนำ",

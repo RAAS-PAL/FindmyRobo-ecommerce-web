@@ -4,7 +4,13 @@
  * then the follow-up that robot needs. Checkout shipping stays separate.
  */
 
-export const QUOTE_INTERESTS = ["lawn-mowing", "pudu-delivery"] as const;
+/** Order is how the form lists them: the priority robots first. */
+export const QUOTE_INTERESTS = [
+  "lawn-mowing",
+  "commercial-cleaning",
+  "pudu-delivery",
+  "cooking",
+] as const;
 export type QuoteInterest = (typeof QUOTE_INTERESTS)[number];
 
 export const PUDU_VENUES = [

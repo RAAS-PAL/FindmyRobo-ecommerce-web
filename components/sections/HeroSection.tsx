@@ -1,454 +1,250 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { motion } from "framer-motion";
-import { ArrowRight, Calendar } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Calendar, Pause, Play } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { GrassIcon } from "@/components/ui/BrandIcons";
 import { useSiteContent } from "@/components/SiteContentProvider";
+import { useQuote } from "@/components/quote/QuoteProvider";
 import { pick } from "@/data/siteContent";
+import { heroSlides } from "@/data/homeShowcase";
+import ShowcasePhoto from "@/components/ui/ShowcasePhoto";
 import HeroQuote from "@/components/quote/HeroQuote";
 
-/**
- * Robot categories surfaced as hero chips (order = how they read left to right).
- * Mowing-only for launch — the store is selling lawn mowers first. Add the
- * other categories (pool-cleaners, cleaning-robots, delivery-robots) back here
- * when they go live.
- */
-const HERO_CATEGORIES = [
-  { slug: "robot-mowers", Icon: GrassIcon },
-] as const;
+/** How long each slide stays up before the next, while playing. */
+const SLIDE_MS = 7000;
 
-/** Spring pop-in for each chip, staggered by the parent. */
-const chipVariants = {
-  hidden: { opacity: 0, y: 14, scale: 0.9 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring" as const, stiffness: 420, damping: 24 },
-  },
+const REDUCE_QUERY = "(prefers-reduced-motion: reduce)";
+const subscribeReduce = (onChange: () => void) => {
+  const mq = window.matchMedia(REDUCE_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+};
+const subscribeVisibility = (onChange: () => void) => {
+  document.addEventListener("visibilitychange", onChange);
+  return () => document.removeEventListener("visibilitychange", onChange);
 };
 
 /**
- * Full-bleed hero background. Every configured clip is mounted, stacked, and
- * the active one plays while the rest sit paused on their first frame — so
- * advancing is a cross-fade with no reload gap. (The old version remounted a
- * single <video> per clip, which flashed the poster image on every switch;
- * that's the bug this replaces, hence no `poster` here at all.)
+ * Homepage hero: a photo per priority robot family (data/homeShowcase.ts),
+ * one at a time, with the quote card docked on the right.
  *
- * iOS Safari only autoplays a muted + inline video, and wants `muted` set as a
- * property before play() — hence the ref assertion; play() is called from the
- * effect (not the autoPlay attr, which would start every stacked clip at once)
- * and its promise is caught because Low Power Mode can refuse autoplay.
+ * From lg the copy sits over the photo's lower-left (a bottom scrim keeps it
+ * readable on any photo) and the card floats on the right. Below lg the photo
+ * stands alone and the copy, the tabs and then the card follow it on the page
+ * surface — the photos are landscape, so overlaying copy on a phone would
+ * cover the robot.
  *
- * Bandwidth: only the active clip preloads on first paint. The others flip to
- * preload="auto" once it starts playing (`ready`), so they buffer a frame
- * before the switch without competing with the hero for the initial load.
+ * The slides advance on their own. Each tab carries a gold bar that fills over
+ * SLIDE_MS — the next slide comes when it's full. Hovering the copy or tabs
+ * (not the photo: on desktop it fills the screen, so the pointer is nearly
+ * always over it), focusing anything in the hero, filling in the quote card,
+ * or the pause button all stop it;
+ * with reduced motion it never starts. The first slide's copy is the CMS hero
+ * headline, so Admin → Content → Homepage still sets the site's lead message.
  */
-function HeroVideoPlaylist({ urls }: { urls: string[] }) {
-  const [index, setIndex] = useState(0);
-  const [ready, setReady] = useState(false);
-  const refs = useRef<(HTMLVideoElement | null)[]>([]);
-  const single = urls.length === 1;
-
-  // Play whichever clip just became active, from its start.
-  useEffect(() => {
-    const el = refs.current[index];
-    if (!el) return;
-    el.muted = true; // must be set before play() for iOS to allow it
-    el.currentTime = 0;
-    const attempt = el.play();
-    if (attempt) attempt.catch(() => undefined); // blocked (e.g. Low Power Mode)
-  }, [index]);
-
-  return (
-    <>
-      {urls.map((src, i) => (
-        <video
-          key={src}
-          ref={(el) => {
-            refs.current[i] = el;
-          }}
-          // brightness/saturate lift the (slightly dark) footage so the hero
-          // reads light — a tone lift only. Shown sharp (no blur, per request).
-          // In dark mode it's dimmed a little (dark:brightness overrides the
-          // light-mode 110%) so the bright hero doesn't glare against dark UI.
-          // origin-top scale-[1.2] zooms the frame a touch and anchors it to the
-          // top, and object-top keeps it there when the hero is wider than 16:9,
-          // so the empty grass at the bottom overflows and is clipped by the
-          // section's overflow-hidden — cropping only the lower part of the clip.
-          className={`absolute inset-0 h-full w-full origin-top scale-[1.2] object-cover object-top brightness-110 saturate-[1.05] transition-opacity duration-700 dark:brightness-90 ${
-            i === index ? "opacity-100" : "opacity-0"
-          }`}
-          src={src}
-          muted
-          loop={single}
-          playsInline
-          preload={i === index || ready ? "auto" : "none"}
-          onPlaying={() => {
-            if (i === index) setReady(true);
-          }}
-          onEnded={single ? undefined : () => setIndex((v) => (v + 1) % urls.length)}
-          aria-hidden="true"
-        />
-      ))}
-    </>
-  );
-}
-
-/* Deterministic pollen positions — no Math.random, avoids hydration mismatch */
-const POLLEN = [
-  { left: "6%", size: 5, delay: 0, duration: 13, opacity: 0.7 },
-  { left: "14%", size: 4, delay: 4.2, duration: 16, opacity: 0.5 },
-  { left: "22%", size: 6, delay: 1.6, duration: 12, opacity: 0.8 },
-  { left: "31%", size: 4, delay: 6.8, duration: 15, opacity: 0.55 },
-  { left: "39%", size: 5, delay: 2.4, duration: 14, opacity: 0.75 },
-  { left: "48%", size: 4, delay: 8.4, duration: 17, opacity: 0.45 },
-  { left: "56%", size: 6, delay: 0.9, duration: 12.5, opacity: 0.85 },
-  { left: "63%", size: 4, delay: 5.3, duration: 15.5, opacity: 0.5 },
-  { left: "71%", size: 5, delay: 3.1, duration: 13.5, opacity: 0.7 },
-  { left: "79%", size: 4, delay: 7.6, duration: 16.5, opacity: 0.55 },
-  { left: "87%", size: 6, delay: 1.2, duration: 12, opacity: 0.75 },
-  { left: "94%", size: 4, delay: 9.1, duration: 14.5, opacity: 0.5 },
-];
-
-/** Daylight robot mower — cream shell, forest chassis, gold accents */
-function MowerSvg() {
-  return (
-    <svg
-      viewBox="0 0 220 130"
-      className="h-24 w-auto drop-shadow-[0_12px_18px_rgba(0,0,0,0.3)] sm:h-28"
-      role="img"
-      aria-label="Robot mower cutting the lawn"
-    >
-      {/* soft ground shadow */}
-      <ellipse cx="110" cy="119" rx="82" ry="9" fill="#0b2e1f" opacity="0.22" />
-      {/* gold underglow — the robot's "tech" signature */}
-      <ellipse cx="110" cy="114" rx="64" ry="7" fill="#f5c842" opacity="0.35" className="animate-glow" />
-      {/* chassis */}
-      <path d="M28 92 L40 56 Q44 44 58 42 L156 42 Q170 44 174 56 L192 92 Q193 100 183 100 L37 100 Q27 100 28 92Z" fill="#123b28" stroke="#1a5c3e" strokeWidth="2" />
-      {/* cream shell */}
-      <path d="M42 84 L52 58 Q55 51 64 50 L150 50 Q159 51 162 58 L176 84 Q177 90 169 90 L49 90 Q41 90 42 84Z" fill="#fdfdf8" />
-      {/* shell shading */}
-      <path d="M42 84 L52 58 Q55 51 64 50 L86 50 L70 90 L49 90 Q41 90 42 84Z" fill="#eef4ea" />
-      {/* gold bumper */}
-      <rect x="44" y="78" width="132" height="6" rx="3" fill="#f5c842" />
-      {/* green accent stripe on shell */}
-      <rect x="58" y="56" width="104" height="4" rx="2" fill="#237a52" opacity="0.85" />
-      {/* lidar dome */}
-      <rect x="92" y="24" width="36" height="20" rx="9" fill="#123b28" stroke="#1a5c3e" strokeWidth="1.5" />
-      <circle cx="110" cy="24" r="5" fill="#f5c842" className="animate-blink" />
-      {/* headlight */}
-      <path d="M182 66 L212 58 L212 78 L184 74Z" fill="#ffe08a" opacity="0.35" />
-      <circle cx="181" cy="68" r="4" fill="#f5c842" />
-      {/* wheels */}
-      <g className="animate-wheel">
-        <circle cx="64" cy="100" r="22" fill="#0b2e1f" stroke="#1a5c3e" strokeWidth="2" />
-        <circle cx="64" cy="100" r="11" fill="#123b28" />
-        <circle cx="64" cy="100" r="3.5" fill="#f5c842" />
-        <line x1="64" y1="82" x2="64" y2="90" stroke="#2e7d4f" strokeWidth="2.5" />
-        <line x1="64" y1="110" x2="64" y2="118" stroke="#2e7d4f" strokeWidth="2.5" />
-        <line x1="46" y1="100" x2="54" y2="100" stroke="#2e7d4f" strokeWidth="2.5" />
-        <line x1="74" y1="100" x2="82" y2="100" stroke="#2e7d4f" strokeWidth="2.5" />
-      </g>
-      <g className="animate-wheel">
-        <circle cx="152" cy="100" r="22" fill="#0b2e1f" stroke="#1a5c3e" strokeWidth="2" />
-        <circle cx="152" cy="100" r="11" fill="#123b28" />
-        <circle cx="152" cy="100" r="3.5" fill="#f5c842" />
-        <line x1="152" y1="82" x2="152" y2="90" stroke="#2e7d4f" strokeWidth="2.5" />
-        <line x1="152" y1="110" x2="152" y2="118" stroke="#2e7d4f" strokeWidth="2.5" />
-        <line x1="134" y1="100" x2="142" y2="100" stroke="#2e7d4f" strokeWidth="2.5" />
-        <line x1="162" y1="100" x2="170" y2="100" stroke="#2e7d4f" strokeWidth="2.5" />
-      </g>
-    </svg>
-  );
-}
-
-const wordVariants = {
-  hidden: { opacity: 0, y: 28, filter: "blur(6px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
-  },
-};
-
 export default function HeroSection() {
-  const t = useTranslations("hero");
-  const tCat = useTranslations("hero.cat");
+  const t = useTranslations("showcase");
   const locale = useLocale();
-  // Headline, text and videos are edited in Admin → Content → Homepage.
   const { home } = useSiteContent();
-  // Thai separates phrases (not words) with spaces, so splitting on
-  // spaces gives natural stagger chunks in both languages. filter(Boolean)
-  // drops the empty chunk a double space or an empty second line would make.
-  const mainWords = pick(home.heroHeadline, locale).split(" ").filter(Boolean);
-  const accentWords = pick(home.heroAccent, locale).split(" ").filter(Boolean);
+  const { openQuote } = useQuote();
+  // The server can't know either, so it renders the still, paused state and
+  // the browser picks up from there once hydrated (no markup mismatch).
+  const reduceMotion = useSyncExternalStore(
+    subscribeReduce,
+    () => window.matchMedia(REDUCE_QUERY).matches,
+    () => true
+  );
+  // A backgrounded tab would otherwise flick through slides nobody sees.
+  const visible = useSyncExternalStore(
+    subscribeVisibility,
+    () => document.visibilityState === "visible",
+    () => false
+  );
 
-  const videos = home.heroVideos;
-  const video = videos.length > 0;
+  const [index, setIndex] = useState(0);
+  const [userPaused, setUserPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const autoplay = !reduceMotion && !userPaused;
+  const running = autoplay && !hovered && !focused && !formOpen;
+
+  const next = useCallback(() => setIndex((i) => (i + 1) % heroSlides.length), []);
+
+  const slide = heroSlides[index];
+  const headline = slide.headline ? pick(slide.headline, locale) : pick(home.heroHeadline, locale);
+  const accent = slide.accent ? pick(slide.accent, locale) : pick(home.heroAccent, locale);
+  const sub = slide.sub ? pick(slide.sub, locale) : pick(home.heroSub, locale);
 
   return (
-    // overflow clip, not hidden: a hidden box is still a scroll container, so
-    // the browser could scroll it (focusing the quote form did, via the
-    // zoomed video's overflow) and hide the headline where no one can scroll
-    // back. Browsers without clip keep hidden.
+    // overflow clip, not hidden: a hidden box is still a scroll container, and
+    // focusing the quote form once scrolled the hero's own content out of reach.
     <section
-      className={`relative overflow-hidden supports-[overflow:clip]:overflow-clip ${
-        video
-          ? // As tall as its content: on desktop that's the copy frame below,
-            // exactly one screenful (100svh minus the header), so the hero ends
-            // at the fold instead of trailing a band of empty footage under it.
-            // The video fills it, anchored to its top. Phones stack the copy
-            // and the quote card, and those set the height.
-            "bg-forest-950 text-white"
-          : "bg-gradient-to-b from-surface via-[#f1f8ee] to-[#e4f1e0] text-content dark:via-forest-900 dark:to-forest-800"
-      }`}
+      aria-roledescription="carousel"
+      aria-label={t("slidesLabel")}
+      className="relative overflow-hidden bg-surface supports-[overflow:clip]:overflow-clip lg:bg-forest-950"
+      onFocus={() => setFocused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node)) setFocused(false);
+      }}
     >
-      {video ? (
-        /* ---- video hero: cycles the playlist set in Admin → Content ---- */
-        <>
-          <HeroVideoPlaylist urls={videos} />
-          {/* No dark scrim — manager wants the hero light and untinted. All
-              legibility now comes from .hero-legible (a text-shadow on the copy
-              itself), which stays readable over the bright lawn footage without
-              putting any dark tint over the video. */}
-        </>
-      ) : (
-        /* ---- animated fallback: morning sun + drifting pollen ---- */
-        <>
-          <div
-            className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-gradient-to-br from-gold-300 to-gold opacity-35 blur-3xl"
-            aria-hidden="true"
-          />
-          <div
-            className="pointer-events-none absolute right-16 top-14 hidden h-24 w-24 rounded-full bg-gradient-to-br from-gold-300 to-gold opacity-80 shadow-[0_0_60px_12px_rgba(245,200,66,0.45)] sm:block"
-            aria-hidden="true"
-          />
-          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-            {POLLEN.map((p, i) => (
-              <span
-                key={i}
-                className="animate-firefly absolute bottom-40 rounded-full bg-gold"
-                style={
-                  {
-                    left: p.left,
-                    width: p.size,
-                    height: p.size,
-                    "--fly-delay": `${p.delay}s`,
-                    "--fly-duration": `${p.duration}s`,
-                    "--fly-opacity": p.opacity,
-                    boxShadow: "0 0 10px 2px rgba(217,169,22,0.4)",
-                  } as React.CSSProperties
-                }
-              />
-            ))}
-          </div>
-        </>
-      )}
-
-      {/* Left side of the banner, continuing the nav wedge as a near-vertical
-          cut so the frost stays across that side instead of tapering away.
-          At rest it's just wide enough for the quote card; it widens to the
-          full half while the card is being filled in (--hero-split).
-          Unlike the nav wedge it stays in dark mode — same blur, dark tint.
-          Only from lg: below that the hero is one stacked column, and a
-          frosted left half just cut the headline and buttons in two. */}
+      {/* ---- the photos, cross-fading ---- */}
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-[1] hidden w-(--hero-split) overflow-hidden transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none lg:block"
+        className="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-auto lg:h-[calc(100svh-100px)] lg:min-h-[38rem] lg:max-h-[62rem]"
       >
+        {heroSlides.map((s, i) => (
+          <div
+            key={s.id}
+            aria-hidden={i !== index}
+            className={`absolute inset-0 transition-opacity duration-700 ease-out motion-reduce:transition-none ${
+              i === index ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <ShowcasePhoto
+              photo={s}
+              alt={pick(s.tab, locale)}
+              sizes="100vw"
+              priority={i === 0}
+              captionAt="top"
+            />
+          </div>
+        ))}
+        {/* Bottom scrim, desktop only: the copy sits here from lg. Dark enough
+            for white text on bright lawn, gone by mid-height so the robot
+            itself stays untinted. */}
         <div
-          className="absolute top-0 left-0 h-full w-full origin-top-left bg-[#eef0f2]/45 backdrop-blur-xl dark:bg-surface/45"
-          style={{ transform: "skewX(calc(-1 * var(--hero-lean)))" }}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(to_top,rgba(10,10,11,0.85)_0%,rgba(10,10,11,0.55)_34%,rgba(10,10,11,0)_66%)] lg:block"
         />
       </div>
 
-      {/* Two sides: the quote sits in the middle of the frosted left side
-          (its column is as wide as the frost is halfway down, so it follows
-          the frost as that widens), the title in the middle of the clear
-          right half. On large screens both are anchored to that fixed frame,
-          so the quote can grow without pushing the title. */}
+      {/* ---- copy + tabs: under the photo on phones, over it from lg ---- */}
       <div
-        className={`relative z-10 flex w-full flex-col lg:block ${
-          video ? "lg:h-[calc(100svh-100px)]" : ""
-        }`}
+        className="relative z-10 mx-auto max-w-7xl px-4 pt-7 sm:px-6 lg:absolute lg:inset-x-0 lg:bottom-0 lg:px-8 lg:pt-0 lg:pb-8 lg:[text-shadow:0_1px_14px_rgba(0,0,0,0.35)]"
+        onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
       >
-        <div className="order-2 flex justify-center px-4 pt-6 pb-14 lg:absolute lg:py-6 lg:inset-y-0 lg:left-0 lg:z-20 lg:w-(--hero-split-mid) lg:items-center lg:px-8 lg:transition-[width] lg:duration-700 lg:ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none">
-          <HeroQuote />
-        </div>
-        <div
-          className={`order-1 flex justify-center px-4 text-center lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:items-center lg:px-10 lg:text-left ${
-            video
-              ? // No full-screen min-height below lg: the stacked quote card
-                // follows the buttons directly instead of a screen of lawn.
-                "pt-14 pb-4 sm:pt-20 sm:pb-6 lg:py-0"
-              : "pb-56 pt-20 sm:pb-64 sm:pt-28"
-          }`}
-        >
-        <div className="flex max-w-xl flex-col items-center lg:items-start">
-
-        {/* Category chips: at a glance, what the store sells — and each one is a
-            direct link into that category's products. */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-6 flex flex-col items-center gap-3 lg:items-start"
-        >
-          <span
-            className={`font-mono text-[12.5px] font-bold uppercase tracking-[0.35em] ${
-              video ? "hero-legible text-white" : "text-gold-600"
-            }`}
-          >
-            {t("categoriesLabel")}
-          </span>
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={{ visible: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } } }}
-            className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3"
-          >
-            {HERO_CATEGORIES.map(({ slug, Icon }) => (
+        {/* leaves the quote card's column (26.5rem open + gap) free */}
+        <div className="lg:max-w-[min(42rem,calc(100%-29rem))]">
+          <div aria-live={running ? "off" : "polite"}>
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={slug}
-                variants={chipVariants}
-                whileHover={{ y: -3, scale: 1.06 }}
-                whileTap={{ scale: 0.95 }}
+                key={slide.id}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.16, 1, 0.3, 1] }}
               >
-                <Link
-                  href={`/shop/${slug}`}
-                  className="group flex items-center gap-2.5 rounded-full border border-gold bg-gold px-6 py-2.5 font-mono text-[14px] font-bold uppercase tracking-[0.15em] text-forest-950 shadow-[0_10px_30px_-8px_rgba(245,200,66,0.65)] transition-all duration-300 hover:border-gold-300 hover:bg-gold-300 hover:shadow-[0_16px_40px_-8px_rgba(245,200,66,0.8)] sm:px-7 sm:text-[15px]"
-                >
-                  <Icon
-                    className="h-[18px] w-[18px] shrink-0 text-forest-950"
-                    aria-hidden="true"
-                  />
-                  {tCat(slug)}
-                </Link>
+                <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-ink-muted uppercase lg:text-white/85 [&:lang(th)]:tracking-[0.06em]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true" />
+                  {pick(slide.eyebrow, locale)}
+                </p>
+                {/* one slide shows at a time, so there is always exactly one
+                    h1 — the server renders the first (the CMS headline) */}
+                <h1 className="mt-3 font-display text-[34px] leading-[1.04] font-extrabold tracking-tight text-content sm:text-5xl lg:text-5xl lg:text-white xl:text-[3.5rem]">
+                  {headline}
+                  <span className="block text-gold-600 lg:text-gold">{accent}</span>
+                </h1>
+                <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:text-base lg:text-[17px] lg:text-white/85">
+                  {sub}
+                </p>
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <Link
+                    href={slide.href}
+                    className="inline-flex min-h-12 items-center gap-2 rounded-full bg-gold px-7 text-[15px] font-bold text-forest-950 transition-colors hover:bg-gold-300"
+                  >
+                    {t("learnMore")}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                  {slide.interest === "lawn-mowing" ? (
+                    <Link
+                      href="/products/request-a-demo"
+                      className="inline-flex min-h-12 items-center gap-2 rounded-full border border-content/20 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/50 lg:border-white/40 lg:text-white lg:hover:border-white"
+                    >
+                      <Calendar className="h-4 w-4" aria-hidden="true" />
+                      {t("bookDemo")}
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => openQuote({ interest: slide.interest })}
+                      className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-content/20 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/50 lg:border-white/40 lg:text-white lg:hover:border-white"
+                    >
+                      {t("getQuote")}
+                    </button>
+                  )}
+                </div>
               </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
+            </AnimatePresence>
+          </div>
 
-        <motion.h1
-          initial="hidden"
-          animate="visible"
-          variants={{ visible: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } } }}
-          className={`font-display text-[36px] font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.25rem] xl:text-6xl ${
-            video ? "hero-legible" : ""
-          }`}
-        >
-          {[...mainWords, ...accentWords].map((word, i) => (
-            <Fragment key={i}>
-              {/* The gold accent phrase always starts its own line, so the
-                  headline lands as the two lines the copy was written as
-                  rather than wherever the container happens to wrap. */}
-              {i === mainWords.length && <br />}
-              <motion.span
-                variants={wordVariants}
-                className={`inline-block ${
-                  i >= mainWords.length
-                    ? video
-                      ? "text-gold"
-                      : "text-forest-700 dark:text-gold"
-                    : ""
-                }`}
-              >
-              {word}
-              {/*  : plain spaces collapse at the end of inline-blocks */}
-              {i < mainWords.length + accentWords.length - 1 && " "}
-              </motion.span>
-            </Fragment>
-          ))}
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className={`mt-6 max-w-xl text-base font-semibold leading-relaxed sm:text-lg ${
-            video ? "hero-legible text-white" : "text-ink-muted"
-          }`}
-        >
-          {pick(home.heroSub, locale)}
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.35, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 flex flex-col items-center gap-4 sm:flex-row lg:justify-start"
-        >
-          <Link
-            href="/shop"
-            className="flex min-h-[52px] items-center gap-2 rounded-full bg-gold px-8 text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_36px_-6px_rgba(245,200,66,0.8)] active:scale-[0.97]"
-          >
-            {t("ctaPrimary")}
-            <ArrowRight className="h-4.5 w-4.5" aria-hidden="true" />
-          </Link>
-          <Link
-            href="/products/request-a-demo"
-            // Over the video this is white-on-footage: the outline alone left
-            // it competing with whatever frame was playing behind it, so it
-            // carries a translucent white fill to sit the label on a
-            // consistent ground without becoming a second solid button.
-            className={`flex min-h-[52px] items-center gap-2 rounded-full border-2 px-8 text-[15px] font-semibold transition-all duration-300 hover:scale-105 active:scale-[0.97] ${
-              video
-                ? "border-white/40 bg-white/20 text-white backdrop-blur-[2px] hover:border-gold hover:bg-white/30 hover:text-gold"
-                : "border-content/25 text-content hover:border-gold-600 hover:text-gold-600"
-            }`}
-          >
-            <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
-            {t("ctaSecondary")}
-          </Link>
-        </motion.div>
-        </div>
+          {/* ---- tabs: which family is on show, and how long until the next ---- */}
+          <div className="mt-8 flex items-stretch gap-3 lg:mt-10">
+            <div role="tablist" aria-label={t("slidesLabel")} className="grid flex-1 grid-cols-2 gap-3">
+              {heroSlides.map((s, i) => {
+                const active = i === index;
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    aria-label={t("showSlide", { name: pick(s.tab, locale) })}
+                    onClick={() => setIndex(i)}
+                    className="group cursor-pointer pt-3 text-left"
+                  >
+                    <span className="relative block h-[3px] overflow-hidden rounded-full bg-content/12 lg:bg-white/25">
+                      {active && (
+                        <span
+                          key={`${s.id}-${index}`}
+                          // with reduced motion globals.css drops the fill
+                          // animation: the bar just marks the tab on show
+                          className="hero-progress absolute inset-0 origin-left rounded-full bg-gold"
+                          style={{
+                            animationDuration: `${SLIDE_MS}ms`,
+                            animationPlayState: running && visible ? "running" : "paused",
+                          }}
+                          onAnimationEnd={next}
+                        />
+                      )}
+                    </span>
+                    <span
+                      className={`mt-2.5 block text-[13.5px] font-semibold transition-colors ${
+                        active
+                          ? "text-content lg:text-white"
+                          : "text-ink-muted group-hover:text-content lg:text-white/60 lg:group-hover:text-white"
+                      }`}
+                    >
+                      {pick(s.tab, locale)}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            {/* nothing plays with reduced motion, so nothing to pause — hidden
+                in CSS, not by the hook, so server and client markup match */}
+            <button
+              type="button"
+              onClick={() => setUserPaused((p) => !p)}
+              aria-label={userPaused ? t("play") : t("pause")}
+              className="mt-1 flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center self-center rounded-full border border-content/15 text-content transition-colors hover:border-content/40 motion-reduce:hidden lg:border-white/30 lg:text-white lg:hover:border-white"
+            >
+              {userPaused ? (
+                <Play className="h-3.5 w-3.5" aria-hidden="true" />
+              ) : (
+                <Pause className="h-3.5 w-3.5" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* ---- animated lawn scene (hidden when a video is configured) ---- */}
-      {!video && (
-        <div className="absolute inset-x-0 bottom-0 h-48 sm:h-56" aria-hidden="true">
-          {/* uncut lawn — daylight greens */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#4caf72] to-[#2e7d4f]" />
-          {/* blend lawn horizon into the sky (navy sky in dark mode) */}
-          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#e4f1e0] to-transparent dark:from-forest-800" />
-
-          {/* grass blade silhouettes along the horizon */}
-          <svg className="absolute inset-x-0 -top-3 h-4 w-full" preserveAspectRatio="none">
-            <defs>
-              <pattern id="grass-tufts" width="16" height="16" patternUnits="userSpaceOnUse">
-                <path d="M0 16 L4 3 L6 16 L10 0 L12 16 L15 6 L16 16Z" fill="#3f9c63" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grass-tufts)" />
-          </svg>
-
-          {/* cut-lawn trail — grows behind the mower, striped like a fresh mow */}
-          <div
-            className="animate-trail absolute bottom-6 left-0 h-24 sm:h-28"
-            style={{
-              background:
-                "repeating-linear-gradient(90deg, #8fd3a4 0px, #8fd3a4 46px, #6fc28b 46px, #6fc28b 92px)",
-              boxShadow: "0 0 24px rgba(255,255,255,0.3)",
-              maskImage: "linear-gradient(to right, black 96%, transparent)",
-              WebkitMaskImage: "linear-gradient(to right, black 96%, transparent)",
-            }}
-          />
-
-          {/* the mower */}
-          <div className="animate-mow absolute bottom-9 left-0 sm:bottom-10">
-            <MowerSvg />
-          </div>
-
-          {/* foreground grass strip */}
-          <div className="absolute inset-x-0 bottom-0 h-6 bg-[#27714a]" />
-        </div>
-      )}
+      {/* ---- quote card: after the copy on phones, docked right from lg ---- */}
+      <div className="relative z-20 flex justify-center px-4 pt-8 pb-14 lg:absolute lg:inset-y-0 lg:right-[max(2rem,calc((100%-80rem)/2+2rem))] lg:items-center lg:p-0">
+        <HeroQuote onOpenChange={setFormOpen} />
+      </div>
     </section>
   );
 }

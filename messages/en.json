@@ -880,7 +880,9 @@
     "interestPlaceholder": "Select a robot",
     "interests": {
       "lawn-mowing": "Lawn mowing",
-      "pudu-delivery": "Pudu delivery"
+      "commercial-cleaning": "Phantas cleaning",
+      "pudu-delivery": "Pudu delivery",
+      "cooking": "T-Chef cooking"
     },
     "areaLabel": "Lawn area",
     "areaPlaceholder": "e.g. 800",
@@ -925,6 +927,19 @@
     "lineOpen": "Open in LINE",
     "noteLabel": "Note",
     "notePlaceholder": "Anything else we should know — your garden, timing, or questions"
+  },
+  "showcase": {
+    "slidesLabel": "Featured robots",
+    "showSlide": "Show {name}",
+    "pause": "Pause the slideshow",
+    "play": "Play the slideshow",
+    "explore": "Explore",
+    "learnMore": "Learn more",
+    "getQuote": "Get a quote",
+    "bookDemo": "Book a demo",
+    "photoComing": "Photo coming",
+    "moreHeading": "More robots from FindMyRobo",
+    "moreSub": "Delivery and kitchen robots for businesses — quoted to your site."
   },
   "products": {
     "eyebrow": "The Lineup",

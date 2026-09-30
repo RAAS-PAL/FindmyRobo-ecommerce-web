@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
 import QuoteForm from "@/components/quote/QuoteForm";
@@ -10,25 +10,31 @@ import LineChatButton from "@/components/quote/LineChatButton";
 const PROMISES = ["warranty", "install", "aftersales"] as const;
 
 /**
- * The hero's left half: the quote card, and under it the three promises and a
- * LINE shortcut for people who would rather chat. Those fold away while the
- * card is open, so the form has the room it grows into.
+ * The hero's quote card, and under it the three promises and a LINE shortcut
+ * for people who would rather chat. Those fold away while the card is open,
+ * so the form has the room it grows into. From lg it floats over the hero
+ * photo, so the notes sit on their own frosted panel rather than on the photo.
  */
-export default function HeroQuote() {
+export default function HeroQuote({
+  onOpenChange,
+}: {
+  /** Told when the card opens or closes (the hero pauses its slides meanwhile). */
+  onOpenChange?: (open: boolean) => void;
+}) {
   const t = useTranslations("heroQuote");
   const [formOpen, setFormOpen] = useState(false);
-
-  // Widens the hero's frosted half, and the nav wedge lined up with it, while
-  // the card is open (both read --hero-split in globals.css).
-  useEffect(() => {
-    const root = document.documentElement;
-    root.toggleAttribute("data-quote-open", formOpen);
-    return () => root.removeAttribute("data-quote-open");
-  }, [formOpen]);
+  // stable, so QuoteForm's outside-click listener isn't re-bound every render
+  const onExpandedChange = useCallback(
+    (open: boolean) => {
+      setFormOpen(open);
+      onOpenChange?.(open);
+    },
+    [onOpenChange]
+  );
 
   return (
-    <div className="flex flex-col items-center">
-      <QuoteForm onExpandedChange={setFormOpen} />
+    <div className="flex flex-col items-center lg:items-end">
+      <QuoteForm onExpandedChange={onExpandedChange} />
 
       <div
         // z-30: above the card (z-20), so the QR popover can rise over it
@@ -39,11 +45,7 @@ export default function HeroQuote() {
       >
         {/* overflow-visible while shown, so the popover isn't clipped */}
         <div className={formOpen ? "overflow-hidden" : "overflow-visible"}>
-          {/* One card with notes under it, not two matching boxes: from lg the
-              frosted half is the backing, so the notes are plain text lined
-              up with the card's content. Phones keep a soft panel — there the
-              frost covers only part of what sits behind them. */}
-          <div className="mt-4 rounded-2xl border border-black/5 bg-surface/70 px-4 py-3.5 backdrop-blur-md dark:border-white/10 lg:mt-5 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-5 lg:py-0 lg:backdrop-blur-none">
+          <div className="mt-3 rounded-2xl border border-black/5 bg-surface/80 px-4 py-3.5 backdrop-blur-md dark:border-white/10">
             <ul aria-label={t("promisesLabel")} className="space-y-2">
               {PROMISES.map((key) => (
                 <li
@@ -57,7 +59,7 @@ export default function HeroQuote() {
                 </li>
               ))}
             </ul>
-            <div className="mt-3 border-t border-black/8 pt-3 dark:border-white/10 lg:mt-5 lg:border-t-0 lg:pt-0">
+            <div className="mt-3 border-t border-black/8 pt-3 dark:border-white/10">
               <LineChatButton />
             </div>
           </div>
