@@ -94,9 +94,9 @@ export default function HeroSection() {
     >
       {/* ---- the photos, cross-fading ---- */}
       <div
-        // photo area plus the 69px the navbar covers; from lg one screen
-        // (100svh less the announcement bar above the navbar)
-        className="relative h-[calc(75vw+69px)] sm:h-[calc(56.25vw+69px)] lg:h-[calc(100svh-34px)] lg:min-h-[42rem] lg:max-h-[66rem]"
+        // photo area plus the 69px the navbar covers; from lg one full
+        // screen (nothing sits above the navbar)
+        className="relative h-[calc(75vw+69px)] sm:h-[calc(56.25vw+69px)] lg:h-svh lg:min-h-[42rem] lg:max-h-[66rem]"
       >
         {heroSlides.map((s, i) => (
           <div

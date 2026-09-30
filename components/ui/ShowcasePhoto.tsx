@@ -31,8 +31,15 @@ export default function ShowcasePhoto({
   const t = useTranslations("showcase");
   const locale = useLocale();
 
-  if (photo.studio?.length) {
-    return <StudioStage robots={photo.studio} light={photo.studioLight} priority={priority} />;
+  if (photo.studioPhoto || photo.studio?.length) {
+    return (
+      <StudioStage
+        robots={photo.studio}
+        photo={photo.studioPhoto}
+        light={photo.studioLight}
+        priority={priority}
+      />
+    );
   }
 
   if (photo.image) {

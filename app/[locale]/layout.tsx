@@ -6,7 +6,6 @@ import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google"
 import "../globals.css";
 import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/siteUrl";
-import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MotionProvider from "@/components/MotionProvider";
@@ -132,7 +131,14 @@ export default async function LocaleLayout({
                 <CartProvider>
                   <QuoteProvider>
                     <CompareProvider>
-                      <AnnouncementBar />
+                      {/* AnnouncementBar is hidden in the 2026-09-30 redesign:
+                          the page opens straight onto the navbar over the
+                          hero (DJI-style), and HeroSection's full-screen
+                          height assumes nothing above the bar. The component
+                          and its CMS section (Admin → Content → Announcement
+                          bar) are kept: re-import it and put
+                          <AnnouncementBar /> back here to bring it back —
+                          until then that CMS section has no effect. */}
                       <Navbar />
                       {children}
                       {/* Products are already loaded here for ProductsProvider —

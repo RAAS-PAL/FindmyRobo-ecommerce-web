@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { StudioRobot } from "@/data/homeShowcase";
+import type { StudioPhoto, StudioRobot } from "@/data/homeShowcase";
 
 /**
  * A product "studio shot" built from transparent cut-outs, instead of a photo:
@@ -12,11 +12,13 @@ import type { StudioRobot } from "@/data/homeShowcase";
  * with separate phone and desktop values (StudioRobot in data/homeShowcase.ts).
  */
 export default function StudioStage({
-  robots,
+  robots = [],
+  photo,
   light = "accent",
   priority = false,
 }: {
-  robots: StudioRobot[];
+  robots?: StudioRobot[];
+  photo?: StudioPhoto;
   light?: "neutral" | "accent";
   priority?: boolean;
 }) {
@@ -54,6 +56,45 @@ export default function StudioStage({
         className={`absolute bottom-[8%] left-1/2 h-[30%] w-[90%] -translate-x-1/2 rounded-[50%] lg:bottom-[44%] lg:left-[35%] lg:w-[52%] ${pool}`}
       />
 
+      {photo && (
+        // the box: the photo may use any of it but never leaves it
+        <div
+          className="absolute top-(--t) right-(--r) bottom-(--bt) left-(--l) flex items-center justify-center [container-type:size] lg:top-(--t-lg) lg:right-(--r-lg) lg:bottom-(--bt-lg) lg:left-(--l-lg) lg:justify-start"
+          style={
+            {
+              "--t": photo.phone.top,
+              "--r": photo.phone.right,
+              "--bt": photo.phone.bottom,
+              "--l": photo.phone.left,
+              "--t-lg": photo.desktop.top,
+              "--r-lg": photo.desktop.right,
+              "--bt-lg": photo.desktop.bottom,
+              "--l-lg": photo.desktop.left,
+            } as React.CSSProperties
+          }
+        >
+          {/* as large as fits: full width, unless that would be too tall */}
+          <div
+            className="relative shrink-0"
+            style={{
+              width: `min(100cqw, calc(100cqh * ${photo.width / photo.height}))`,
+              aspectRatio: `${photo.width} / ${photo.height}`,
+            }}
+          >
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              fill
+              priority={priority}
+              sizes="(min-width: 1024px) 60vw, 100vw"
+              // fade every edge of the frame (the robot sits clear of the
+              // fades) so the photo melts into the set
+              className="object-cover [mask-image:linear-gradient(to_right,transparent,black_5%,black_60%,transparent_97%),linear-gradient(to_bottom,transparent,black_13%,black_70%,transparent_100%)] [mask-composite:intersect]"
+            />
+          </div>
+        </div>
+      )}
+
       {robots.map((robot) => (
         <div
           key={robot.src}
@@ -76,17 +117,10 @@ export default function StudioStage({
             width={robot.width}
             height={robot.height}
             priority={priority}
-            sizes={robot.photo ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 30vw, 60vw"}
-            className={`relative h-auto w-full ${
-              robot.photo
-                ? // fade every edge of the frame (the robot sits clear of the fades)
-                  // so the photo melts into the set
-                  "[mask-image:linear-gradient(to_right,transparent,black_5%,black_60%,transparent_97%),linear-gradient(to_bottom,transparent,black_13%,black_70%,transparent_100%)] [mask-composite:intersect]"
-                : "drop-shadow-[0_18px_22px_rgba(0,0,0,0.55)]"
-            }`}
+            sizes="(min-width: 1024px) 30vw, 60vw"
+            className="relative h-auto w-full drop-shadow-[0_18px_22px_rgba(0,0,0,0.55)]"
           />
           {/* reflection: the same cut-out, flipped and fading into the floor */}
-          {!robot.photo && (
           <Image
             src={robot.src}
             alt=""
@@ -96,7 +130,6 @@ export default function StudioStage({
             sizes="(min-width: 1024px) 30vw, 60vw"
             className="pointer-events-none absolute top-full left-0 h-auto w-full -scale-y-100 opacity-20 [mask-image:linear-gradient(to_bottom,transparent_55%,black_100%)]"
           />
-          )}
         </div>
       ))}
     </div>

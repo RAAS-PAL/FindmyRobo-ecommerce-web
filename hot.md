@@ -80,8 +80,12 @@ branch `main`.
   Phantas, half tiles for Pudu and T-Chef (`components/sections/RobotShowcase.tsx`,
   placeholders say which photo is needed). Quote form gained Phantas cleaning
   and T-Chef cooking. Navbar is transparent over the homepage hero until
-  scroll (`header[data-clear]` in globals.css). Copy for Phantas/Pudu/T-Chef
-  is descriptive only until spec sheets arrive; their Thai lines are drafts.
+  scroll (`header[data-clear]` in globals.css). The announcement bar is hidden
+  (not rendered in `app/[locale]/layout.tsx`), so its CMS section currently
+  does nothing. The hero photo sits in a box below the navbar and above the
+  headline (`studioPhoto` in `data/homeShowcase.ts`) and scales to fit it.
+  Copy for Phantas/Pudu/T-Chef is descriptive only until spec sheets arrive;
+  their Thai lines are drafts.
 
 - **Navbar** (`components/layout/Navbar.tsx`, `.nav-track` in globals.css): a
   3px gold track on the bar's bottom edge glides to the hovered/focused link

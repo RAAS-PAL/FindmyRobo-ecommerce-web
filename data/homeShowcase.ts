@@ -31,11 +31,29 @@ export interface StudioRobot {
   desktop: { left: string; bottom: string; width: string };
   /** Stacking: the nearer robot is higher. */
   z?: number;
-  /**
-   * A full studio photograph rather than a cut-out: no drop shadow or fake
-   * reflection (the photo has its own), and its edges fade into the set.
-   */
-  photo?: boolean;
+}
+
+/** Offsets from the stage's edges (any CSS length). */
+export interface StageBox {
+  top: string;
+  right: string;
+  bottom: string;
+  left: string;
+}
+
+/**
+ * A full studio photograph on the set, rather than cut-outs: it has its own
+ * floor and reflection, and its edges fade into the set. It is drawn as large
+ * as fits inside `box` without cropping, at its own aspect ratio, so it can
+ * never run under the navbar or into the headline, whatever the screen shape.
+ */
+export interface StudioPhoto {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  phone: StageBox;
+  desktop: StageBox;
 }
 
 export interface ShowcasePhoto {
@@ -45,6 +63,8 @@ export interface ShowcasePhoto {
    * (components/ui/StudioStage). Wins over `image`.
    */
   studio?: StudioRobot[];
+  /** A finished studio photo on the set (wins over `studio` cut-outs). */
+  studioPhoto?: StudioPhoto;
   /** The studio's key light: soft white, or the brand blue. Default blue. */
   studioLight?: "neutral" | "accent";
   focus?: string;
@@ -96,19 +116,24 @@ export const heroSlides: HeroSlide[] = [
     // the headline and clear of the quote card. Not mirrored to face into
     // the page: that would print MAMMOTION / LUBA backwards.
     image: null,
-    studio: [
-      {
-        // studio render of the LUBA 3 AWD (generated from the product photo,
-        // details checked against it); its dark edges fade into the set
-        src: "/studio/luba-studio-photo.webp",
-        alt: "Mammotion LUBA robot mower",
-        width: 1672,
-        height: 941,
-        phone: { left: "10%", bottom: "2%", width: "104%" },
-        desktop: { left: "3%", bottom: "38%", width: "60%" },
-        photo: true,
+    // studio render of the LUBA 3 AWD (generated from the product photo,
+    // details checked against it). The hero runs up under the navbar, so
+    // its box starts below the bar (69px) and ends above the headline.
+    studioPhoto: {
+      src: "/studio/luba-studio-photo.webp",
+      alt: "Mammotion LUBA robot mower",
+      width: 1672,
+      height: 941,
+      phone: { top: "69px", right: "0%", bottom: "0%", left: "0%" },
+      // left: lined up with the page's content column (max-w-7xl) on wide
+      // screens; bottom: the headline block is about 26rem tall on any screen
+      desktop: {
+        top: "calc(69px + 2%)",
+        right: "38%",
+        bottom: "max(42%, 27rem)",
+        left: "max(3%, calc((100% - 80rem) / 2))",
       },
-    ],
+    },
     studioLight: "neutral",
     shot: { en: "", th: "" },
   },
