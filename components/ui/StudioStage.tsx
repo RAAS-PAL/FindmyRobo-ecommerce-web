@@ -28,7 +28,7 @@ export default function StudioStage({
       {/* the blue key light behind the robots */}
       <div
         aria-hidden="true"
-        className="absolute top-[4%] left-1/2 h-[62%] w-[80%] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(var(--accent-rgb)/0.42),rgb(var(--accent-rgb)/0.12)_55%,transparent)] blur-2xl lg:left-[57%] lg:w-[46%]"
+        className="absolute top-[4%] left-1/2 h-[62%] w-[80%] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(var(--accent-rgb)/0.42),rgb(var(--accent-rgb)/0.12)_55%,transparent)] blur-2xl lg:left-[34%] lg:w-[50%]"
       />
       {/* floor: a seamless cove (no horizon line, as in a real studio: a
           hard line would cut through the copy and leave the rear robot
@@ -39,7 +39,7 @@ export default function StudioStage({
       />
       <div
         aria-hidden="true"
-        className="absolute bottom-[14%] left-1/2 h-[30%] w-[90%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgb(120_160_255/0.16),transparent)] lg:bottom-[30%] lg:left-[57%] lg:w-[50%]"
+        className="absolute bottom-[14%] left-1/2 h-[30%] w-[90%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgb(120_160_255/0.16),transparent)] lg:bottom-[38%] lg:left-[34%] lg:w-[52%]"
       />
 
       {robots.map((robot) => (
