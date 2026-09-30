@@ -1,34 +1,70 @@
-# Project Index — E-commerce RAASPAL
+# Project Index — FindMyRobo (RAAS PAL)
 
-## Status: Building — home page complete (2026-07-04)
+## Status: live at findmyrobo.com, quote-only mode (2026-09-30)
 
-## Code Map
-- app/[locale]/page.tsx — home page (imports all sections)
-- app/[locale]/shop/page.tsx — all-products listing with category pills
-- app/[locale]/shop/[category]/page.tsx — category pages (+ coming-soon empty state)
-- app/[locale]/products/[id]/page.tsx — product detail (specs, features, related)
-- app/[locale]/layout.tsx — fonts (incl. Thai), i18n provider, nav, footer
-- app/globals.css — navy/gold design tokens + keyframe animations
-- i18n/ — next-intl routing (th default at /, en at /en), navigation, request config
-- middleware.ts — locale routing
-- messages/th.json + en.json — ALL site copy lives here (Thai needs native review)
-- components/layout/ — Navbar, Footer, AnnouncementBar
-- components/sections/ — Hero, ProductGrid, Trust, WhyUs, Partners, News, YouTubeCTA
-- components/ui/ — ProductCard, AnimatedCounter, RobotIllustration, BrandIcons
-- data/categories.ts — category source of truth (nav derives from this)
-- data/products.ts — 6 placeholder products (฿ prices), each tagged with category
+Current state, open items and gotchas: `hot.md`. Setup, env vars, DB, CMS,
+deployment: `README.md`.
 
-## Key Decisions
-- [[vault/projects/tech-stack-decision]]
-- [[vault/projects/payment-gateway-decision]]
-- [[vault/projects/brand-name-decision]]
+## Code map
 
-## Pending Items
-- [ ] Finalize brand name + domain
-- [ ] Register Omise account
-- [ ] Get Sokochan API docs
-- [ ] Confirm product data from Chris/Pommy
+### Storefront — `app/[locale]/` (Thai at `/`, English at `/en`)
+- `layout.tsx` — root layout: fonts, `ThemeScript`, providers (intl, motion,
+  products, site content, cart, quote, compare), AnnouncementBar, Navbar,
+  Footer, QuoteDrawer
+- `page.tsx` — homepage sections (`components/sections/*`)
+- `shop/`, `shop/[category]/` — listings (coming-soon categories get a teaser)
+- `products/[id]/` — product page (gallery, specs, tech anatomy, FAQ, reviews,
+  floating bar); `products/request-a-demo` is the demo booking product
+- `about/`, `contact-sales/`, `location/`, `refund-policy/`, `compare/`,
+  `search/`, `order-status/`
+- `login/`, `signup/`, `forgot-password/`, `reset-password/`, `account/`
+- `checkout/` — switched off while `siteConfig.cartEnabled` is false
 
-## Resources
-- [[vault/resources/robomate-australia-reference]]
-- [[vault/resources/sokochan-api-notes]]
+### Admin and CMS
+- `app/admin/(protected)/` — Supabase-role admin: products, page builder,
+  orders, fulfilment (`components/admin/*`)
+- `app/(payload)/cms`, `cms-api` — Payload CMS; config `payload.config.ts`,
+  schema in `payload/` (collections, globals, migrations, seed, storage),
+  content reader `lib/payloadContent.ts`
+
+### API — `app/api/`
+- `quotes/` — quote form → email to sales (quote-only flow)
+- `checkout/` (+ `pay`, `promptpay`), `webhooks/omise`, `webhooks/sokochan`
+- `admin/*`, `account/*`, `orders/*`, `reviews/`
+
+### Components
+- `layout/` — Navbar (gold track, menus, drawer), ProfileMenu, CatalogSearch,
+  LanguageSwitcher, AnnouncementBar, Footer, ThemeToggle (admin only)
+- `quote/` — QuoteForm (card + panel variants), HeroQuote, QuoteDrawer,
+  QuoteProvider, LineChatButton
+- `sections/` — HeroSection and the other homepage sections
+- `contact/` — ContactSalesBody, LocationBody
+- `product/`, `cart/`, `checkout/`, `compare/`, `account/`, `auth/`, `about/`,
+  `ui/`, `seo/`
+- `ThemeProvider.tsx` — theme store + `ThemeScript`; `SiteContentProvider`,
+  `ProductsProvider`, `MotionProvider`
+
+### Data, config, copy
+- `data/siteConfig.ts` — business switches (`showPrices`, `cartEnabled`),
+  registered address, Google Maps place + URLs, organisation
+- `data/siteContent.ts`, `data/about.ts` — built-in content (CMS fallback)
+- `data/categories.ts` — categories (nav derives from it); `data/products.ts`,
+  `products.json` — fallback catalogue (live catalogue is in Supabase)
+- `data/techAnatomy.ts`, `data/returnPolicy.ts`
+- `messages/en.json`, `messages/th.json` — all UI copy (identical key sets)
+- `app/globals.css` — Tailwind v4 `@theme` tokens, hero vars
+  (`--hero-split`, `--hero-lean`), nav track, animations
+
+### Library — `lib/`
+- `supabase/` (client, server, service, middleware), `productStore.ts`,
+  `orderStore.ts`, `addressStore.ts`, `reviewStore.ts`, `siteContentStore.ts`
+- `quoteRequest.ts` (quote validation), `checkout.ts`, `email.ts`,
+  `notifications.ts`, `omise.ts`, `sokochan.ts`, `rateLimit.ts`
+- `seo.ts`, `structuredData.ts`, `siteUrl.ts`
+
+### Other
+- `middleware.ts` — locale routing + Supabase session refresh
+- `i18n/` — next-intl routing/navigation/request
+- `supabase/*.sql` — schema + migrations, applied by hand (README)
+- `scripts/payload-migrate.mjs` — runs before `next build`
+- `docs/` — reference material (internal spreadsheets are gitignored)

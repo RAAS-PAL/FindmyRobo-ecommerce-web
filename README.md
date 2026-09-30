@@ -39,7 +39,8 @@ the whole site locally without Resend, Omise or Sokochan credentials — see
   (`"type": "module"` — Payload requires it)
 - **Payload CMS 3** — embedded in this app at `/cms`; see [CMS](#cms-payload)
 - **Tailwind CSS v4** — design tokens live in `app/globals.css` under `@theme`
-  (`forest-*` green scale + `gold`), not in a Tailwind config file
+  (`forest-*` scale, currently remapped to charcoal so the brand reads black +
+  gold, and `gold`), not in a Tailwind config file
 - **next-intl v4** — Thai is the default at `/`, English at `/en`
   (`localePrefix: "as-needed"`). Locale detection is deliberately **off**:
   everyone gets Thai first and switches via the toggle, which is remembered in
@@ -174,13 +175,25 @@ no price is rendered anywhere a customer can see, while prices are still read
 from the catalogue, still priced server-side at checkout, and still shown to
 sales in the alert email and the admin panel.
 
-Flip it to `true` when card payment goes live. No other change is needed.
+`siteConfig.cartEnabled` is also **`false`**: there is no cart. Every
+"interested" button opens one quote form (`components/quote/*`) with the
+product preselected, `/checkout` redirects home and `POST /api/checkout`
+returns 404. Quote requests are emailed to `SALES_ALERT_EMAIL` only
+(`app/api/quotes`) — they are not stored, so a missing `RESEND_API_KEY` loses
+them.
+
+Flip both to `true` when card payment goes live. No other change is needed.
 
 ## Deployment
 
 Vercel builds `main` automatically. Environment variables are set in the Vercel
 project — **changing one requires a redeploy**, it does not apply to a running
 deployment.
+
+Vercel restores a build cache between deployments, and once served a stale
+compiled `app/globals.css` (new CSS custom properties missing live). After
+changing that file, check the live stylesheet; if it's stale, redeploy without
+the cache (dashboard → Redeploy → untick "Use existing Build Cache").
 
 The storefront is statically generated, but the admin product routes call
 `revalidatePath` on every save, so catalogue edits publish immediately — no

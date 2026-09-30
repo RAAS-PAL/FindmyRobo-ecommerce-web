@@ -1,123 +1,162 @@
-# Hot Cache — Last Updated: 2026-07-08
+# Hot Cache — Last Updated: 2026-09-30
 
-## Latest Change — CEO REBRAND: LIGHT GREEN + YELLOW ✅ (2026-07-08)
-- CEO decision: lighter look, green + yellow, premium. Supersedes navy+gold.
-- Token rename repo-wide: navy-* → forest-* (green values) in
-  app/globals.css @theme; gold kept (#F5C842); gold-600 darkened to
-  #8a6a00 for WCAG text contrast on white; cloud/ink-muted now green-tinted
-- Light surfaces: navbar (white glass), hero (daylight lawn scene:
-  sun, pollen, cream/green mower), WhyUs (white cards), YouTube CTA
-  (light gradient). Dark-forest anchors kept: footer, stat cards,
-  specs panel, news banners, cart drawer, admin header
-- HERO VIDEO SLOT: data/siteConfig.ts → heroVideoUrl (null now).
-  Set to "/hero.mp4" (file in /public) or CDN URL → hero plays video
-  full-bleed with dark overlay + white text; null → animated scene.
-  Verified both modes render. CEO's video pending.
-- RobotIllustration + hero MowerSvg restyled: cream shells, forest
-  chassis, gold accents
-- NBSP gotcha in HeroSection headline separator still applies (line
-  contains a literal U+00A0 — edits there must match it)
+Read this first. It's the current state in one page; `README.md` has setup,
+stack, layout, CMS, env vars and conventions in depth; `index.md` maps the
+code; `history.md` is the dated log.
 
-## Latest Change (part 3) — SHOP + PRODUCT DETAIL PAGES ✅
-- New routes (all SSG, 27 static pages, both locales):
-  /shop (all products, category filter pills)
-  /shop/[category] (4 categories; coming-soon ones get a
-  premium empty state with Book-a-Demo CTA)
-  /products/[id] (breadcrumb, navy gallery card, description,
-  price, demo/contact CTAs, features list, dark specs panel,
-  related products)
-- data/products.ts: added specs field — PLACEHOLDER values from
-  public Mammotion specs, replace when Chris/Pommy confirm
-- All detail copy (descriptions, features, spec labels) in
-  messages/{th,en}.json under productDetail + shop namespaces
-- categories.ts: href field removed → use categoryHref(slug)
-- ProductCard now links whole card to /products/[id]
-- Hero "Find Your Ideal Robot" + nav Shop → /shop
-- User has DEPLOYED to Vercel (before this change) — needs a
-  redeploy/push to pick these pages up
-- NEXT AGREED STEP: Book-a-Demo/contact flow (form + LINE OA
-  button) — the site's conversion path until payments exist
-- WINDOWS GOTCHA: TaskStop on `npm run start` leaves an orphaned
-  node child holding port 3000 serving STALE routes — always
-  kill by port before restarting (Get-NetTCPConnection -LocalPort 3000)
+## What this is
 
-## Latest Change (same day, part 2) — THAI LANGUAGE ✅
-- Full bilingual site via next-intl v4: THAI DEFAULT at "/",
-  English at "/en" (user's explicit choice)
-- localeDetection: false — "/" is always Thai regardless of
-  browser language; EN/ไทย switcher in navbar (desktop + drawer)
-- All copy in messages/th.json + messages/en.json (Claude-drafted
-  Thai — needs native review before launch)
-- App moved to app/[locale]/; middleware.ts handles routing;
-  both locales prerender as static (SSG)
-- Thai fonts: Prompt (display fallback) + Noto Sans Thai (body
-  fallback) — Archivo/Inter have no Thai glyphs
-- Product taglines + category names/descriptions now live in
-  messages files, NOT in data/*.ts (data has ids/prices/slugs only)
-- GOTCHA: HeroSection.tsx line ~138 contains a real NBSP (U+00A0)
-  inside "&& " "" — intentional (spaces collapse at end of
-  inline-block); exact-match edits on that line must use NBSP
-- Verified: build clean, screenshots of / (Thai), /en, mobile
+FindMyRobo (findmyrobo.com): the bilingual Thai/English storefront of Raas Pal
+Company Limited, selling Mammotion robot mowers in Thailand (pool, cleaning and
+delivery robots are listed as "coming soon"). Thai is the default at `/`,
+English at `/en`. Next.js 16.3 App Router, React 19, Tailwind v4, next-intl 4,
+Supabase (auth, products, orders), Payload CMS 3 embedded at `/cms`, Resend
+email. pnpm 12, Node ≥ 24, ESM. Repo `RAAS-PAL/FindmyRobo-ecommerce-web`, only
+branch `main`.
 
-## Previous Change (same day)
-- MULTI-CATEGORY RESTRUCTURE ✅
-  - New data/categories.ts = single source of truth for store
-    structure (robot-mowers, pool-cleaners available;
-    cleaning-robots, delivery-robots marked coming-soon)
-  - products.ts: added `category: CategorySlug` field;
-    `variant` is now ONLY the illustration style
-  - Navbar: "Robot Mowers | Pool Cleaners" replaced by one
-    "Shop ▾" dropdown generated from categories data —
-    coming-soon categories show gold "SOON" badge, disabled
-  - Mobile drawer: accordion sub-menus (Shop expanded default)
-  - ProductCard: category label chip above product name
-  - Verified via screenshots (desktop dropdown + mobile drawer)
-- To add a category later: add one entry in data/categories.ts,
-  nav updates automatically
+## Current state (live)
 
-## Last Session Summary
-- HOME PAGE BUILT ✅ — all 8 sections complete and verified
-  (hero, products, trust/stats, why-us, partners, news,
-  YouTube CTA, footer) + navbar, announcement marquee,
-  mobile drawer
-- Animated hero: CSS/SVG robot mower crossing a lawn with
-  cut-trail, gold fireflies, word-by-word headline (no video)
-- Design system: navy #0D1B4B / #070F2E + gold #F5C842,
-  fonts Archivo (display) / Inter (body) / IBM Plex Mono
-  (prices, eyebrows, stats) via next/font
-- lucide-react installed (NOTE: brand icons were removed from
-  lucide — social/YouTube icons are inline SVGs in
-  components/ui/BrandIcons.tsx)
-- `npm run build` passes; verified visually at 1440px and
-  375px via headless Edge screenshots
-- Placeholder brand "RoboMart TH" used everywhere —
-  search-replace when real brand name is decided
+- **Quote-only mode.** `data/siteConfig.ts`: `showPrices: false` (no prices
+  anywhere a customer sees) and `cartEnabled: false` (no cart; `/checkout`
+  redirects home and `POST /api/checkout` returns 404). Every "interested"
+  button (product page, floating bar, compare, demo, installation, navbar)
+  opens ONE quote form (`components/quote/*`) with the product preselected.
+  The cart, checkout, Omise payments and Sokochan fulfilment code all still
+  exist, switched off — flip the two flags back when selling online.
+- **Quote requests email the sales team only** (`app/api/quotes/route.ts` →
+  `SALES_ALERT_EMAIL` via Resend, reply-to = customer). Nothing goes to the
+  customer until sales confirm prices (business decision, 2026-09-28). Requests
+  are NOT saved to the database, and if `RESEND_API_KEY` is missing they are
+  silently lost — see Open items.
+- **CMS:** Payload at `/cms` edits homepage (hero videos/copy), announcement
+  bar, About, contact/socials (incl. the LINE QR), SEO and media. Publishing
+  revalidates the site — no deploy needed. `data/*.ts` and `messages/*.json`
+  ARE compiled in and need a deploy.
+- **Theme:** light mode is the default; brand reads black + gold. The
+  `forest-*` tokens in `app/globals.css` were remapped to a charcoal scale
+  ("green → black" experiment, still live); gold `#f5c842`. Dark mode is a
+  neutral near-black. Fonts: Barlow (display/body) with Prompt / Noto Sans Thai
+  for Thai glyphs, IBM Plex Mono for eyebrows/labels.
 
-## Current Status
-- Project setup: ✅ complete
-- Home page: ✅ built (placeholder data, placeholder brand)
-- All other pages: ❌ not started
-- Payment: ❌ postponed to Phase 2 (no Omise code exists — correct)
+## How work ships
 
-## Next Session — Start Here
-1. Read CLAUDE.md + history.md + index.md
-2. Candidate next steps (ask user which):
-   - Product detail page (/products/[id])
-   - Real product images to replace SVG illustrations
-   - Brand name finalization → replace "RoboMart TH"
-   - Blog/news listing page
-   - Contact / Book-a-demo form page
+- **A push to `main` deploys production automatically** (Vercel Git
+  integration; Vercel project `e-commerce-raaspal`). Work has been committed
+  straight to `main` since 2026-09-28; earlier work came through PRs from
+  feature branches.
+- **Build-cache gotcha (2026-09-29):** a push that changed `app/globals.css`
+  deployed a STALE compiled stylesheet (Vercel restored its build cache): new
+  `:root` custom properties were missing live and the hero frost collapsed to
+  0px, while a local `next build` was correct. After any `globals.css` change,
+  check the live CSS for the new rules; if they're missing, redeploy without
+  the cache (Vercel dashboard → Redeploy → untick "Use existing Build Cache",
+  or `vercel deploy --prod --force` from a clean checkout). Never deploy from a
+  folder that holds local `.env*` files — the CLI uploads them.
+- `pnpm build` runs Payload migrations first (`scripts/payload-migrate.mjs`)
+  against whatever `DATABASE_URL` points at.
 
-## Known Issues
-- Hero cut-trail resets each 16s loop (by design, reads as a
-  new mowing pass)
-- Nav links point to section anchors (#products, #news, …)
-  until real pages exist
+## Cloud / fresh-checkout sessions
 
-## Important Decisions
-- Brand name: [PLACEHOLDER "RoboMart TH"] — not decided yet
-- Omise payment: POSTPONED — no payment code until Phase 2
-- Reference site: robomate.com.au (PDF in docs/)
-- SCOPE: general robotics store, NOT mower-only. Launch categories
-  = mowers + pool cleaners; later = cleaning robots, delivery
-  robots, and more. Keep nav/IA/data category-agnostic.
+- No `.env.local` in the repo. To boot the storefront you need at least
+  `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (the
+  navbar's profile menu creates a Supabase client on mount).
+- **Leave `DATABASE_URL` unset** unless you mean to touch the live CMS
+  database: with it, `pnpm dev` edits live content and `pnpm build` migrates
+  the production DB. Without it the CMS is off and the site shows its built-in
+  content (`data/siteContent.ts`, `data/about.ts`) — fine for UI work.
+- To check a build without migrations: `pnpm exec next build`.
+- Verify UI changes with a headless browser (screenshots at 1440 and 390 px,
+  light + dark, `/` Thai and `/en`); the site's owner reviews by screenshot.
+
+## Recent work (2026-09-24 → 09-30), newest first
+
+- **Navbar** (`components/layout/Navbar.tsx`, `.nav-track` in globals.css): a
+  3px gold track on the bar's bottom edge glides to the hovered/focused link
+  (leading end first, glowing head) and rests under the current section
+  (Products / About / Contact); About/Contact menus hang from that edge (pt-4)
+  under the track; menu items have icons; the bare quote icon is now a gold
+  "Get a quote" pill (gold disc on phones).
+- **Profile menu** (`components/layout/ProfileMenu.tsx`): hover (mouse) or
+  click/tap opens Sign in / Create account, or My account / Sign out when
+  signed in, plus the Dark mode switch. The bar's "Book a Demo" button and
+  standalone theme button were removed (Book a Demo stays under Contact and in
+  the hero). "FindMyRobo TV" was removed from the menu.
+- **Location page** `/location` (`components/contact/LocationBody.tsx`): Google
+  Maps embed (no API key) of the company's Google Business listing
+  (`siteConfig.salesContact.mapsPlace`); every "Open in Google Maps" link,
+  directions link and the embed are built from it (`salesMapUrl`,
+  `salesDirectionsUrl`, `salesMapEmbedUrl`). The street address alone matched
+  several "Software Park" places.
+- **Hero** (`components/sections/HeroSection.tsx`, `components/quote/*`):
+  - Desktop (lg+): the left side is a frosted panel whose edge leans 6° and
+    lines up with the nav's grey wedge as one straight line. Shared CSS vars in
+    globals.css: `--hero-split` (where frost/wedge end; narrow at rest,
+    `50%` while `html[data-quote-open]`, set by `HeroQuote`), `--hero-lean`
+    (6deg), `--hero-split-mid` (frost width halfway down — the quote column is
+    this wide so the card sits centred in the frost).
+  - Below lg: no frost at all; the headline block is content-height so the
+    quote card follows the buttons.
+  - The section is `overflow: clip` (not hidden) on purpose: a hidden box is
+    still a scroll container, and focusing the form once scrolled the hero's
+    own content up, out of reach.
+- **Quote form** (`components/quote/QuoteForm.tsx`): expands on focus. Opening
+  it scrolls the WINDOW (never `scrollIntoView`): on touch + text field, an
+  instant jump before the keyboard opens (card top just under the sticky
+  header); otherwise a smooth glide to centre. Phone placeholder
+  `+66 123456789` (validation accepts +66… and 0…). Optional note field.
+- **Dark mode kept across language switches** (`ThemeScript` in
+  `components/ThemeProvider.tsx`): switching `/`↔`/en` remounts the root
+  `[locale]` layout in the browser; the old next/script `beforeInteractive`
+  tag re-rendered as an inert inline `<script>` (React warning) and `.dark`
+  was lost.
+- 2026-09-28: About story copy (with a guarded CMS migration), quote-only
+  flow, PRD + Office lock files gitignored, repo made public.
+- 2026-09-24: Payload CMS replaced a hand-built content editor.
+
+## Open items / next candidates
+
+- Save quote requests to a DB table + an `/admin` list for sales follow-up;
+  fail loudly (not silently) when `RESEND_API_KEY` is missing.
+- Automatic price/offer email to customers — waits on business decisions
+  (prices in email? VAT-inclusive?; Pudu has no catalogue products yet).
+- Admin login (`components/admin/LoginForm.tsx`) doesn't send a Turnstile
+  `captchaToken` — add it before Supabase Auth CAPTCHA is switched on, or admin
+  sign-in breaks.
+- Payment gateway not chosen yet (Omise vs 2C2P). Omise caps PromptPay /
+  instalments at ฿150,000; `app/api/checkout/promptpay` has no guard for that.
+- Profile menu's signed-in state and the phone-keyboard scroll fix were tested
+  in headless browsers only — confirm on a real account / real phone.
+- Content still to verify: homepage "4.7★ Customer Rating" stat (no source),
+  About stats ("77 provinces", "24h response"), placeholder About story photo,
+  empty YUKA quick specs; English return policy says "RAASPAL Co., Ltd." but
+  the registered name is "Raas Pal Company Limited".
+- Known and accepted: in Thai on 1024–1366px screens the nav's grey slope runs
+  through the last label "ศูนย์ช่วยเหลือ" (owner chose to keep the wording).
+- Pre-existing lint errors (don't block builds; `next build` skips lint):
+  `components/auth/Turnstile.tsx` (ref read during render),
+  `components/cart/InstallPurchasePanel.tsx` (setState in effect).
+- Optional cleanup: drop the old `site_content` tables
+  (`supabase/drop-site-content.sql`) only after confirming /cms serves content.
+
+## Gotchas
+
+- `messages/en.json` and `messages/th.json` must keep identical key sets.
+  Thai copy is reviewed by the Thai team — mark new Thai strings as drafts.
+- Product claims must trace to the manual/spec table/photos
+  (`data/techAnatomy.ts` has the rule). Don't claim a Mammotion partnership
+  or exclusivity in copy until it's confirmed in writing.
+- Supabase SQL is applied by hand (README → Database setup); run
+  `supabase/add-product-brand.sql` before adding a non-Mammotion product.
+- `HeroSection.tsx` headline separator contains a literal NBSP (U+00A0).
+- The Products mega-menu is index 0 of `navLinks` (positioned off `<nav>`, not
+  its `<li>`); other code assumes that.
+
+## Conventions for agents
+
+- The repo is **public**: never commit secrets, `.env*` files or internal
+  documents (`docs/PRD-*.xlsx` and Office `~$*` lock files are gitignored).
+- Commit messages: a plain-English subject saying what changed for the user,
+  a short body with the why; **no `Co-Authored-By` line** (owner's
+  preference). Suggest a commit message after finishing a code feature.
+- Ask before pushing to `main` — it deploys production.
+- Keep comments explaining *why*; match the surrounding style.
