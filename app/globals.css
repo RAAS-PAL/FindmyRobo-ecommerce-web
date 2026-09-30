@@ -1,22 +1,18 @@
 @import "tailwindcss";
 
-/* Class-based dark mode: an inline script in the layout puts .dark on <html>
-   before paint, so there is no flash of the wrong theme. */
+/* One theme only (2026-09-30: dark mode removed). The dark variant stays
+   bound to a .dark class that nothing sets, so leftover `dark:` utilities are
+   inert instead of following the visitor's OS setting (Tailwind's default). */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   /* Palette: GRAPHITE + ELECTRIC BLUE (2026-09-30, replacing black + gold).
 
-     DARK MODE: the palette below is the LIGHT theme. The .dark block further
-     down re-points these same tokens, so most components need no dark:
-     variants — `bg-cloud`, `border-forest-100`, `text-ink-muted` etc. all
-     re-theme themselves.
-
-     Two meanings could not share a token and were split out as semantic ones:
-       --color-surface  (cards/panels)  — white in light, raised graphite in dark
-       --color-content  (primary text)  — graphite in light, near-white in dark
-     ...because `bg-forest` (a dark surface) and `text-forest` (dark text on a
-     light surface) need OPPOSITE treatment in dark mode.
+     One light theme, deliberately not pure white: the page and panels sit on
+     a soft cool grey so the white of the robots and the blue stand out.
+       --color-surface  page, cards, panels, the solid navbar
+       --color-cloud    alternate bands and quiet fills, a step darker
+       --color-content  primary text
 
      `forest-*` is the neutral scale (a legacy name — it was green, then black;
      now a cool graphite). The brand colour is `accent-*`: change these few
@@ -28,7 +24,7 @@
   --color-forest-800: #2a2d34;
   --color-forest-700: #3e424b;
   --color-forest-300: #b5bac4;
-  --color-forest-100: #e3e6eb;
+  --color-forest-100: #dadee5; /* borders: visible on the grey page */
 
   /* brand accent — electric blue */
   --color-accent: #2e6bff; /* fills: buttons, bars, dots, focus ring */
@@ -36,13 +32,13 @@
   --color-accent-300: #5c90ff; /* accent TEXT on dark surfaces (and over photos): 6:1 on near-black */
   --color-accent-600: #1f4fd6; /* accent TEXT on light surfaces: 6:1 on white */
   --color-on-accent: #ffffff; /* text/icons sitting on an accent fill */
-  --color-accent-50: #eef3ff; /* faint accent wash: section bands */
+  --color-accent-50: #e6ecf9; /* faint accent wash: section bands */
 
-  --color-cloud: #f3f5f8;
+  --color-cloud: #e8ebf0;
   --color-ink-muted: #5a606b;
 
   /* semantic — see note above */
-  --color-surface: #ffffff;
+  --color-surface: #f3f5f8;
   --color-content: #121418;
 
   /* Thai fallbacks: Barlow/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
@@ -58,30 +54,6 @@
   --radius-xl: 0.5rem;
   --radius-2xl: 0.75rem;
   --radius-3xl: 1rem;
-}
-
-/* ---------- dark theme: graphite + electric blue (matches the light theme) ----------
-   A cool near-black graphite scale. The accent fill stays the same blue; accent
-   TEXT (accent-600) flips to a light blue so it reads on the dark surfaces.
-   Contrast (AA): content #f1f3f6 on #17191e ~15:1 · muted #9aa0ab ~6.5:1 ·
-   accent-600 #8db0ff on #0a0b0e ~8:1. */
-.dark {
-  color-scheme: dark;
-
-  --color-forest-950: #07080a; /* deepest surfaces: footer, drawer, hero scrim */
-  --color-forest-900: #111317;
-  --color-forest: #1a1c21; /* mid brand surface (gradient tiles, badges) */
-  --color-forest-800: #282b31;
-  --color-forest-700: #383c44;
-  --color-forest-300: #9ea3ad;
-  --color-forest-100: #2b2e35; /* borders — visible on the near-black canvas */
-  --color-accent-600: #8db0ff; /* accent text, lightened for dark surfaces */
-  --color-accent-50: #0d1321; /* section bands: a blue-black wash */
-  --color-cloud: #0a0b0e; /* page canvas */
-  --color-ink-muted: #9aa0ab;
-
-  --color-surface: #17191e; /* cards, raised above the canvas */
-  --color-content: #f1f3f6;
 }
 
 /* The accent as bare RGB channels, for glows and translucent shadows:
@@ -156,6 +128,31 @@
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* ---------- navbar over the homepage hero ----------
+   Navbar sets data-clear on the homepage until the page scrolls. While the
+   bar isn't hovered or focused, it drops its background and re-points the
+   colour tokens it uses to white, so every link, icon and outline inside
+   turns light at once (its dropdowns only open on hover or focus, i.e. on
+   the solid bar). Unlayered, so it beats the bar's own bg-* utilities. */
+header[data-clear="true"]:not(:hover):not(:focus-within) {
+  --color-content: #ffffff;
+  --color-ink-muted: rgb(255 255 255 / 0.78);
+  --color-forest-100: rgb(255 255 255 / 0.3);
+  --color-cloud: rgb(255 255 255 / 0.1);
+  --color-accent-600: #8db0ff;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.nav-logo-on-dark,
+header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-light {
+  display: none;
+}
+header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-dark {
+  display: block;
 }
 
 /* ---------- utilities ---------- */

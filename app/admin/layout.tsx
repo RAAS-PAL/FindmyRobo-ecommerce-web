@@ -3,7 +3,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google";
 import "../globals.css";
-import { themeInitScript } from "@/components/ThemeProvider";
 import { getAdminLocale } from "@/lib/adminLocale";
 
 /* Same font variables as the storefront so theme font tokens resolve. */
@@ -48,12 +47,8 @@ export default async function AdminRootLayout({
   return (
     <html
       lang={locale}
-      suppressHydrationWarning
       className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full antialiased`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className="flex min-h-full flex-col bg-cloud">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}

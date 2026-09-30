@@ -26,7 +26,6 @@
     "createAccount": "สร้างบัญชี",
     "signOut": "ออกจากระบบ",
     "signedInAs": "เข้าสู่ระบบในชื่อ",
-    "darkMode": "โหมดมืด",
     "quotationLabel": "รายการขอใบเสนอราคา {count} รายการ",
     "aboutUs": "เกี่ยวกับเรา",
     "getQuote": "ขอใบเสนอราคา"
@@ -213,8 +212,6 @@
     "navigation": {
       "adminLabel": "แอดมิน",
       "viewStore": "ดูหน้าร้าน",
-      "themeToDark": "เปลี่ยนเป็นโหมดมืด",
-      "themeToLight": "เปลี่ยนเป็นโหมดสว่าง",
       "switchLanguage": "เปลี่ยนภาษาแอดมินเป็นภาษาอังกฤษ",
       "switchLocale": "EN",
       "switchError": "ไม่สามารถเปลี่ยนภาษาแอดมินได้",

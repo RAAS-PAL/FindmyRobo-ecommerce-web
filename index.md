@@ -41,7 +41,7 @@ deployment: `README.md`.
 - `contact/` — ContactSalesBody, LocationBody
 - `product/`, `cart/`, `checkout/`, `compare/`, `account/`, `auth/`, `about/`,
   `ui/`, `seo/`
-- `ThemeProvider.tsx` — theme store + `ThemeScript`; `SiteContentProvider`,
+- `SiteContentProvider`,
   `ProductsProvider`, `MotionProvider`
 
 ### Data, config, copy

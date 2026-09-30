@@ -84,7 +84,9 @@ export default function HeroSection() {
     <section
       aria-roledescription="carousel"
       aria-label={t("slidesLabel")}
-      className="relative overflow-hidden bg-surface supports-[overflow:clip]:overflow-clip lg:bg-forest-950"
+      // -mt: the hero runs up under the navbar, which sits clear over it
+      // until the page scrolls (Navbar, data-clear); 69px = bar + border
+      className="relative -mt-[69px] overflow-hidden bg-surface supports-[overflow:clip]:overflow-clip lg:bg-forest-950"
       onFocus={() => setFocused(true)}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node)) setFocused(false);
@@ -92,7 +94,9 @@ export default function HeroSection() {
     >
       {/* ---- the photos, cross-fading ---- */}
       <div
-        className="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-auto lg:h-[calc(100svh-100px)] lg:min-h-[38rem] lg:max-h-[62rem]"
+        // photo area plus the 69px the navbar covers; from lg one screen
+        // (100svh less the announcement bar above the navbar)
+        className="relative h-[calc(75vw+69px)] sm:h-[calc(56.25vw+69px)] lg:h-[calc(100svh-34px)] lg:min-h-[42rem] lg:max-h-[66rem]"
       >
         {heroSlides.map((s, i) => (
           <div

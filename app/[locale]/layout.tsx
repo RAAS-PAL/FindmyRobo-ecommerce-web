@@ -10,7 +10,6 @@ import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MotionProvider from "@/components/MotionProvider";
-import { ThemeScript } from "@/components/ThemeProvider";
 import ProductsProvider from "@/components/ProductsProvider";
 import CartProvider from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
@@ -115,19 +114,11 @@ export default async function LocaleLayout({
   ]);
 
   return (
-    // suppressHydrationWarning: themeInitScript sets the .dark class on <html>
-    // before React hydrates, so the server/client class lists differ by design.
     <html
       lang={locale}
-      suppressHydrationWarning
       className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        {/* Sets the theme before first paint. Not next/script's beforeInteractive:
-            in the app router that is still an inline <script> in this tree, so
-            when switching language remounts this layout in the browser React
-            warns about it, and dark mode was lost. */}
-        <ThemeScript />
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
             <ProductsProvider products={products}>

@@ -150,6 +150,11 @@ export default function Navbar() {
   // Which section the page belongs to (the demo booking lives under /products
   // but is listed under Contact).
   const pathname = usePathname();
+  // DJI-style: on the homepage, before any scroll, the bar sits clear over
+  // the dark hero (white text, no background — styles in globals.css under
+  // header[data-clear]). Scrolling makes it solid, and so does hovering or
+  // focusing anything in it, so its menus always open on a solid bar.
+  const clear = pathname === "/" && !scrolled;
   const inContact =
     pathname === "/contact-sales" ||
     pathname === "/location" ||
@@ -236,6 +241,7 @@ export default function Navbar() {
   return (
     <>
     <header
+      data-clear={clear}
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled
           ? "border-forest-100 bg-surface/85 shadow-[0_8px_28px_-16px_rgba(0,0,0,0.25)] backdrop-blur-xl"
@@ -257,15 +263,16 @@ export default function Navbar() {
             width={1200}
             height={320}
             priority
-            className="h-10 w-auto sm:h-12 dark:hidden"
+            className="nav-logo-on-light h-10 w-auto sm:h-12"
           />
+          {/* the white version, for the clear bar over the hero */}
           <Image
             src="/main-logo-dark.png"
-            alt="FindMyRobo"
+            alt=""
             width={1200}
             height={320}
             priority
-            className="hidden h-10 w-auto sm:h-12 dark:block"
+            className="nav-logo-on-dark h-10 w-auto sm:h-12"
           />
         </Link>
 

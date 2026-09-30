@@ -32,10 +32,12 @@ branch `main`.
   bar, About, contact/socials (incl. the LINE QR), SEO and media. Publishing
   revalidates the site — no deploy needed. `data/*.ts` and `messages/*.json`
   ARE compiled in and need a deploy.
-- **Theme:** light mode is the default; brand reads black + gold. The
-  `forest-*` tokens in `app/globals.css` were remapped to a charcoal scale
-  ("green → black" experiment, still live); gold `#f5c842`. Dark mode is a
-  neutral near-black. Fonts: Barlow (display/body) with Prompt / Noto Sans Thai
+- **Theme (on branch `claude/project-brief-review-sfx73n`, not yet on main):**
+  one light theme only (dark mode removed), soft grey page (`--color-surface`
+  `#f3f5f8`), graphite neutrals, electric-blue brand colour. The brand colour
+  is one token, `accent-*` (plus `--accent-rgb`, `bg-accent-gradient`,
+  `text-accent-gradient`) in `app/globals.css`: change it there to re-colour
+  the site. Main still has black + gold with dark mode. Fonts: Barlow (display/body) with Prompt / Noto Sans Thai
   for Thai glyphs, IBM Plex Mono for eyebrows/labels.
 
 ## How work ships
@@ -70,6 +72,17 @@ branch `main`.
 
 ## Recent work (2026-09-24 → 09-30), newest first
 
+- **Homepage redesign, DJI-style** (branch `claude/project-brief-review-sfx73n`,
+  Vercel preview only): hero slides per robot family (`data/homeShowcase.ts`:
+  lawn mowing, then Gausium Phantas) with a progress tab bar and the quote
+  card docked right; the LUBA hero is a studio render faded into a graphite
+  set (`components/ui/StudioStage.tsx`); full-width banners for mowers and
+  Phantas, half tiles for Pudu and T-Chef (`components/sections/RobotShowcase.tsx`,
+  placeholders say which photo is needed). Quote form gained Phantas cleaning
+  and T-Chef cooking. Navbar is transparent over the homepage hero until
+  scroll (`header[data-clear]` in globals.css). Copy for Phantas/Pudu/T-Chef
+  is descriptive only until spec sheets arrive; their Thai lines are drafts.
+
 - **Navbar** (`components/layout/Navbar.tsx`, `.nav-track` in globals.css): a
   3px gold track on the bar's bottom edge glides to the hovered/focused link
   (leading end first, glowing head) and rests under the current section
@@ -78,7 +91,7 @@ branch `main`.
   "Get a quote" pill (gold disc on phones).
 - **Profile menu** (`components/layout/ProfileMenu.tsx`): hover (mouse) or
   click/tap opens Sign in / Create account, or My account / Sign out when
-  signed in, plus the Dark mode switch. The bar's "Book a Demo" button and
+  signed in (the Dark mode switch was removed with dark mode). The bar's "Book a Demo" button and
   standalone theme button were removed (Book a Demo stays under Contact and in
   the hero). "FindMyRobo TV" was removed from the menu.
 - **Location page** `/location` (`components/contact/LocationBody.tsx`): Google
@@ -104,11 +117,6 @@ branch `main`.
   instant jump before the keyboard opens (card top just under the sticky
   header); otherwise a smooth glide to centre. Phone placeholder
   `+66 123456789` (validation accepts +66… and 0…). Optional note field.
-- **Dark mode kept across language switches** (`ThemeScript` in
-  `components/ThemeProvider.tsx`): switching `/`↔`/en` remounts the root
-  `[locale]` layout in the browser; the old next/script `beforeInteractive`
-  tag re-rendered as an inert inline `<script>` (React warning) and `.dark`
-  was lost.
 - 2026-09-28: About story copy (with a guarded CMS migration), quote-only
   flow, PRD + Office lock files gitignored, repo made public.
 - 2026-09-24: Payload CMS replaced a hand-built content editor.

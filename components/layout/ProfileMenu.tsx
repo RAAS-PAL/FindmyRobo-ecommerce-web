@@ -3,15 +3,14 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import { LogOut, Moon, User, UserRound } from "lucide-react";
+import { LogOut, User, UserRound } from "lucide-react";
 import { Link, useRouter } from "@/i18n/navigation";
-import { useTheme } from "@/components/ThemeProvider";
 import { createClient } from "@/lib/supabase/client";
 
 /**
  * The navbar's profile icon. Hovering it opens a small panel — sign in and
  * create account when signed out, the account page and sign out when signed
- * in — and the light/dark switch, which lives here rather than on the bar.
+ * in.
  *
  * Hover only opens it for a mouse. A click, tap or Enter opens it and pins
  * it, so it stays until you click elsewhere, press Escape or tab away (a
@@ -21,8 +20,6 @@ import { createClient } from "@/lib/supabase/client";
 export default function ProfileMenu() {
   const t = useTranslations("nav");
   const router = useRouter();
-  const { theme, toggle } = useTheme();
-  const isDark = theme === "dark";
   const [signedIn, setSignedIn] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -185,32 +182,6 @@ export default function ProfileMenu() {
                 </div>
               )}
 
-              <div className="mx-1 my-1.5 h-px bg-forest-100" />
-
-              <button
-                type="button"
-                role="switch"
-                aria-checked={isDark}
-                onClick={toggle}
-                className={`${itemClass} justify-between`}
-              >
-                <span className="flex items-center gap-3">
-                  <Moon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                  {t("darkMode")}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-                    isDark ? "bg-accent" : "bg-forest-100"
-                  }`}
-                >
-                  <span
-                    className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
-                      isDark ? "translate-x-4" : ""
-                    }`}
-                  />
-                </span>
-              </button>
             </div>
           </motion.div>
         )}

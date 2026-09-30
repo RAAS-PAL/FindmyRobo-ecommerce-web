@@ -8,7 +8,6 @@ import LogoutButton from "@/components/admin/LogoutButton";
 import AdminLanguageSwitcher from "@/components/admin/AdminLanguageSwitcher";
 import AdminTabs from "@/components/admin/AdminTabs";
 import ConfirmProvider from "@/components/admin/ConfirmProvider";
-import { ThemeToggleButton } from "@/components/layout/ThemeToggle";
 import { getAdminLocale } from "@/lib/adminLocale";
 
 export default async function AdminProtectedLayout({
@@ -51,11 +50,6 @@ export default async function AdminProtectedLayout({
               <span className="hidden sm:inline">{t("viewStore")}</span>
             </a>
             <AdminLanguageSwitcher variant="dark" />
-            <ThemeToggleButton
-              variant="onDark"
-              toDark={t("themeToDark")}
-              toLight={t("themeToLight")}
-            />
             <LogoutButton />
           </div>
         </div>

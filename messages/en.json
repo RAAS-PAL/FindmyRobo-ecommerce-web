@@ -26,7 +26,6 @@
     "createAccount": "Create account",
     "signOut": "Sign out",
     "signedInAs": "Signed in as",
-    "darkMode": "Dark mode",
     "quotationLabel": "Quotation list, {count} items",
     "aboutUs": "About Us",
     "getQuote": "Get a quote"
@@ -213,8 +212,6 @@
     "navigation": {
       "adminLabel": "Admin",
       "viewStore": "View store",
-      "themeToDark": "Switch to dark mode",
-      "themeToLight": "Switch to light mode",
       "switchLanguage": "Switch admin language to Thai",
       "switchLocale": "ไทย",
       "switchError": "Could not change the admin language.",

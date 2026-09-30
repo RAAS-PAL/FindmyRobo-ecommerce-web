@@ -36,13 +36,15 @@ explicitly told to.
 - Use ui-ux-pro-max skill for color/font/layout decisions
 - Use frontend-design skill for aesthetic direction
 - Ground design in real reference: Robomate Australia structure
-- Colors: LIGHT theme is the default. The brand currently reads BLACK + gold:
-  the `forest-*` tokens in app/globals.css @theme are remapped to a charcoal
-  scale ("green → black", 2026-07-30, still live). The CEO's 2026-07-08
-  decision was forest green + yellow — the greens are in git history if asked
-  to restore them. Gold `#f5c842`.
-- Hero: video playlist from the CMS (Homepage → hero videos); the animated
-  lawn scene is the fallback when none is set
+- Colors (2026-09-30 redesign): one light theme, no dark mode; soft grey page
+  (not pure white), graphite neutrals (`forest-*` tokens), electric-blue brand
+  colour `accent-*` (#2E6BFF) with a blue-to-cyan gradient on the main calls
+  to action. Earlier palettes (green + yellow, black + gold) are in git history.
+  The logo is still navy + gold and may change.
+- Reference design: DJI (dji.com) — product-led banners; priority robots are
+  lawn mowers and Gausium Phantas, then Pudu and T-Chef.
+- Hero: slides per robot family from `data/homeShowcase.ts` (studio product
+  shots, not lawn photos); the CMS hero headline is the first slide's copy
 
 ## Brand
 - FindMyRobo / findmyrobo.com (decided 2026-08-07). Legal entity:
