@@ -442,11 +442,17 @@ export default function Navbar() {
               the tabs (on hover or focus) instead of widening the bar and
               shoving the tabs aside. */}
           <div className="relative hidden h-11 w-11 shrink-0 xl:block">
-            <CatalogSearch
-              className="group absolute top-0 right-0 z-10"
-              inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-64 group-hover:cursor-text group-hover:pr-4 focus:w-64 focus:cursor-text focus:pr-4 focus:border-accent-600/60 focus:bg-surface focus:outline-none"
-              dropdownClassName="right-0 w-[360px]"
-            />
+            {/* Anchored by its right edge, so it grows leftwards. The anchor
+                is this wrapper, not CatalogSearch itself: its root is always
+                `relative`, which beat an `absolute` passed in, and the field
+                grew rightwards over the buttons. */}
+            <div className="absolute top-0 right-0 z-10">
+              <CatalogSearch
+                className="group"
+                inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-64 group-hover:cursor-text group-hover:pr-4 focus:w-64 focus:cursor-text focus:pr-4 focus:border-accent-600/60 focus:bg-surface focus:outline-none"
+                dropdownClassName="right-0 w-[360px]"
+              />
+            </div>
           </div>
 
           <LanguageSwitcher className="hidden md:flex" />

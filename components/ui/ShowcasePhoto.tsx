@@ -61,6 +61,8 @@ export default function ShowcasePhoto({
     );
   }
 
+  // the brief for the photo still to come; no note at all without one
+  const brief = pick(photo.shot, locale);
   return (
     <div
       role="img"
@@ -72,19 +74,21 @@ export default function ShowcasePhoto({
         aria-hidden="true"
         className="absolute inset-x-0 bottom-[30%] h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
       />
-      <div
-        className={`absolute inset-x-4 flex items-start gap-2.5 rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-white/80 backdrop-blur-sm sm:inset-x-auto sm:left-5 sm:max-w-md ${
-          captionAt === "top" ? "top-4 sm:top-5" : "bottom-4 sm:bottom-5"
-        }`}
-      >
-        <Camera className="mt-0.5 h-4 w-4 shrink-0 text-accent-300" aria-hidden="true" />
-        <p className="text-[12px] leading-snug">
-          <span className="font-mono text-[10.5px] font-semibold tracking-[0.2em] text-accent-300 uppercase">
-            {t("photoComing")}
-          </span>
-          <span className="mt-0.5 block">{pick(photo.shot, locale)}</span>
-        </p>
-      </div>
+      {brief && (
+        <div
+          className={`absolute inset-x-4 flex items-start gap-2.5 rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-white/80 backdrop-blur-sm sm:inset-x-auto sm:left-5 sm:max-w-md ${
+            captionAt === "top" ? "top-4 sm:top-5" : "bottom-4 sm:bottom-5"
+          }`}
+        >
+          <Camera className="mt-0.5 h-4 w-4 shrink-0 text-accent-300" aria-hidden="true" />
+          <p className="text-[12px] leading-snug">
+            <span className="font-mono text-[10.5px] font-semibold tracking-[0.2em] text-accent-300 uppercase">
+              {t("photoComing")}
+            </span>
+            <span className="mt-0.5 block">{brief}</span>
+          </p>
+        </div>
+      )}
     </div>
   );
 }

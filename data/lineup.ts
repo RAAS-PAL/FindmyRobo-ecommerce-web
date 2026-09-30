@@ -21,12 +21,19 @@ export interface LineupModel {
   category: CategorySlug;
   brand: string;
   name: string;
-  /** A /public image path, once there is a photo. */
+  /** A /public image path, once there is a photo: a transparent cut-out,
+   *  trimmed close (it is shown `object-contain` on a light tile). */
   image?: string;
 }
 
 export const lineup: LineupModel[] = [
-  { id: "gausium-phantas", category: "cleaning-robots", brand: "Gausium", name: "Phantas" },
+  {
+    id: "gausium-phantas",
+    category: "cleaning-robots",
+    brand: "Gausium",
+    name: "Phantas",
+    image: "/models/gausium-phantas.webp",
+  },
   { id: "aventurier-a1-basic", category: "smart-equipment", brand: "Aventurier", name: "A1-Basic" },
   { id: "aventurier-a1-youth", category: "smart-equipment", brand: "Aventurier", name: "A1-Youth" },
   { id: "t-chef-tc-e10a", category: "cooking-robots", brand: "T-Chef", name: "TC-E10A" },

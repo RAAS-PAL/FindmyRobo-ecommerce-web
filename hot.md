@@ -161,13 +161,15 @@ branch `main`.
   `supabase/add-product-brand.sql` before adding a non-Mammotion product.
 - `HeroSection.tsx` headline separator contains a literal NBSP (U+00A0).
 - Navbar (2026-09-30, branch): one tab per `nav: true` category in
-  `data/categories.ts` (Lawn Mowing Robot, Cleaning Robot, Smart Equipment,
-  Cooking Robot, Pudu) plus one "About" menu that also holds Contact and
+  `data/categories.ts`, labelled by `categories.<slug>.nav` in messages:
+  Lawn Mowers, Cleaner, Smart Equipment, Cooker, Delivery (the Pudu robots);
+  Thai labels are drafts. Plus one "About" menu that also holds Contact and
   Support — all eight didn't fit on one line in Thai. Tabs show from xl
   (1280px); below that they're in the drawer. Category panels and the accent
   track are positioned against the `<header>` (the `<nav>` is deliberately not
-  positioned) so panels span the full width. Thai tab row has ~70px to spare
-  at 1280px — re-measure if labels get longer.
+  positioned) so panels span the full width. The Thai tab row has ~40px to
+  spare at 1280px — re-measure if labels get longer. The search field sits in
+  a fixed slot and opens leftwards over the tabs (it must not widen the bar).
 - Models without a catalogue product (Phantas, Aventurier A1-Basic/A1-Youth,
   T-Chef TC-E10A, Pudu1/Pudu2/Bella/Ketty) live in `data/lineup.ts`: the
   navbar and category pages list them, and "Get a quote" sends `modelId`

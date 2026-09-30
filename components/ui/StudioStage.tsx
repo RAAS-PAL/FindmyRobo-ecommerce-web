@@ -87,9 +87,14 @@ export default function StudioStage({
               fill
               priority={priority}
               sizes="(min-width: 1024px) 60vw, 100vw"
-              // fade every edge of the frame (the robot sits clear of the
-              // fades) so the photo melts into the set
-              className="object-cover [mask-image:linear-gradient(to_right,transparent,black_5%,black_60%,transparent_97%),linear-gradient(to_bottom,transparent,black_13%,black_70%,transparent_100%)] [mask-composite:intersect]"
+              // a photo with its own backdrop: fade every edge of the frame
+              // (the robot sits clear of the fades) so it melts into the set;
+              // a transparent cut-out has no edges to hide
+              className={`object-cover ${
+                photo.fade === false
+                  ? ""
+                  : "[mask-image:linear-gradient(to_right,transparent,black_5%,black_60%,transparent_97%),linear-gradient(to_bottom,transparent,black_13%,black_70%,transparent_100%)] [mask-composite:intersect]"
+              }`}
             />
           </div>
         </div>

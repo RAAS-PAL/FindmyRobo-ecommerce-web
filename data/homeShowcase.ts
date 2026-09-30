@@ -54,7 +54,31 @@ export interface StudioPhoto {
   height: number;
   phone: StageBox;
   desktop: StageBox;
+  /**
+   * Fade the photo's edges into the set — for a photo with its own backdrop.
+   * Off for a transparent cut-out, whose edges are already clear (and the
+   * fade would eat into the robot). Default true.
+   */
+  fade?: boolean;
 }
+
+/**
+ * Where a hero slide's studio photo may sit. The hero runs up under the
+ * navbar, so the box starts below the bar (69px) and ends above the headline.
+ * desktop.left: the photo's edge lines up with the hero title, i.e. the
+ * page's content column (max-w-7xl, centred) plus its lg:px-8 padding — keep
+ * in step with the copy block in HeroSection. desktop.bottom: the headline
+ * block is about 26rem tall on any screen.
+ */
+const HERO_PHOTO_BOX: Pick<StudioPhoto, "phone" | "desktop"> = {
+  phone: { top: "69px", right: "0%", bottom: "0%", left: "0%" },
+  desktop: {
+    top: "calc(69px + 2%)",
+    right: "38%",
+    bottom: "max(42%, 27rem)",
+    left: "calc(max(0px, (100% - 80rem) / 2) + 2rem)",
+  },
+};
 
 export interface ShowcasePhoto {
   image: string | null;
@@ -121,24 +145,13 @@ export const heroSlides: HeroSlide[] = [
     // the page: that would print MAMMOTION / LUBA backwards.
     image: null,
     // studio render of the LUBA 3 AWD (generated from the product photo,
-    // details checked against it). The hero runs up under the navbar, so
-    // its box starts below the bar (69px) and ends above the headline.
+    // details checked against it)
     studioPhoto: {
       src: "/studio/luba-studio-photo.webp",
       alt: "Mammotion LUBA robot mower",
       width: 1672,
       height: 941,
-      phone: { top: "69px", right: "0%", bottom: "0%", left: "0%" },
-      // left: the photo's edge lines up with the hero title, i.e. the page's
-      // content column (max-w-7xl, centred) plus its lg:px-8 padding — keep
-      // in step with the copy block in HeroSection. bottom: the headline
-      // block is about 26rem tall on any screen.
-      desktop: {
-        top: "calc(69px + 2%)",
-        right: "38%",
-        bottom: "max(42%, 27rem)",
-        left: "calc(max(0px, (100% - 80rem) / 2) + 2rem)",
-      },
+      ...HERO_PHOTO_BOX,
     },
     studioLight: "neutral",
     shot: { en: "", th: "" },
@@ -157,10 +170,18 @@ export const heroSlides: HeroSlide[] = [
     interest: "commercial-cleaning",
     modelId: "gausium-phantas",
     image: null,
-    shot: {
-      en: "Phantas cleaning a bright lobby or office corridor · landscape 16:9 · robot in the centre third, open floor below it",
-      th: "Phantas กำลังทำความสะอาดล็อบบี้หรือทางเดินสำนักงาน · แนวนอน 16:9 · หุ่นยนต์อยู่กลางภาพ",
+    // Gausium's transparent product render (2026-09-30); its own soft floor
+    // glow reads as a spotlight on the dark set
+    studioPhoto: {
+      src: "/studio/phantas-studio.webp",
+      alt: "Gausium Phantas cleaning robot",
+      width: 1400,
+      height: 1173,
+      fade: false,
+      ...HERO_PHOTO_BOX,
     },
+    studioLight: "neutral",
+    shot: { en: "", th: "" },
   },
 ];
 

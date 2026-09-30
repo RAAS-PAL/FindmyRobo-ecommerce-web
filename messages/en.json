@@ -838,12 +838,12 @@
   "categories": {
     "robot-mowers": {
       "name": "Robotic Lawn Mowers",
-      "nav": "Lawn Mowing Robot",
+      "nav": "Lawn Mowers",
       "description": "Wire-free AWD mowers for every Thai garden"
     },
     "cleaning-robots": {
       "name": "Cleaning Robots",
-      "nav": "Cleaning Robot",
+      "nav": "Cleaner",
       "description": "Gausium Phantas, autonomous floor cleaning for commercial spaces"
     },
     "smart-equipment": {
@@ -853,12 +853,12 @@
     },
     "cooking-robots": {
       "name": "Cooking Robots",
-      "nav": "Cooking Robot",
+      "nav": "Cooker",
       "description": "The T-Chef TC-E10A cooking robot"
     },
     "delivery-robots": {
-      "name": "Pudu Robots",
-      "nav": "Pudu",
+      "name": "Delivery Robots",
+      "nav": "Delivery",
       "description": "Pudu delivery robots for business"
     },
     "pool-cleaners": {

@@ -3,8 +3,8 @@
  * The nav, shop pages, and product data all derive from this, so adding
  * a new robot category here propagates everywhere.
  *
- * Order is the navbar's tab order (2026-09-30: lawn mowing and cleaning first,
- * then smart equipment, cooking and Pudu), then the rest.
+ * Order is the navbar's tab order (2026-09-30: Lawn Mowers and Cleaner first,
+ * then Smart Equipment, Cooker and Delivery — the Pudu robots), then the rest.
  *
  * English name/description here are fallback/reference copy; the UI reads
  * translated versions from messages/{locale}.json under `categories.*`
@@ -62,7 +62,7 @@ export const categories: Category[] = [
   },
   {
     slug: "delivery-robots",
-    name: "Pudu Robots",
+    name: "Delivery Robots",
     description: "Pudu delivery robots for business",
     available: true,
     nav: true,
