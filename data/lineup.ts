@@ -21,6 +21,8 @@ export interface LineupModel {
   category: CategorySlug;
   brand: string;
   name: string;
+  /** Its product page, once it has one (data/modelPages.ts). */
+  page?: string;
   /** A /public image path, once there is a photo: a transparent cut-out,
    *  trimmed close (it is shown `object-contain` on a light tile). */
   image?: string;
@@ -33,6 +35,7 @@ export const lineup: LineupModel[] = [
     brand: "Gausium",
     name: "Phantas",
     image: "/models/gausium-phantas.webp",
+    page: "/products/gausium-phantas",
   },
   { id: "aventurier-a1-basic", category: "smart-equipment", brand: "Aventurier", name: "A1-Basic" },
   { id: "aventurier-a1-youth", category: "smart-equipment", brand: "Aventurier", name: "A1-Youth" },

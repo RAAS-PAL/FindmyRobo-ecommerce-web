@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import ModelTile from "@/components/ui/ModelTile";
 import type { LineupModel } from "@/data/lineup";
@@ -15,6 +16,7 @@ import type { LineupModel } from "@/data/lineup";
 export default function LineupCard({ model }: { model: LineupModel }) {
   const t = useTranslations("shop");
   const tn = useTranslations("nav");
+  const tm = useTranslations("modelPage");
   const { openQuote } = useQuote();
 
   return (
@@ -35,8 +37,10 @@ export default function LineupCard({ model }: { model: LineupModel }) {
           {model.brand}
         </span>
         <h2 className="font-display text-xl leading-snug font-bold text-content">{model.name}</h2>
-        <p className="text-[13px] leading-relaxed text-ink-muted">{t("modelPageSoon")}</p>
-        <div className="mt-auto pt-4">
+        {!model.page && (
+          <p className="text-[13px] leading-relaxed text-ink-muted">{t("modelPageSoon")}</p>
+        )}
+        <div className="mt-auto flex flex-wrap items-center gap-2 pt-4">
           <button
             type="button"
             onClick={() => openQuote({ modelId: model.id })}
@@ -45,6 +49,14 @@ export default function LineupCard({ model }: { model: LineupModel }) {
             {tn("getQuote")}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </button>
+          {model.page && (
+            <Link
+              href={model.page}
+              className="inline-flex min-h-11 items-center rounded-full border border-forest-100 px-5 text-[14px] font-semibold text-content transition-colors hover:border-accent"
+            >
+              {tm("learnMore")}
+            </Link>
+          )}
         </div>
       </div>
     </article>

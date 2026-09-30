@@ -177,6 +177,13 @@ branch `main`.
   lineup models only while it has no catalogue products; when real products
   are added in Admin, add all of that category's models and drop its lineup
   entries.
+- Gausium Phantas has a product page built in code (Admin → Products is
+  blocked by Cloudflare in testing): content in `data/modelPages.ts` (specs
+  from the business's spec sheet; Thai lines are drafts), layout in
+  `components/model/ModelPageView.tsx`, route
+  `app/[locale]/products/gausium-phantas/`. That static route wins over
+  `products/[id]` — delete it when Phantas is added in Admin. Photos in
+  `public/models/phantas/`.
 
 ## Conventions for agents
 

@@ -167,7 +167,7 @@ export default function Navbar() {
       key: model.id,
       name: model.name,
       brand: model.brand,
-      href: `${categoryHref(slug)}#${model.id}`,
+      href: model.page ?? `${categoryHref(slug)}#${model.id}`,
       lineup: model,
     }));
   };

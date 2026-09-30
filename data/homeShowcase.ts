@@ -169,7 +169,7 @@ export const heroSlides: HeroSlide[] = [
       en: "Autonomous floor cleaning for offices, hotels and shops. Tell us about your site and we’ll quote the right setup.",
       th: "หุ่นยนต์ทำความสะอาดพื้นอัตโนมัติ สำหรับสำนักงาน โรงแรม และร้านค้า บอกเราเกี่ยวกับพื้นที่ของคุณ แล้วเราจะเสนอราคาที่เหมาะสม",
     },
-    href: "/shop/cleaning-robots",
+    href: "/products/gausium-phantas",
     interest: "commercial-cleaning",
     modelId: "gausium-phantas",
     image: null,
@@ -213,14 +213,13 @@ export const featuredFamilies: RobotFamily[] = [
       en: "Autonomous floor cleaning for commercial spaces.",
       th: "หุ่นยนต์ทำความสะอาดพื้นอัตโนมัติ สำหรับพื้นที่เชิงพาณิชย์",
     },
-    href: "/shop/cleaning-robots",
+    href: "/products/gausium-phantas",
     interest: "commercial-cleaning",
     modelId: "gausium-phantas",
-    image: null,
-    shot: {
-      en: "Phantas at work in a mall, hotel or office · wide 21:9 · robot small in the lower half, space above for the title",
-      th: "Phantas ทำงานในห้าง โรงแรม หรือสำนักงาน · ภาพกว้าง 21:9 · หุ่นยนต์อยู่ครึ่งล่าง เว้นที่ด้านบนสำหรับหัวข้อ",
-    },
+    // Gausium's own render: the robot sits low, under the title's scrim
+    image: "/models/phantas/office.webp",
+    focus: "50% 70%",
+    shot: { en: "", th: "" },
   },
 ];
 

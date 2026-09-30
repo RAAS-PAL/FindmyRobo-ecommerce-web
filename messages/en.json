@@ -1182,5 +1182,15 @@
   "refundPolicy": {
     "metaTitle": "Return, Exchange, Claim & Refund Policy — FindMyRobo",
     "eyebrow": "Policy"
+  },
+  "modelPage": {
+    "breadcrumb": "Breadcrumb",
+    "shop": "Shop",
+    "getQuote": "Get a quote",
+    "bookDemo": "Book a demo",
+    "learnMore": "Learn more",
+    "specsHeading": "Specifications",
+    "ctaHeading": "Want {name} at your site?",
+    "ctaBody": "Tell us about your space and we’ll reply with a quotation within one business day."
   }
 }
