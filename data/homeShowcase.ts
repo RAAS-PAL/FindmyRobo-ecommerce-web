@@ -87,6 +87,8 @@ export interface HeroSlide extends ShowcasePhoto {
   href: string;
   /** Preselects the quote form's robot. */
   interest: QuoteInterest;
+  /** A single model's slide or banner: names it in the quote (data/lineup.ts). */
+  modelId?: string;
 }
 
 export interface RobotFamily extends ShowcasePhoto {
@@ -99,6 +101,8 @@ export interface RobotFamily extends ShowcasePhoto {
   /** "Learn more" target; null when there is no page yet. */
   href: string | null;
   interest: QuoteInterest;
+  /** A single model's slide or banner: names it in the quote (data/lineup.ts). */
+  modelId?: string;
 }
 
 export const heroSlides: HeroSlide[] = [
@@ -151,6 +155,7 @@ export const heroSlides: HeroSlide[] = [
     },
     href: "/shop/cleaning-robots",
     interest: "commercial-cleaning",
+    modelId: "gausium-phantas",
     image: null,
     shot: {
       en: "Phantas cleaning a bright lobby or office corridor · landscape 16:9 · robot in the centre third, open floor below it",
@@ -186,6 +191,7 @@ export const featuredFamilies: RobotFamily[] = [
     },
     href: "/shop/cleaning-robots",
     interest: "commercial-cleaning",
+    modelId: "gausium-phantas",
     image: null,
     shot: {
       en: "Phantas at work in a mall, hotel or office · wide 21:9 · robot small in the lower half, space above for the title",
@@ -215,12 +221,14 @@ export const moreFamilies: RobotFamily[] = [
     id: "tchef",
     eyebrow: { en: "T-Chef", th: "T-Chef" },
     title: { en: "Cooking robot", th: "หุ่นยนต์ทำอาหาร" },
+    // descriptive only until the spec sheet says who it is for
     tagline: {
-      en: "The TC-E10A, for commercial kitchens.",
-      th: "TC-E10A สำหรับครัวเชิงพาณิชย์",
+      en: "The T-Chef TC-E10A.",
+      th: "T-Chef TC-E10A",
     },
-    href: null,
+    href: "/shop/cooking-robots",
     interest: "cooking",
+    modelId: "t-chef-tc-e10a",
     image: null,
     shot: {
       en: "TC-E10A in a working kitchen, pan in motion · 4:3 · machine centred, full height in frame",

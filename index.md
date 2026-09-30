@@ -48,7 +48,9 @@ deployment: `README.md`.
 - `data/siteConfig.ts` — business switches (`showPrices`, `cartEnabled`),
   registered address, Google Maps place + URLs, organisation
 - `data/siteContent.ts`, `data/about.ts` — built-in content (CMS fallback)
-- `data/categories.ts` — categories (nav derives from it); `data/products.ts`,
+- `data/categories.ts` — categories and the navbar's tab order (`nav: true`);
+  `data/lineup.ts` — models sold before they have catalogue products;
+  `data/homeShowcase.ts` — homepage hero slides and banners; `data/products.ts`,
   `products.json` — fallback catalogue (live catalogue is in Supabase)
 - `data/techAnatomy.ts`, `data/returnPolicy.ts`
 - `messages/en.json`, `messages/th.json` — all UI copy (identical key sets)

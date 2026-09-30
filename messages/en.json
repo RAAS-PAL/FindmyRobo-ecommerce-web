@@ -28,7 +28,11 @@
     "signedInAs": "Signed in as",
     "quotationLabel": "Quotation list, {count} items",
     "aboutUs": "About Us",
-    "getQuote": "Get a quote"
+    "getQuote": "Get a quote",
+    "viewAll": "View all",
+    "groupCompany": "About FindMyRobo",
+    "groupContact": "Contact & support",
+    "productsHeading": "Products"
   },
   "auth": {
     "login": {
@@ -834,22 +838,37 @@
   "categories": {
     "robot-mowers": {
       "name": "Robotic Lawn Mowers",
+      "nav": "Lawn Mowing Robot",
       "description": "Wire-free AWD mowers for every Thai garden"
-    },
-    "pool-cleaners": {
-      "name": "Pool Cleaners",
-      "description": "Effortless crystal-clear pools"
     },
     "cleaning-robots": {
       "name": "Cleaning Robots",
-      "description": "Floor and window robots for the home"
+      "nav": "Cleaning Robot",
+      "description": "Gausium Phantas, autonomous floor cleaning for commercial spaces"
+    },
+    "smart-equipment": {
+      "name": "Smart Equipment",
+      "nav": "Smart Equipment",
+      "description": "Aventurier A1-Basic and A1-Youth"
+    },
+    "cooking-robots": {
+      "name": "Cooking Robots",
+      "nav": "Cooking Robot",
+      "description": "The T-Chef TC-E10A cooking robot"
     },
     "delivery-robots": {
-      "name": "Delivery Robots",
-      "description": "Autonomous delivery for business"
+      "name": "Pudu Robots",
+      "nav": "Pudu",
+      "description": "Pudu delivery robots for business"
+    },
+    "pool-cleaners": {
+      "name": "Pool Cleaners",
+      "nav": "Pool Cleaners",
+      "description": "Effortless crystal-clear pools"
     },
     "services": {
       "name": "Services",
+      "nav": "Services",
       "description": "Professional installation and in-home demos"
     }
   },
@@ -877,9 +896,10 @@
     "interestPlaceholder": "Select a robot",
     "interests": {
       "lawn-mowing": "Lawn mowing",
-      "commercial-cleaning": "Phantas cleaning",
-      "pudu-delivery": "Pudu delivery",
-      "cooking": "T-Chef cooking"
+      "commercial-cleaning": "Cleaning robot",
+      "smart-equipment": "Smart equipment",
+      "cooking": "Cooking robot",
+      "pudu-delivery": "Pudu delivery"
     },
     "areaLabel": "Lawn area",
     "areaPlaceholder": "e.g. 800",
@@ -975,7 +995,9 @@
     "backToShop": "Browse all robots",
     "metaTitle": "Shop Robots — FindMyRobo",
     "installCardName": "Installation Service",
-    "installCardTagline": "Professional on-site setup — choose your coverage area on the next page."
+    "installCardTagline": "Professional on-site setup — choose your coverage area on the next page.",
+    "modelPageSoon": "Full product page coming soon. Ask us for details and pricing.",
+    "modelsLabel": "Models"
   },
   "search": {
     "eyebrow": "Catalog Search",

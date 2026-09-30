@@ -1,17 +1,29 @@
+import type { CategorySlug } from "@/data/categories";
+
 /**
  * The quote form — on the homepage hero, and in the quote panel that every
  * "interested" button opens. Contact details plus the robot the visitor wants,
  * then the follow-up that robot needs. Checkout shipping stays separate.
  */
 
-/** Order is how the form lists them: the priority robots first. */
+/** Order is how the form lists them: the navbar's category order. */
 export const QUOTE_INTERESTS = [
   "lawn-mowing",
   "commercial-cleaning",
-  "pudu-delivery",
+  "smart-equipment",
   "cooking",
+  "pudu-delivery",
 ] as const;
 export type QuoteInterest = (typeof QUOTE_INTERESTS)[number];
+
+/** Which "robot" answer a product or model of each category gives. */
+export const CATEGORY_INTEREST: Partial<Record<CategorySlug, QuoteInterest>> = {
+  "robot-mowers": "lawn-mowing",
+  "cleaning-robots": "commercial-cleaning",
+  "smart-equipment": "smart-equipment",
+  "cooking-robots": "cooking",
+  "delivery-robots": "pudu-delivery",
+};
 
 export const PUDU_VENUES = [
   "restaurant",
@@ -45,6 +57,8 @@ export interface QuoteRequest {
   note: string;
   /** Catalogue product the visitor came from, when they pressed its button. */
   productId: string;
+  /** A model not in the catalogue yet (data/lineup.ts), when they pressed its button. */
+  modelId: string;
   /** For a service (demo, installation): the robot it is for. */
   forId: string;
 }
@@ -63,6 +77,7 @@ export const EMPTY_QUOTE: QuoteRequest = {
   floors: "",
   note: "",
   productId: "",
+  modelId: "",
   forId: "",
 };
 
@@ -91,8 +106,8 @@ export function isPuduVenue(value: string): value is PuduVenue {
  * Field → error key. Contact errors match `checkout.errors.*`.
  * Robot follow-ups use `heroQuote.errors.*`.
  *
- * `productChosen`: the visitor came from a product's button, so that product
- * answers "which robot" and the interest choice is not asked.
+ * `productChosen`: the visitor came from a product's (or lineup model's)
+ * button, so that answers "which robot" and the interest choice is not asked.
  */
 export function validateQuote(
   form: QuoteRequest,
@@ -139,6 +154,7 @@ export function asQuote(raw: unknown): QuoteRequest {
     floors: str("floors"),
     note: str("note").slice(0, QUOTE_NOTE_MAX),
     productId: str("productId"),
+    modelId: str("modelId"),
     forId: str("forId"),
   };
 }

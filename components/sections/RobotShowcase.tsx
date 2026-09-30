@@ -77,7 +77,7 @@ function FamilyCard({ family, size }: { family: RobotFamily; size: "wide" | "hal
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
-            onClick={() => openQuote({ interest: family.interest })}
+            onClick={() => openQuote({ interest: family.interest, modelId: family.modelId })}
             className="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-accent-gradient px-6 text-[14.5px] font-bold"
           >
             {t("getQuote")}

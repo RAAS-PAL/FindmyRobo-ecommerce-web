@@ -4,12 +4,14 @@ import { routing } from "@/i18n/routing";
 import { emailConfigured, salesAlertRecipients, sendEmail } from "@/lib/email";
 import {
   asQuote,
+  CATEGORY_INTEREST,
   validateQuote,
   type PuduVenue,
   type QuoteInterest,
   type QuoteRequest,
 } from "@/lib/quoteRequest";
 import { getAllProducts } from "@/lib/productStore";
+import { getLineupModel, lineupModelName, type LineupModel } from "@/data/lineup";
 import { enforce, MINUTE } from "@/lib/rateLimit";
 
 const esc = (value: string) =>
@@ -21,9 +23,10 @@ const esc = (value: string) =>
 
 const INTEREST_LABEL: Record<QuoteInterest, string> = {
   "lawn-mowing": "Lawn mowing",
-  "commercial-cleaning": "Gausium Phantas (commercial cleaning)",
+  "commercial-cleaning": "Cleaning robot (Gausium)",
+  "smart-equipment": "Smart equipment (Aventurier)",
+  cooking: "Cooking robot (T-Chef)",
   "pudu-delivery": "Pudu delivery",
-  cooking: "T-Chef cooking robot",
 };
 
 const VENUE_LABEL: Record<PuduVenue, string> = {
@@ -35,11 +38,17 @@ const VENUE_LABEL: Record<PuduVenue, string> = {
   other: "Other",
 };
 
-function quoteEmail(quote: QuoteRequest, product?: Product, forProduct?: Product): string {
+function quoteEmail(
+  quote: QuoteRequest,
+  product?: Product,
+  forProduct?: Product,
+  model?: LineupModel
+): string {
   const rows: [string, string][] = [["Name", quote.fullName]];
   if (quote.company) rows.push(["Company", quote.company]);
   rows.push(["Phone", quote.phone], ["Email", quote.email]);
   if (product) rows.push(["Product", product.name]);
+  if (model) rows.push(["Model", lineupModelName(model)]);
   if (forProduct) rows.push(["For robot", forProduct.name]);
   if (quote.interest) rows.push(["Robot", INTEREST_LABEL[quote.interest]]);
   if (quote.interest === "lawn-mowing") {
@@ -99,8 +108,14 @@ export async function POST(request: Request) {
   }
   if (!product) quote.productId = "";
   if (!forProduct) quote.forId = "";
+  // Likewise a lineup model (not in the catalogue yet) must be one we list.
+  const model = quote.modelId ? getLineupModel(quote.modelId) : undefined;
+  if (!model) quote.modelId = "";
+  // The form sends the model's robot type with it; fill it in if it didn't,
+  // so the email always says what kind of robot it is.
+  if (model && !quote.interest) quote.interest = CATEGORY_INTEREST[model.category] ?? "";
 
-  const errors = validateQuote(quote, { productChosen: !!product });
+  const errors = validateQuote(quote, { productChosen: !!product || !!model });
   if (Object.keys(errors).length > 0) {
     return NextResponse.json({ error: "Invalid details", errors }, { status: 400 });
   }
@@ -119,14 +134,17 @@ export async function POST(request: Request) {
       email: quote.email,
       interest: quote.interest,
       product: product?.id,
+      model: model?.id,
     });
     return NextResponse.json({ ok: true, emailed: false });
   }
 
   const sent = await sendEmail({
     to: salesAlertRecipients,
-    subject: `Quotation request — ${quote.fullName}${product ? ` — ${product.name}` : ""}`,
-    html: quoteEmail(quote, product, forProduct),
+    subject: `Quotation request — ${quote.fullName}${
+      product ? ` — ${product.name}` : model ? ` — ${lineupModelName(model)}` : ""
+    }`,
+    html: quoteEmail(quote, product, forProduct, model),
     replyTo: quote.email,
   });
 

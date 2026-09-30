@@ -70,11 +70,12 @@ export default function QuoteDrawer() {
             <div className="flex-1 overflow-y-auto px-5 py-5">
               {/* keyed so opening it for another product starts a fresh form */}
               <QuoteForm
-                key={`${target.productId ?? ""}:${target.forId ?? ""}:${target.interest ?? ""}`}
+                key={`${target.productId ?? ""}:${target.forId ?? ""}:${target.interest ?? ""}:${target.modelId ?? ""}`}
                 variant="panel"
                 productId={target.productId}
                 forId={target.forId}
                 interest={target.interest}
+                modelId={target.modelId}
               />
             </div>
           </motion.aside>

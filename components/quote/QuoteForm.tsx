@@ -13,7 +13,9 @@ import {
   X,
 } from "lucide-react";
 import { useProducts } from "@/components/ProductsProvider";
+import { getLineupModel, lineupModelName } from "@/data/lineup";
 import {
+  CATEGORY_INTEREST,
   EMPTY_QUOTE,
   PUDU_VENUES,
   QUOTE_INTERESTS,
@@ -94,6 +96,7 @@ export default function QuoteForm({
   productId,
   forId,
   interest,
+  modelId,
   onExpandedChange,
 }: {
   variant?: "card" | "panel";
@@ -101,6 +104,8 @@ export default function QuoteForm({
   forId?: string;
   /** Preselected robot family (a homepage banner's button). */
   interest?: QuoteRequest["interest"];
+  /** A lineup model's button (no catalogue product yet): answers "which robot". */
+  modelId?: string;
   /** Card only: told when it opens or closes, so the page can make room. */
   onExpandedChange?: (expanded: boolean) => void;
 }) {
@@ -114,6 +119,9 @@ export default function QuoteForm({
   const { getProduct } = useProducts();
   const product = productId ? getProduct(productId) : undefined;
   const forProduct = forId ? getProduct(forId) : undefined;
+  const model = !product && modelId ? getLineupModel(modelId) : undefined;
+  // What the button asked about — shown at the top, and the answer to "which robot".
+  const selection = product?.name ?? (model ? lineupModelName(model) : undefined);
   const panel = variant === "panel";
 
   const [expanded, setExpandedState] = useState(false);
@@ -128,9 +136,15 @@ export default function QuoteForm({
   const [form, setForm] = useState<QuoteRequest>(() => ({
     ...EMPTY_QUOTE,
     productId: product?.id ?? "",
+    modelId: model?.id ?? "",
     forId: forProduct?.id ?? "",
-    // A mower still needs the lawn area, so it keeps that follow-up.
-    interest: product?.category === "robot-mowers" ? "lawn-mowing" : (interest ?? ""),
+    // The robot's category still sets its follow-up (a mower's lawn area,
+    // a Pudu's venue), so it is kept even though the choice isn't shown.
+    interest:
+      (product && CATEGORY_INTEREST[product.category]) ||
+      (model && CATEGORY_INTEREST[model.category]) ||
+      interest ||
+      "",
   }));
   const [errors, setErrors] = useState<Partial<Record<QuoteField, string>>>({});
   const [busy, setBusy] = useState(false);
@@ -240,7 +254,7 @@ export default function QuoteForm({
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const nextErrors = validateQuote(form, { productChosen: !!product });
+    const nextErrors = validateQuote(form, { productChosen: !!selection });
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
       setExpanded(true);
@@ -354,7 +368,7 @@ export default function QuoteForm({
             </p>
           ) : (
             <>
-              {product && (
+              {selection && (
                 <div className="mt-4 flex items-center gap-3 rounded-xl border border-accent/40 bg-accent/10 px-3.5 py-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-on-accent">
                     <Bot className="h-4.5 w-4.5" aria-hidden="true" />
@@ -362,7 +376,7 @@ export default function QuoteForm({
                   <div className="min-w-0">
                     <p className="text-[11.5px] font-medium text-ink-muted">{t("selectionLabel")}</p>
                     <p className="font-display text-[15px] leading-snug font-bold text-content">
-                      {product.name}
+                      {selection}
                     </p>
                     {forProduct && (
                       <p className="text-[12px] font-medium text-accent-600">
@@ -434,8 +448,8 @@ export default function QuoteForm({
                         className={inputClass(!!errors.email)}
                       />
                     </Field>
-                    {/* a product from the button already answers "which robot" */}
-                    {!product && (
+                    {/* a product or model from the button already answers "which robot" */}
+                    {!selection && (
                       <div className="col-span-2">
                         <div className="flex flex-col gap-1.5">
                           <p id={fieldId("interest")} className="text-[12px] font-medium tracking-wide text-ink-muted">
@@ -460,7 +474,8 @@ export default function QuoteForm({
                                   role="radio"
                                   aria-checked={selected}
                                   onClick={() => chooseInterest(interest)}
-                                  className={`flex min-h-9 cursor-pointer items-center justify-center rounded-md px-2 py-1.5 text-center text-[13px] leading-tight font-semibold transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                                  // an odd one out at the end takes the whole row
+                                  className={`flex min-h-9 cursor-pointer items-center justify-center rounded-md px-2 py-1.5 text-center text-[13px] leading-tight font-semibold transition-colors last:odd:col-span-2 focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
                                     selected
                                       ? "bg-forest-950 text-white shadow-sm"
                                       : "text-ink-muted hover:text-content"

@@ -173,7 +173,7 @@ export default function HeroSection() {
                   ) : (
                     <button
                       type="button"
-                      onClick={() => openQuote({ interest: slide.interest })}
+                      onClick={() => openQuote({ interest: slide.interest, modelId: slide.modelId })}
                       className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-content/20 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/50 lg:border-white/40 lg:text-white lg:hover:border-white"
                     >
                       {t("getQuote")}

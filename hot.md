@@ -160,8 +160,21 @@ branch `main`.
 - Supabase SQL is applied by hand (README → Database setup); run
   `supabase/add-product-brand.sql` before adding a non-Mammotion product.
 - `HeroSection.tsx` headline separator contains a literal NBSP (U+00A0).
-- The Products mega-menu is index 0 of `navLinks` (positioned off `<nav>`, not
-  its `<li>`); other code assumes that.
+- Navbar (2026-09-30, branch): one tab per `nav: true` category in
+  `data/categories.ts` (Lawn Mowing Robot, Cleaning Robot, Smart Equipment,
+  Cooking Robot, Pudu) plus one "About" menu that also holds Contact and
+  Support — all eight didn't fit on one line in Thai. Tabs show from xl
+  (1280px); below that they're in the drawer. Category panels and the accent
+  track are positioned against the `<header>` (the `<nav>` is deliberately not
+  positioned) so panels span the full width. Thai tab row has ~70px to spare
+  at 1280px — re-measure if labels get longer.
+- Models without a catalogue product (Phantas, Aventurier A1-Basic/A1-Youth,
+  T-Chef TC-E10A, Pudu1/Pudu2/Bella/Ketty) live in `data/lineup.ts`: the
+  navbar and category pages list them, and "Get a quote" sends `modelId`
+  (checked server-side) so the sales email names the model. A category shows
+  lineup models only while it has no catalogue products; when real products
+  are added in Admin, add all of that category's models and drop its lineup
+  entries.
 
 ## Conventions for agents
 

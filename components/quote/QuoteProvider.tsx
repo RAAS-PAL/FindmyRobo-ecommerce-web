@@ -13,6 +13,8 @@ export interface QuoteTarget {
   forId?: string;
   /** Preselects "which robot"; the visitor can still change it. */
   interest?: QuoteInterest;
+  /** A lineup model with no catalogue product yet (data/lineup.ts). */
+  modelId?: string;
 }
 
 interface QuoteContextValue {

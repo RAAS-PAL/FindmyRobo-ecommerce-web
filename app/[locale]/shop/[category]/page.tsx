@@ -7,8 +7,10 @@ import { routing } from "@/i18n/routing";
 import CategoryTabs from "@/components/ui/CategoryTabs";
 import FadeIn from "@/components/ui/FadeIn";
 import ProductCard from "@/components/ui/ProductCard";
+import LineupCard from "@/components/ui/LineupCard";
 import { collapseInstallTiers, isInstallTier } from "@/lib/installTiers";
 import { categories, type CategorySlug } from "@/data/categories";
+import { lineupFor } from "@/data/lineup";
 import { getProductsByCategory } from "@/lib/productStore";
 import { pageAlternates } from "@/lib/seo";
 
@@ -48,6 +50,9 @@ export default async function CategoryPage({
   const tn = await getTranslations("nav");
   const slug = cat.slug as CategorySlug;
   const items = await getProductsByCategory(slug);
+  // Models we sell that aren't in the catalogue yet (no product pages): shown
+  // until the category has catalogue products of its own.
+  const models = cat.available && items.length === 0 ? lineupFor(slug) : [];
 
   return (
     <main className="bg-cloud">
@@ -77,6 +82,12 @@ export default async function CategoryPage({
                   ? { displayName: t("installCardName"), displayTagline: t("installCardTagline") }
                   : {})}
               />
+            ))}
+          </div>
+        ) : models.length > 0 ? (
+          <div className="mt-10 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {models.map((model) => (
+              <LineupCard key={model.id} model={model} />
             ))}
           </div>
         ) : (

@@ -28,7 +28,11 @@
     "signedInAs": "เข้าสู่ระบบในชื่อ",
     "quotationLabel": "รายการขอใบเสนอราคา {count} รายการ",
     "aboutUs": "เกี่ยวกับเรา",
-    "getQuote": "ขอใบเสนอราคา"
+    "getQuote": "ขอใบเสนอราคา",
+    "viewAll": "ดูทั้งหมด",
+    "groupCompany": "เกี่ยวกับ FindMyRobo",
+    "groupContact": "ติดต่อและบริการ",
+    "productsHeading": "สินค้า"
   },
   "auth": {
     "login": {
@@ -834,22 +838,37 @@
   "categories": {
     "robot-mowers": {
       "name": "หุ่นยนต์ตัดหญ้า",
+      "nav": "หุ่นยนต์ตัดหญ้า",
       "description": "หุ่นยนต์ตัดหญ้าไร้สายขับเคลื่อน 4 ล้อ สำหรับทุกสวนไทย"
-    },
-    "pool-cleaners": {
-      "name": "หุ่นยนต์ดูแลสระว่ายน้ำ",
-      "description": "สระใสสะอาดโดยไม่ต้องออกแรง"
     },
     "cleaning-robots": {
       "name": "หุ่นยนต์ทำความสะอาด",
-      "description": "หุ่นยนต์ดูแลพื้นและกระจกภายในบ้าน"
+      "nav": "หุ่นยนต์ทำความสะอาด",
+      "description": "Gausium Phantas หุ่นยนต์ทำความสะอาดพื้นอัตโนมัติสำหรับพื้นที่เชิงพาณิชย์"
+    },
+    "smart-equipment": {
+      "name": "อุปกรณ์อัจฉริยะ",
+      "nav": "อุปกรณ์อัจฉริยะ",
+      "description": "Aventurier A1-Basic และ A1-Youth"
+    },
+    "cooking-robots": {
+      "name": "หุ่นยนต์ทำอาหาร",
+      "nav": "หุ่นยนต์ทำอาหาร",
+      "description": "หุ่นยนต์ทำอาหาร T-Chef TC-E10A"
     },
     "delivery-robots": {
-      "name": "หุ่นยนต์ขนส่ง",
-      "description": "หุ่นยนต์ส่งของอัตโนมัติสำหรับธุรกิจ"
+      "name": "หุ่นยนต์ Pudu",
+      "nav": "Pudu",
+      "description": "หุ่นยนต์ส่งของ Pudu สำหรับธุรกิจ"
+    },
+    "pool-cleaners": {
+      "name": "หุ่นยนต์ดูแลสระว่ายน้ำ",
+      "nav": "หุ่นยนต์ดูแลสระว่ายน้ำ",
+      "description": "สระใสสะอาดโดยไม่ต้องออกแรง"
     },
     "services": {
       "name": "บริการ",
+      "nav": "บริการ",
       "description": "บริการติดตั้งโดยมืออาชีพและสาธิตถึงบ้าน"
     }
   },
@@ -877,9 +896,10 @@
     "interestPlaceholder": "เลือกหุ่นยนต์",
     "interests": {
       "lawn-mowing": "หุ่นยนต์ตัดหญ้า",
-      "commercial-cleaning": "หุ่นยนต์ทำความสะอาด Phantas",
-      "pudu-delivery": "หุ่นยนต์ขนส่ง Pudu",
-      "cooking": "หุ่นยนต์ทำอาหาร T-Chef"
+      "commercial-cleaning": "หุ่นยนต์ทำความสะอาด",
+      "smart-equipment": "อุปกรณ์อัจฉริยะ",
+      "cooking": "หุ่นยนต์ทำอาหาร",
+      "pudu-delivery": "หุ่นยนต์ขนส่ง Pudu"
     },
     "areaLabel": "พื้นที่สนาม",
     "areaPlaceholder": "เช่น 800",
@@ -975,7 +995,9 @@
     "backToShop": "ดูหุ่นยนต์ทั้งหมด",
     "metaTitle": "เลือกซื้อหุ่นยนต์ — FindMyRobo",
     "installCardName": "บริการติดตั้ง",
-    "installCardTagline": "ติดตั้งโดยทีมงานมืออาชีพถึงสถานที่ — เลือกขนาดพื้นที่ได้ในหน้าถัดไป"
+    "installCardTagline": "ติดตั้งโดยทีมงานมืออาชีพถึงสถานที่ — เลือกขนาดพื้นที่ได้ในหน้าถัดไป",
+    "modelPageSoon": "หน้ารายละเอียดสินค้าเร็วๆ นี้ สอบถามรายละเอียดและราคาได้เลย",
+    "modelsLabel": "รุ่นที่มีจำหน่าย"
   },
   "search": {
     "eyebrow": "ค้นหาแคตตาล็อก",
