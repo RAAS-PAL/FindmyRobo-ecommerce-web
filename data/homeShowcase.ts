@@ -125,13 +125,15 @@ export const heroSlides: HeroSlide[] = [
       width: 1672,
       height: 941,
       phone: { top: "69px", right: "0%", bottom: "0%", left: "0%" },
-      // left: lined up with the page's content column (max-w-7xl) on wide
-      // screens; bottom: the headline block is about 26rem tall on any screen
+      // left: the photo's edge lines up with the hero title, i.e. the page's
+      // content column (max-w-7xl, centred) plus its lg:px-8 padding — keep
+      // in step with the copy block in HeroSection. bottom: the headline
+      // block is about 26rem tall on any screen.
       desktop: {
         top: "calc(69px + 2%)",
         right: "38%",
         bottom: "max(42%, 27rem)",
-        left: "max(3%, calc((100% - 80rem) / 2))",
+        left: "calc(max(0px, (100% - 80rem) / 2) + 2rem)",
       },
     },
     studioLight: "neutral",
