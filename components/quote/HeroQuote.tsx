@@ -1,11 +1,21 @@
 "use client";
 
+import { useCallback, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Check } from "lucide-react";
 import QuoteForm from "@/components/quote/QuoteForm";
+import LineChatButton from "@/components/quote/LineChatButton";
+
+/** Why buy here rather than import — the About page's approved promises, shortened. */
+const PROMISES = ["warranty", "install", "aftersales"] as const;
 
 /**
- * The hero's quote card. From lg it floats over the dark studio hero, so it
- * wears the dark glass tone (`.hero-quote-dark` in globals.css); on phones it
- * sits on the light page under the copy and keeps the light one.
+ * The hero's quote card, and under it the three promises and a LINE shortcut
+ * for people who would rather chat — set straight on the hero, no panel of
+ * their own. They fold away while the card is open, so the form has the room
+ * it grows into. From lg everything here wears the dark tone
+ * (`.hero-quote-dark` in globals.css) to sit on the dark studio hero; on
+ * phones it sits on the light page and keeps the light one.
  */
 export default function HeroQuote({
   onOpenChange,
@@ -13,9 +23,50 @@ export default function HeroQuote({
   /** Told when the card opens or closes (the hero pauses its slides meanwhile). */
   onOpenChange?: (open: boolean) => void;
 }) {
+  const t = useTranslations("heroQuote");
+  const [formOpen, setFormOpen] = useState(false);
+  // stable, so QuoteForm's outside-click listener isn't re-bound every render
+  const onExpandedChange = useCallback(
+    (open: boolean) => {
+      setFormOpen(open);
+      onOpenChange?.(open);
+    },
+    [onOpenChange]
+  );
+
   return (
     <div className="hero-quote-dark flex flex-col items-center lg:items-end">
-      <QuoteForm onExpandedChange={onOpenChange} />
+      <QuoteForm onExpandedChange={onExpandedChange} />
+
+      <div
+        // z-30: above the card (z-20), so the QR popover can rise over it
+        className={`relative z-30 grid w-[20rem] max-w-[calc(100vw-2rem)] transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
+          formOpen ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100"
+        }`}
+        inert={formOpen ? true : undefined}
+      >
+        {/* overflow-visible while shown, so the popover isn't clipped */}
+        <div className={formOpen ? "overflow-hidden" : "overflow-visible"}>
+          <div className="mt-5 px-1">
+            <ul aria-label={t("promisesLabel")} className="space-y-2">
+              {PROMISES.map((key) => (
+                <li
+                  key={key}
+                  className="flex items-center gap-2.5 text-[13px] leading-snug font-semibold text-content"
+                >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-on-accent">
+                    <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+                  </span>
+                  {t(`promises.${key}`)}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 border-t border-forest-100 pt-3">
+              <LineChatButton />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
