@@ -20,8 +20,26 @@ import type { QuoteInterest } from "@/lib/quoteRequest";
  * Will move into the CMS (Homepage global) once the layout is approved.
  */
 
+/** A cut-out placed on a StudioStage; positions are % of the stage. */
+export interface StudioRobot {
+  src: string;
+  alt: string;
+  /** Intrinsic size of the (trimmed) cut-out. */
+  width: number;
+  height: number;
+  phone: { left: string; bottom: string; width: string };
+  desktop: { left: string; bottom: string; width: string };
+  /** Stacking: the nearer robot is higher. */
+  z?: number;
+}
+
 export interface ShowcasePhoto {
   image: string | null;
+  /**
+   * Instead of a photo: product cut-outs on a graphite studio set
+   * (components/ui/StudioStage). Wins over `image`.
+   */
+  studio?: StudioRobot[];
   focus?: string;
   /** Below sm, when the phone crop needs a different point (defaults to focus). */
   focusPhone?: string;
@@ -66,11 +84,30 @@ export const heroSlides: HeroSlide[] = [
     sub: null,
     href: "/shop/robot-mowers",
     interest: "lawn-mowing",
-    // robot small, right of centre: clear of the copy (lower left) and the
-    // quote card (right)
-    image: "/posters/lubamini21500onebangkok.png",
-    focus: "50% 50%",
-    focusPhone: "72% 50%",
+    // Studio set, not a lawn photo: green grass fought the blue palette, and
+    // cut-outs pasted into garden scenes look composited. Robots sit between
+    // the copy (lower left) and the quote card (right) on desktop.
+    image: null,
+    studio: [
+      {
+        src: "/studio/luba-yellow.webp",
+        alt: "Mammotion LUBA robot mower",
+        width: 861,
+        height: 479,
+        phone: { left: "60%", bottom: "46%", width: "30%" },
+        desktop: { left: "60%", bottom: "60%", width: "12%" },
+        z: 1,
+      },
+      {
+        src: "/studio/luba-orange.webp",
+        alt: "Mammotion LUBA robot mower",
+        width: 1846,
+        height: 958,
+        phone: { left: "6%", bottom: "14%", width: "58%" },
+        desktop: { left: "37%", bottom: "46%", width: "23%" },
+        z: 2,
+      },
+    ],
     shot: { en: "", th: "" },
   },
   {

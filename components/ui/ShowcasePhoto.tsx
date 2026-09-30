@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Camera } from "lucide-react";
 import { pick } from "@/data/siteContent";
 import type { ShowcasePhoto as Photo } from "@/data/homeShowcase";
+import StudioStage from "@/components/ui/StudioStage";
 
 /**
  * A showcase photo filling its (relative) parent. Until the photo exists it
@@ -29,6 +30,10 @@ export default function ShowcasePhoto({
 }) {
   const t = useTranslations("showcase");
   const locale = useLocale();
+
+  if (photo.studio?.length) {
+    return <StudioStage robots={photo.studio} priority={priority} />;
+  }
 
   if (photo.image) {
     return (
