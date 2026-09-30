@@ -32,7 +32,7 @@ export default function ShowcasePhoto({
   const locale = useLocale();
 
   if (photo.studio?.length) {
-    return <StudioStage robots={photo.studio} priority={priority} />;
+    return <StudioStage robots={photo.studio} light={photo.studioLight} priority={priority} />;
   }
 
   if (photo.image) {

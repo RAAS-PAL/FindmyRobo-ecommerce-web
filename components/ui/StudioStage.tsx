@@ -13,11 +13,23 @@ import type { StudioRobot } from "@/data/homeShowcase";
  */
 export default function StudioStage({
   robots,
+  light = "accent",
   priority = false,
 }: {
   robots: StudioRobot[];
+  light?: "neutral" | "accent";
   priority?: boolean;
 }) {
+  // "neutral" lights the set in soft white, leaving blue to the buttons.
+  const key =
+    light === "neutral"
+      ? "bg-[radial-gradient(closest-side,rgb(210_220_240/0.2),rgb(210_220_240/0.06)_55%,transparent)]"
+      : "bg-[radial-gradient(closest-side,rgb(var(--accent-rgb)/0.42),rgb(var(--accent-rgb)/0.12)_55%,transparent)]";
+  const pool =
+    light === "neutral"
+      ? "bg-[radial-gradient(closest-side,rgb(255_255_255/0.1),transparent)]"
+      : "bg-[radial-gradient(closest-side,rgb(120_160_255/0.16),transparent)]";
+
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#0b0d10]">
       {/* backdrop: graphite, a little lighter where the light falls */}
@@ -25,10 +37,10 @@ export default function StudioStage({
         aria-hidden="true"
         className="absolute inset-0 bg-[radial-gradient(90%_70%_at_55%_38%,#1d2230_0%,#12151c_45%,#0b0d10_100%)]"
       />
-      {/* the blue key light behind the robots */}
+      {/* the key light behind the robots */}
       <div
         aria-hidden="true"
-        className="absolute top-[4%] left-1/2 h-[62%] w-[80%] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(var(--accent-rgb)/0.42),rgb(var(--accent-rgb)/0.12)_55%,transparent)] blur-2xl lg:left-[34%] lg:w-[50%]"
+        className={`absolute top-[4%] left-1/2 h-[62%] w-[80%] -translate-x-1/2 rounded-full blur-2xl lg:left-[35%] lg:w-[50%] ${key}`}
       />
       {/* floor: a seamless cove (no horizon line, as in a real studio: a
           hard line would cut through the copy and leave the rear robot
@@ -39,7 +51,7 @@ export default function StudioStage({
       />
       <div
         aria-hidden="true"
-        className="absolute bottom-[14%] left-1/2 h-[30%] w-[90%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgb(120_160_255/0.16),transparent)] lg:bottom-[38%] lg:left-[34%] lg:w-[52%]"
+        className={`absolute bottom-[8%] left-1/2 h-[30%] w-[90%] -translate-x-1/2 rounded-[50%] lg:bottom-[44%] lg:left-[35%] lg:w-[52%] ${pool}`}
       />
 
       {robots.map((robot) => (

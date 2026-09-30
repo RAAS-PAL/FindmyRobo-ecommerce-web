@@ -40,6 +40,8 @@ export interface ShowcasePhoto {
    * (components/ui/StudioStage). Wins over `image`.
    */
   studio?: StudioRobot[];
+  /** The studio's key light: soft white, or the brand blue. Default blue. */
+  studioLight?: "neutral" | "accent";
   focus?: string;
   /** Below sm, when the phone crop needs a different point (defaults to focus). */
   focusPhone?: string;
@@ -85,31 +87,21 @@ export const heroSlides: HeroSlide[] = [
     href: "/shop/robot-mowers",
     interest: "lawn-mowing",
     // Studio set, not a lawn photo: green grass fought the blue palette, and
-    // cut-outs pasted into garden scenes look composited. The two robots are
-    // the same size in real life, so they share a height and a floor line,
-    // above the headline and clear of the quote card. Not mirrored to face
-    // into the page: that would print MAMMOTION / LUBA backwards.
+    // cut-outs pasted into garden scenes look composited. One robot, above
+    // the headline and clear of the quote card. Not mirrored to face into
+    // the page: that would print MAMMOTION / LUBA backwards.
     image: null,
     studio: [
-      {
-        src: "/studio/luba-yellow.webp",
-        alt: "Mammotion LUBA robot mower",
-        width: 861,
-        height: 479,
-        phone: { left: "53%", bottom: "30%", width: "42%" },
-        desktop: { left: "38%", bottom: "53%", width: "19.6%" },
-        z: 1,
-      },
       {
         src: "/studio/luba-orange.webp",
         alt: "Mammotion LUBA robot mower",
         width: 1846,
         height: 958,
-        phone: { left: "4%", bottom: "30%", width: "45%" },
-        desktop: { left: "14%", bottom: "53%", width: "21%" },
-        z: 2,
+        phone: { left: "12%", bottom: "16%", width: "76%" },
+        desktop: { left: "21%", bottom: "56%", width: "27%" },
       },
     ],
+    studioLight: "neutral",
     shot: { en: "", th: "" },
   },
   {
