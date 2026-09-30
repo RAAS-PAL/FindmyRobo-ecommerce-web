@@ -412,7 +412,7 @@ export default function QuoteForm({
                         type="tel"
                         autoComplete="tel"
                         inputMode="tel"
-                        placeholder="08x-xxx-xxxx"
+                        placeholder="+66 123456789"
                         value={form.phone}
                         onChange={setField("phone")}
                         className={inputClass(!!errors.phone)}
