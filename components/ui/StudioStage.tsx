@@ -76,10 +76,17 @@ export default function StudioStage({
             width={robot.width}
             height={robot.height}
             priority={priority}
-            sizes="(min-width: 1024px) 30vw, 60vw"
-            className="relative h-auto w-full drop-shadow-[0_18px_22px_rgba(0,0,0,0.55)]"
+            sizes={robot.photo ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 30vw, 60vw"}
+            className={`relative h-auto w-full ${
+              robot.photo
+                ? // fade every edge of the frame (the robot sits clear of the fades)
+                  // so the photo melts into the set
+                  "[mask-image:linear-gradient(to_right,transparent,black_5%,black_60%,transparent_97%),linear-gradient(to_bottom,transparent,black_13%,black_70%,transparent_100%)] [mask-composite:intersect]"
+                : "drop-shadow-[0_18px_22px_rgba(0,0,0,0.55)]"
+            }`}
           />
           {/* reflection: the same cut-out, flipped and fading into the floor */}
+          {!robot.photo && (
           <Image
             src={robot.src}
             alt=""
@@ -89,6 +96,7 @@ export default function StudioStage({
             sizes="(min-width: 1024px) 30vw, 60vw"
             className="pointer-events-none absolute top-full left-0 h-auto w-full -scale-y-100 opacity-20 [mask-image:linear-gradient(to_bottom,transparent_55%,black_100%)]"
           />
+          )}
         </div>
       ))}
     </div>

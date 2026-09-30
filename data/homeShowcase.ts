@@ -31,6 +31,11 @@ export interface StudioRobot {
   desktop: { left: string; bottom: string; width: string };
   /** Stacking: the nearer robot is higher. */
   z?: number;
+  /**
+   * A full studio photograph rather than a cut-out: no drop shadow or fake
+   * reflection (the photo has its own), and its edges fade into the set.
+   */
+  photo?: boolean;
 }
 
 export interface ShowcasePhoto {
@@ -93,12 +98,15 @@ export const heroSlides: HeroSlide[] = [
     image: null,
     studio: [
       {
-        src: "/studio/luba-orange.webp",
+        // studio render of the LUBA 3 AWD (generated from the product photo,
+        // details checked against it); its dark edges fade into the set
+        src: "/studio/luba-studio-photo.webp",
         alt: "Mammotion LUBA robot mower",
-        width: 1846,
-        height: 958,
-        phone: { left: "12%", bottom: "16%", width: "76%" },
-        desktop: { left: "21%", bottom: "56%", width: "27%" },
+        width: 1672,
+        height: 941,
+        phone: { left: "10%", bottom: "2%", width: "104%" },
+        desktop: { left: "3%", bottom: "38%", width: "60%" },
+        photo: true,
       },
     ],
     studioLight: "neutral",
