@@ -196,7 +196,7 @@ export default function FeaturedProductCard({
             <PriceOrQuote
               amount={product.price}
               className="font-mono text-xl font-bold tabular-nums text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-2xl"
-              quoteClassName="text-base font-bold text-accent-300 drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-lg"
+              quoteClassName="text-base font-bold text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-lg"
             />
           </span>
         </span>

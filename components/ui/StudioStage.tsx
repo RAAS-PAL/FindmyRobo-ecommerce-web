@@ -42,7 +42,7 @@ export default function StudioStage({
       {/* the key light behind the robots */}
       <div
         aria-hidden="true"
-        className={`absolute top-[4%] left-1/2 h-[62%] w-[80%] -translate-x-1/2 rounded-full blur-2xl lg:left-[35%] lg:w-[50%] ${key}`}
+        className={`absolute top-[4%] left-1/2 h-[62%] w-[80%] -translate-x-1/2 rounded-full blur-2xl lg:left-[40%] lg:w-[50%] ${key}`}
       />
       {/* floor: a seamless cove (no horizon line, as in a real studio: a
           hard line would cut through the copy and leave the rear robot
@@ -53,13 +53,13 @@ export default function StudioStage({
       />
       <div
         aria-hidden="true"
-        className={`absolute bottom-[8%] left-1/2 h-[30%] w-[90%] -translate-x-1/2 rounded-[50%] lg:bottom-[44%] lg:left-[35%] lg:w-[52%] ${pool}`}
+        className={`absolute bottom-[8%] left-1/2 h-[30%] w-[90%] -translate-x-1/2 rounded-[50%] lg:bottom-[44%] lg:left-[40%] lg:w-[52%] ${pool}`}
       />
 
       {photo && (
         // the box: the photo may use any of it but never leaves it
         <div
-          className="absolute top-(--t) right-(--r) bottom-(--bt) left-(--l) flex items-center justify-center [container-type:size] lg:top-(--t-lg) lg:right-(--r-lg) lg:bottom-(--bt-lg) lg:left-(--l-lg) lg:justify-start"
+          className="absolute top-(--t) right-(--r) bottom-(--bt) left-(--l) flex items-center justify-center [container-type:size] lg:top-(--t-lg) lg:right-(--r-lg) lg:bottom-(--bt-lg) lg:left-(--l-lg)"
           style={
             {
               "--t": photo.phone.top,

@@ -379,6 +379,24 @@ header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-dark {
 /* Homepage hero: the accent bar on the active slide's tab fills over the slide's
    time on screen; HeroSection advances when it ends (animationend) and pauses
    it with animation-play-state. Reduced motion never gets the class. */
+/* Hero quote card from lg: dark glass over the dark studio hero instead of a
+   light box pasted on it. Re-points the tokens the form uses, so its fields,
+   labels, steps and borders all turn at once (the card's own background is
+   set in QuoteForm); native controls (the venue select) follow color-scheme.
+   Phones keep the light card: there it sits on the light page. */
+@media (min-width: 64rem) {
+  .hero-quote-dark {
+    color-scheme: dark;
+    --color-surface: #1b1f28;
+    --color-content: #f1f3f6;
+    --color-ink-muted: #9aa0ab;
+    --color-forest-100: rgb(255 255 255 / 0.12);
+    --color-forest-300: #6b7280;
+    --color-cloud: rgb(255 255 255 / 0.06);
+    --color-accent-600: #8db0ff;
+  }
+}
+
 @keyframes hero-progress {
   from {
     transform: scaleX(0);

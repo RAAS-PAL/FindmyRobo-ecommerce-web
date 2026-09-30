@@ -303,7 +303,7 @@ export default function QuoteForm({
         panel
           ? "text-left"
           : `group relative z-20 max-w-[calc(100vw-2rem)] shrink-0 text-left transition-[width] duration-300 ease-out motion-reduce:transition-none ${
-              expanded ? "w-[min(26.5rem,calc(100vw-2rem))]" : "w-[17.5rem]"
+              expanded ? "w-[min(26.5rem,calc(100vw-2rem))]" : "w-[20rem]"
             }`
       }
     >
@@ -324,7 +324,7 @@ export default function QuoteForm({
         className={
           panel
             ? ""
-            : `overflow-hidden rounded-2xl border border-black/8 bg-surface/95 backdrop-blur-md transition-shadow duration-500 dark:border-white/10 ${
+            : `overflow-hidden rounded-2xl border border-black/8 bg-surface/95 backdrop-blur-md transition-shadow duration-500 lg:border-white/10 lg:bg-[#141821]/75 lg:backdrop-blur-xl ${
                 expanded
                   ? "max-h-[calc(100svh-6.5rem)] overflow-y-auto shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5),0_0_48px_-10px_rgb(var(--accent-rgb)/0.6)]"
                   : "shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5)] group-hover:shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5),0_0_48px_-10px_rgb(var(--accent-rgb)/0.6)]"

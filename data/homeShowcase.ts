@@ -65,7 +65,7 @@ export interface StudioPhoto {
 /**
  * Where a hero slide's studio photo may sit. The hero runs up under the
  * navbar, so the box starts below the bar (69px) and ends above the headline.
- * desktop.left: the photo's edge lines up with the hero title, i.e. the
+ * desktop.left: the box starts on the hero title's line, i.e. the
  * page's content column (max-w-7xl, centred) plus its lg:px-8 padding — keep
  * in step with the copy block in HeroSection. desktop.bottom: the headline
  * block is about 26rem tall on any screen.
@@ -74,7 +74,9 @@ const HERO_PHOTO_BOX: Pick<StudioPhoto, "phone" | "desktop"> = {
   phone: { top: "69px", right: "0%", bottom: "0%", left: "0%" },
   desktop: {
     top: "calc(69px + 2%)",
-    right: "38%",
+    // stop short of the quote card's column (20rem card + 2.5rem air), so the
+    // robot is centred in the space between the title's edge and the card
+    right: "calc(max(0px, (100% - 80rem) / 2) + 2rem + 22.5rem)",
     bottom: "max(42%, 27rem)",
     left: "calc(max(0px, (100% - 80rem) / 2) + 2rem)",
   },
