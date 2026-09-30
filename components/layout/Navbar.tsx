@@ -248,12 +248,16 @@ export default function Navbar() {
           : "border-forest-100/70 bg-surface"
       }`}
     >
+      {/* The bar's background spans the screen; its contents sit in the same
+          centred column as the page (max-w-7xl, same padding), DJI-style, so
+          on wide screens the logo lines up with the hero title and the quote
+          button with the hero's quote card instead of hugging the edges. */}
       <nav
         ref={navRef}
-        className="relative flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6 xl:px-10"
+        className="relative mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8"
       >
         <span ref={trackRef} aria-hidden="true" className="nav-track hidden lg:block" />
-        {/* left group: logo + primary links, kept together on the left edge */}
+        {/* left group: logo + primary links, kept together on the left */}
         <div className="flex items-center gap-4 xl:gap-9">
         {/* logo */}
         <Link href="/" className="flex shrink-0 items-center" aria-label="FindMyRobo home">
