@@ -147,7 +147,7 @@ export default function HeroSection() {
                 </p>
                 {/* one slide shows at a time, so there is always exactly one
                     h1 — the server renders the first (the CMS headline) */}
-                <h1 className="mt-3 font-display text-[34px] leading-[1.04] font-extrabold tracking-tight text-content sm:text-5xl lg:text-5xl lg:text-white xl:text-[3.5rem]">
+                <h1 className="mt-3 font-display text-[34px] leading-[1.04] font-extrabold tracking-tight text-content sm:text-5xl lg:text-[2.6rem] lg:text-white xl:text-[2.9rem]">
                   {headline}
                   <span className="block text-accent-600 lg:text-accent-gradient">{accent}</span>
                 </h1>
