@@ -1,14 +1,79 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  type Variants,
+} from "framer-motion";
 import { ArrowUpRight, Calendar, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import FadeIn from "@/components/ui/FadeIn";
 import { categoryHref } from "@/data/categories";
 import { pick } from "@/data/siteContent";
-import type { ModelPage } from "@/data/modelPages";
+import type { ModelFeature, ModelPage } from "@/data/modelPages";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+/** Hero copy: each line slides in after the one above it. */
+const heroCopy: Variants = {
+  hidden: {},
+  shown: { transition: { staggerChildren: 0.09, delayChildren: 0.25 } },
+};
+const heroLine: Variants = {
+  hidden: { opacity: 0, y: 22 },
+  shown: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+};
+
+/**
+ * A feature photo that opens out as it scrolls into view, DJI-style: it
+ * starts as a smaller rounded window and widens to the full column while the
+ * image inside settles from a slight zoom. Tied to scroll position, so it
+ * plays forwards and backwards; static with reduced motion (CSS below).
+ */
+function FeaturePhoto({ feature }: { feature: ModelFeature }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "center center"],
+  });
+  const inset = useTransform(scrollYProgress, [0, 1], [12, 0]);
+  const clipPath = useTransform(
+    inset,
+    (v) => `inset(${v}% ${v}% ${v}% ${v}% round 1rem)`,
+  );
+  const scale = useTransform(scrollYProgress, [0, 1], [1.18, 1]);
+  return (
+    <div
+      ref={ref}
+      className="mx-auto mt-10 max-w-7xl px-3 sm:mt-14 sm:px-6 lg:px-8"
+    >
+      <motion.div
+        style={{ clipPath }}
+        // reduced motion: CSS drops the scroll-bound clip and zoom (framer's
+        // reducedMotion setting doesn't reach values bound to scroll)
+        className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-forest-950 motion-reduce:[clip-path:none]!"
+      >
+        <motion.div
+          style={{ scale }}
+          className="absolute inset-0 motion-reduce:[transform:none]!"
+        >
+          <Image
+            src={feature.image}
+            alt={feature.alt}
+            fill
+            sizes="(min-width: 1280px) 1216px, 100vw"
+            className="object-cover"
+          />
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
 
 /**
  * A lineup model's product page (data/modelPages.ts), DJI-style: a dark
@@ -33,29 +98,57 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
           className="absolute inset-0 bg-[radial-gradient(70%_80%_at_68%_45%,#1d2230_0%,#12151c_50%,#0b0d10_100%)]"
         />
         <div className="relative mx-auto grid max-w-7xl items-center gap-6 px-4 pt-8 pb-14 sm:px-6 lg:min-h-[calc(100svh-69px)] lg:max-h-[56rem] lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:px-8 lg:py-12">
-          <div className="order-2 lg:order-1">
-            <nav aria-label={t("breadcrumb")} className="mb-6 flex items-center gap-1.5 text-[12.5px] text-white/60">
+          <motion.div
+            className="order-2 lg:order-1"
+            variants={heroCopy}
+            initial="hidden"
+            animate="shown"
+          >
+            <motion.nav
+              variants={heroLine}
+              aria-label={t("breadcrumb")}
+              className="mb-6 flex items-center gap-1.5 text-[12.5px] text-white/60"
+            >
               <Link href="/shop" className="hover:text-white">
                 {t("shop")}
               </Link>
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-              <Link href={categoryHref(page.category)} className="hover:text-white">
+              <Link
+                href={categoryHref(page.category)}
+                className="hover:text-white"
+              >
                 {tc(`${page.category}.name`)}
               </Link>
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
               <span className="text-white/85">{page.name}</span>
-            </nav>
-            <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-white/80 uppercase [&:lang(th)]:tracking-[0.06em]">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+            </motion.nav>
+            <motion.p
+              variants={heroLine}
+              className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-white/80 uppercase [&:lang(th)]:tracking-[0.06em]"
+            >
+              <span
+                className="h-1.5 w-1.5 rounded-full bg-accent"
+                aria-hidden="true"
+              />
               {text(page.eyebrow)}
-            </p>
-            <h1 className="mt-3 font-display text-5xl leading-[1.02] font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
-              {page.brand} <span className="text-accent-gradient">{page.name}</span>
-            </h1>
-            <p className="mt-5 max-w-md text-[16px] leading-relaxed text-white/80 sm:text-lg">
+            </motion.p>
+            <motion.h1
+              variants={heroLine}
+              className="mt-3 font-display text-5xl leading-[1.02] font-extrabold tracking-tight sm:text-6xl lg:text-7xl"
+            >
+              {page.brand}{" "}
+              <span className="text-accent-gradient">{page.name}</span>
+            </motion.h1>
+            <motion.p
+              variants={heroLine}
+              className="mt-5 max-w-md text-[16px] leading-relaxed text-white/80 sm:text-lg"
+            >
               {text(page.tagline)}
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            </motion.p>
+            <motion.div
+              variants={heroLine}
+              className="mt-8 flex flex-wrap items-center gap-3"
+            >
               <button
                 type="button"
                 onClick={quote}
@@ -71,34 +164,77 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
                 <Calendar className="h-4 w-4" aria-hidden="true" />
                 {t("bookDemo")}
               </Link>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
           <div className="relative order-1 mx-auto w-full max-w-md lg:order-2 lg:max-w-none">
-            <Image
-              src={page.heroImage.src}
-              alt={`${page.brand} ${page.name}`}
-              width={page.heroImage.width}
-              height={page.heroImage.height}
-              priority
-              sizes="(min-width: 1024px) 50vw, 90vw"
-              className="h-auto w-full"
+            {/* light blooming behind the robot as it arrives */}
+            <motion.div
+              aria-hidden="true"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.6, ease: EASE }}
+              className="absolute inset-[8%] rounded-full bg-[radial-gradient(closest-side,rgb(var(--accent-rgb)/0.28),rgb(var(--accent-rgb)/0.08)_55%,transparent)] blur-2xl"
             />
+            {/* arrives rising into place, then floats */}
+            <motion.div
+              initial={{ opacity: 0, y: 60, scale: 0.92 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 1.1, ease: EASE }}
+              className="relative"
+            >
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{
+                  duration: 6,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  delay: 1.2,
+                }}
+              >
+                <Image
+                  src={page.heroImage.src}
+                  alt={`${page.brand} ${page.name}`}
+                  width={page.heroImage.width}
+                  height={page.heroImage.height}
+                  priority
+                  sizes="(min-width: 1024px) 50vw, 90vw"
+                  className="h-auto w-full"
+                />
+              </motion.div>
+            </motion.div>
           </div>
         </div>
 
         {/* ---- key figures ---- */}
         <div className="relative border-t border-white/10">
+          {/* a blue line drawing across as the figures come in */}
+          <motion.span
+            aria-hidden="true"
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, delay: 0.2, ease: EASE }}
+            className="absolute -top-px left-0 h-px w-full origin-left bg-gradient-to-r from-transparent via-accent to-transparent"
+          />
           <dl className="mx-auto grid max-w-7xl grid-cols-2 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
             {page.figures.map((figure, i) => (
-              <div
+              <motion.div
                 key={figure.value}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.1 + i * 0.1, ease: EASE }}
                 className={`py-7 lg:py-9 ${i % 2 === 1 ? "pl-5 lg:pl-8" : "lg:pl-8"} ${
                   i > 0 ? "lg:border-l lg:border-white/10" : "lg:pl-0"
                 } ${i === 1 ? "border-l border-white/10" : ""} ${i === 3 ? "border-l border-white/10" : ""}`}
               >
-                <dt className="order-2 mt-1.5 text-[13px] text-white/60">{text(figure.label)}</dt>
-                <dd className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">{figure.value}</dd>
-              </div>
+                <dt className="order-2 mt-1.5 text-[13px] text-white/60">
+                  {text(figure.label)}
+                </dt>
+                <dd className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+                  {figure.value}
+                </dd>
+              </motion.div>
             ))}
           </dl>
         </div>
@@ -114,13 +250,11 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
               {text(feature.title)}
             </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-ink-muted sm:text-lg">{text(feature.body)}</p>
+            <p className="mt-4 text-[15px] leading-relaxed text-ink-muted sm:text-lg">
+              {text(feature.body)}
+            </p>
           </FadeIn>
-          <div className="mx-auto mt-10 max-w-7xl px-3 sm:mt-14 sm:px-6 lg:px-8">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-forest-950">
-              <Image src={feature.image} alt={feature.alt} fill sizes="(min-width: 1280px) 1216px, 100vw" className="object-cover" />
-            </div>
-          </div>
+          <FeaturePhoto feature={feature} />
         </section>
       ))}
 
@@ -131,8 +265,18 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
             {t("specsHeading")}
           </h2>
           <div className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
-            {page.specs.map((group) => (
-              <div key={group.title.en}>
+            {page.specs.map((group, i) => (
+              <motion.div
+                key={group.title.en}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{
+                  duration: 0.6,
+                  delay: (i % 2) * 0.12,
+                  ease: EASE,
+                }}
+              >
                 <h3 className="border-b-2 border-content pb-2 font-display text-lg font-bold text-content">
                   {text(group.title)}
                 </h3>
@@ -143,11 +287,13 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
                       className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-4 border-b border-forest-100 py-3 text-[14px]"
                     >
                       <dt className="text-ink-muted">{text(row.label)}</dt>
-                      <dd className="font-semibold text-content">{text(row.value)}</dd>
+                      <dd className="font-semibold text-content">
+                        {text(row.value)}
+                      </dd>
                     </div>
                   ))}
                 </dl>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -155,7 +301,7 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
 
       {/* ---- closing call ---- */}
       <section className="bg-[#0b0d10] py-20 text-center text-white sm:py-24">
-        <div className="mx-auto max-w-xl px-4">
+        <FadeIn className="mx-auto max-w-xl px-4">
           <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
             {t("ctaHeading", { name: page.name })}
           </h2>
@@ -168,7 +314,7 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
             {t("getQuote")}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </button>
-        </div>
+        </FadeIn>
       </section>
     </main>
   );
