@@ -1192,5 +1192,9 @@
     "specsHeading": "Specifications",
     "ctaHeading": "Want {name} at your site?",
     "ctaBody": "Tell us about your space and we’ll reply with a quotation within one business day."
+  },
+  "condition": {
+    "preOwned": "Pre-owned",
+    "label": "Condition"
   }
 }

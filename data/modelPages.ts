@@ -42,6 +42,8 @@ export interface ModelPage {
   category: CategorySlug;
   brand: string;
   name: string;
+  /** Second-hand stock: badge in the hero, a Condition row in the specs. */
+  preOwned?: boolean;
   /** Transparent studio cut-out for the page's hero. */
   heroImage: { src: string; width: number; height: number };
   eyebrow: Bilingual;
@@ -60,6 +62,7 @@ export const modelPages: ModelPage[] = [
     category: "cleaning-robots",
     brand: "Gausium",
     name: "Phantas",
+    preOwned: true,
     heroImage: { src: "/studio/phantas-studio.webp", width: 1400, height: 1173 },
     eyebrow: { en: "Gausium · Commercial cleaning robot", th: "Gausium · หุ่นยนต์ทำความสะอาดเชิงพาณิชย์" },
     tagline: {
@@ -152,8 +155,8 @@ export const modelPages: ModelPage[] = [
       },
     ],
     metaDescription: {
-      en: "Gausium Phantas commercial cleaning robot in Thailand: sweeping, scrubbing, vacuuming and mopping, 400–700 m²/h, 2–4 h runtime. Get a quote from FindMyRobo.",
-      th: "หุ่นยนต์ทำความสะอาดเชิงพาณิชย์ Gausium Phantas ในประเทศไทย กวาด ขัด ดูด ถู 400–700 ตร.ม./ชม. ทำงาน 2–4 ชั่วโมง ขอใบเสนอราคาจาก FindMyRobo",
+      en: "Pre-owned Gausium Phantas commercial cleaning robot in Thailand: sweeping, scrubbing, vacuuming and mopping, 400–700 m²/h, 2–4 h runtime. Get a quote from FindMyRobo.",
+      th: "หุ่นยนต์ทำความสะอาดเชิงพาณิชย์ Gausium Phantas (ผ่านการใช้งาน) ในประเทศไทย กวาด ขัด ดูด ถู 400–700 ตร.ม./ชม. ทำงาน 2–4 ชั่วโมง ขอใบเสนอราคาจาก FindMyRobo",
     },
   },
 ];

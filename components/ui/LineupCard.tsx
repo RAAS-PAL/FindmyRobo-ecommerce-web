@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import ModelTile from "@/components/ui/ModelTile";
+import PreOwnedBadge from "@/components/ui/PreOwnedBadge";
 import type { LineupModel } from "@/data/lineup";
 
 /**
@@ -24,7 +25,8 @@ export default function LineupCard({ model }: { model: LineupModel }) {
       id={model.id}
       className="flex w-full max-w-sm scroll-mt-24 flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-shadow target:border-accent target:shadow-[0_0_0_3px_rgb(var(--accent-rgb)/0.25)]"
     >
-      <div className="h-52 bg-gradient-to-b from-cloud to-forest-100/40 p-6">
+      <div className="relative h-52 bg-gradient-to-b from-cloud to-forest-100/40 p-6">
+        {model.preOwned && <PreOwnedBadge className="absolute top-4 left-4 z-10" />}
         <ModelTile
           category={model.category}
           image={model.image}

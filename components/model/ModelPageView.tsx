@@ -13,6 +13,7 @@ import { ArrowUpRight, Calendar, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import FadeIn from "@/components/ui/FadeIn";
+import PreOwnedBadge from "@/components/ui/PreOwnedBadge";
 import { categoryHref } from "@/data/categories";
 import { pick } from "@/data/siteContent";
 import type { ModelFeature, ModelPage } from "@/data/modelPages";
@@ -88,6 +89,24 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
   const { openQuote } = useQuote();
   const quote = () => openQuote({ modelId: page.id });
   const text = (v: { en: string; th: string }) => pick(v, locale);
+  const tcond = useTranslations("condition");
+  // condition as the table's first row, so it's read before any figure
+  const specs = page.preOwned
+    ? page.specs.map((group, i) =>
+        i === 0
+          ? {
+              ...group,
+              rows: [
+                {
+                  label: { en: tcond("label"), th: tcond("label") },
+                  value: { en: tcond("preOwned"), th: tcond("preOwned") },
+                },
+                ...group.rows,
+              ],
+            }
+          : group
+      )
+    : page.specs;
 
   return (
     <main>
@@ -132,6 +151,11 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
               />
               {text(page.eyebrow)}
             </motion.p>
+            {page.preOwned && (
+              <motion.div variants={heroLine} className="mt-4">
+                <PreOwnedBadge tone="dark" />
+              </motion.div>
+            )}
             <motion.h1
               variants={heroLine}
               className="mt-3 font-display text-5xl leading-[1.02] font-extrabold tracking-tight sm:text-6xl lg:text-7xl"
@@ -265,7 +289,7 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
             {t("specsHeading")}
           </h2>
           <div className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
-            {page.specs.map((group, i) => (
+            {specs.map((group, i) => (
               <motion.div
                 key={group.title.en}
                 initial={{ opacity: 0, y: 24 }}

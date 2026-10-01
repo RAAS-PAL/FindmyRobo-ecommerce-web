@@ -48,7 +48,7 @@ function quoteEmail(
   if (quote.company) rows.push(["Company", quote.company]);
   rows.push(["Phone", quote.phone], ["Email", quote.email]);
   if (product) rows.push(["Product", product.name]);
-  if (model) rows.push(["Model", lineupModelName(model)]);
+  if (model) rows.push(["Model", `${lineupModelName(model)}${model.preOwned ? " (pre-owned)" : ""}`]);
   if (forProduct) rows.push(["For robot", forProduct.name]);
   if (quote.interest) rows.push(["Robot", INTEREST_LABEL[quote.interest]]);
   if (quote.interest === "lawn-mowing") {

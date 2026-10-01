@@ -32,6 +32,7 @@ import { useQuote } from "@/components/quote/QuoteProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
 import ModelTile from "@/components/ui/ModelTile";
+import PreOwnedBadge from "@/components/ui/PreOwnedBadge";
 import CatalogSearch from "@/components/layout/CatalogSearch";
 
 interface NavChild {
@@ -384,7 +385,10 @@ export default function Navbar() {
                                 onClick={closeMenu}
                                 className="flex h-full flex-col rounded-xl border border-forest-100 bg-cloud/50 p-3 transition hover:-translate-y-0.5 hover:border-accent-600/40 hover:bg-surface hover:shadow-md"
                               >
-                                <span className="flex h-28 items-center justify-center">
+                                <span className="relative flex h-28 items-center justify-center">
+                                  {model.lineup?.preOwned && (
+                                    <PreOwnedBadge className="absolute top-0 left-0 z-10" />
+                                  )}
                                   {model.product ? (
                                     <ProductVisual product={model.product} className="h-full w-full" />
                                   ) : (

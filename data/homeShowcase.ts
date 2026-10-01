@@ -162,7 +162,8 @@ export const heroSlides: HeroSlide[] = [
   {
     id: "phantas",
     tab: { en: "Commercial cleaning", th: "ทำความสะอาดเชิงพาณิชย์" },
-    eyebrow: { en: "Gausium · Commercial cleaning robot", th: "Gausium · หุ่นยนต์ทำความสะอาดเชิงพาณิชย์" },
+    // pre-owned stock: said in the slide itself (business decision 2026-10-01)
+    eyebrow: { en: "Gausium · Pre-owned cleaning robot", th: "Gausium · หุ่นยนต์ทำความสะอาด ผ่านการใช้งาน" },
     headline: { en: "Gausium Phantas.", th: "Gausium Phantas" },
     accent: { en: "Clean floors, every shift.", th: "พื้นสะอาด ทุกกะการทำงาน" },
     sub: {
@@ -207,7 +208,7 @@ export const featuredFamilies: RobotFamily[] = [
   },
   {
     id: "phantas",
-    eyebrow: { en: "Gausium", th: "Gausium" },
+    eyebrow: { en: "Gausium · Pre-owned", th: "Gausium · ผ่านการใช้งาน" },
     title: { en: "Phantas", th: "Phantas" },
     tagline: {
       en: "Autonomous floor cleaning for commercial spaces.",
@@ -226,7 +227,7 @@ export const featuredFamilies: RobotFamily[] = [
 export const moreFamilies: RobotFamily[] = [
   {
     id: "pudu",
-    eyebrow: { en: "Pudu Robotics", th: "Pudu Robotics" },
+    eyebrow: { en: "Pudu Robotics · Pre-owned", th: "Pudu Robotics · ผ่านการใช้งาน" },
     title: { en: "Delivery robots", th: "หุ่นยนต์ขนส่ง" },
     tagline: {
       en: "Bella, Ketty and more — for restaurants, hotels and offices.",
@@ -242,7 +243,7 @@ export const moreFamilies: RobotFamily[] = [
   },
   {
     id: "tchef",
-    eyebrow: { en: "T-Chef", th: "T-Chef" },
+    eyebrow: { en: "T-Chef · Pre-owned", th: "T-Chef · ผ่านการใช้งาน" },
     title: { en: "Cooking robot", th: "หุ่นยนต์ทำอาหาร" },
     // descriptive only until the spec sheet says who it is for
     tagline: {

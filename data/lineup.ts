@@ -21,6 +21,8 @@ export interface LineupModel {
   category: CategorySlug;
   brand: string;
   name: string;
+  /** Second-hand stock — labelled "Pre-owned" everywhere it appears. */
+  preOwned?: boolean;
   /** Its product page, once it has one (data/modelPages.ts). */
   page?: string;
   /** A /public image path, once there is a photo: a transparent cut-out,
@@ -34,16 +36,17 @@ export const lineup: LineupModel[] = [
     category: "cleaning-robots",
     brand: "Gausium",
     name: "Phantas",
+    preOwned: true,
     image: "/models/gausium-phantas.webp",
     page: "/products/gausium-phantas",
   },
-  { id: "aventurier-a1-basic", category: "smart-equipment", brand: "Aventurier", name: "A1-Basic" },
-  { id: "aventurier-a1-youth", category: "smart-equipment", brand: "Aventurier", name: "A1-Youth" },
-  { id: "t-chef-tc-e10a", category: "cooking-robots", brand: "T-Chef", name: "TC-E10A" },
-  { id: "pudu-1", category: "delivery-robots", brand: "Pudu", name: "Pudu1" },
-  { id: "pudu-2", category: "delivery-robots", brand: "Pudu", name: "Pudu2" },
-  { id: "pudu-bella", category: "delivery-robots", brand: "Pudu", name: "Bella" },
-  { id: "pudu-ketty", category: "delivery-robots", brand: "Pudu", name: "Ketty" },
+  { id: "aventurier-a1-basic", category: "smart-equipment", brand: "Aventurier", name: "A1-Basic", preOwned: true },
+  { id: "aventurier-a1-youth", category: "smart-equipment", brand: "Aventurier", name: "A1-Youth", preOwned: true },
+  { id: "t-chef-tc-e10a", category: "cooking-robots", brand: "T-Chef", name: "TC-E10A", preOwned: true },
+  { id: "pudu-1", category: "delivery-robots", brand: "Pudu", name: "Pudu1", preOwned: true },
+  { id: "pudu-2", category: "delivery-robots", brand: "Pudu", name: "Pudu2", preOwned: true },
+  { id: "pudu-bella", category: "delivery-robots", brand: "Pudu", name: "Bella", preOwned: true },
+  { id: "pudu-ketty", category: "delivery-robots", brand: "Pudu", name: "Ketty", preOwned: true },
 ];
 
 export const getLineupModel = (id: string): LineupModel | undefined =>

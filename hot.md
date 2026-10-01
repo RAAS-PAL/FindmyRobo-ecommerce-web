@@ -184,6 +184,13 @@ branch `main`.
   `app/[locale]/products/gausium-phantas/`. That static route wins over
   `products/[id]` — delete it when Phantas is added in Admin. Photos in
   `public/models/phantas/`.
+- Phantas, Aventurier, T-Chef and the Pudu robots are second-hand stock,
+  labelled "Pre-owned" (Thai draft: ผ่านการใช้งาน) everywhere they appear —
+  cards, navbar menus, the Phantas page (badge + first spec row), the
+  homepage slide and banners, and the sales email (decision 2026-10-01).
+  Flag: `preOwned` in `data/lineup.ts` / `data/modelPages.ts`;
+  `components/ui/PreOwnedBadge.tsx`. Open question: the hero promise
+  "Warranty in Thailand" — what warranty applies to pre-owned units?
 
 ## Conventions for agents
 
