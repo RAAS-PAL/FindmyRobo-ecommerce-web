@@ -1195,6 +1195,9 @@
   },
   "condition": {
     "preOwned": "Pre-owned",
-    "label": "Condition"
+    "new": "Brand-new",
+    "either": "Brand-new or pre-owned",
+    "label": "Condition",
+    "ask": "Brand-new or pre-owned?"
   }
 }

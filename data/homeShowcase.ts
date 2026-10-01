@@ -162,8 +162,8 @@ export const heroSlides: HeroSlide[] = [
   {
     id: "phantas",
     tab: { en: "Commercial cleaning", th: "ทำความสะอาดเชิงพาณิชย์" },
-    // pre-owned stock: said in the slide itself (business decision 2026-10-01)
-    eyebrow: { en: "Gausium · Pre-owned cleaning robot", th: "Gausium · หุ่นยนต์ทำความสะอาด ผ่านการใช้งาน" },
+    // sold new and pre-owned: said in the slide itself (business, 2026-10-01)
+    eyebrow: { en: "Gausium · Brand-new or pre-owned", th: "Gausium · เครื่องใหม่ หรือผ่านการใช้งาน" },
     headline: { en: "Gausium Phantas.", th: "Gausium Phantas" },
     accent: { en: "Clean floors, every shift.", th: "พื้นสะอาด ทุกกะการทำงาน" },
     sub: {
@@ -208,7 +208,7 @@ export const featuredFamilies: RobotFamily[] = [
   },
   {
     id: "phantas",
-    eyebrow: { en: "Gausium · Pre-owned", th: "Gausium · ผ่านการใช้งาน" },
+    eyebrow: { en: "Gausium · Brand-new or pre-owned", th: "Gausium · เครื่องใหม่ หรือผ่านการใช้งาน" },
     title: { en: "Phantas", th: "Phantas" },
     tagline: {
       en: "Autonomous floor cleaning for commercial spaces.",
@@ -243,7 +243,7 @@ export const moreFamilies: RobotFamily[] = [
   },
   {
     id: "tchef",
-    eyebrow: { en: "T-Chef · Pre-owned", th: "T-Chef · ผ่านการใช้งาน" },
+    eyebrow: { en: "T-Chef · Brand-new or pre-owned", th: "T-Chef · เครื่องใหม่ หรือผ่านการใช้งาน" },
     title: { en: "Cooking robot", th: "หุ่นยนต์ทำอาหาร" },
     // descriptive only until the spec sheet says who it is for
     tagline: {

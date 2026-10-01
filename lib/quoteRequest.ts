@@ -1,4 +1,5 @@
 import type { CategorySlug } from "@/data/categories";
+import { isStockCondition, type StockCondition } from "@/data/lineup";
 
 /**
  * The quote form — on the homepage hero, and in the quote panel that every
@@ -61,6 +62,12 @@ export interface QuoteRequest {
   modelId: string;
   /** For a service (demo, installation): the robot it is for. */
   forId: string;
+  /**
+   * New or pre-owned, when the lineup model is sold that way. Required only
+   * when the model is sold as both; a single-condition model is filled in
+   * by the server.
+   */
+  condition: StockCondition | "";
 }
 
 export type QuoteField = keyof QuoteRequest;
@@ -79,6 +86,7 @@ export const EMPTY_QUOTE: QuoteRequest = {
   productId: "",
   modelId: "",
   forId: "",
+  condition: "",
 };
 
 const PHONE_RE = /^(\+66[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?\d{4}|0\d{1,2}[\s-]?\d{3}[\s-]?\d{4})$/;
@@ -108,10 +116,11 @@ export function isPuduVenue(value: string): value is PuduVenue {
  *
  * `productChosen`: the visitor came from a product's (or lineup model's)
  * button, so that answers "which robot" and the interest choice is not asked.
+ * `needsCondition`: the model is sold both new and pre-owned, so they pick one.
  */
 export function validateQuote(
   form: QuoteRequest,
-  { productChosen = false }: { productChosen?: boolean } = {}
+  { productChosen = false, needsCondition = false }: { productChosen?: boolean; needsCondition?: boolean } = {}
 ): Partial<Record<QuoteField, string>> {
   const errors: Partial<Record<QuoteField, string>> = {};
   if (!form.fullName.trim()) errors.fullName = "required";
@@ -120,6 +129,7 @@ export function validateQuote(
   if (!form.phone.trim()) errors.phone = "required";
   else if (!PHONE_RE.test(form.phone.trim())) errors.phone = "phone";
   if (!form.interest && !productChosen) errors.interest = "required";
+  if (needsCondition && !form.condition) errors.condition = "required";
 
   if (form.interest === "lawn-mowing") {
     if (!form.areaM2.trim()) errors.areaM2 = "required";
@@ -142,6 +152,7 @@ export function asQuote(raw: unknown): QuoteRequest {
   const str = (key: string) => (typeof v[key] === "string" ? v[key].trim() : "");
   const interest = str("interest");
   const venue = str("venue");
+  const condition = str("condition");
   return {
     fullName: str("fullName"),
     company: str("company"),
@@ -156,5 +167,6 @@ export function asQuote(raw: unknown): QuoteRequest {
     productId: str("productId"),
     modelId: str("modelId"),
     forId: str("forId"),
+    condition: isStockCondition(condition) ? condition : "",
   };
 }

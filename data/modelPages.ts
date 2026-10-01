@@ -44,8 +44,6 @@ export interface ModelPage {
   category: CategorySlug;
   brand: string;
   name: string;
-  /** Second-hand stock: badge in the hero, a Condition row in the specs. */
-  preOwned?: boolean;
   /** Transparent studio cut-out for the page's hero. */
   heroImage: { src: string; width: number; height: number };
   eyebrow: Bilingual;
@@ -64,7 +62,6 @@ export const modelPages: ModelPage[] = [
     category: "cleaning-robots",
     brand: "Gausium",
     name: "Phantas",
-    preOwned: true,
     heroImage: { src: "/studio/phantas-studio.webp", width: 1400, height: 1173 },
     eyebrow: { en: "Gausium · Commercial cleaning robot", th: "Gausium · หุ่นยนต์ทำความสะอาดเชิงพาณิชย์" },
     tagline: {
@@ -157,8 +154,8 @@ export const modelPages: ModelPage[] = [
       },
     ],
     metaDescription: {
-      en: "Pre-owned Gausium Phantas commercial cleaning robot in Thailand: sweeping, scrubbing, vacuuming and mopping, 400–700 m²/h, 2–4 h runtime. Get a quote from FindMyRobo.",
-      th: "หุ่นยนต์ทำความสะอาดเชิงพาณิชย์ Gausium Phantas (ผ่านการใช้งาน) ในประเทศไทย กวาด ขัด ดูด ถู 400–700 ตร.ม./ชม. ทำงาน 2–4 ชั่วโมง ขอใบเสนอราคาจาก FindMyRobo",
+      en: "Brand-new or pre-owned Gausium Phantas commercial cleaning robot in Thailand: sweeping, scrubbing, vacuuming and mopping, 400–700 m²/h, 2–4 h runtime. Get a quote from FindMyRobo.",
+      th: "หุ่นยนต์ทำความสะอาดเชิงพาณิชย์ Gausium Phantas (เครื่องใหม่ หรือผ่านการใช้งาน) ในประเทศไทย กวาด ขัด ดูด ถู 400–700 ตร.ม./ชม. ทำงาน 2–4 ชั่วโมง ขอใบเสนอราคาจาก FindMyRobo",
     },
   },
   /*
@@ -178,7 +175,6 @@ export const modelPages: ModelPage[] = [
     category: "cooking-robots",
     brand: "T-Chef",
     name: "TC-E10A",
-    preOwned: true,
     heroImage: { src: "/studio/t-chef-studio.webp", width: 1400, height: 1079 },
     eyebrow: { en: "T-Chef · Small intelligent cooking robot", th: "T-Chef · หุ่นยนต์ทำอาหารอัจฉริยะขนาดเล็ก" },
     tagline: {
@@ -277,8 +273,159 @@ export const modelPages: ModelPage[] = [
       },
     ],
     metaDescription: {
-      en: "Pre-owned T-Chef TC-E10A small intelligent cooking robot in Thailand: auto food delivery, 11 combination stir-fry modes, up to 1 kg, 7-inch touch screen. Get a quote from FindMyRobo.",
-      th: "หุ่นยนต์ทำอาหารอัจฉริยะขนาดเล็ก T-Chef TC-E10A (ผ่านการใช้งาน) ในประเทศไทย เติมวัตถุดิบอัตโนมัติ โหมดผัดแบบผสมผสาน 11 แบบ ปรุงได้สูงสุด 1 กก. หน้าจอสัมผัส 7 นิ้ว ขอใบเสนอราคาจาก FindMyRobo",
+      en: "Brand-new or pre-owned T-Chef TC-E10A small intelligent cooking robot in Thailand: auto food delivery, 11 combination stir-fry modes, up to 1 kg, 7-inch touch screen. Get a quote from FindMyRobo.",
+      th: "หุ่นยนต์ทำอาหารอัจฉริยะขนาดเล็ก T-Chef TC-E10A (เครื่องใหม่ หรือผ่านการใช้งาน) ในประเทศไทย เติมวัตถุดิบอัตโนมัติ โหมดผัดแบบผสมผสาน 11 แบบ ปรุงได้สูงสุด 1 กก. หน้าจอสัมผัส 7 นิ้ว ขอใบเสนอราคาจาก FindMyRobo",
+    },
+  },
+  /*
+   * Aventurier A1-Youth. Two sources, and they disagree in places, so the
+   * page keeps only what both can support:
+   *   - Artist 1 brochure (Introduction, final, Jan 2024): one spec table for
+   *     "Artist 1", not split into Basic and Youth. Hardware figures below
+   *     come from that table. It also lists 4+1 modes and a cloud platform.
+   *   - The business (2026-10-01): Basic and Youth look the same and use the
+   *     same consumables. Youth differs in the screen — Wi-Fi and 4G, so
+   *     reports can be checked — and in having 3 modes, not 1. One battery
+   *     is included; extras are sold separately.
+   * The brochure's five mode names are NOT listed: they don't match "3 modes".
+   * Battery capacity is left out: the brochure says 13 Ah, the labelled
+   * diagram says 26 Ah. The Thai text is a DRAFT for the Thai team.
+   * Photos: transparent renders supplied for Youth (2026-10-01), plus the
+   * shared brush close-up. The hero is the three-quarter render on a wide
+   * canvas so the portrait file doesn't stretch the page.
+   */
+  {
+    id: "aventurier-a1-youth",
+    category: "smart-equipment",
+    brand: "Aventurier",
+    name: "A1-Youth",
+    heroImage: { src: "/models/aventurier/youth/hero.webp", width: 1400, height: 1173 },
+    eyebrow: {
+      en: "Aventurier · Walk-behind floor scrubber",
+      th: "Aventurier · เครื่องขัดพื้นแบบเดินตาม",
+    },
+    tagline: {
+      en: "A walk-behind floor scrubber with Wi-Fi and 4G, so cleaning reports can be checked. Three operating modes.",
+      th: "เครื่องขัดพื้นแบบเดินตาม เชื่อมต่อ Wi-Fi และ 4G เพื่อตรวจรายงานการทำความสะอาด มีโหมดการทำงาน 3 โหมด",
+    },
+    figures: [
+      { value: "800–1,200 m²/h", label: { en: "Cleaning rate", th: "อัตราการทำความสะอาด" } },
+      { value: "3", label: { en: "Operating modes", th: "โหมดการทำงาน" } },
+      { value: "75 min", label: { en: "Runtime, one battery", th: "ระยะเวลาทำงาน แบตเตอรี่ 1 ก้อน" } },
+      { value: "Wi-Fi & 4G", label: { en: "Connectivity", th: "การเชื่อมต่อ" } },
+    ],
+    features: [
+      {
+        image: "/models/aventurier/youth/handle.webp",
+        alt: "The A1-Youth handle screen showing tank, blockage and battery status",
+        eyebrow: { en: "Wi-Fi and 4G", th: "Wi-Fi และ 4G" },
+        title: { en: "Check the reports.", th: "ตรวจรายงานได้" },
+        body: {
+          en: "Youth connects over Wi-Fi and 4G, so cleaning reports can be checked. The handle screen shows Full, Lack, Blocking and the battery level.",
+          th: "รุ่น Youth เชื่อมต่อผ่าน Wi-Fi และ 4G จึงตรวจรายงานการทำความสะอาดได้ หน้าจอบนด้ามจับแสดงสถานะถังเต็ม น้ำไม่พอ สิ่งกีดขวาง และระดับแบตเตอรี่",
+        },
+      },
+      {
+        image: "/models/aventurier/brushes.webp",
+        alt: "The A1's two red disc brushes and suction drying the floor",
+        eyebrow: { en: "Cleaning", th: "การทำความสะอาด" },
+        title: { en: "Scrub, then dry.", th: "ขัด แล้วพื้นแห้งทันที" },
+        body: {
+          en: "Two disc brushes scrub the floor. The Artist 1 brochure rates suction at 8,000 Pa, brush pressure at 15 kg and brush speed at 350 RPM, and says the floor is dry straight after cleaning.",
+          th: "แปรงจาน 2 หัวขัดพื้น เอกสาร Artist 1 ระบุแรงดูด 8,000 Pa แรงกดแปรง 15 กก. ความเร็วแปรง 350 รอบต่อนาที และพื้นแห้งทันทีหลังทำความสะอาด",
+        },
+      },
+      {
+        image: "/models/aventurier/youth/batteries.webp",
+        alt: "The A1-Youth base with two battery doors",
+        eyebrow: { en: "Battery", th: "แบตเตอรี่" },
+        title: { en: "One battery to start.", th: "เริ่มต้นด้วยแบตเตอรี่ 1 ก้อน" },
+        body: {
+          en: "One battery is included. The base has a second bay, and extra batteries are sold separately. On the included battery the brochure lists 75 minutes in ECO mode.",
+          th: "ให้แบตเตอรี่มา 1 ก้อน ฐานเครื่องมีช่องสำหรับก้อนที่สอง และมีแบตเตอรี่ขายแยก เอกสารระบุระยะเวลาทำงาน 75 นาทีในโหมด ECO เมื่อใช้แบตเตอรี่ก้อนเดียว",
+        },
+      },
+    ],
+    specs: [
+      {
+        title: { en: "Cleaning", th: "การทำความสะอาด" },
+        rows: [
+          {
+            label: { en: "Cleaning rate", th: "อัตราการทำความสะอาด" },
+            value: same("800–1,200 m²/h"),
+          },
+          { label: { en: "Working width", th: "ความกว้างในการทำงาน" }, value: { en: "40 cm", th: "40 ซม." } },
+          { label: { en: "Suction", th: "แรงดูด" }, value: same("8,000 Pa") },
+          { label: { en: "Brush pressure", th: "แรงกดแปรง" }, value: { en: "15 kg", th: "15 กก." } },
+          { label: { en: "Brush speed", th: "ความเร็วแปรง" }, value: { en: "350 RPM", th: "350 รอบต่อนาที" } },
+          { label: { en: "Noise", th: "เสียง" }, value: same("60 dB(A)") },
+          { label: { en: "Operating modes", th: "โหมดการทำงาน" }, value: { en: "3", th: "3 โหมด" } },
+          {
+            label: { en: "Floors", th: "พื้นผิวที่ใช้ได้" },
+            value: {
+              en: "Tile, granite, marble, PVC, epoxy, cement",
+              th: "กระเบื้อง หินแกรนิต หินอ่อน พีวีซี อีพ็อกซี ปูน",
+            },
+          },
+        ],
+      },
+      {
+        title: { en: "Water", th: "น้ำ" },
+        rows: [
+          { label: { en: "Solution tank", th: "ถังน้ำยา" }, value: { en: "4 L", th: "4 ลิตร" } },
+          { label: { en: "Recovery tank", th: "ถังน้ำเสีย" }, value: { en: "4 L", th: "4 ลิตร" } },
+        ],
+      },
+      {
+        title: { en: "Battery", th: "แบตเตอรี่" },
+        rows: [
+          {
+            label: { en: "Included", th: "ที่ให้มา" },
+            value: {
+              en: "1 battery. Extra batteries sold separately",
+              th: "1 ก้อน แบตเตอรี่เพิ่มมีขายแยก",
+            },
+          },
+          {
+            label: { en: "Runtime", th: "ระยะเวลาทำงาน" },
+            value: {
+              en: "75 min, one battery, ECO mode",
+              th: "75 นาที แบตเตอรี่ 1 ก้อน โหมด ECO",
+            },
+          },
+        ],
+      },
+      {
+        title: { en: "Connectivity", th: "การเชื่อมต่อ" },
+        rows: [
+          { label: { en: "Connection", th: "การเชื่อมต่อ" }, value: same("Wi-Fi & 4G") },
+          {
+            label: { en: "Reports", th: "รายงาน" },
+            value: { en: "Can be checked", th: "ตรวจสอบได้" },
+          },
+          {
+            label: { en: "Handle screen", th: "หน้าจอบนด้ามจับ" },
+            value: {
+              en: "Full, Lack, Blocking, battery level",
+              th: "ถังเต็ม น้ำไม่พอ สิ่งกีดขวาง ระดับแบตเตอรี่",
+            },
+          },
+        ],
+      },
+      {
+        title: { en: "Size and weight", th: "ขนาดและน้ำหนัก" },
+        rows: [
+          {
+            label: { en: "Dimensions", th: "ขนาด" },
+            value: { en: "1,104 × 439 × 346 mm", th: "1,104 × 439 × 346 มม." },
+          },
+          { label: { en: "Weight", th: "น้ำหนัก" }, value: { en: "22 kg", th: "22 กก." } },
+        ],
+      },
+    ],
+    metaDescription: {
+      en: "Brand-new Aventurier A1-Youth walk-behind floor scrubber in Thailand: Wi-Fi and 4G, 3 operating modes, 800–1,200 m²/h, one battery included. Get a quote from FindMyRobo.",
+      th: "เครื่องขัดพื้นแบบเดินตาม Aventurier A1-Youth (เครื่องใหม่) ในประเทศไทย เชื่อมต่อ Wi-Fi และ 4G โหมดการทำงาน 3 โหมด ทำความสะอาด 800–1,200 ตร.ม./ชม. ให้แบตเตอรี่มา 1 ก้อน ขอใบเสนอราคาจาก FindMyRobo",
     },
   },
 ];

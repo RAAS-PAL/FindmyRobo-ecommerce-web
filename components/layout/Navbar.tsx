@@ -32,7 +32,7 @@ import { useQuote } from "@/components/quote/QuoteProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
 import ModelTile from "@/components/ui/ModelTile";
-import PreOwnedBadge from "@/components/ui/PreOwnedBadge";
+import ConditionLine from "@/components/ui/ConditionLine";
 import CatalogSearch from "@/components/layout/CatalogSearch";
 
 interface NavChild {
@@ -386,8 +386,12 @@ export default function Navbar() {
                                 className="flex h-full flex-col rounded-xl border border-forest-100 bg-cloud/50 p-3 transition hover:-translate-y-0.5 hover:border-accent-600/40 hover:bg-surface hover:shadow-md"
                               >
                                 <span className="relative flex h-28 items-center justify-center">
-                                  {model.lineup?.preOwned && (
-                                    <PreOwnedBadge className="absolute top-0 left-0 z-10" />
+                                  {model.lineup && (
+                                    <ConditionLine
+                                      conditions={model.lineup.conditions}
+                                      stack
+                                      className="absolute top-0 left-0 z-10"
+                                    />
                                   )}
                                   {model.product ? (
                                     <ProductVisual product={model.product} className="h-full w-full" />
@@ -598,9 +602,14 @@ export default function Navbar() {
                                     <Link
                                       href={model.href}
                                       onClick={() => setOpen(false)}
-                                      className="flex min-h-[44px] items-center rounded-lg px-4 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
+                                      className="flex min-h-[44px] flex-col justify-center rounded-lg px-4 py-2 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
                                     >
-                                      {model.lineup ? lineupModelName(model.lineup) : model.name}
+                                      <span>
+                                        {model.lineup ? lineupModelName(model.lineup) : model.name}
+                                      </span>
+                                      {model.lineup && (
+                                        <ConditionLine conditions={model.lineup.conditions} />
+                                      )}
                                     </Link>
                                   </li>
                                 ))}

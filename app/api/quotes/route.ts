@@ -48,7 +48,10 @@ function quoteEmail(
   if (quote.company) rows.push(["Company", quote.company]);
   rows.push(["Phone", quote.phone], ["Email", quote.email]);
   if (product) rows.push(["Product", product.name]);
-  if (model) rows.push(["Model", `${lineupModelName(model)}${model.preOwned ? " (pre-owned)" : ""}`]);
+  if (model) rows.push(["Model", lineupModelName(model)]);
+  if (quote.condition) {
+    rows.push(["Condition", quote.condition === "new" ? "Brand-new" : "Pre-owned"]);
+  }
   if (forProduct) rows.push(["For robot", forProduct.name]);
   if (quote.interest) rows.push(["Robot", INTEREST_LABEL[quote.interest]]);
   if (quote.interest === "lawn-mowing") {
@@ -114,8 +117,14 @@ export async function POST(request: Request) {
   // The form sends the model's robot type with it; fill it in if it didn't,
   // so the email always says what kind of robot it is.
   if (model && !quote.interest) quote.interest = CATEGORY_INTEREST[model.category] ?? "";
+  // One way of selling it: the email states that, whatever the form sent.
+  // Both ways: they have to pick, and the pick has to be one we sell.
+  const needsCondition = !!model && model.conditions.length > 1;
+  if (!model) quote.condition = "";
+  else if (model.conditions.length === 1) quote.condition = model.conditions[0];
+  else if (!model.conditions.includes(quote.condition as "new" | "pre-owned")) quote.condition = "";
 
-  const errors = validateQuote(quote, { productChosen: !!product || !!model });
+  const errors = validateQuote(quote, { productChosen: !!product || !!model, needsCondition });
   if (Object.keys(errors).length > 0) {
     return NextResponse.json({ error: "Invalid details", errors }, { status: 400 });
   }

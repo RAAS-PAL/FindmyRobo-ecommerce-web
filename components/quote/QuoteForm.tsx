@@ -13,7 +13,8 @@ import {
   X,
 } from "lucide-react";
 import { useProducts } from "@/components/ProductsProvider";
-import { getLineupModel, lineupModelName } from "@/data/lineup";
+import { getLineupModel, lineupModelName, type StockCondition } from "@/data/lineup";
+import ConditionLine from "@/components/ui/ConditionLine";
 import {
   CATEGORY_INTEREST,
   EMPTY_QUOTE,
@@ -112,6 +113,7 @@ export default function QuoteForm({
   const t = useTranslations("heroQuote");
   const tc = useTranslations("checkout");
   const tq = useTranslations("quotation");
+  const tcond = useTranslations("condition");
   const tcart = useTranslations("cart");
   const locale = useLocale();
   const formId = useId();
@@ -138,6 +140,7 @@ export default function QuoteForm({
     productId: product?.id ?? "",
     modelId: model?.id ?? "",
     forId: forProduct?.id ?? "",
+    condition: model?.conditions.length === 1 ? model.conditions[0] : "",
     // The robot's category still sets its follow-up (a mower's lawn area,
     // a Pudu's venue), so it is kept even though the choice isn't shown.
     interest:
@@ -245,6 +248,18 @@ export default function QuoteForm({
     });
   };
 
+  const needsCondition = !!model && model.conditions.length > 1;
+
+  const chooseCondition = (condition: StockCondition) => {
+    setForm((current) => ({ ...current, condition }));
+    setErrors((current) => {
+      if (!current.condition) return current;
+      const next = { ...current };
+      delete next.condition;
+      return next;
+    });
+  };
+
   const err = (name: QuoteField) => {
     const key = errors[name];
     if (!key) return undefined;
@@ -254,13 +269,13 @@ export default function QuoteForm({
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const nextErrors = validateQuote(form, { productChosen: !!selection });
+    const nextErrors = validateQuote(form, { productChosen: !!selection, needsCondition });
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
       setExpanded(true);
       const first = Object.keys(nextErrors)[0] as QuoteField;
       const target = document.getElementById(fieldId(first));
-      if (first === "interest") {
+      if (first === "interest" || first === "condition") {
         target?.parentElement?.querySelector<HTMLElement>("[role='radio']")?.focus();
       } else {
         target?.focus();
@@ -378,12 +393,58 @@ export default function QuoteForm({
                     <p className="font-display text-[15px] leading-snug font-bold text-content">
                       {selection}
                     </p>
+                    {model && model.conditions.length === 1 && (
+                      <ConditionLine conditions={model.conditions} className="mt-0.5" />
+                    )}
                     {forProduct && (
                       <p className="text-[12px] font-medium text-accent-600">
                         {tcart("forRobot", { name: forProduct.name })}
                       </p>
                     )}
                   </div>
+                </div>
+              )}
+
+              {model && model.conditions.length > 1 && (
+                <div className="mt-3.5 flex flex-col gap-1.5">
+                  <p id={fieldId("condition")} className="text-[12px] font-medium tracking-wide text-ink-muted">
+                    {tcond("ask")}
+                    <span className="ml-0.5 text-accent-600" aria-hidden="true">
+                      *
+                    </span>
+                  </p>
+                  <div
+                    role="radiogroup"
+                    aria-labelledby={fieldId("condition")}
+                    className="flex flex-wrap gap-1.5"
+                  >
+                    {model.conditions.map((condition) => {
+                      const selected = form.condition === condition;
+                      return (
+                        <button
+                          key={condition}
+                          type="button"
+                          role="radio"
+                          aria-checked={selected}
+                          onClick={() => chooseCondition(condition)}
+                          className={`inline-flex cursor-pointer items-center border px-2 py-1 font-mono text-[10px] leading-none font-semibold tracking-[0.12em] uppercase transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 [&:lang(th)]:tracking-[0.02em] ${
+                            selected
+                              ? "border-forest-950 bg-forest-950 text-white"
+                              : errors.condition
+                                ? "border-red-400 bg-surface text-content"
+                                : "border-forest-200 bg-surface text-content hover:border-forest-950"
+                          }`}
+                        >
+                          {condition === "new" ? tcond("new") : tcond("preOwned")}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {err("condition") && (
+                    <p role="alert" className="text-[12px] font-medium text-red-600">
+                      {err("condition")}
+                    </p>
+                  )}
                 </div>
               )}
 
