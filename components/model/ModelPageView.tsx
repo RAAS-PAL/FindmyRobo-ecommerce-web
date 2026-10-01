@@ -17,7 +17,7 @@ import ConditionLine from "@/components/ui/ConditionLine";
 import { conditionKind, getLineupModel } from "@/data/lineup";
 import { categoryHref } from "@/data/categories";
 import { pick } from "@/data/siteContent";
-import type { ModelFeature, ModelPage } from "@/data/modelPages";
+import type { ModelColor, ModelFeature, ModelPage } from "@/data/modelPages";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -74,6 +74,39 @@ function FeaturePhoto({ feature }: { feature: ModelFeature }) {
         </motion.div>
       </motion.div>
     </div>
+  );
+}
+
+/** One body colour in a model's hero, named so the two can be told apart. */
+function HeroColor({
+  color,
+  alt,
+  label,
+}: {
+  color: ModelColor;
+  alt: string;
+  label: string;
+}) {
+  return (
+    <figure className="flex min-w-0 flex-1 flex-col items-center">
+      <Image
+        src={color.image.src}
+        alt={alt}
+        width={color.image.width}
+        height={color.image.height}
+        priority
+        sizes="(min-width: 1024px) 24vw, 45vw"
+        className="h-[min(42svh,22rem)] w-auto max-w-full object-contain sm:h-[min(52svh,28rem)] lg:h-[min(64svh,34rem)]"
+      />
+      <figcaption className="mt-3 flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.18em] text-white/80 uppercase [&:lang(th)]:tracking-[0.04em]">
+        <span
+          aria-hidden="true"
+          className="h-3.5 w-3.5 rounded-full border border-white/50"
+          style={{ backgroundColor: color.swatch }}
+        />
+        {label}
+      </figcaption>
+    </figure>
   );
 }
 
@@ -195,7 +228,11 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
               </Link>
             </motion.div>
           </motion.div>
-          <div className="relative order-1 mx-auto w-full max-w-md lg:order-2 lg:max-w-none">
+          <div
+            className={`relative order-1 mx-auto w-full lg:order-2 lg:max-w-none ${
+              page.heroColors ? "max-w-xl" : "max-w-md"
+            }`}
+          >
             {/* light blooming behind the robot as it arrives */}
             <motion.div
               aria-hidden="true"
@@ -220,15 +257,28 @@ export default function ModelPageView({ page }: { page: ModelPage }) {
                   delay: 1.2,
                 }}
               >
-                <Image
-                  src={page.heroImage.src}
-                  alt={`${page.brand} ${page.name}`}
-                  width={page.heroImage.width}
-                  height={page.heroImage.height}
-                  priority
-                  sizes="(min-width: 1024px) 50vw, 90vw"
-                  className="h-auto w-full"
-                />
+                {page.heroColors ? (
+                  <div className="flex items-end justify-center gap-1 sm:gap-4">
+                    {page.heroColors.map((color) => (
+                      <HeroColor
+                        key={color.id}
+                        color={color}
+                        alt={`${page.brand} ${page.name}, ${text(color.label)}`}
+                        label={text(color.label)}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <Image
+                    src={page.heroImage.src}
+                    alt={`${page.brand} ${page.name}`}
+                    width={page.heroImage.width}
+                    height={page.heroImage.height}
+                    priority
+                    sizes="(min-width: 1024px) 50vw, 90vw"
+                    className="h-auto w-full"
+                  />
+                )}
               </motion.div>
             </motion.div>
           </div>

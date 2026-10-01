@@ -38,6 +38,14 @@ export interface ModelSpecGroup {
   rows: ModelSpecRow[];
 }
 
+export interface ModelColor {
+  id: string;
+  label: Bilingual;
+  /** Swatch fill, shown next to the colour name. */
+  swatch: string;
+  image: { src: string; width: number; height: number };
+}
+
 export interface ModelPage {
   /** Same as the lineup id; the page lives at /products/<id>. */
   id: string;
@@ -46,6 +54,11 @@ export interface ModelPage {
   name: string;
   /** Transparent studio cut-out for the page's hero. */
   heroImage: { src: string; width: number; height: number };
+  /**
+   * When a model is sold in more than one colour, the hero shows each one.
+   * `heroImage` stays the default cut-out used everywhere else.
+   */
+  heroColors?: ModelColor[];
   eyebrow: Bilingual;
   tagline: Bilingual;
   figures: ModelFigure[];
@@ -291,8 +304,9 @@ export const modelPages: ModelPage[] = [
    * Battery capacity is left out: the brochure says 13 Ah, the labelled
    * diagram says 26 Ah. The Thai text is a DRAFT for the Thai team.
    * Photos: transparent renders supplied for Youth (2026-10-01), plus the
-   * shared brush close-up. The hero is the three-quarter render on a wide
-   * canvas so the portrait file doesn't stretch the page.
+   * shared brush close-up. The body comes in two colours — white (those
+   * renders) and grey (the render supplied later the same day). The hero
+   * shows both. Feature photos stay on the white body.
    */
   {
     id: "aventurier-a1-youth",
@@ -300,6 +314,20 @@ export const modelPages: ModelPage[] = [
     brand: "Aventurier",
     name: "A1-Youth",
     heroImage: { src: "/models/aventurier/youth/hero.webp", width: 1400, height: 1173 },
+    heroColors: [
+      {
+        id: "white",
+        label: { en: "White", th: "สีขาว" },
+        swatch: "#f3f3f3",
+        image: { src: "/models/aventurier/youth/hero-white.webp", width: 1037, height: 2943 },
+      },
+      {
+        id: "grey",
+        label: { en: "Grey", th: "สีเทา" },
+        swatch: "#85909c",
+        image: { src: "/models/aventurier/youth/hero-grey.webp", width: 1183, height: 3092 },
+      },
+    ],
     eyebrow: {
       en: "Aventurier · Walk-behind floor scrubber",
       th: "Aventurier · เครื่องขัดพื้นแบบเดินตาม",
