@@ -167,8 +167,9 @@ export const modelPages: ModelPage[] = [
    * Cooking Robot"), checked 2026-10-01. Figures and specs are from its
    * Technical Parameters tab; the feature claims are the five callouts on its
    * labelled product image (the page has no other feature text). It never
-   * says "commercial", so neither do we. Photos are T-Chef's own two images
-   * from that page (the cut-outs and the dark studio shot are made from them).
+   * says "commercial", so neither do we. Photos: T-Chef's product render as a
+   * sharper transparent cut-out supplied by the business (2026-10-01) — the
+   * hero, the card and both studio shots — plus the labelled image itself.
    * The Thai text is a DRAFT for the Thai team to review.
    */
   {
