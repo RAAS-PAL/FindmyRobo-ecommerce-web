@@ -325,7 +325,7 @@ export const modelPages: ModelPage[] = [
         id: "grey",
         label: { en: "Grey", th: "สีเทา" },
         swatch: "#85909c",
-        image: { src: "/models/aventurier/youth/hero-grey.webp", width: 1183, height: 3092 },
+        image: { src: "/models/aventurier/youth/grey.webp", width: 1037, height: 2943 },
       },
     ],
     eyebrow: {
