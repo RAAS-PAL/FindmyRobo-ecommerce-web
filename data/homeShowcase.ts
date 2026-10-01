@@ -250,10 +250,13 @@ export const moreFamilies: RobotFamily[] = [
       en: "The T-Chef TC-E10A.",
       th: "T-Chef TC-E10A",
     },
-    href: "/shop/cooking-robots",
+    href: "/products/t-chef-tc-e10a",
     interest: "cooking",
     modelId: "t-chef-tc-e10a",
-    image: null,
+    // T-Chef's own studio shot (en.t-chef.com.cn): the machine sits low, under
+    // the title's scrim. Its page has no lifestyle photo yet.
+    image: "/models/t-chef/studio.webp",
+    focus: "50% 70%",
     shot: {
       en: "TC-E10A in a working kitchen, pan in motion · 4:3 · machine centred, full height in frame",
       th: "TC-E10A ในครัวที่กำลังทำงาน · 4:3 · เครื่องอยู่กลางภาพ เห็นเต็มตัว",

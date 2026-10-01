@@ -9,8 +9,10 @@ import type { CategorySlug } from "@/data/categories";
  * and entry here, or the admin product will be hidden behind this page.
  *
  * Copy rule (data/techAnatomy.ts): every figure and claim traces to the
- * manufacturer's spec sheet (supplied by the business 2026-09-30); the
- * photos are Gausium's own. Thai lines are DRAFTS for the Thai team.
+ * manufacturer's own material, and the photos are the manufacturer's own —
+ * for Phantas, Gausium's spec sheet (supplied by the business 2026-09-30);
+ * for T-Chef, its official product page (see that entry). Thai lines are
+ * DRAFTS for the Thai team.
  */
 
 export interface ModelFigure {
@@ -157,6 +159,124 @@ export const modelPages: ModelPage[] = [
     metaDescription: {
       en: "Pre-owned Gausium Phantas commercial cleaning robot in Thailand: sweeping, scrubbing, vacuuming and mopping, 400–700 m²/h, 2–4 h runtime. Get a quote from FindMyRobo.",
       th: "หุ่นยนต์ทำความสะอาดเชิงพาณิชย์ Gausium Phantas (ผ่านการใช้งาน) ในประเทศไทย กวาด ขัด ดูด ถู 400–700 ตร.ม./ชม. ทำงาน 2–4 ชั่วโมง ขอใบเสนอราคาจาก FindMyRobo",
+    },
+  },
+  /*
+   * T-Chef TC-E10A. Source: T-Chef's official page,
+   * https://en.t-chef.com.cn/products_37/193.html ("E10A Small Intelligent
+   * Cooking Robot"), checked 2026-10-01. Figures and specs are from its
+   * Technical Parameters tab; the feature claims are the five callouts on its
+   * labelled product image (the page has no other feature text). It never
+   * says "commercial", so neither do we. Photos are T-Chef's own two images
+   * from that page (the cut-outs and the dark studio shot are made from them).
+   * The Thai text is a DRAFT for the Thai team to review.
+   */
+  {
+    id: "t-chef-tc-e10a",
+    category: "cooking-robots",
+    brand: "T-Chef",
+    name: "TC-E10A",
+    preOwned: true,
+    heroImage: { src: "/studio/t-chef-studio.webp", width: 1400, height: 1073 },
+    eyebrow: { en: "T-Chef · Small intelligent cooking robot", th: "T-Chef · หุ่นยนต์ทำอาหารอัจฉริยะขนาดเล็ก" },
+    tagline: {
+      en: "A small intelligent cooking robot with automatic food delivery, 11 stir-fry modes and smart temperature control.",
+      th: "หุ่นยนต์ทำอาหารอัจฉริยะขนาดเล็ก พร้อมระบบเติมวัตถุดิบอัตโนมัติ โหมดผัด 11 แบบ และระบบควบคุมอุณหภูมิอัจฉริยะ",
+    },
+    figures: [
+      { value: "1 kg", label: { en: "Max. cooking capacity", th: "ปริมาณการปรุงสูงสุด" } },
+      { value: "11", label: { en: "Combination stir-fry modes", th: "โหมดผัดแบบผสมผสาน" } },
+      { value: "5 kW / 8 kW", label: { en: "Power", th: "กำลังไฟ" } },
+      { value: "7-inch", label: { en: "Touch LCD colour screen", th: "หน้าจอสัมผัส LCD สี" } },
+    ],
+    features: [
+      {
+        image: "/models/t-chef/studio.webp",
+        alt: "T-Chef TC-E10A cooking robot",
+        eyebrow: { en: "Auto food delivery", th: "ระบบเติมวัตถุดิบอัตโนมัติ" },
+        title: { en: "Ingredients in, hands free.", th: "เติมวัตถุดิบเอง ไม่ต้องใช้มือ" },
+        body: {
+          en: "Its auto food delivery module adds the ingredients for you, leaving your hands free. It seasons with two types of liquid, oil and water.",
+          th: "โมดูลเติมวัตถุดิบอัตโนมัติจะเติมวัตถุดิบให้ คุณจึงไม่ต้องใช้มือ และปรุงรสด้วยของเหลว 2 ชนิด คือ น้ำมันและน้ำ",
+        },
+      },
+      {
+        image: "/models/t-chef/diagram.webp",
+        alt: "T-Chef TC-E10A with its main features labelled",
+        eyebrow: { en: "Stir-fry modes", th: "โหมดการผัด" },
+        title: { en: "11 ways to stir-fry.", th: "ผัดได้ 11 รูปแบบ" },
+        body: {
+          en: "11 combination stir-fry modes suit a range of dishes, with smart temperature control and electromagnetic heating. It cooks up to 1 kg, in manual or auto mode.",
+          th: "โหมดผัดแบบผสมผสาน 11 แบบ เหมาะกับอาหารหลากหลายเมนู พร้อมระบบควบคุมอุณหภูมิอัจฉริยะและให้ความร้อนแบบแม่เหล็กไฟฟ้า ปรุงได้สูงสุด 1 กก. ทั้งแบบควบคุมเองและอัตโนมัติ",
+        },
+      },
+      {
+        image: "/models/t-chef/dark.webp",
+        alt: "T-Chef TC-E10A cooking robot on a dark background",
+        eyebrow: { en: "Touch screen", th: "หน้าจอสัมผัส" },
+        title: { en: "One-click cooking.", th: "ทำอาหารได้ในคลิกเดียว" },
+        body: {
+          en: "A 7-inch touch LCD colour screen gives you one-click cooking. At W599 × D650 × H470 mm and 35 kg, its small size suits a variety of settings.",
+          th: "หน้าจอสัมผัส LCD สีขนาด 7 นิ้ว สั่งทำอาหารได้ในคลิกเดียว ด้วยขนาด กว้าง 599 × ลึก 650 × สูง 470 มม. และน้ำหนัก 35 กก. ตัวเครื่องขนาดเล็กจึงเหมาะกับการใช้งานหลากหลายสถานที่",
+        },
+      },
+    ],
+    specs: [
+      {
+        title: { en: "Cooking", th: "การปรุงอาหาร" },
+        rows: [
+          { label: { en: "Max. cooking capacity", th: "ปริมาณการปรุงสูงสุด" }, value: { en: "1 kg", th: "1 กก." } },
+          { label: { en: "Heating source", th: "แหล่งความร้อน" }, value: { en: "Electromagnetic", th: "แม่เหล็กไฟฟ้า" } },
+          {
+            label: { en: "Pot material", th: "วัสดุกระทะ" },
+            value: { en: "Compound wok / honeycomb wok (optional)", th: "กระทะคอมพาวด์ / กระทะรังผึ้ง (เลือกได้)" },
+          },
+          {
+            label: { en: "Seasoning", th: "เครื่องปรุง" },
+            value: { en: "2 types of liquid (oil, water)", th: "ของเหลว 2 ชนิด (น้ำมัน น้ำ)" },
+          },
+          { label: { en: "Stir-fry modes", th: "โหมดการผัด" }, value: { en: "11 combination modes", th: "11 โหมดแบบผสมผสาน" } },
+          {
+            label: { en: "Ingredient feeding", th: "การเติมวัตถุดิบ" },
+            value: { en: "Auto food delivery module", th: "โมดูลเติมวัตถุดิบอัตโนมัติ" },
+          },
+          {
+            label: { en: "Temperature control", th: "การควบคุมอุณหภูมิ" },
+            value: { en: "Smart temperature control", th: "ระบบควบคุมอุณหภูมิอัจฉริยะ" },
+          },
+        ],
+      },
+      {
+        title: { en: "Controls", th: "การควบคุม" },
+        rows: [
+          { label: { en: "Cooking method", th: "วิธีการปรุง" }, value: { en: "Manual / auto", th: "ควบคุมเอง / อัตโนมัติ" } },
+          {
+            label: { en: "Screen", th: "หน้าจอ" },
+            value: { en: "7-inch touch LCD colour screen", th: "หน้าจอสัมผัส LCD สี 7 นิ้ว" },
+          },
+        ],
+      },
+      {
+        title: { en: "Power", th: "พลังงาน" },
+        rows: [
+          { label: { en: "Voltage", th: "แรงดันไฟฟ้า" }, value: same("220 VAC / 380 VAC, 50–60 Hz") },
+          { label: { en: "Power", th: "กำลังไฟ" }, value: same("5 kW / 8 kW") },
+        ],
+      },
+      {
+        title: { en: "Size and weight", th: "ขนาดและน้ำหนัก" },
+        rows: [
+          {
+            label: { en: "Dimensions (W × D × H)", th: "ขนาด (ก × ล × ส)" },
+            value: { en: "599 × 650 × 470 mm", th: "599 × 650 × 470 มม." },
+          },
+          { label: { en: "Net weight", th: "น้ำหนักสุทธิ" }, value: { en: "35 kg", th: "35 กก." } },
+        ],
+      },
+    ],
+    metaDescription: {
+      en: "Pre-owned T-Chef TC-E10A small intelligent cooking robot in Thailand: auto food delivery, 11 combination stir-fry modes, up to 1 kg, 7-inch touch screen. Get a quote from FindMyRobo.",
+      th: "หุ่นยนต์ทำอาหารอัจฉริยะขนาดเล็ก T-Chef TC-E10A (ผ่านการใช้งาน) ในประเทศไทย เติมวัตถุดิบอัตโนมัติ โหมดผัดแบบผสมผสาน 11 แบบ ปรุงได้สูงสุด 1 กก. หน้าจอสัมผัส 7 นิ้ว ขอใบเสนอราคาจาก FindMyRobo",
     },
   },
 ];

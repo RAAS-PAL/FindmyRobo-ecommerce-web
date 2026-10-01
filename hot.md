@@ -184,6 +184,9 @@ branch `main`.
   `app/[locale]/products/gausium-phantas/`. That static route wins over
   `products/[id]` — delete it when Phantas is added in Admin. Photos in
   `public/models/phantas/`.
+- T-Chef TC-E10A also has a code-built page (same setup; content from T-Chef's
+  official page, photos in `public/models/t-chef/`): delete the route
+  `app/[locale]/products/t-chef-tc-e10a/` once T-Chef is added in Admin.
 - Phantas, Aventurier, T-Chef and the Pudu robots are second-hand stock,
   labelled "Pre-owned" (Thai draft: ผ่านการใช้งาน) everywhere they appear —
   cards, navbar menus, the Phantas page (badge + first spec row), the
