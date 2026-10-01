@@ -223,8 +223,9 @@ export const featuredFamilies: RobotFamily[] = [
     href: "/products/gausium-phantas",
     interest: "commercial-cleaning",
     modelId: "gausium-phantas",
-    // Gausium's own render: the robot sits low, under the title's scrim
-    image: "/models/phantas/office.webp",
+    // Same office render as the product page, widened so the robot sits a
+    // little smaller in this banner. The product page keeps office.webp.
+    image: "/models/phantas/office-banner.webp",
     focus: "50% 70%",
     shot: { en: "", th: "" },
   },
