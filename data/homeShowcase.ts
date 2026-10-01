@@ -97,6 +97,12 @@ export interface ShowcasePhoto {
   focus?: string;
   /** Below sm, when the phone crop needs a different point (defaults to focus). */
   focusPhone?: string;
+  /**
+   * Draw the photo smaller than the tile (1 fills it). The gap shows
+   * `photoBackdrop`, which should match the photo's own studio colour.
+   */
+  photoScale?: number;
+  photoBackdrop?: string;
   /** What the placeholder asks for while `image` is null. */
   shot: Bilingual;
 }
@@ -260,6 +266,9 @@ export const moreFamilies: RobotFamily[] = [
     image: "/models/t-chef/tile.webp",
     focus: "50% 50%",
     focusPhone: "50% 100%",
+    // a little smaller than the tile, so the machine isn't edge to edge
+    photoScale: 0.9,
+    photoBackdrop: "#d9dee6",
     shot: {
       en: "TC-E10A in a working kitchen, pan in motion · 4:3 · machine centred, full height in frame",
       th: "TC-E10A ในครัวที่กำลังทำงาน · 4:3 · เครื่องอยู่กลางภาพ เห็นเต็มตัว",

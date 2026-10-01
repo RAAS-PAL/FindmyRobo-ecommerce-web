@@ -50,11 +50,12 @@ export default function ShowcasePhoto({
         fill
         sizes={sizes}
         priority={priority}
-        className={`object-cover [object-position:var(--focus-phone)] sm:[object-position:var(--focus)] ${className}`}
+        className={`object-cover [object-position:var(--focus-phone)] sm:[object-position:var(--focus)] ${photo.photoScale ? "scale-(--photo-scale)" : ""} ${className}`}
         style={
           {
             "--focus": photo.focus ?? "50% 50%",
             "--focus-phone": photo.focusPhone ?? photo.focus ?? "50% 50%",
+            "--photo-scale": photo.photoScale ?? 1,
           } as React.CSSProperties
         }
       />
