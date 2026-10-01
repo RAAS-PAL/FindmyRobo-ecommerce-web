@@ -253,9 +253,10 @@ export const moreFamilies: RobotFamily[] = [
     href: "/products/t-chef-tc-e10a",
     interest: "cooking",
     modelId: "t-chef-tc-e10a",
-    // T-Chef's product render on a light studio set, made for this tile: the
-    // machine sits in the lower part, clear of the title and buttons. Phones
-    // show a 4:3 strip, kept to the bottom. There's no lifestyle photo yet.
+    // The machine (the business's high-res render) on a light studio set,
+    // made for this tile: it sits in the lower part, clear of the title and
+    // buttons. Phones show a 4:3 strip, kept to the bottom. No lifestyle
+    // photo yet.
     image: "/models/t-chef/tile.webp",
     focus: "50% 50%",
     focusPhone: "50% 100%",

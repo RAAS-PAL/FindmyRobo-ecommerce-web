@@ -167,9 +167,10 @@ export const modelPages: ModelPage[] = [
    * Cooking Robot"), checked 2026-10-01. Figures and specs are from its
    * Technical Parameters tab; the feature claims are the five callouts on its
    * labelled product image (the page has no other feature text). It never
-   * says "commercial", so neither do we. Photos: T-Chef's product render as a
-   * sharper transparent cut-out supplied by the business (2026-10-01) — the
-   * hero, the card and both studio shots — plus the labelled image itself.
+   * says "commercial", so neither do we. Photos: all from ONE image, a
+   * high-resolution transparent render of the machine supplied by the
+   * business (2026-10-01, with its Robro Chef badge) — the hero and card
+   * cut-outs, and one close-up per feature of the part it describes.
    * The Thai text is a DRAFT for the Thai team to review.
    */
   {
@@ -178,7 +179,7 @@ export const modelPages: ModelPage[] = [
     brand: "T-Chef",
     name: "TC-E10A",
     preOwned: true,
-    heroImage: { src: "/studio/t-chef-studio.webp", width: 1400, height: 1073 },
+    heroImage: { src: "/studio/t-chef-studio.webp", width: 1400, height: 1079 },
     eyebrow: { en: "T-Chef · Small intelligent cooking robot", th: "T-Chef · หุ่นยนต์ทำอาหารอัจฉริยะขนาดเล็ก" },
     tagline: {
       en: "A small intelligent cooking robot with automatic food delivery, 11 stir-fry modes and smart temperature control.",
@@ -192,8 +193,8 @@ export const modelPages: ModelPage[] = [
     ],
     features: [
       {
-        image: "/models/t-chef/studio.webp",
-        alt: "T-Chef TC-E10A cooking robot",
+        image: "/models/t-chef/feeder.webp",
+        alt: "The TC-E10A's three ingredient boxes and auto food delivery module",
         eyebrow: { en: "Auto food delivery", th: "ระบบเติมวัตถุดิบอัตโนมัติ" },
         title: { en: "Ingredients in, hands free.", th: "เติมวัตถุดิบเอง ไม่ต้องใช้มือ" },
         body: {
@@ -202,8 +203,8 @@ export const modelPages: ModelPage[] = [
         },
       },
       {
-        image: "/models/t-chef/diagram.webp",
-        alt: "T-Chef TC-E10A with its main features labelled",
+        image: "/models/t-chef/wok.webp",
+        alt: "The TC-E10A's stirring head and wok",
         eyebrow: { en: "Stir-fry modes", th: "โหมดการผัด" },
         title: { en: "11 ways to stir-fry.", th: "ผัดได้ 11 รูปแบบ" },
         body: {
@@ -212,8 +213,8 @@ export const modelPages: ModelPage[] = [
         },
       },
       {
-        image: "/models/t-chef/dark.webp",
-        alt: "T-Chef TC-E10A cooking robot on a dark background",
+        image: "/models/t-chef/controls.webp",
+        alt: "The TC-E10A's 7-inch touch screen and power buttons",
         eyebrow: { en: "Touch screen", th: "หน้าจอสัมผัส" },
         title: { en: "One-click cooking.", th: "ทำอาหารได้ในคลิกเดียว" },
         body: {
