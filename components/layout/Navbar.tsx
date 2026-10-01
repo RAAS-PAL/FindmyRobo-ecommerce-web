@@ -386,13 +386,6 @@ export default function Navbar() {
                                 className="flex h-full flex-col rounded-xl border border-forest-100 bg-cloud/50 p-3 transition hover:-translate-y-0.5 hover:border-accent-600/40 hover:bg-surface hover:shadow-md"
                               >
                                 <span className="relative flex h-28 items-center justify-center">
-                                  {model.lineup && (
-                                    <ConditionLine
-                                      conditions={model.lineup.conditions}
-                                      stack
-                                      className="absolute top-0 left-0 z-10"
-                                    />
-                                  )}
                                   {model.product ? (
                                     <ProductVisual product={model.product} className="h-full w-full" />
                                   ) : (
