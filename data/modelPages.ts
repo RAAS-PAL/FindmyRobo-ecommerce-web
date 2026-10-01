@@ -316,16 +316,16 @@ export const modelPages: ModelPage[] = [
     heroImage: { src: "/models/aventurier/youth/hero.webp", width: 1400, height: 1173 },
     heroColors: [
       {
-        id: "white",
-        label: { en: "White", th: "สีขาว" },
-        swatch: "#f3f3f3",
-        image: { src: "/models/aventurier/youth/hero-white.webp", width: 1037, height: 2943 },
-      },
-      {
         id: "grey",
         label: { en: "Grey", th: "สีเทา" },
         swatch: "#85909c",
         image: { src: "/models/aventurier/youth/grey.webp", width: 1037, height: 2943 },
+      },
+      {
+        id: "white",
+        label: { en: "White", th: "สีขาว" },
+        swatch: "#f3f3f3",
+        image: { src: "/models/aventurier/youth/hero-white.webp", width: 1037, height: 2943 },
       },
     ],
     eyebrow: {
