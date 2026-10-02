@@ -9,6 +9,7 @@ import {
   type FaqItem,
   type LocalizedText,
   type PageBlock,
+  type RobotFit,
   type Product,
   type ProductPage,
   type SpecGroup,
@@ -279,6 +280,29 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   const page = parsePage(body.page);
   if (typeof page === "string") return page;
 
+  // How it is sold: one checkbox each; at least one.
+  const conditions: Product["conditions"] = [];
+  if (body.condition_new) conditions.push("new");
+  if (body.condition_preowned) conditions.push("pre-owned");
+  if (conditions.length === 0) return "Tick at least one: new or pre-owned";
+
+  // Recommender facts: blank fields are left out, never stored as 0.
+  const fit: RobotFit = {};
+  for (const [field, key] of [
+    ["fit_maxAreaM2", "maxAreaM2"],
+    ["fit_maxSlopePct", "maxSlopePct"],
+    ["fit_cleaningRateM2h", "cleaningRateM2h"],
+  ] as const) {
+    const raw = asText(body[field]).replace(/,/g, "");
+    if (!raw) continue;
+    const value = Number(raw);
+    if (!Number.isFinite(value) || value <= 0)
+      return "Recommendation facts must be positive numbers, or left blank";
+    fit[key] = value;
+  }
+  const operation = asText(body.fit_operation);
+  if (operation === "autonomous" || operation === "walk-behind") fit.operation = operation;
+
   // Visible unless explicitly turned off. The form pairs a hidden "false" input
   // with the checkbox so an unchecked box arrives as "false" rather than absent;
   // any other value (incl. a payload that omits it entirely) defaults to shown.
@@ -307,6 +331,8 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
     visible,
     ...(sku ? { sku } : {}),
     ...(brand ? { brand } : {}),
+    conditions,
+    ...(Object.keys(fit).length > 0 ? { fit } : {}),
     specs,
     tagline: { en: taglineEn, th: taglineTh },
     description: { en: descriptionEn, th: descriptionTh },

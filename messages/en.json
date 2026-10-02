@@ -32,7 +32,9 @@
     "viewAll": "View all",
     "groupCompany": "About FindMyRobo",
     "groupContact": "Contact & support",
-    "productsHeading": "Products"
+    "productsHeading": "Products",
+    "groupChoose": "Help choosing",
+    "finder": "Find my robot"
   },
   "auth": {
     "login": {
@@ -422,7 +424,10 @@
         "thaiFeatureBullets": "Feature bullets (Thai) — one per line",
         "brand": "Brand",
         "productType": "Product type",
-        "typeDrawing": "Drawing for its type"
+        "typeDrawing": "Drawing for its type",
+        "conditions": "Sold as",
+        "conditionNew": "Brand-new",
+        "conditionPreowned": "Pre-owned"
       },
       "variants": {
         "mower": "Lawn mower",
@@ -453,7 +458,8 @@
         "visible": "Hide it to keep working on it without listing it in the shop, or to pull it from sale without deleting it.",
         "sku": "The code Sokochan's warehouse uses for this product. Required to ship it — leave blank for services.",
         "brand": "The manufacturer, as Google should see it in the product’s structured data. Defaults to Mammotion — only change it for a robot from another maker.",
-        "productType": "The kind of product, not the model. Picks the drawing shown when there is no photo; checkout uses \"Installation service\" and \"Demo booking\"."
+        "productType": "The kind of product, not the model. Picks the drawing shown when there is no photo; checkout uses \"Installation service\" and \"Demo booking\".",
+        "conditions": "Tick both when it is sold either way."
       },
       "actions": {
         "uploading": "Uploading…",
@@ -477,6 +483,17 @@
         "galleryUrls": "https://example.com/robot-side.jpg\nhttps://example.com/robot-top.jpg",
         "englishTagline": "All-wheel drive precision for large Thai gardens",
         "englishFeatureBullets": "AWD climbs slopes up to 80%\nNo boundary wire needed"
+      },
+      "fit": {
+        "title": "Recommendation facts",
+        "hint": "Numbers the robot recommender matches on, from the manufacturer's spec sheet only. Leave blank when the sheet doesn't say; mowers fall back to their coverage and slope specs.",
+        "maxAreaM2": "Max. area (m²)",
+        "maxSlopePct": "Max. slope (%)",
+        "cleaningRateM2h": "Cleaning rate (m²/h, best case)",
+        "operation": "How it runs (floor cleaners)",
+        "operationUnset": "Not set",
+        "autonomous": "Drives itself",
+        "walkBehind": "Pushed by staff"
       }
     },
     "pageBuilder": {
@@ -969,7 +986,9 @@
     "bookDemo": "Book a demo",
     "photoComing": "Photo coming",
     "moreHeading": "More robots from FindMyRobo",
-    "moreSub": "Delivery and kitchen robots for businesses — quoted to your site."
+    "moreSub": "Delivery and kitchen robots for businesses — quoted to your site.",
+    "finderPrompt": "Not sure which robot fits?",
+    "finderLink": "Find yours"
   },
   "products": {
     "eyebrow": "The Lineup",
@@ -1212,5 +1231,168 @@
     "either": "Brand-new or pre-owned",
     "label": "Condition",
     "ask": "Brand-new or pre-owned?"
+  },
+  "recommend": {
+    "metaTitle": "Find the right robot",
+    "metaDescription": "Answer a few questions about your lawn, floors, kitchen or venue and see which robots fit, with the reasons. FindMyRobo, Thailand.",
+    "eyebrow": "Robot finder",
+    "heading": "Find the right robot",
+    "sub": "A few questions about the job, and we'll show which of our robots fit, and why.",
+    "stepOf": "Step {step} of {total}",
+    "back": "Back",
+    "next": "Next",
+    "seeResults": "See my robots",
+    "startAgain": "Start again",
+    "viewRobot": "View robot",
+    "sqm": "m²",
+    "job": {
+      "question": "What do you need a robot for?",
+      "lawn": {
+        "title": "Mowing a lawn",
+        "hint": "Gardens, estates, resorts"
+      },
+      "floor": {
+        "title": "Cleaning floors",
+        "hint": "Offices, hotels, shops, factories"
+      },
+      "cooking": {
+        "title": "Cooking",
+        "hint": "Restaurant and canteen kitchens"
+      },
+      "delivery": {
+        "title": "Delivering and serving",
+        "hint": "Restaurants, hotels, hospitals"
+      }
+    },
+    "lawn": {
+      "areaQuestion": "How big is the lawn?",
+      "areaHint": "Roughly is fine. Leave it blank if you're not sure.",
+      "slopeQuestion": "How steep is the steepest part?",
+      "slope": {
+        "flat": {
+          "title": "Flat",
+          "hint": "Up to about 10%"
+        },
+        "moderate": {
+          "title": "Gentle slopes",
+          "hint": "Up to about 30%"
+        },
+        "steep": {
+          "title": "Steep",
+          "hint": "Up to about 50%"
+        },
+        "very-steep": {
+          "title": "Very steep",
+          "hint": "Up to about 80%"
+        },
+        "unsure": {
+          "title": "Not sure",
+          "hint": "We'll check with you"
+        }
+      }
+    },
+    "floor": {
+      "areaQuestion": "How much floor needs cleaning each time?",
+      "areaHint": "Roughly is fine. Leave it blank if you're not sure.",
+      "operationQuestion": "How should it work?",
+      "operation": {
+        "autonomous": {
+          "title": "Cleans by itself",
+          "hint": "A robot that drives on its own"
+        },
+        "walk-behind": {
+          "title": "Staff push it",
+          "hint": "A machine your team walks behind"
+        },
+        "either": {
+          "title": "Either",
+          "hint": "Show me both"
+        }
+      }
+    },
+    "delivery": {
+      "venueQuestion": "Where will it work?",
+      "venue": {
+        "restaurant": "Restaurant",
+        "hotel": "Hotel",
+        "office": "Office",
+        "hospital": "Hospital",
+        "mall": "Shopping mall",
+        "other": "Somewhere else"
+      }
+    },
+    "condition": {
+      "question": "New or pre-owned?",
+      "hint": "Some robots are sold one way only.",
+      "either": {
+        "title": "Either",
+        "hint": "Show me both"
+      },
+      "new": {
+        "title": "Brand-new",
+        "hint": "Unused stock"
+      },
+      "pre-owned": {
+        "title": "Pre-owned",
+        "hint": "A unit that has been used"
+      }
+    },
+    "results": {
+      "title": "Your best matches",
+      "sub": {
+        "lawn": "Ranked by how each mower's rated area and slope match your lawn.",
+        "floor": "Ranked by how each one runs and how long your floor would take.",
+        "cooking": "The cooking robots we sell, for the way you want to buy.",
+        "delivery": "Our delivery robots. Our team will confirm which model suits your venue's layout."
+      },
+      "closeTitle": "No exact match: the closest options",
+      "closeSub": "None of our robots meets every answer. These come closest; leave your details and we'll suggest a setup.",
+      "noneTitle": "We don't list a robot for this yet",
+      "noneSub": "Leave your details and our team will get back to you.",
+      "footnote": "Figures are the manufacturers' own. Our team confirms the right model, price and availability before you buy."
+    },
+    "reasons": {
+      "areaCovers": "Rated for up to {capacity, number} m², your lawn is {area, number} m²",
+      "areaTooSmall": "Rated for up to {capacity, number} m², smaller than your {area, number} m²",
+      "areaUnknown": "Rated area to be confirmed by our team",
+      "slopeHandles": "Handles slopes up to {limit}%, yours is up to about {need}%",
+      "slopeTooSteep": "Handles slopes up to {limit}%, yours is up to about {need}%",
+      "slopeUnknown": "Slope rating to be confirmed by our team",
+      "operationSelf": "Drives itself: no one needs to push it",
+      "operationPush": "Pushed by staff",
+      "operationSelfMiss": "Drives itself; you asked for one staff push",
+      "operationPushMiss": "Pushed by staff; you asked for one that drives itself",
+      "operationUnknown": "How it runs to be confirmed by our team",
+      "rateHours": "About {hours, number} h for {area, number} m² at its top rate of {rate, number} m²/h",
+      "rateUnknown": "Cleaning rate to be confirmed by our team",
+      "soldBoth": "Sold brand-new or pre-owned",
+      "soldNew": "Sold brand-new",
+      "soldPreowned": "Sold pre-owned",
+      "notNew": "Sold pre-owned only",
+      "notPreowned": "Sold brand-new only"
+    },
+    "contact": {
+      "title": "Want our team to help?",
+      "sub": "Send us these results and we'll call you with prices and the right setup. No obligation.",
+      "fields": {
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "note": "Anything else we should know?"
+      },
+      "optional": "optional",
+      "consent": "I agree that Raas Pal Company Limited may keep these details and my answers to contact me about robots for my needs. I can ask for them to be deleted at any time.",
+      "submit": "Send to our team",
+      "sending": "Sending…",
+      "sentTitle": "Thank you, we've got it.",
+      "sentBody": "Our team will call you within one working day.",
+      "errors": {
+        "required": "Please fill this in.",
+        "phone": "Enter a Thai phone number, e.g. 081 234 5678.",
+        "email": "Check the email address.",
+        "consent": "Please tick the box so we may contact you.",
+        "send": "Sorry, that didn't go through. Please try again, or call us."
+      }
+    }
   }
 }

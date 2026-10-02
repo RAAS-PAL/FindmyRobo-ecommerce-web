@@ -61,7 +61,7 @@ const SUPPORT_HREFS: (string | null)[] = [
  * translated array. Keep this in step with the `about` array in
  * messages/{en,th}.json; adding a label without a href here falls back to "#".
  */
-const ABOUT_HREFS = ["/about", "/#contact", "/#support", "/shop"];
+const ABOUT_HREFS = ["/about", "/#contact", "/#support", "/recommend"];
 
 /**
  * Icon + accessible name per platform. What actually renders is the

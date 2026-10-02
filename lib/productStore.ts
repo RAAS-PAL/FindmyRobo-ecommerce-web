@@ -1,6 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import type { CategorySlug } from "@/data/categories";
-import type { AnatomyModel, Product, ProductPage } from "@/data/products";
+import type { AnatomyModel, Product, ProductPage, RobotFit } from "@/data/products";
+import { isStockCondition } from "@/data/lineup";
 
 /**
  * Supabase-backed product store — the single read/write path for product
@@ -31,6 +32,8 @@ interface ProductRow {
   visible?: boolean;
   sku?: string | null;
   brand?: string | null;
+  conditions?: string[] | null;
+  fit?: RobotFit | null;
   specs: Product["specs"];
   tagline: Product["tagline"];
   description: Product["description"];
@@ -64,6 +67,13 @@ function withLegacyAnatomy(page: ProductPage, model: AnatomyModel | undefined): 
   };
 }
 
+/** new first, then pre-owned; an empty or missing list reads as new. */
+function conditionsOf(raw: string[] | null | undefined): Product["conditions"] {
+  const list = (raw ?? []).filter(isStockCondition);
+  const ordered = (["new", "pre-owned"] as const).filter((c) => list.includes(c));
+  return ordered.length > 0 ? [...ordered] : ["new"];
+}
+
 function rowToProduct(row: ProductRow): Product {
   const legacy = LEGACY_VARIANTS[row.variant];
   const hoverVideo = row.hover_video || legacy?.hoverVideo;
@@ -85,6 +95,8 @@ function rowToProduct(row: ProductRow): Product {
     visible: row.visible ?? true,
     ...(row.sku ? { sku: row.sku } : {}),
     ...(row.brand ? { brand: row.brand } : {}),
+    conditions: conditionsOf(row.conditions),
+    ...(row.fit && Object.keys(row.fit).length > 0 ? { fit: row.fit } : {}),
     specs: row.specs ?? {},
     tagline: row.tagline,
     description: row.description,
@@ -101,7 +113,15 @@ const isMissingSortOrder = (error: { code?: string; message?: string } | null) =
 // (undefined column) and PostgREST reports PGRST204 (not in the schema cache) —
 // either way the message names the column. We strip the named column and retry
 // so a product save keeps working before its migration is applied.
-const DEGRADABLE_COLUMNS = ["visible", "sku", "hover_video", "home_image", "brand"] as const;
+const DEGRADABLE_COLUMNS = [
+  "visible",
+  "sku",
+  "hover_video",
+  "home_image",
+  "brand",
+  "conditions",
+  "fit",
+] as const;
 
 function missingOptionalColumn(
   error: { code?: string; message?: string } | null
@@ -127,6 +147,8 @@ function productFields(
     visible: product.visible ?? true,
     sku: product.sku ?? null,
     brand: product.brand ?? null,
+    conditions: product.conditions,
+    fit: product.fit ?? {},
     specs: product.specs,
     tagline: product.tagline,
     description: product.description,
@@ -165,8 +187,17 @@ async function fetchAllProducts(): Promise<Product[]> {
  * the `visible` column doesn't exist yet (absent → treated as visible).
  */
 export async function getAllProducts(): Promise<Product[]> {
-  return (await fetchAllProducts()).filter((p) => p.visible !== false);
+  const all = await fetchAllProducts();
+  return SHOW_HIDDEN ? all : all.filter((p) => p.visible !== false);
 }
+
+/**
+ * Preview-only switch: set SHOW_HIDDEN_PRODUCTS=1 on Vercel's Preview
+ * environment to see hidden products (e.g. robots added but not launched) on
+ * a preview deployment. Never on production, whatever the variable says.
+ */
+const SHOW_HIDDEN =
+  process.env.SHOW_HIDDEN_PRODUCTS === "1" && process.env.VERCEL_ENV !== "production";
 
 /** Admin catalog — includes hidden products so staff can manage and reveal them. */
 export async function getAllProductsForAdmin(): Promise<Product[]> {

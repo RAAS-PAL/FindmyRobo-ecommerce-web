@@ -180,6 +180,16 @@ export default function HeroSection() {
                     </button>
                   )}
                 </div>
+                <Link
+                  href="/recommend"
+                  className="mt-4 inline-flex items-center gap-1.5 text-[14px] text-ink-muted transition-colors hover:text-content lg:text-white/75 lg:hover:text-white"
+                >
+                  {t("finderPrompt")}
+                  <span className="font-semibold text-accent-600 underline-offset-4 hover:underline lg:text-accent-300">
+                    {t("finderLink")}
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5 text-accent-600 lg:text-accent-300" aria-hidden="true" />
+                </Link>
               </motion.div>
             </AnimatePresence>
           </div>

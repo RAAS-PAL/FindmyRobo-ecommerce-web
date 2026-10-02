@@ -138,31 +138,38 @@ branch `main`.
      product without a price.
   3. `supabase/seed-lineup-robots.sql` — the 8 code-only robots, HIDDEN;
      prices may stay null.
-  4. `supabase/variant-to-product-type.sql` — `variant` becomes the product
+  4. `supabase/add-recommender.sql` — `fit` column, `recommendation_requests`
+     table, facts for Phantas and A1. Additive; safe any time after step 3.
+  5. `supabase/variant-to-product-type.sql` — `variant` becomes the product
      type (mower, pool, cleaner, equipment, cooking, delivery, installation,
      demo), never a model name. Run it right AFTER this branch's code is live
      on main: old main code doesn't know the new values. Until then
      `lib/productStore.ts` reads luba/mini/install as the new values and keeps
-     each LUBA's clip and diagram (LEGACY_VARIANTS, delete after step 3).
+     each LUBA's clip and diagram (LEGACY_VARIANTS, delete after step 5).
      The parts diagram is now picked per page section (`anatomy` block
      `model`), only for the model it describes: YUKA Mini 2 and LUBA Mini 2
      AWD 1000 get none. Live row `c40` (Cleaner, price 999999) looks like a
-     test product — hide it before going live.
+     test product — hide it before going live (it would also be offered by
+     the recommender for floor cleaning).
+     Preview-only: set `SHOW_HIDDEN_PRODUCTS=1` on Vercel's Preview
+     environment to see hidden robots on preview deployments (ignored on
+     production).
 
-- **Robot recommender — decided 2026-10-02, NOT started.** Director wants a
-  "Not sure which robot fits? Get a recommendation" entry on the hero: a form
-  of needs → the best-fit robots. Chosen approach: **hybrid** — hard rules
-  filter out robots that can't work (indoor/outdoor, area, slope…), weighted
-  scoring ranks the rest (top 3 with reasons), and an LLM may later write the
-  explanation / read free-text needs (phase 2, must only name catalogue
-  products and quote real specs). Prerequisites, in order: (1) every robot in
-  the Supabase `products` table (see the migration below), (2) comparable
-  structured attributes per product (max area m², slope, indoor/outdoor, use
-  cases, cleaning m²/h, payload, condition, budget band), (3) a
-  `recommendation_requests` table (answers, results, contact, locale, date —
-  also gives sales a lead list). Open questions for the director: the
-  question list, whether budget is asked, contact before or after results,
-  PDPA consent wording.
+- **Robot recommender — built 2026-10-02 (hybrid, phase 1).** `/recommend`
+  (EN/TH), linked from the hero ("Not sure which robot fits?"), About menu →
+  "Find my robot", and the footer. Steps: job (lawn / floor / cooking /
+  delivery) → follow-ups (area + slope; area + self-driving or pushed; venue)
+  → new / pre-owned → top 3 with reasons. Rules + score in `lib/recommend.ts`
+  (pure; the API re-runs it); facts per product in `fit` (Admin → Products →
+  "Recommendation facts"; mowers fall back to their area/slope specs); a
+  missing figure shows "to be confirmed", never a guess. Answers saved to
+  `recommendation_requests` on results; contact (name, phone, optional email,
+  PDPA consent) only after results, emailed to sales. No budget question
+  until prices exist. Phase 2 (LLM wording / free text) not started.
+  Needs `supabase/add-recommender.sql` (after the seed). Open: PDPA consent
+  wording and the Privacy Policy page (footer still has none) for legal review;
+  Thai copy is a draft; T-Chef and Pudu have no facts the questions use, so
+  they match on job + condition only.
 
 - Save quote requests to a DB table + an `/admin` list for sales follow-up;
   fail loudly (not silently) when `RESEND_API_KEY` is missing.

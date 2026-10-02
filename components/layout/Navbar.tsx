@@ -7,6 +7,7 @@ import {
   ArrowRight,
   BookOpen,
   Building2,
+  Compass,
   CalendarDays,
   ChevronDown,
   Handshake,
@@ -150,6 +151,7 @@ export default function Navbar() {
     pathname === "/about" ||
     pathname === "/contact-sales" ||
     pathname === "/location" ||
+    pathname === "/recommend" ||
     pathname.startsWith("/products/request-a-demo");
 
   // A category's models: its catalogue products, or — until it has any — the
@@ -186,6 +188,10 @@ export default function Navbar() {
       label: t("about"),
       current: inAbout,
       groups: [
+        {
+          heading: t("groupChoose"),
+          items: [{ label: t("finder"), href: "/recommend", icon: Compass }],
+        },
         {
           heading: t("groupCompany"),
           items: [

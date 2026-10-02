@@ -302,6 +302,29 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           />
           <p className={hintClass}>{t("hints.brand")}</p>
         </div>
+        <fieldset>
+          <legend className={labelClass}>{t("fields.conditions")}</legend>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            {(
+              [
+                ["condition_new", "new", "conditionNew"],
+                ["condition_preowned", "pre-owned", "conditionPreowned"],
+              ] as const
+            ).map(([field, value, label]) => (
+              <label key={field} className="flex items-center gap-2 text-[13.5px] text-content">
+                <input
+                  type="checkbox"
+                  name={field}
+                  value="1"
+                  defaultChecked={(initial?.conditions ?? ["new"]).includes(value)}
+                  className="h-4.5 w-4.5 rounded border-forest-100 accent-accent"
+                />
+                {t(`fields.${label}`)}
+              </label>
+            ))}
+          </div>
+          <p className={hintClass}>{t("hints.conditions")}</p>
+        </fieldset>
         <div>
           <label htmlFor="variant" className={labelClass}>
             {t("fields.productType")}
@@ -515,6 +538,51 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           </datalist>
           <p className={hintClass}>{t("hints.hoverVideo")}</p>
         </div>
+        <fieldset className="sm:col-span-2 rounded-2xl border border-forest-100 p-4">
+          <legend className="px-1 text-[13px] font-semibold text-content">
+            {t("fit.title")}
+          </legend>
+          <p className={`${hintClass} mt-0 mb-3`}>{t("fit.hint")}</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {(
+              [
+                ["fit_maxAreaM2", "maxAreaM2"],
+                ["fit_maxSlopePct", "maxSlopePct"],
+                ["fit_cleaningRateM2h", "cleaningRateM2h"],
+              ] as const
+            ).map(([field, key]) => (
+              <div key={field}>
+                <label htmlFor={field} className={labelClass}>
+                  {t(`fit.${key}`)}
+                </label>
+                <input
+                  id={field}
+                  name={field}
+                  type="number"
+                  min={1}
+                  step="any"
+                  defaultValue={initial?.fit?.[key] ?? ""}
+                  className={inputClass}
+                />
+              </div>
+            ))}
+            <div>
+              <label htmlFor="fit_operation" className={labelClass}>
+                {t("fit.operation")}
+              </label>
+              <select
+                id="fit_operation"
+                name="fit_operation"
+                defaultValue={initial?.fit?.operation ?? ""}
+                className={inputClass}
+              >
+                <option value="">{t("fit.operationUnset")}</option>
+                <option value="autonomous">{t("fit.autonomous")}</option>
+                <option value="walk-behind">{t("fit.walkBehind")}</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
         <div className="flex items-center gap-2.5">
           <input
             id="preorder"

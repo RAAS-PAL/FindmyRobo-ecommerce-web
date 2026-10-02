@@ -1,4 +1,5 @@
 import type { CategorySlug } from "@/data/categories";
+import type { StockCondition } from "@/data/lineup";
 
 /**
  * The type of product (database column `variant`), never a model name: it
@@ -19,6 +20,23 @@ export type RobotVariant =
   | "delivery"
   | "installation"
   | "demo";
+
+/**
+ * Facts the robot recommender matches on (lib/recommend.ts), as numbers.
+ * Each must come from the manufacturer's spec sheet; leave a field out when
+ * the sheet doesn't give it — the recommender then says "to be confirmed"
+ * rather than guessing. Mowers fall back to their `area` and `slope` specs.
+ */
+export interface RobotFit {
+  /** Largest area it is rated for, m² (a mower's lawn area). */
+  maxAreaM2?: number;
+  /** Steepest slope it handles, % (mowers). */
+  maxSlopePct?: number;
+  /** Floor it cleans per hour at best, m²/h (floor cleaners). */
+  cleaningRateM2h?: number;
+  /** Floor cleaners: drives itself, or is pushed by staff. */
+  operation?: "autonomous" | "walk-behind";
+}
 
 /** Robots with an interactive parts diagram (data/techAnatomy.ts). */
 export type AnatomyModel = "luba-3" | "luba-mini-2";
@@ -190,6 +208,11 @@ export interface Product {
    * DEFAULT_BRAND below.
    */
   brand?: string;
+  /** How it is sold: new, pre-owned, or both (the `conditions` column;
+   *  rows saved before it existed read as new). */
+  conditions: StockCondition[];
+  /** Recommender facts; see RobotFit. */
+  fit?: RobotFit;
   specs: Partial<Record<SpecKey, string>>;
   tagline: LocalizedText;
   description: LocalizedText;
