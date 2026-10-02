@@ -5,9 +5,10 @@
 -- ONLY: nothing is dropped, renamed or rewritten, existing rows keep their
 -- values, and the live site keeps working before and after.
 --
--- Checked against the live table on 2026-10-02: brand and sku were missing
--- (add-product-brand.sql / add-product-sku.sql never ran); every other column
--- the app expects was present.
+-- Checked against the live table on 2026-10-02: brand was missing
+-- (add-product-brand.sql never ran). sku is left out on purpose for now
+-- (add-product-sku.sql adds it when fulfilment needs it); the app works
+-- without it.
 --
 -- Run once in Supabase: SQL Editor -> New query -> paste -> Run. Safe to re-run.
 -- Back up first: create table products_backup_<date> as select * from products;
@@ -19,11 +20,7 @@ begin;
 alter table public.products
   add column if not exists brand text not null default 'Mammotion';
 
--- 2. Warehouse SKU for fulfilment (was add-product-sku.sql). Optional.
-alter table public.products
-  add column if not exists sku text;
-
--- 3. How a product is sold: new, pre-owned, or both. Existing rows are new.
+-- 2. How a product is sold: new, pre-owned, or both. Existing rows are new.
 alter table public.products
   add column if not exists conditions text[] not null default '{new}';
 
@@ -36,7 +33,7 @@ alter table public.products
     and conditions <@ array['new', 'pre-owned']::text[]
   );
 
--- 4. Robot types beyond mowers. `variant` picks the fallback illustration and
+-- 3. Robot types beyond mowers. `variant` picks the fallback illustration and
 --    the mower technology section; the new values are for the new families.
 --    The original check constraint's name is whatever Postgres generated, so
 --    find any check on this table that mentions `variant` and replace it.
