@@ -134,12 +134,15 @@ branch `main`.
   2. `supabase/allow-unknown-price.sql` — `price` may be null (not known
      yet): shown as "Price on request", kept out of cart and checkout
      (`hasPrice` / `PricedProduct` in data/products.ts). Run before step 3.
+     **Ran on live 2026-10-02.**
      Until this branch is on main, the OLD live admin list can't show a
      product without a price.
   3. `supabase/seed-lineup-robots.sql` — the 8 code-only robots, HIDDEN,
-     with no price (set prices in Admin). Nothing to edit before running.
+     with no price (set prices in Admin). Nothing to edit before running. **Ran on live
+     2026-10-02** (8 robots in, hidden, no price; c40 hidden).
   4. `supabase/add-recommender.sql` — `fit` column, `recommendation_requests`
      table, facts for Phantas and A1. Additive; safe any time after step 3.
+     **Ran on live 2026-10-02** (3 robots with facts).
   5. `supabase/variant-to-product-type.sql` — `variant` becomes the product
      type (mower, pool, cleaner, equipment, cooking, delivery, installation,
      demo), never a model name. Run it right AFTER this branch's code is live
