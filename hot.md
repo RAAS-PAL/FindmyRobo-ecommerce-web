@@ -127,6 +127,21 @@ branch `main`.
 
 ## Open items / next candidates
 
+- **Robot recommender — decided 2026-10-02, NOT started.** Director wants a
+  "Not sure which robot fits? Get a recommendation" entry on the hero: a form
+  of needs → the best-fit robots. Chosen approach: **hybrid** — hard rules
+  filter out robots that can't work (indoor/outdoor, area, slope…), weighted
+  scoring ranks the rest (top 3 with reasons), and an LLM may later write the
+  explanation / read free-text needs (phase 2, must only name catalogue
+  products and quote real specs). Prerequisites, in order: (1) every robot in
+  the Supabase `products` table (see the migration below), (2) comparable
+  structured attributes per product (max area m², slope, indoor/outdoor, use
+  cases, cleaning m²/h, payload, condition, budget band), (3) a
+  `recommendation_requests` table (answers, results, contact, locale, date —
+  also gives sales a lead list). Open questions for the director: the
+  question list, whether budget is asked, contact before or after results,
+  PDPA consent wording.
+
 - Save quote requests to a DB table + an `/admin` list for sales follow-up;
   fail loudly (not silently) when `RESEND_API_KEY` is missing.
 - Automatic price/offer email to customers — waits on business decisions
