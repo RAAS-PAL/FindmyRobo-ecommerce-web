@@ -59,7 +59,7 @@ function buildInstallGroups(items: CartLine[], catalog: Product[]): InstallGroup
   if (robots.length === 0) return [];
 
   const tiers = catalog
-    .filter((p) => p.category === SERVICE_CATEGORY && p.variant === "install")
+    .filter((p) => p.category === SERVICE_CATEGORY && p.variant === "installation")
     .sort((a, b) => parseArea(a.specs.area) - parseArea(b.specs.area));
   if (tiers.length === 0) return [];
 
@@ -184,7 +184,7 @@ export default function CheckoutClient() {
   // The install tier currently chosen for a robot, if any (one per robot).
   const selectedTierId = (group: InstallGroup) =>
     items.find(
-      (l) => l.forId === group.robotId && l.product.variant === "install"
+      (l) => l.forId === group.robotId && l.product.variant === "installation"
     )?.product.id ?? null;
   // Radio behaviour: picking a tier replaces any other install tier for that
   // robot; picking "No installation" (tier = null) just clears it.

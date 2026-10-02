@@ -18,7 +18,7 @@ export const parseArea = (spec?: string) =>
   spec ? Number(spec.replace(/[^0-9]/g, "")) : NaN;
 
 export const isInstallTier = (product: Product) =>
-  product.category === SERVICE_CATEGORY && product.variant === "install";
+  product.category === SERVICE_CATEGORY && product.variant === "installation";
 
 /** Every installation tier with a usable coverage figure, smallest first. */
 export function installTiers(products: Product[]): Product[] {

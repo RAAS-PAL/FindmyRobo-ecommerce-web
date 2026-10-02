@@ -2,7 +2,7 @@ import FadeIn from "@/components/ui/FadeIn";
 import VideoEmbed from "@/components/product/VideoEmbed";
 import ShowcaseCarousel from "@/components/product/ShowcaseCarousel";
 import TechAnatomy from "@/components/sections/TechAnatomy";
-import type { Locale, PageBlock, RobotVariant } from "@/data/products";
+import type { Locale, PageBlock } from "@/data/products";
 
 /**
  * Renders the admin-built content sections of a product detail page, in
@@ -24,13 +24,10 @@ export default function ProductPageBlocks({
   blocks,
   locale,
   productName,
-  variant,
 }: {
   blocks: PageBlock[];
   locale: Locale;
   productName: string;
-  /** Decides which anatomy an "anatomy" block renders, if any. */
-  variant: RobotVariant;
 }) {
   const renderBlock = (block: PageBlock, i: number) => {
     switch (block.type) {
@@ -43,7 +40,7 @@ export default function ProductPageBlocks({
                 key={i}
                 className="relative left-1/2 right-1/2 -mx-[50vw] w-screen"
               >
-                <TechAnatomy variant={variant} />
+                <TechAnatomy model={block.model} />
               </div>
             );
 

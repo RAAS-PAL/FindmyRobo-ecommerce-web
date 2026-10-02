@@ -127,6 +127,23 @@ branch `main`.
 
 ## Open items / next candidates
 
+- **Robots into the database (2026-10-02, in progress).** SQL is run by hand
+  in Supabase, after a backup, in this order:
+  1. `supabase/add-multi-brand-catalogue.sql` — brand + conditions columns,
+     new robot types. **Ran on live 2026-10-02.** (No `sku` column on purpose.)
+  2. `supabase/seed-lineup-robots.sql` — the 8 code-only robots, HIDDEN;
+     prices must be filled in first.
+  3. `supabase/variant-to-product-type.sql` — `variant` becomes the product
+     type (mower, pool, cleaner, equipment, cooking, delivery, installation,
+     demo), never a model name. Run it right AFTER this branch's code is live
+     on main: old main code doesn't know the new values. Until then
+     `lib/productStore.ts` reads luba/mini/install as the new values and keeps
+     each LUBA's clip and diagram (LEGACY_VARIANTS, delete after step 3).
+     The parts diagram is now picked per page section (`anatomy` block
+     `model`), only for the model it describes: YUKA Mini 2 and LUBA Mini 2
+     AWD 1000 get none. Live row `c40` (Cleaner, price 999999) looks like a
+     test product — hide it before going live.
+
 - **Robot recommender — decided 2026-10-02, NOT started.** Director wants a
   "Not sure which robot fits? Get a recommendation" entry on the hero: a form
   of needs → the best-fit robots. Chosen approach: **hybrid** — hard rules

@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import FadeIn from "@/components/ui/FadeIn";
-import { anatomyByVariant } from "@/data/techAnatomy";
-import type { Locale, RobotVariant } from "@/data/products";
+import { anatomyByModel } from "@/data/techAnatomy";
+import type { AnatomyModel, Locale } from "@/data/products";
 
 /**
  * "Under the hood" — the product renders with numbered hotspots. Selecting a
@@ -20,13 +20,12 @@ import type { Locale, RobotVariant } from "@/data/products";
  * inside the same layer so they travel with the image, and carry an inverse
  * scale so they stay a constant size on screen.
  *
- * Renders nothing for a variant with no anatomy defined, so it can be dropped
- * onto every product page unconditionally.
+ * Renders nothing without a model, so a section left without one is harmless.
  */
-export default function TechAnatomy({ variant }: { variant: RobotVariant }) {
+export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
   const t = useTranslations("techAnatomy");
   const locale = useLocale() as Locale;
-  const set = anatomyByVariant[variant];
+  const set = model ? anatomyByModel[model] : undefined;
   const [activeId, setActiveId] = useState(set?.hotspots[0]?.id ?? "");
 
   if (!set || set.hotspots.length === 0) return null;

@@ -106,7 +106,7 @@ export default async function ProductPage({
   const isDemo = isService && product.variant === "demo";
   // Installation also prices by area, and the coverage band is chosen inside
   // InstallPurchasePanel rather than by browsing to a different tier product.
-  const isInstall = isService && product.variant === "install";
+  const isInstall = isService && product.variant === "installation";
   const related = allProducts
     .filter((p) => p.id !== product.id)
     .sort((a, b) =>
@@ -292,7 +292,6 @@ export default async function ProductPage({
                 blocks={blocks}
                 locale={locale as Locale}
                 productName={product.name}
-                variant={product.variant}
               />
             </div>
           ) : null;

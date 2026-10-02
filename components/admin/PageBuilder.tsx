@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
-import type { LocalizedText, PageBlock, ProductPage } from "@/data/products";
+import { ANATOMY_MODELS, type AnatomyModel, type LocalizedText, type PageBlock, type ProductPage } from "@/data/products";
 import { useConfirm } from "@/components/admin/ConfirmProvider";
 
 /**
@@ -38,6 +38,8 @@ export interface DraftBlock {
   captionEn: string;
   captionTh: string;
   cards: DraftCard[];
+  /** anatomy only: which model's parts diagram; "" = none */
+  model: AnatomyModel | "";
 }
 export interface DraftSpecRow {
   labelEn: string;
@@ -81,6 +83,7 @@ export const emptyBlock = (type: PageBlock["type"]): DraftBlock => ({
   captionEn: "",
   captionTh: "",
   cards: [],
+  model: "",
 });
 
 const emptyRow = (): DraftSpecRow => ({ labelEn: "", labelTh: "", valueEn: "", valueTh: "" });
@@ -131,6 +134,7 @@ export function pageToDraft(page?: ProductPage): DraftPage {
       bodyTh: "body" in b ? loc(b.body).th : "",
       captionEn: b.type === "video" ? loc(b.caption).en : "",
       captionTh: b.type === "video" ? loc(b.caption).th : "",
+      model: b.type === "anatomy" && b.model ? b.model : ("" as const),
       cards:
         b.type === "cardGrid"
           ? b.cards.map((c) => ({
@@ -188,6 +192,7 @@ export function draftToPage(draft: DraftPage): Record<string, unknown> {
       heading: l(b.headingEn, b.headingTh),
       body: l(b.bodyEn, b.bodyTh),
       caption: l(b.captionEn, b.captionTh),
+      model: b.model,
       cards: b.cards.map((c) => ({
         image: c.image.trim(),
         caption: l(c.captionEn, c.captionTh),
@@ -335,6 +340,24 @@ function BlockEditor({
 
   return (
     <div className="space-y-3">
+      {block.type === "anatomy" && (
+        <div>
+          <label className={miniLabel}>{t("fields.anatomyModel")}</label>
+          <select
+            value={block.model}
+            onChange={(e) => set({ model: e.target.value as DraftBlock["model"] })}
+            className={inputClass}
+          >
+            <option value="">{t("anatomyModels.none")}</option>
+            {ANATOMY_MODELS.map((m) => (
+              <option key={m} value={m}>
+                {t(`anatomyModels.${m}`)}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1 text-[11.5px] text-ink-muted">{t("fields.anatomyModelHint")}</p>
+        </div>
+      )}
       {(block.type === "banner" ||
         block.type === "feature" ||
         block.type === "imageText") && (

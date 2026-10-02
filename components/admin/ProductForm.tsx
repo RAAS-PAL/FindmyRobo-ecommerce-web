@@ -29,10 +29,13 @@ const SPEC_LABEL_KEYS = {
 } as const satisfies Record<SpecKey, string>;
 
 const VARIANT_LABEL_KEYS = {
-  luba: "variants.luba",
-  mini: "variants.mini",
+  mower: "variants.mower",
   pool: "variants.pool",
-  install: "variants.install",
+  cleaner: "variants.cleaner",
+  equipment: "variants.equipment",
+  cooking: "variants.cooking",
+  delivery: "variants.delivery",
+  installation: "variants.installation",
   demo: "variants.demo",
 } as const satisfies Record<(typeof ROBOT_VARIANTS)[number], string>;
 
@@ -107,9 +110,13 @@ export default function ProductForm({ initial }: { initial?: Product }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState(initial?.name ?? "");
-  // "image" is a UI-only choice: the real variant stays as the fallback art
-  const [artChoice, setArtChoice] = useState<(typeof ROBOT_VARIANTS)[number] | "image">(
-    initial?.imageUrl ? "image" : initial?.variant ?? "luba"
+  // product type (the `variant` column); also picks the stand-in drawing
+  const [variant, setVariant] = useState<(typeof ROBOT_VARIANTS)[number]>(
+    initial?.variant ?? "mower"
+  );
+  // UI-only: show the type's drawing, or the product's own image
+  const [artChoice, setArtChoice] = useState<"drawing" | "image">(
+    initial?.imageUrl ? "image" : "drawing"
   );
   const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? "");
   const [homeImage, setHomeImage] = useState(initial?.homeImage ?? "");
@@ -120,8 +127,6 @@ export default function ProductForm({ initial }: { initial?: Product }) {
   const mainFileRef = useRef<HTMLInputElement>(null);
   const homeFileRef = useRef<HTMLInputElement>(null);
   const galleryFileRef = useRef<HTMLInputElement>(null);
-  const fallbackVariant =
-    artChoice === "image" ? initial?.variant ?? "luba" : artChoice;
   // rich detail page (video, content sections, spec table) — see PageBuilder
   const [pageDraft, setPageDraft] = useState<DraftPage>(() => pageToDraft(initial?.page));
 
@@ -299,12 +304,28 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           <p className={hintClass}>{t("hints.brand")}</p>
         </div>
         <div>
+          <label htmlFor="variant" className={labelClass}>
+            {t("fields.productType")}
+          </label>
+          <select
+            id="variant"
+            name="variant"
+            value={variant}
+            onChange={(e) => setVariant(e.target.value as typeof variant)}
+            className={inputClass}
+          >
+            {ROBOT_VARIANTS.map((v) => (
+              <option key={v} value={v}>
+                {t(VARIANT_LABEL_KEYS[v])}
+              </option>
+            ))}
+          </select>
+          <p className={hintClass}>{t("hints.productType")}</p>
+        </div>
+        <div>
           <label htmlFor="artChoice" className={labelClass}>
             {t("fields.productVisual")}
           </label>
-          {/* the submitted variant is always a real illustration (the fallback
-              when an image URL is set or later removed) */}
-          <input type="hidden" name="variant" value={fallbackVariant} />
           <div className="flex items-center gap-4">
             <select
               id="artChoice"
@@ -312,11 +333,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
               onChange={(e) => setArtChoice(e.target.value as typeof artChoice)}
               className={inputClass}
             >
-              {ROBOT_VARIANTS.map((v) => (
-                <option key={v} value={v}>
-                  {t(VARIANT_LABEL_KEYS[v])}
-                </option>
-              ))}
+              <option value="drawing">{t("fields.typeDrawing")}</option>
               <option value="image">{t("fields.customImage")}</option>
             </select>
             <span className="flex h-14 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
@@ -328,7 +345,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
                   className="h-full w-auto object-contain"
                 />
               ) : (
-                <RobotIllustration variant={fallbackVariant} className="h-full w-auto" />
+                <RobotIllustration variant={variant} className="h-full w-auto" />
               )}
             </span>
           </div>

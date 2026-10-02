@@ -2,7 +2,9 @@ import { categories } from "@/data/categories";
 import {
   PAGE_BLOCK_TYPES,
   ROBOT_VARIANTS,
+  ANATOMY_MODELS,
   SPEC_KEYS,
+  type AnatomyModel,
   type BoxItem,
   type FaqItem,
   type LocalizedText,
@@ -94,9 +96,9 @@ export function parsePage(raw: unknown): ProductPage | undefined | string {
       const body = asLocalized(b.body);
 
       if (type === "anatomy") {
-        // No configuration: the content comes from the product's variant, so
-        // the block only records its position among the others.
-        blocks.push({ type });
+        // which model's diagram; none renders nothing (see TechAnatomy)
+        const model = asText(b.model) as AnatomyModel;
+        blocks.push(ANATOMY_MODELS.includes(model) ? { type, model } : { type });
       } else if (type === "banner" && image) {
         blocks.push({ type, image });
       } else if (type === "feature" && heading && body) {
@@ -220,7 +222,7 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
 
   const variant = asText(body.variant);
   if (!ROBOT_VARIANTS.includes(variant as Product["variant"]))
-    return "Unknown illustration variant";
+    return "Unknown product type";
 
   const taglineEn = asText(body.taglineEn);
   const taglineTh = asText(body.taglineTh);

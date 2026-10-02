@@ -9,18 +9,6 @@ import ProductVisual from "@/components/ui/ProductVisual";
 import { type Locale, type Product } from "@/data/products";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
 
-/**
- * TEMPORARY demo clips so the hover-to-play effect is visible locally before
- * real per-product videos are set on `product.hoverVideo` (ideally via the
- * admin panel). Keyed by robot variant; only the mower variants have a clip.
- * Swap in short, lightweight per-product videos for production — the hero
- * clips reused here are large (they only load on hover, but still).
- */
-const DEMO_HOVER_VIDEO: Partial<Record<Product["variant"], string>> = {
-  luba: "/videos/hero-banner-luba3.mp4",
-  mini: "/videos/hero-luba-mini.mp4",
-};
-
 export default function ProductCard({
   product,
   index,
@@ -46,8 +34,7 @@ export default function ProductCard({
   const tc = useTranslations("categories");
   const locale = useLocale() as Locale;
 
-  // Real per-product clip wins; otherwise fall back to the variant demo above.
-  const hoverVideo = product.hoverVideo ?? DEMO_HOVER_VIDEO[product.variant];
+  const hoverVideo = product.hoverVideo;
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Play from the start on hover/focus; reset when the pointer leaves so the

@@ -1,11 +1,29 @@
 import type { CategorySlug } from "@/data/categories";
 
 /**
- * Visual style for the placeholder SVG illustration only — not the category.
- * "install" and "demo" are used by service products (see the "services"
- * category), which are sold alongside robots.
+ * The type of product (database column `variant`), never a model name: it
+ * picks the stand-in drawing when a product has no photo, and marks the two
+ * kinds of service product ("installation" and "demo", in the "services"
+ * category) that checkout and the demo panel look for. Anything tied to one
+ * model (its hover video, its parts diagram) is set on the product itself.
+ *
+ * Until supabase/variant-to-product-type.sql has run, rows may still carry
+ * the old values; lib/productStore.ts reads those as the new ones.
  */
-export type RobotVariant = "luba" | "mini" | "pool" | "install" | "demo";
+export type RobotVariant =
+  | "mower"
+  | "pool"
+  | "cleaner"
+  | "equipment"
+  | "cooking"
+  | "delivery"
+  | "installation"
+  | "demo";
+
+/** Robots with an interactive parts diagram (data/techAnatomy.ts). */
+export type AnatomyModel = "luba-3" | "luba-mini-2";
+
+export const ANATOMY_MODELS: AnatomyModel[] = ["luba-3", "luba-mini-2"];
 
 /**
  * Quick specs. No longer rendered on the product page — that shows only the
@@ -53,11 +71,11 @@ export type PageBlock =
   | { type: "imageText"; image: string; body: LocalizedText; imageSide: "left" | "right" }
   | { type: "video"; heading?: LocalizedText; url: string; caption?: LocalizedText }
   | {
-      /** The interactive "under the hood" anatomy. Carries no configuration —
-       *  its content is chosen from the product's `variant` (see
-       *  data/techAnatomy.ts), so the block only decides WHERE on the page it
-       *  appears. Renders nothing for a variant with no anatomy defined. */
+      /** The interactive "under the hood" anatomy of one model
+       *  (data/techAnatomy.ts). Renders nothing without a model: a diagram
+       *  must be of the product's own model, never a sibling's. */
       type: "anatomy";
+      model?: AnatomyModel;
     };
 
 export const PAGE_BLOCK_TYPES = [
@@ -188,10 +206,13 @@ export const SPEC_KEYS: SpecKey[] = [
 ];
 
 export const ROBOT_VARIANTS: RobotVariant[] = [
-  "luba",
-  "mini",
+  "mower",
   "pool",
-  "install",
+  "cleaner",
+  "equipment",
+  "cooking",
+  "delivery",
+  "installation",
   "demo",
 ];
 

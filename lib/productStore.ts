@@ -1,6 +1,6 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import type { CategorySlug } from "@/data/categories";
-import type { Product, ProductPage } from "@/data/products";
+import type { AnatomyModel, Product, ProductPage } from "@/data/products";
 
 /**
  * Supabase-backed product store — the single read/write path for product
@@ -38,18 +38,47 @@ interface ProductRow {
   page: ProductPage | null;
 }
 
+/**
+ * Rows saved before supabase/variant-to-product-type.sql still say which LUBA
+ * they are in `variant` ("luba" = LUBA 3, "mini" = LUBA Mini 2), and rely on it
+ * for their hover clip and parts diagram. Read them as the new product types
+ * and carry those two over, so the site looks the same before and after the
+ * migration. Delete once the migration has run.
+ */
+const LEGACY_VARIANTS: Record<
+  string,
+  { variant: Product["variant"]; hoverVideo?: string; anatomy?: AnatomyModel }
+> = {
+  luba: { variant: "mower", hoverVideo: "/videos/hero-banner-luba3.mp4", anatomy: "luba-3" },
+  mini: { variant: "mower", hoverVideo: "/videos/hero-luba-mini.mp4", anatomy: "luba-mini-2" },
+  install: { variant: "installation" },
+};
+
+function withLegacyAnatomy(page: ProductPage, model: AnatomyModel | undefined): ProductPage {
+  if (!model || !page.blocks) return page;
+  return {
+    ...page,
+    blocks: page.blocks.map((b) =>
+      b.type === "anatomy" && !b.model ? { ...b, model } : b
+    ),
+  };
+}
+
 function rowToProduct(row: ProductRow): Product {
+  const legacy = LEGACY_VARIANTS[row.variant];
+  const hoverVideo = row.hover_video || legacy?.hoverVideo;
+  const page = row.page ? withLegacyAnatomy(row.page, legacy?.anatomy) : null;
   return {
     id: row.id,
     ...(typeof row.sort_order === "number" ? { displayOrder: row.sort_order } : {}),
     name: row.name,
     price: row.price,
     category: row.category as CategorySlug,
-    variant: row.variant as Product["variant"],
+    variant: legacy?.variant ?? (row.variant as Product["variant"]),
     ...(row.image_url ? { imageUrl: row.image_url } : {}),
     ...(row.home_image ? { homeImage: row.home_image } : {}),
     ...(row.images?.length ? { images: row.images } : {}),
-    ...(row.hover_video ? { hoverVideo: row.hover_video } : {}),
+    ...(hoverVideo ? { hoverVideo } : {}),
     preorder: row.preorder,
     // absent column (pre-migration) reads as visible so the storefront never
     // blanks out before add-product-visibility.sql is applied
@@ -60,7 +89,7 @@ function rowToProduct(row: ProductRow): Product {
     tagline: row.tagline,
     description: row.description,
     features: row.features,
-    ...(row.page ? { page: row.page } : {}),
+    ...(page ? { page } : {}),
   };
 }
 

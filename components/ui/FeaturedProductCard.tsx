@@ -37,15 +37,6 @@ const MAX_CARD_SPECS = 3;
  * used on the shop, search, and related-products grids.
  */
 
-/**
- * TEMPORARY demo clips (mirrors ProductCard) so the hover effect shows before
- * real per-product videos are set on `product.hoverVideo`. Keyed by variant.
- */
-const DEMO_HOVER_VIDEO: Partial<Record<Product["variant"], string>> = {
-  luba: "/videos/hero-banner-luba3.mp4",
-  mini: "/videos/hero-luba-mini.mp4",
-};
-
 export default function FeaturedProductCard({
   product,
   index,
@@ -64,7 +55,7 @@ export default function FeaturedProductCard({
   // Home card prefers a dedicated lifestyle photo; falls back to the product
   // render used everywhere else.
   const cardImage = product.homeImage ?? product.imageUrl;
-  const hoverVideo = product.hoverVideo ?? DEMO_HOVER_VIDEO[product.variant];
+  const hoverVideo = product.hoverVideo;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [active, setActive] = useState(false);
   const touchedRef = useRef(false);

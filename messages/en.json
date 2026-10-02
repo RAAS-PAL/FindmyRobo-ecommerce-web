@@ -420,13 +420,18 @@
         "thaiTagline": "Tagline (Thai)",
         "thaiDescription": "Description (Thai)",
         "thaiFeatureBullets": "Feature bullets (Thai) — one per line",
-        "brand": "Brand"
+        "brand": "Brand",
+        "productType": "Product type",
+        "typeDrawing": "Drawing for its type"
       },
       "variants": {
-        "luba": "Large mower",
-        "mini": "Compact mower",
+        "mower": "Lawn mower",
         "pool": "Pool robot",
-        "install": "Installation service",
+        "cleaner": "Cleaning robot",
+        "equipment": "Cleaning equipment",
+        "cooking": "Cooking robot",
+        "delivery": "Delivery robot",
+        "installation": "Installation service",
         "demo": "Demo booking"
       },
       "specLabels": {
@@ -447,7 +452,8 @@
         "placeholderArt": "Placeholder art until real product photos land.",
         "visible": "Hide it to keep working on it without listing it in the shop, or to pull it from sale without deleting it.",
         "sku": "The code Sokochan's warehouse uses for this product. Required to ship it — leave blank for services.",
-        "brand": "The manufacturer, as Google should see it in the product’s structured data. Defaults to Mammotion — only change it for a robot from another maker."
+        "brand": "The manufacturer, as Google should see it in the product’s structured data. Defaults to Mammotion — only change it for a robot from another maker.",
+        "productType": "The kind of product, not the model. Picks the drawing shown when there is no photo; checkout uses \"Installation service\" and \"Demo booking\"."
       },
       "actions": {
         "uploading": "Uploading…",
@@ -502,7 +508,9 @@
         "boxItemName": "Item name",
         "boxItemQty": "Quantity",
         "faqQuestion": "Question",
-        "faqAnswer": "Answer"
+        "faqAnswer": "Answer",
+        "anatomyModel": "Which robot's diagram",
+        "anatomyModelHint": "Only pick this product's own model. Another model's parts and figures would be wrong for this robot."
       },
       "positions": {
         "right": "Image on the right",
@@ -570,6 +578,11 @@
         "row": "Row {number} will be removed from this specification group. The change takes effect when you save the product.",
         "boxItem": "Item {number} will be removed from what's in the box. The change takes effect when you save the product.",
         "faq": "Question {number} will be removed. The change takes effect when you save the product."
+      },
+      "anatomyModels": {
+        "none": "None (section hidden)",
+        "luba-3": "LUBA 3",
+        "luba-mini-2": "LUBA Mini 2 AWD 1500"
       }
     },
     "confirmDialog": {
