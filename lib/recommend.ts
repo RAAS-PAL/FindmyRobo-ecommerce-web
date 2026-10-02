@@ -19,13 +19,11 @@ import { parseArea } from "@/lib/installTiers";
 export type Job = "lawn" | "floor" | "cooking" | "delivery";
 export type SlopeBand = "flat" | "moderate" | "steep" | "very-steep" | "unsure";
 export type OperationPref = "autonomous" | "walk-behind" | "either";
-export type ConditionPref = "new" | "pre-owned" | "either";
 export type Venue = "restaurant" | "hotel" | "office" | "hospital" | "mall" | "other";
 
 export const JOBS: Job[] = ["lawn", "floor", "cooking", "delivery"];
 export const SLOPE_BANDS: SlopeBand[] = ["flat", "moderate", "steep", "very-steep", "unsure"];
 export const OPERATION_PREFS: OperationPref[] = ["autonomous", "walk-behind", "either"];
-export const CONDITION_PREFS: ConditionPref[] = ["either", "new", "pre-owned"];
 export const VENUES: Venue[] = ["restaurant", "hotel", "office", "hospital", "mall", "other"];
 
 /** The steepest slope (%) each band means. */
@@ -43,7 +41,6 @@ export interface Answers {
   slope?: SlopeBand;
   operation?: OperationPref;
   venue?: Venue;
-  condition: ConditionPref;
 }
 
 /** Which categories answer each job. */
@@ -143,20 +140,6 @@ function scoreFloor(p: Product, a: Answers, m: Match) {
   }
 }
 
-function scoreCondition(p: Product, a: Answers, m: Match) {
-  const has = (c: "new" | "pre-owned") => p.conditions.includes(c);
-  if (a.condition !== "either" && !has(a.condition)) {
-    m.fits = false;
-    m.score -= 40;
-    m.reasons.push({ tone: "miss", key: a.condition === "new" ? "notNew" : "notPreowned" });
-    return;
-  }
-  m.reasons.push({
-    tone: "good",
-    key: has("new") && has("pre-owned") ? "soldBoth" : has("new") ? "soldNew" : "soldPreowned",
-  });
-}
-
 /**
  * Rank the catalogue for these answers. Only robots that pass every rule are
  * returned; when none do, the closest ones are (fits: false), so the page can
@@ -172,7 +155,6 @@ export function recommend(products: Product[], a: Answers, limit = 3): Match[] {
       const m: Match = { product, fits: true, score: 100, reasons: [] };
       if (a.job === "lawn") scoreLawn(product, a, m);
       if (a.job === "floor") scoreFloor(product, a, m);
-      scoreCondition(product, a, m);
       return m;
     });
 
@@ -207,6 +189,5 @@ export function asAnswers(raw: unknown): Answers | null {
       ? { operation: pick(OPERATION_PREFS, r.operation) }
       : {}),
     ...(job === "delivery" && pick(VENUES, r.venue) ? { venue: pick(VENUES, r.venue) } : {}),
-    condition: pick(CONDITION_PREFS, r.condition) ?? "either",
   };
 }

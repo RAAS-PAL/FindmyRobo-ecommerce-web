@@ -158,13 +158,16 @@ branch `main`.
 - **Robot recommender — built 2026-10-02 (hybrid, phase 1).** `/recommend`
   (EN/TH), linked from the hero ("Not sure which robot fits?"), About menu →
   "Find my robot", and the footer. Steps: job (lawn / floor / cooking /
-  delivery) → follow-ups (area + slope; area + self-driving or pushed; venue)
-  → new / pre-owned → top 3 with reasons. Rules + score in `lib/recommend.ts`
+  delivery) → follow-ups (area + slope; area + self-driving or pushed; venue;
+  cooking has none and goes straight to results) → 1 to 3 robots with
+  reasons. No new/pre-owned question (owner, 2026-10-02: customers shouldn't
+  have to think about it; the cards still show how each is sold). Rules + score in `lib/recommend.ts`
   (pure; the API re-runs it); facts per product in `fit` (Admin → Products →
   "Recommendation facts"; mowers fall back to their area/slope specs); a
   missing figure shows "to be confirmed", never a guess. Answers saved to
-  `recommendation_requests` on results; contact (name, phone, optional email,
-  PDPA consent) only after results, emailed to sales. No budget question
+  `recommendation_requests` on results. Contact is optional: under the
+  results only an offer ("Yes, contact me") until tapped; then name, phone,
+  optional email, PDPA consent, emailed to sales. No budget question
   until prices exist. Phase 2 (LLM wording / free text) not started.
   Needs `supabase/add-recommender.sql` (after the seed). Open: PDPA consent
   wording and the Privacy Policy page (footer still has none) for legal review;

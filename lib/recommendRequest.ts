@@ -66,7 +66,6 @@ export function describeAnswers(a: Answers): [string, string][] {
   if (a.slope) rows.push(["Steepest slope", a.slope]);
   if (a.operation) rows.push(["Wants", a.operation]);
   if (a.venue) rows.push(["Venue", a.venue]);
-  rows.push(["Condition", a.condition]);
   return rows;
 }
 

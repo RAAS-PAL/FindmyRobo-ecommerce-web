@@ -1240,7 +1240,6 @@
     "sub": "A few questions about the job, and we'll show which of our robots fit, and why.",
     "stepOf": "Step {step} of {total}",
     "back": "Back",
-    "next": "Next",
     "seeResults": "See my robots",
     "startAgain": "Start again",
     "viewRobot": "View robot",
@@ -1321,28 +1320,12 @@
         "other": "Somewhere else"
       }
     },
-    "condition": {
-      "question": "New or pre-owned?",
-      "hint": "Some robots are sold one way only.",
-      "either": {
-        "title": "Either",
-        "hint": "Show me both"
-      },
-      "new": {
-        "title": "Brand-new",
-        "hint": "Unused stock"
-      },
-      "pre-owned": {
-        "title": "Pre-owned",
-        "hint": "A unit that has been used"
-      }
-    },
     "results": {
       "title": "Your best matches",
       "sub": {
         "lawn": "Ranked by how each mower's rated area and slope match your lawn.",
         "floor": "Ranked by how each one runs and how long your floor would take.",
-        "cooking": "The cooking robots we sell, for the way you want to buy.",
+        "cooking": "The cooking robots we sell.",
         "delivery": "Our delivery robots. Our team will confirm which model suits your venue's layout."
       },
       "closeTitle": "No exact match: the closest options",
@@ -1364,16 +1347,11 @@
       "operationPushMiss": "Pushed by staff; you asked for one that drives itself",
       "operationUnknown": "How it runs to be confirmed by our team",
       "rateHours": "About {hours, number} h for {area, number} m² at its top rate of {rate, number} m²/h",
-      "rateUnknown": "Cleaning rate to be confirmed by our team",
-      "soldBoth": "Sold brand-new or pre-owned",
-      "soldNew": "Sold brand-new",
-      "soldPreowned": "Sold pre-owned",
-      "notNew": "Sold pre-owned only",
-      "notPreowned": "Sold brand-new only"
+      "rateUnknown": "Cleaning rate to be confirmed by our team"
     },
     "contact": {
-      "title": "Want our team to help?",
-      "sub": "Send us these results and we'll call you with prices and the right setup. No obligation.",
+      "title": "Want our team to contact you?",
+      "sub": "We'll call you about these results, prices and setup. No obligation.",
       "fields": {
         "name": "Name",
         "phone": "Phone",
@@ -1392,7 +1370,9 @@
         "email": "Check the email address.",
         "consent": "Please tick the box so we may contact you.",
         "send": "Sorry, that didn't go through. Please try again, or call us."
-      }
+      },
+      "offer": "Optional. If you'd like a call about prices and the right setup, leave your details.",
+      "open": "Yes, contact me"
     }
   }
 }

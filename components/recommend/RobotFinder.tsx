@@ -24,14 +24,12 @@ import ProductVisual from "@/components/ui/ProductVisual";
 import { DEFAULT_BRAND } from "@/data/products";
 import { EMAIL_RE, PHONE_RE } from "@/lib/quoteRequest";
 import {
-  CONDITION_PREFS,
   JOBS,
   OPERATION_PREFS,
   SLOPE_BANDS,
   VENUES,
   recommend,
   type Answers,
-  type ConditionPref,
   type Job,
   type Match,
   type OperationPref,
@@ -47,7 +45,7 @@ const JOB_ICONS: Record<Job, LucideIcon> = {
   delivery: ConciergeBell,
 };
 
-type Step = "job" | "details" | "condition" | "results";
+type Step = "job" | "details" | "results";
 
 const inputClass = (hasError = false) =>
   `h-11 w-full rounded-lg border bg-surface px-3 text-[15px] text-content transition-colors placeholder:text-forest-300 focus-visible:outline-none! focus-visible:ring-2 ${
@@ -169,6 +167,8 @@ function ContactForm({ answers, requestId }: { answers: Answers; requestId: stri
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [state, setState] = useState<ContactState>("idle");
+  // optional: only an offer until the customer asks to be contacted
+  const [open, setOpen] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -205,6 +205,25 @@ function ContactForm({ answers, requestId }: { answers: Answers; requestId: stri
       <div role="status" className="rounded-2xl border border-accent/40 bg-accent/[0.07] p-6">
         <p className="font-display text-lg font-bold text-content">{t("sentTitle")}</p>
         <p className="mt-1 text-[14px] text-ink-muted">{t("sentBody")}</p>
+      </div>
+    );
+  }
+
+  if (!open) {
+    return (
+      <div className="flex flex-col gap-4 rounded-2xl border border-forest-100 bg-surface p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+        <div>
+          <h2 className="font-display text-xl font-bold text-content">{t("title")}</h2>
+          <p className="mt-1 text-[14px] text-ink-muted">{t("offer")}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-expanded={false}
+          className="inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 self-start rounded-full border border-forest-100 px-5 text-[14px] font-semibold text-content transition-colors hover:border-accent sm:self-auto"
+        >
+          {t("open")}
+        </button>
       </div>
     );
   }
@@ -298,33 +317,34 @@ export default function RobotFinder() {
   const [slope, setSlope] = useState<SlopeBand | null>(null);
   const [operation, setOperation] = useState<OperationPref | null>(null);
   const [venue, setVenue] = useState<Venue | null>(null);
-  const [condition, setCondition] = useState<ConditionPref>("either");
   const [requestId, setRequestId] = useState<string | null>(null);
 
-  const answers: Answers | null = useMemo(() => {
-    if (!job) return null;
+  const buildAnswers = (j: Job): Answers => {
     const areaM2 = Number(area.replace(/[^\d.]/g, ""));
     return {
-      job,
-      ...(areaM2 > 0 && (job === "lawn" || job === "floor") ? { areaM2: Math.round(areaM2) } : {}),
-      ...(job === "lawn" && slope ? { slope } : {}),
-      ...(job === "floor" && operation ? { operation } : {}),
-      ...(job === "delivery" && venue ? { venue } : {}),
-      condition,
+      job: j,
+      ...(areaM2 > 0 && (j === "lawn" || j === "floor") ? { areaM2: Math.round(areaM2) } : {}),
+      ...(j === "lawn" && slope ? { slope } : {}),
+      ...(j === "floor" && operation ? { operation } : {}),
+      ...(j === "delivery" && venue ? { venue } : {}),
     };
-  }, [job, area, slope, operation, venue, condition]);
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- buildAnswers reads exactly these
+  const answers = useMemo(() => (job ? buildAnswers(job) : null), [job, area, slope, operation, venue]);
 
   const matches = useMemo(
     () => (answers && step === "results" ? recommend(products, answers) : []),
     [answers, products, step]
   );
 
-  const hasDetails = job !== "cooking";
-  const steps: Step[] = hasDetails ? ["job", "details", "condition"] : ["job", "condition"];
+  // cooking has no follow-up question: picking it goes straight to results
+  const steps: Step[] = job === "cooking" ? ["job"] : ["job", "details"];
   const stepNumber = steps.indexOf(step) + 1;
 
-  const showResults = () => {
-    if (!answers) return;
+  /** `j` when the job was only just picked (state not updated yet). */
+  const showResults = (j: Job | null = job) => {
+    if (!j) return;
+    const answers = buildAnswers(j);
     setStep("results");
     setRequestId(null);
     // save the questionnaire; the results don't wait for it
@@ -345,7 +365,6 @@ export default function RobotFinder() {
     setSlope(null);
     setOperation(null);
     setVenue(null);
-    setCondition("either");
     setRequestId(null);
   };
 
@@ -419,7 +438,8 @@ export default function RobotFinder() {
                 selected={job === j}
                 onClick={() => {
                   setJob(j);
-                  setStep(j === "cooking" ? "condition" : "details");
+                  if (j === "cooking") showResults(j);
+                  else setStep("details");
                 }}
                 title={t(`job.${j}.title`)}
                 hint={t(`job.${j}.hint`)}
@@ -494,23 +514,6 @@ export default function RobotFinder() {
         </fieldset>
       )}
 
-      {step === "condition" && (
-        <fieldset className="mt-5">
-          <legend className="font-display text-2xl font-bold text-content">{t("condition.question")}</legend>
-          <p className="mt-1 text-[13.5px] text-ink-muted">{t("condition.hint")}</p>
-          <div role="radiogroup" className="mt-4 grid gap-2.5 sm:grid-cols-3">
-            {CONDITION_PREFS.map((c) => (
-              <Choice
-                key={c}
-                selected={condition === c}
-                onClick={() => setCondition(c)}
-                title={t(`condition.${c}.title`)}
-                hint={t(`condition.${c}.hint`)}
-              />
-            ))}
-          </div>
-        </fieldset>
-      )}
 
       <div className="mt-8 flex items-center justify-between gap-3">
         {step !== "job" ? (
@@ -529,10 +532,10 @@ export default function RobotFinder() {
           <button
             type="button"
             disabled={!canContinue}
-            onClick={() => (step === "condition" ? showResults() : setStep("condition"))}
+            onClick={() => showResults()}
             className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-[14px] font-bold disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {step === "condition" ? t("seeResults") : t("next")}
+            {t("seeResults")}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
         )}
