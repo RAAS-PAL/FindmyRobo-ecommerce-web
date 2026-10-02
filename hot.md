@@ -136,8 +136,8 @@ branch `main`.
      (`hasPrice` / `PricedProduct` in data/products.ts). Run before step 3.
      Until this branch is on main, the OLD live admin list can't show a
      product without a price.
-  3. `supabase/seed-lineup-robots.sql` — the 8 code-only robots, HIDDEN;
-     prices may stay null.
+  3. `supabase/seed-lineup-robots.sql` — the 8 code-only robots, HIDDEN,
+     with no price (set prices in Admin). Nothing to edit before running.
   4. `supabase/add-recommender.sql` — `fit` column, `recommendation_requests`
      table, facts for Phantas and A1. Additive; safe any time after step 3.
   5. `supabase/variant-to-product-type.sql` — `variant` becomes the product
