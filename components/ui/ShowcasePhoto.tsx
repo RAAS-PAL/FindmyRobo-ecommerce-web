@@ -42,6 +42,33 @@ export default function ShowcasePhoto({
     );
   }
 
+  if (photo.cutout) {
+    return (
+      <div
+        className={`absolute inset-0 bg-[radial-gradient(85%_75%_at_50%_78%,#f5f7fa_0%,#e2e6ec_50%,#c7cdd6_100%)] ${className}`}
+      >
+        {/* Below sm the copy sits under the photo, so the machine can use
+            the frame; from sm the copy is over the top of the card and the
+            machine stays in the lower half. */}
+        <div className="absolute inset-x-[10%] top-[8%] bottom-[7%] sm:inset-x-[9%] sm:top-[47%] sm:bottom-[6%]">
+          {/* floor shadow under the feet */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-[8%] bottom-0 h-[10%] translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgb(15_20_30/0.28),transparent)]"
+          />
+          <Image
+            src={photo.cutout.src}
+            alt={alt}
+            fill
+            sizes={sizes}
+            priority={priority}
+            className="object-contain object-bottom"
+          />
+        </div>
+      </div>
+    );
+  }
+
   if (photo.image) {
     return (
       <Image
@@ -50,12 +77,11 @@ export default function ShowcasePhoto({
         fill
         sizes={sizes}
         priority={priority}
-        className={`object-cover [object-position:var(--focus-phone)] sm:[object-position:var(--focus)] ${photo.photoScale ? "scale-(--photo-scale)" : ""} ${className}`}
+        className={`object-cover [object-position:var(--focus-phone)] sm:[object-position:var(--focus)] ${className}`}
         style={
           {
             "--focus": photo.focus ?? "50% 50%",
             "--focus-phone": photo.focusPhone ?? photo.focus ?? "50% 50%",
-            "--photo-scale": photo.photoScale ?? 1,
           } as React.CSSProperties
         }
       />

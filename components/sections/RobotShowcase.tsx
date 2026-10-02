@@ -32,10 +32,7 @@ function FamilyCard({ family, size }: { family: RobotFamily; size: "wide" | "hal
       }`}
     >
       <div className="relative -z-10 aspect-[4/3] overflow-hidden sm:absolute sm:inset-0 sm:aspect-auto">
-        <div
-          className="absolute inset-0 transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
-          style={family.photoBackdrop ? { backgroundColor: family.photoBackdrop } : undefined}
-        >
+        <div className="absolute inset-0 transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03] motion-reduce:transition-none">
           <ShowcasePhoto
             photo={family}
             alt={title}

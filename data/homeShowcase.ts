@@ -98,11 +98,12 @@ export interface ShowcasePhoto {
   /** Below sm, when the phone crop needs a different point (defaults to focus). */
   focusPhone?: string;
   /**
-   * Draw the photo smaller than the tile (1 fills it). The gap shows
-   * `photoBackdrop`, which should match the photo's own studio colour.
+   * A transparent product cut-out on a light studio backdrop drawn in CSS,
+   * instead of a photo. The backdrop always fills the whole card, and the
+   * machine is placed (object-contain) in the card's lower part, clear of
+   * the title and buttons, so no image edge can show at any card shape.
    */
-  photoScale?: number;
-  photoBackdrop?: string;
+  cutout?: { src: string; width: number; height: number };
   /** What the placeholder asks for while `image` is null. */
   shot: Bilingual;
 }
@@ -260,16 +261,10 @@ export const moreFamilies: RobotFamily[] = [
     href: "/products/t-chef-tc-e10a",
     interest: "cooking",
     modelId: "t-chef-tc-e10a",
-    // The machine (the business's high-res render) on a light studio set,
-    // made for this tile: it sits in the lower part, clear of the title and
-    // buttons. Phones show a 4:3 strip, kept to the bottom. No lifestyle
-    // photo yet.
-    image: "/models/t-chef/tile.webp",
-    focus: "50% 50%",
-    focusPhone: "50% 100%",
-    // a little smaller than the tile, so the machine isn't edge to edge
-    photoScale: 0.9,
-    photoBackdrop: "#d9dee6",
+    // The machine (cut out of the business's high-res render) on a light
+    // studio backdrop drawn by the card. No lifestyle photo yet.
+    image: null,
+    cutout: { src: "/studio/t-chef-studio.webp", width: 1400, height: 1079 },
     shot: {
       en: "TC-E10A in a working kitchen, pan in motion · 4:3 · machine centred, full height in frame",
       th: "TC-E10A ในครัวที่กำลังทำงาน · 4:3 · เครื่องอยู่กลางภาพ เห็นเต็มตัว",
