@@ -6,7 +6,7 @@ import { siteConfig } from "@/data/siteConfig";
 
 /**
  * Renders a price, or "Price on request" while the site is in quotation mode
- * (siteConfig.showPrices === false).
+ * (siteConfig.showPrices === false) or the product has no price yet (null).
  *
  * Centralised so the two modes can never drift apart across the ~13 surfaces
  * that show money. Amounts are still passed in and still computed server-side —
@@ -19,13 +19,13 @@ export default function PriceOrQuote({
    *  price style (mono, tabular-nums) reads badly on a sentence. */
   quoteClassName,
 }: {
-  amount: number;
+  amount: number | null;
   className?: string;
   quoteClassName?: string;
 }) {
   const t = useTranslations("quotation");
 
-  if (siteConfig.showPrices) {
+  if (siteConfig.showPrices && amount !== null) {
     return <span className={className}>{formatBaht(amount)}</span>;
   }
   return <span className={quoteClassName ?? className}>{t("onRequest")}</span>;

@@ -12,9 +12,10 @@
 -- are switched on (step at the bottom), after the code that shows them is live.
 --
 -- Before running:
---   1. Run add-multi-brand-catalogue.sql first (brand, conditions, variants).
---   2. Fill in every price below (whole baht). A price left as null stops the
---      script with an error and nothing is added.
+--   1. Run add-multi-brand-catalogue.sql (brand, conditions, variants) and
+--      allow-unknown-price.sql (lets a price be empty).
+--   2. Prices below are in whole baht. Leave null where the price isn't known
+--      yet: the site shows "Price on request" and keeps it out of the cart.
 --
 -- Run once in Supabase: SQL Editor -> New query -> paste -> Run. Safe to
 -- re-run: a robot whose id is already in the table is skipped, never

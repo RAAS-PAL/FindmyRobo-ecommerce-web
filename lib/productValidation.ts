@@ -214,8 +214,11 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   const name = asText(body.name);
   if (!name) return "Product name is required";
 
-  const price = Number(body.price);
-  if (!Number.isFinite(price) || price <= 0) return "Price must be a positive number";
+  // blank = not known yet (stored as null, shown as "Price on request")
+  const rawPrice = asText(String(body.price ?? ""));
+  const price = rawPrice === "" ? null : Number(rawPrice);
+  if (price !== null && (!Number.isFinite(price) || price <= 0))
+    return "Price must be a positive number, or left blank";
 
   const category = asText(body.category);
   if (!categories.some((c) => c.slug === category)) return "Unknown category";
@@ -293,7 +296,7 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   return {
     id,
     name,
-    price: Math.round(price),
+    price: price === null ? null : Math.round(price),
     category: category as Product["category"],
     variant: variant as Product["variant"],
     ...(imageUrl ? { imageUrl } : {}),

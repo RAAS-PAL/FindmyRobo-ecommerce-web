@@ -21,7 +21,7 @@ import CardPaymentForm from "@/components/checkout/CardPaymentForm";
 import PromptPayForm from "@/components/checkout/PromptPayForm";
 import { useCart, type CartLine } from "@/components/cart/CartProvider";
 import { useProducts } from "@/components/ProductsProvider";
-import { formatBaht, SERVICE_CATEGORY, type Product } from "@/data/products";
+import { formatBaht, hasPrice, SERVICE_CATEGORY, type PricedProduct, type Product } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
 import {
   EMPTY_SHIPPING,
@@ -37,7 +37,7 @@ interface InstallGroup {
   robotId: string;
   robot: Product;
   /** All installation tiers, smallest coverage area first. */
-  tiers: Product[];
+  tiers: PricedProduct[];
   /** Id of the smallest tier that covers the robot's area — badged "Recommended". */
   recommendedId: string;
 }
@@ -59,6 +59,7 @@ function buildInstallGroups(items: CartLine[], catalog: Product[]): InstallGroup
   if (robots.length === 0) return [];
 
   const tiers = catalog
+    .filter(hasPrice)
     .filter((p) => p.category === SERVICE_CATEGORY && p.variant === "installation")
     .sort((a, b) => parseArea(a.specs.area) - parseArea(b.specs.area));
   if (tiers.length === 0) return [];
@@ -454,7 +455,7 @@ export default function CheckoutClient() {
                 {installGroups.map((group) => {
                   const selected = selectedTierId(group);
                   // tier options, then an explicit opt-out; `null` id = "none"
-                  const options: (Product | null)[] = [...group.tiers, null];
+                  const options: (PricedProduct | null)[] = [...group.tiers, null];
                   return (
                     <div
                       key={group.robotId}

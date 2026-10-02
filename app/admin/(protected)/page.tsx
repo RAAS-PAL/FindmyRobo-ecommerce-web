@@ -152,7 +152,7 @@ export default async function AdminProductsPage() {
                     {categoryName(product.category)}
                   </td>
                   <td className="px-5 py-3.5 text-right font-mono font-semibold tabular-nums text-content">
-                    {formatBaht(product.price)}
+                    {product.price === null ? "—" : formatBaht(product.price)}
                   </td>
                   <td className="hidden px-5 py-3.5 sm:table-cell">
                     <div className="flex flex-wrap gap-1.5">

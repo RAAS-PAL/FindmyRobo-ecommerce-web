@@ -6,7 +6,7 @@ import { Bot, Calendar, Ruler } from "lucide-react";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { Link } from "@/i18n/navigation";
 import { useProducts } from "@/components/ProductsProvider";
-import { formatBaht, SERVICE_CATEGORY } from "@/data/products";
+import { formatBaht, hasPrice, SERVICE_CATEGORY } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
 
 /** "5,000 m²" → 5000; NaN when the spec is missing/unparsable. */
@@ -32,6 +32,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
   const tiers = useMemo(
     () =>
       products
+        .filter(hasPrice)
         .filter(
           (p) =>
             p.category === SERVICE_CATEGORY &&
@@ -64,7 +65,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
   return (
     <div className="flex flex-col gap-5">
       {/* price of the selected area band */}
-      {selected && siteConfig.showPrices && (
+      {selected && selected.price !== null && siteConfig.showPrices && (
         <p className="font-mono text-3xl font-semibold tabular-nums text-content">
           {formatBaht(selected.price)}
         </p>

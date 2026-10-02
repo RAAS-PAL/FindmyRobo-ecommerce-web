@@ -20,7 +20,7 @@ interface ProductRow {
   id: string;
   sort_order?: number;
   name: string;
-  price: number;
+  price: number | null;
   category: string;
   variant: string;
   image_url: string | null;

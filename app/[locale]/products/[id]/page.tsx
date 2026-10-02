@@ -360,7 +360,7 @@ export default async function ProductPage({
         </div>
       </div>
     </main>
-    {!isService && (
+    {!isService && product.price !== null && (
       <FloatingAddToCart
         productId={product.id}
         name={product.name}

@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type { Product } from "@/data/products";
+import { hasPrice, type PricedProduct, type Product } from "@/data/products";
 import { useProducts } from "@/components/ProductsProvider";
 
 const STORAGE_KEY = "raaspal-cart";
@@ -28,7 +28,8 @@ export interface CartItem {
  */
 export interface CartLine extends CartItem {
   key: string;
-  product: Product;
+  /** Only priced products make a line; one without a price is dropped. */
+  product: PricedProduct;
   /** The robot a service line is attached to, if still in the catalog. */
   forProduct?: Product;
 }
@@ -148,7 +149,7 @@ export default function CartProvider({ children }: { children: React.ReactNode }
   const value = useMemo<CartContextValue>(() => {
     const items = rawItems.flatMap<CartLine>((item) => {
       const product = getProduct(item.id);
-      if (!product) return [];
+      if (!product || !hasPrice(product)) return [];
       const forProduct = item.forId ? getProduct(item.forId) : undefined;
       return [{ ...item, key: lineKey(item), product, forProduct }];
     });

@@ -131,9 +131,14 @@ branch `main`.
   in Supabase, after a backup, in this order:
   1. `supabase/add-multi-brand-catalogue.sql` — brand + conditions columns,
      new robot types. **Ran on live 2026-10-02.** (No `sku` column on purpose.)
-  2. `supabase/seed-lineup-robots.sql` — the 8 code-only robots, HIDDEN;
-     prices must be filled in first.
-  3. `supabase/variant-to-product-type.sql` — `variant` becomes the product
+  2. `supabase/allow-unknown-price.sql` — `price` may be null (not known
+     yet): shown as "Price on request", kept out of cart and checkout
+     (`hasPrice` / `PricedProduct` in data/products.ts). Run before step 3.
+     Until this branch is on main, the OLD live admin list can't show a
+     product without a price.
+  3. `supabase/seed-lineup-robots.sql` — the 8 code-only robots, HIDDEN;
+     prices may stay null.
+  4. `supabase/variant-to-product-type.sql` — `variant` becomes the product
      type (mower, pool, cleaner, equipment, cooking, delivery, installation,
      demo), never a model name. Run it right AFTER this branch's code is live
      on main: old main code doesn't know the new values. Until then

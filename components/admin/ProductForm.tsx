@@ -249,10 +249,9 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             id="price"
             name="price"
             type="number"
-            required
             min={1}
             step={1}
-            defaultValue={initial?.price}
+            defaultValue={initial?.price ?? ""}
             placeholder={t("placeholders.price")}
             className={inputClass}
           />

@@ -138,7 +138,9 @@ export interface Product {
   /** Admin-controlled storefront position; lower values appear first. */
   displayOrder?: number;
   name: string;
-  price: number;
+  /** Whole baht; null while the price is not known yet ("Price on request",
+   *  and the product can't go in the cart). */
+  price: number | null;
   category: CategorySlug;
   variant: RobotVariant;
   /**
@@ -225,5 +227,11 @@ export const SERVICE_CATEGORY = "services" as const;
  * the two in step. Every robot in the launch lineup is Mammotion.
  */
 export const DEFAULT_BRAND = "Mammotion";
+
+/** A product whose price is set — the only kind the cart and checkout take. */
+export type PricedProduct = Product & { price: number };
+
+export const hasPrice = (product: Product): product is PricedProduct =>
+  product.price !== null;
 
 export const formatBaht = (price: number) => `฿${price.toLocaleString("en-US")}`;
