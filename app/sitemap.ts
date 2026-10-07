@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { categories } from "@/data/categories";
-import { modelPages } from "@/data/modelPages";
 import { routing } from "@/i18n/routing";
 import { getAllProducts } from "@/lib/productStore";
 import { localizedUrl as localizedPath } from "@/lib/seo";
@@ -52,20 +51,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: "weekly",
         // Coming-soon categories are real pages but have nothing to sell yet.
         priority: category.available ? 0.8 : 0.4,
-        alternates: alternates(path),
-      });
-    }
-  }
-
-  // product pages built in code, for models not in the catalogue yet
-  for (const page of modelPages) {
-    const path = `/products/${page.id}`;
-    for (const locale of routing.locales) {
-      entries.push({
-        url: localizedPath(locale, path),
-        lastModified: now,
-        changeFrequency: "weekly",
-        priority: 0.8,
         alternates: alternates(path),
       });
     }

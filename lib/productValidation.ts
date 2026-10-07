@@ -3,8 +3,11 @@ import {
   PAGE_BLOCK_TYPES,
   ROBOT_VARIANTS,
   ANATOMY_MODELS,
+  MAX_SHOWCASE_FIGURES,
   SPEC_KEYS,
   type AnatomyModel,
+  type ShowcaseColor,
+  type ShowcaseFigure,
   type BoxItem,
   type FaqItem,
   type LocalizedText,
@@ -53,6 +56,7 @@ const asLines = (v: unknown) =>
     .filter(Boolean);
 
 const URL_RE = /^(https?:\/\/|\/)[^\s]+$/i;
+const HEX_RE = /^#[0-9a-f]{6}$/i;
 
 /** Localized text from the page builder: EN required, TH falls back to EN. */
 function asLocalized(v: unknown): LocalizedText | null {
@@ -73,6 +77,51 @@ export function parsePage(raw: unknown): ProductPage | undefined | string {
   if (typeof raw !== "object" || raw === null) return undefined;
   const input = raw as Record<string, unknown>;
   const page: ProductPage = {};
+
+  // Full-screen page: sent only while switched on, and it needs the line above
+  // the name. Figures and colours missing a part are dropped like any
+  // half-filled row.
+  if (typeof input.showcase === "object" && input.showcase !== null) {
+    const s = input.showcase as Record<string, unknown>;
+    const eyebrow = asLocalized(s.eyebrow);
+    if (!eyebrow) {
+      return "Full-screen page: fill in the line above the name, or switch the full-screen page off";
+    }
+    {
+      const heroImage = asText(s.heroImage);
+      if (heroImage && !URL_RE.test(heroImage)) {
+        return "Full-screen page: the header image URL must start with https:// or /";
+      }
+      const figures: ShowcaseFigure[] = [];
+      for (const item of Array.isArray(s.figures) ? s.figures : []) {
+        if (typeof item !== "object" || item === null) continue;
+        const o = item as Record<string, unknown>;
+        const value = asText(o.value);
+        const label = asLocalized(o.label);
+        if (value && label) figures.push({ value, label });
+      }
+      const colors: ShowcaseColor[] = [];
+      for (const [i, item] of (Array.isArray(s.colors) ? s.colors : []).entries()) {
+        if (typeof item !== "object" || item === null) continue;
+        const o = item as Record<string, unknown>;
+        const label = asLocalized(o.label);
+        const image = asText(o.image);
+        if (!label || !image) continue;
+        if (!URL_RE.test(image)) {
+          return `Full-screen page: colour ${i + 1} image URL must start with https:// or /`;
+        }
+        const swatch = asText(o.swatch);
+        colors.push({ label, image, swatch: HEX_RE.test(swatch) ? swatch : "#d1d5db" });
+      }
+      page.showcase = {
+        eyebrow,
+        ...(heroImage ? { heroImage } : {}),
+        figures: figures.slice(0, MAX_SHOWCASE_FIGURES),
+        // one colour is just the robot: the header shows the main image instead
+        ...(colors.length > 1 ? { colors } : {}),
+      };
+    }
+  }
 
   const videoUrl = asText(input.videoUrl);
   if (videoUrl) {
@@ -103,7 +152,14 @@ export function parsePage(raw: unknown): ProductPage | undefined | string {
       } else if (type === "banner" && image) {
         blocks.push({ type, image });
       } else if (type === "feature" && heading && body) {
-        blocks.push({ type, heading, body, ...(image ? { image } : {}) });
+        const eyebrow = asLocalized(b.eyebrow);
+        blocks.push({
+          type,
+          heading,
+          body,
+          ...(image ? { image } : {}),
+          ...(eyebrow ? { eyebrow } : {}),
+        });
       } else if (type === "imageText" && image && body) {
         const imageSide = asText(b.imageSide) === "left" ? "left" : "right";
         blocks.push({ type, image, body, imageSide });

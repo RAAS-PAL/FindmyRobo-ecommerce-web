@@ -5,7 +5,7 @@ import type { QuoteInterest } from "@/lib/quoteRequest";
 
 /**
  * What the quote panel was opened for — nothing, a product, a service for a
- * robot, or a robot family that has no catalogue product yet (a homepage banner).
+ * robot, or a robot family (a homepage banner).
  */
 export interface QuoteTarget {
   productId?: string;
@@ -13,8 +13,6 @@ export interface QuoteTarget {
   forId?: string;
   /** Preselects "which robot"; the visitor can still change it. */
   interest?: QuoteInterest;
-  /** A lineup model with no catalogue product yet (data/lineup.ts). */
-  modelId?: string;
 }
 
 interface QuoteContextValue {

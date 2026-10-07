@@ -14,6 +14,7 @@ import InstallPurchasePanel from "@/components/cart/InstallPurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
 import ProductGallery from "@/components/product/ProductGallery";
 import ProductPageBlocks from "@/components/product/ProductPageBlocks";
+import ShowcasePage from "@/components/product/ShowcasePage";
 import ExpandOnScroll from "@/components/product/ExpandOnScroll";
 import SpecTable from "@/components/product/SpecTable";
 import BoxContents from "@/components/product/BoxContents";
@@ -28,7 +29,7 @@ import {
   type PageBlock,
 } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
-import { getAllProducts, getProductById } from "@/lib/productStore";
+import { getAllProducts, getProductById, showsOnStorefront } from "@/lib/productStore";
 import { localizedUrl, metaDescription, pageAlternates } from "@/lib/seo";
 import { breadcrumbJsonLd, productJsonLd } from "@/lib/structuredData";
 import { getSiteContent } from "@/lib/siteContentStore";
@@ -48,7 +49,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, id } = await params;
   const product = await getProductById(id);
-  if (!product || product.visible === false) return {};
+  if (!product || !showsOnStorefront(product)) return {};
 
   // Description and share image come from the product record itself, so every
   // product — including ones added later — gets its own search snippet and its
@@ -91,7 +92,7 @@ export default async function ProductPage({
 
   const product = await getProductById(id);
   // hidden products are unreachable by direct URL, not just unlisted
-  if (!product || product.visible === false) notFound();
+  if (!product || !showsOnStorefront(product)) notFound();
 
   const t = await getTranslations("productDetail");
   const tc = await getTranslations("categories");
@@ -118,18 +119,61 @@ export default async function ProductPage({
   // same names, same order — because Google checks the two against each other.
   const categoryName = tc(`${product.category}.name`);
   const l = locale as Locale;
+  const structuredData = (
+    <>
+      <JsonLd data={productJsonLd(product, l, categoryName)} />
+      <JsonLd
+        data={breadcrumbJsonLd(l, [
+          { name: t("home"), path: "/" },
+          { name: t("shop"), path: "/shop" },
+          { name: categoryName, path: `/shop/${product.category}` },
+          { name: product.name, path: `/products/${product.id}` },
+        ])}
+      />
+    </>
+  );
+
+  // Full-screen page (Admin → Products → "Full-screen page"): its feature
+  // sections with a photo become the page's photo sections; any other
+  // sections, what's in the box and the FAQ follow in their usual form.
+  const showcase = page?.showcase;
+  if (showcase) {
+    const otherBlocks = (page?.blocks ?? []).filter((b) => !(b.type === "feature" && b.image));
+    return (
+      <>
+        {structuredData}
+        <ShowcasePage
+          product={product}
+          showcase={showcase}
+          afterFeatures={
+            otherBlocks.length > 0 ? (
+              <ProductPageBlocks blocks={otherBlocks} locale={l} productName={product.name} />
+            ) : undefined
+          }
+          afterSpecs={
+            (page?.boxItems?.length ?? 0) > 0 || (page?.faqs?.length ?? 0) > 0 ? (
+              <>
+                {page?.boxItems && page.boxItems.length > 0 && (
+                  <FadeIn>
+                    <BoxContents items={page.boxItems} heading={t("boxHeading")} locale={l} />
+                  </FadeIn>
+                )}
+                {page?.faqs && page.faqs.length > 0 && (
+                  <FadeIn>
+                    <FaqSection faqs={page.faqs} heading={t("faqHeading")} locale={l} />
+                  </FadeIn>
+                )}
+              </>
+            ) : undefined
+          }
+        />
+      </>
+    );
+  }
 
   return (
     <>
-    <JsonLd data={productJsonLd(product, l, categoryName)} />
-    <JsonLd
-      data={breadcrumbJsonLd(l, [
-        { name: t("home"), path: "/" },
-        { name: t("shop"), path: "/shop" },
-        { name: categoryName, path: `/shop/${product.category}` },
-        { name: product.name, path: `/products/${product.id}` },
-      ])}
-    />
+    {structuredData}
     {/* overflow-x-clip contains ExpandOnScroll's full-bleed w-screen panel */}
     <main className="overflow-x-clip bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { Product } from "@/data/products";
+import { productLabel, SERVICE_CATEGORY, type Product } from "@/data/products";
 import { routing } from "@/i18n/routing";
 import { emailConfigured, salesAlertRecipients, sendEmail } from "@/lib/email";
 import {
@@ -11,7 +11,6 @@ import {
   type QuoteRequest,
 } from "@/lib/quoteRequest";
 import { getAllProducts } from "@/lib/productStore";
-import { getLineupModel, lineupModelName, type LineupModel } from "@/data/lineup";
 import { enforce, MINUTE } from "@/lib/rateLimit";
 
 const esc = (value: string) =>
@@ -41,14 +40,12 @@ const VENUE_LABEL: Record<PuduVenue, string> = {
 function quoteEmail(
   quote: QuoteRequest,
   product?: Product,
-  forProduct?: Product,
-  model?: LineupModel
+  forProduct?: Product
 ): string {
   const rows: [string, string][] = [["Name", quote.fullName]];
   if (quote.company) rows.push(["Company", quote.company]);
   rows.push(["Phone", quote.phone], ["Email", quote.email]);
-  if (product) rows.push(["Product", product.name]);
-  if (model) rows.push(["Model", lineupModelName(model)]);
+  if (product) rows.push(["Product", productLabel(product)]);
   if (quote.condition) {
     rows.push(["Condition", quote.condition === "new" ? "Brand-new" : "Pre-owned"]);
   }
@@ -111,20 +108,18 @@ export async function POST(request: Request) {
   }
   if (!product) quote.productId = "";
   if (!forProduct) quote.forId = "";
-  // Likewise a lineup model (not in the catalogue yet) must be one we list.
-  const model = quote.modelId ? getLineupModel(quote.modelId) : undefined;
-  if (!model) quote.modelId = "";
-  // The form sends the model's robot type with it; fill it in if it didn't,
-  // so the email always says what kind of robot it is.
-  if (model && !quote.interest) quote.interest = CATEGORY_INTEREST[model.category] ?? "";
-  // One way of selling it: the email states that, whatever the form sent.
-  // Both ways: they have to pick, and the pick has to be one we sell.
-  const needsCondition = !!model && model.conditions.length > 1;
-  if (!model) quote.condition = "";
-  else if (model.conditions.length === 1) quote.condition = model.conditions[0];
-  else if (!model.conditions.includes(quote.condition as "new" | "pre-owned")) quote.condition = "";
+  // The form sends the robot's type with it; fill it in if it didn't, so the
+  // email always says what kind of robot it is.
+  if (product && !quote.interest) quote.interest = CATEGORY_INTEREST[product.category] ?? "";
+  // How a robot is sold. One way: the email states it, whatever the form
+  // sent. Both ways: they have to pick, and the pick has to be one we sell.
+  const sold = product && product.category !== SERVICE_CATEGORY ? product : undefined;
+  const needsCondition = !!sold && sold.conditions.length > 1;
+  if (!sold) quote.condition = "";
+  else if (sold.conditions.length === 1) quote.condition = sold.conditions[0];
+  else if (!sold.conditions.includes(quote.condition as "new" | "pre-owned")) quote.condition = "";
 
-  const errors = validateQuote(quote, { productChosen: !!product || !!model, needsCondition });
+  const errors = validateQuote(quote, { productChosen: !!product, needsCondition });
   if (Object.keys(errors).length > 0) {
     return NextResponse.json({ error: "Invalid details", errors }, { status: 400 });
   }
@@ -143,17 +138,14 @@ export async function POST(request: Request) {
       email: quote.email,
       interest: quote.interest,
       product: product?.id,
-      model: model?.id,
     });
     return NextResponse.json({ ok: true, emailed: false });
   }
 
   const sent = await sendEmail({
     to: salesAlertRecipients,
-    subject: `Quotation request — ${quote.fullName}${
-      product ? ` — ${product.name}` : model ? ` — ${lineupModelName(model)}` : ""
-    }`,
-    html: quoteEmail(quote, product, forProduct, model),
+    subject: `Quotation request — ${quote.fullName}${product ? ` — ${productLabel(product)}` : ""}`,
+    html: quoteEmail(quote, product, forProduct),
     replyTo: quote.email,
   });
 

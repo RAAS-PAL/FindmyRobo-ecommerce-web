@@ -77,7 +77,7 @@ function FamilyCard({ family, size }: { family: RobotFamily; size: "wide" | "hal
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
-            onClick={() => openQuote({ interest: family.interest, modelId: family.modelId })}
+            onClick={() => openQuote({ interest: family.interest, productId: family.productId })}
             className="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-accent-gradient px-6 text-[14.5px] font-bold"
           >
             {t("getQuote")}
@@ -117,9 +117,10 @@ export function MoreFamilies({ families }: { families: RobotFamily[] }) {
         </h2>
         <p className="mt-3 text-[15px] text-ink-muted sm:text-base">{t("moreSub")}</p>
       </div>
-      <div className="grid gap-3 sm:gap-4 lg:grid-cols-2">
+      {/* two to a row; one alone spans it rather than leaving half empty */}
+      <div className={`grid gap-3 sm:gap-4 ${families.length > 1 ? "lg:grid-cols-2" : ""}`}>
         {families.map((family) => (
-          <FamilyCard key={family.id} family={family} size="half" />
+          <FamilyCard key={family.id} family={family} size={families.length > 1 ? "half" : "wide"} />
         ))}
       </div>
     </section>

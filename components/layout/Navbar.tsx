@@ -22,9 +22,9 @@ import {
 import Image from "next/image";
 import { Link, usePathname } from "@/i18n/navigation";
 import { categoryHref, navCategories, type CategorySlug } from "@/data/categories";
-import { lineupFor, lineupModelName, type LineupModel } from "@/data/lineup";
+import { showsCondition } from "@/data/conditions";
 import { siteConfig } from "@/data/siteConfig";
-import type { Product } from "@/data/products";
+import { DEFAULT_BRAND, productLabel, type Product } from "@/data/products";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 import ProfileMenu from "@/components/layout/ProfileMenu";
 import { useCart } from "@/components/cart/CartProvider";
@@ -32,7 +32,6 @@ import CartIcon from "@/components/cart/CartIcon";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
-import ModelTile from "@/components/ui/ModelTile";
 import ConditionLine from "@/components/ui/ConditionLine";
 import CatalogSearch from "@/components/layout/CatalogSearch";
 
@@ -47,15 +46,14 @@ interface NavGroup {
   items: NavChild[];
 }
 
-/** One model in a category's menu: a catalogue product, or a lineup model
- *  (data/lineup.ts) that has no product page yet. */
+/** One robot in a category's menu. */
 interface MenuModel {
   key: string;
   name: string;
+  /** Shown above the name for brands other than Mammotion. */
   brand?: string;
   href: string;
-  product?: Product;
-  lineup?: LineupModel;
+  product: Product;
 }
 
 interface NavItem {
@@ -154,36 +152,32 @@ export default function Navbar() {
     pathname === "/recommend" ||
     pathname.startsWith("/products/request-a-demo");
 
-  // A category's models: its catalogue products, or — until it has any — the
-  // lineup models, which link to their card on the category page.
-  const modelsFor = (slug: CategorySlug): MenuModel[] => {
-    const own = products.filter((product) => product.category === slug);
-    if (own.length > 0) {
-      return own.map((product) => ({
+  // A category's robots: the products shown on the storefront (hidden ones,
+  // e.g. robots still waiting for photos, are not in `products`).
+  const modelsFor = (slug: CategorySlug): MenuModel[] =>
+    products
+      .filter((product) => product.category === slug)
+      .map((product) => ({
         key: product.id,
         name: product.name,
+        ...(product.brand && product.brand !== DEFAULT_BRAND ? { brand: product.brand } : {}),
         href: `/products/${product.id}`,
         product,
       }));
-    }
-    return lineupFor(slug).map((model) => ({
-      key: model.id,
-      name: model.name,
-      brand: model.brand,
-      href: model.page ?? `${categoryHref(slug)}#${model.id}`,
-      lineup: model,
-    }));
-  };
 
   /* One tab per navbar category (data/categories.ts), then About, which also
      holds contact and support: all eight did not fit on one line in Thai. */
+  // A category with nothing on show yet has no tab (it comes back by itself
+  // once a robot in it is switched on in Admin).
   const navLinks: NavItem[] = [
-    ...navCategories.map((category) => ({
-      label: tc(`${category.slug}.nav`),
-      category: category.slug,
-      models: modelsFor(category.slug),
-      current: currentCategory === category.slug,
-    })),
+    ...navCategories
+      .map((category) => ({
+        label: tc(`${category.slug}.nav`),
+        category: category.slug,
+        models: modelsFor(category.slug),
+        current: currentCategory === category.slug,
+      }))
+      .filter((link) => link.models.length > 0),
     {
       label: t("about"),
       current: inAbout,
@@ -392,15 +386,7 @@ export default function Navbar() {
                                 className="flex h-full flex-col rounded-xl border border-forest-100 bg-cloud/50 p-3 transition hover:-translate-y-0.5 hover:border-accent-600/40 hover:bg-surface hover:shadow-md"
                               >
                                 <span className="relative flex h-28 items-center justify-center">
-                                  {model.product ? (
-                                    <ProductVisual product={model.product} className="h-full w-full" />
-                                  ) : (
-                                    <ModelTile
-                                      category={link.category!}
-                                      image={model.lineup?.image}
-                                      className="h-full w-full"
-                                    />
-                                  )}
+                                  <ProductVisual product={model.product} className="h-full w-full" />
                                 </span>
                                 {model.brand && (
                                   <span className={`mt-2.5 ${groupHeadingClass}`}>{model.brand}</span>
@@ -603,11 +589,9 @@ export default function Navbar() {
                                       onClick={() => setOpen(false)}
                                       className="flex min-h-[44px] flex-col justify-center rounded-lg px-4 py-2 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
                                     >
-                                      <span>
-                                        {model.lineup ? lineupModelName(model.lineup) : model.name}
-                                      </span>
-                                      {model.lineup && (
-                                        <ConditionLine conditions={model.lineup.conditions} />
+                                      <span>{productLabel(model.product)}</span>
+                                      {showsCondition(model.product.conditions) && (
+                                        <ConditionLine conditions={model.product.conditions} />
                                       )}
                                     </Link>
                                   </li>

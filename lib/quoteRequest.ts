@@ -1,5 +1,5 @@
 import type { CategorySlug } from "@/data/categories";
-import { isStockCondition, type StockCondition } from "@/data/lineup";
+import { isStockCondition, type StockCondition } from "@/data/conditions";
 
 /**
  * The quote form — on the homepage hero, and in the quote panel that every
@@ -58,13 +58,11 @@ export interface QuoteRequest {
   note: string;
   /** Catalogue product the visitor came from, when they pressed its button. */
   productId: string;
-  /** A model not in the catalogue yet (data/lineup.ts), when they pressed its button. */
-  modelId: string;
   /** For a service (demo, installation): the robot it is for. */
   forId: string;
   /**
-   * New or pre-owned, when the lineup model is sold that way. Required only
-   * when the model is sold as both; a single-condition model is filled in
+   * New or pre-owned, when the robot is sold that way. Required only when
+   * it is sold as both; a robot sold one way only has it filled in
    * by the server.
    */
   condition: StockCondition | "";
@@ -84,7 +82,6 @@ export const EMPTY_QUOTE: QuoteRequest = {
   floors: "",
   note: "",
   productId: "",
-  modelId: "",
   forId: "",
   condition: "",
 };
@@ -114,7 +111,7 @@ export function isPuduVenue(value: string): value is PuduVenue {
  * Field → error key. Contact errors match `checkout.errors.*`.
  * Robot follow-ups use `heroQuote.errors.*`.
  *
- * `productChosen`: the visitor came from a product's (or lineup model's)
+ * `productChosen`: the visitor came from a product's
  * button, so that answers "which robot" and the interest choice is not asked.
  * `needsCondition`: the model is sold both new and pre-owned, so they pick one.
  */
@@ -165,7 +162,6 @@ export function asQuote(raw: unknown): QuoteRequest {
     floors: str("floors"),
     note: str("note").slice(0, QUOTE_NOTE_MAX),
     productId: str("productId"),
-    modelId: str("modelId"),
     forId: str("forId"),
     condition: isStockCondition(condition) ? condition : "",
   };

@@ -1,5 +1,5 @@
 import type { CategorySlug } from "@/data/categories";
-import type { StockCondition } from "@/data/lineup";
+import type { StockCondition } from "@/data/conditions";
 
 /**
  * The type of product (database column `variant`), never a model name: it
@@ -73,7 +73,15 @@ export type LocalizedText = Record<Locale, string>;
  */
 export type PageBlock =
   | { type: "banner"; image: string }
-  | { type: "feature"; heading: LocalizedText; body: LocalizedText; image?: string }
+  | {
+      type: "feature";
+      heading: LocalizedText;
+      body: LocalizedText;
+      image?: string;
+      /** Small line above the heading. Full-screen pages only (see
+       *  ShowcaseContent): there each feature with a photo is a section. */
+      eyebrow?: LocalizedText;
+    }
   | {
       type: "cardGrid";
       heading?: LocalizedText;
@@ -127,11 +135,48 @@ export interface FaqItem {
   answer: LocalizedText;
 }
 
+/** One key figure under a full-screen page's header, e.g. "2–4 h" / Runtime. */
+export interface ShowcaseFigure {
+  value: string;
+  label: LocalizedText;
+}
+
+/** One body colour, for a robot sold in more than one. */
+export interface ShowcaseColor {
+  label: LocalizedText;
+  /** Swatch fill shown next to the colour name, e.g. "#85909c". */
+  swatch: string;
+  /** Transparent cut-out of the robot in this colour. */
+  image: string;
+}
+
+/**
+ * Content for the full-screen product page (components/product/ShowcasePage):
+ * a dark studio header with the robot, its key figures, one full-width photo
+ * per feature section, then the spec table. A product that has this gets that
+ * design; one without keeps the standard page (gallery beside the details).
+ * Edited in Admin → Products → "Full-screen page".
+ */
+export interface ShowcaseContent {
+  /** Short line above the name, e.g. "Gausium · Commercial cleaning robot". */
+  eyebrow: LocalizedText;
+  /** Transparent cut-out for the header; the product's main image if unset. */
+  heroImage?: string;
+  /** Up to four, in order. */
+  figures: ShowcaseFigure[];
+  /** Two or more colours: the header shows the robot in each, named. */
+  colors?: ShowcaseColor[];
+}
+
+export const MAX_SHOWCASE_FIGURES = 4;
+
 /**
  * Optional rich detail-page content. When absent the product page falls back
  * to the compact layout (description + features + the small specs band).
  */
 export interface ProductPage {
+  /** Full-screen page design; see ShowcaseContent. */
+  showcase?: ShowcaseContent;
   /** Review/demo video near the top (YouTube URL or /path or https mp4). */
   videoUrl?: string;
   videoCaption?: LocalizedText;
@@ -258,3 +303,19 @@ export const hasPrice = (product: Product): product is PricedProduct =>
   product.price !== null;
 
 export const formatBaht = (price: number) => `฿${price.toLocaleString("en-US")}`;
+
+/**
+ * How to name a product to people: "Gausium Phantas", "Pudu Bella" — the
+ * brand is part of how people ask for these — but plain "Pudu1" when the name
+ * already starts with it. Mammotion's own robots and the services keep their
+ * names as they are ("LUBA 3 AWD 5000").
+ */
+export function productLabel(product: Pick<Product, "name" | "brand" | "category">): string {
+  const brand = product.brand;
+  if (!brand || brand === DEFAULT_BRAND || product.category === SERVICE_CATEGORY) {
+    return product.name;
+  }
+  return product.name.toLowerCase().startsWith(brand.toLowerCase())
+    ? product.name
+    : `${brand} ${product.name}`;
+}

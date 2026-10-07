@@ -1,7 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import type { CategorySlug } from "@/data/categories";
 import type { AnatomyModel, Product, ProductPage, RobotFit } from "@/data/products";
-import { isStockCondition } from "@/data/lineup";
+import { isStockCondition } from "@/data/conditions";
 
 /**
  * Supabase-backed product store — the single read/write path for product
@@ -199,6 +199,11 @@ export async function getAllProducts(): Promise<Product[]> {
 const SHOW_HIDDEN =
   process.env.SHOW_HIDDEN_PRODUCTS === "1" && process.env.VERCEL_ENV !== "production";
 
+/** Whether a product is reachable on the storefront (its page, its quote):
+ *  visible, or hidden but shown on a preview with SHOW_HIDDEN_PRODUCTS. */
+export const showsOnStorefront = (product: Product) =>
+  SHOW_HIDDEN || product.visible !== false;
+
 /** Admin catalog — includes hidden products so staff can manage and reveal them. */
 export async function getAllProductsForAdmin(): Promise<Product[]> {
   return fetchAllProducts();
@@ -234,8 +239,10 @@ export async function getProductsByCategory(
   }
   const { data, error } = result;
   if (error) throw new Error(`Failed to load ${category} products: ${error.message}`);
-  // storefront read — hidden products are excluded
-  return (data ?? []).map(rowToProduct).filter((p) => p.visible !== false);
+  // storefront read — hidden products are excluded (except on a preview with
+  // SHOW_HIDDEN_PRODUCTS, like getAllProducts)
+  const products = (data ?? []).map(rowToProduct);
+  return SHOW_HIDDEN ? products : products.filter((p) => p.visible !== false);
 }
 
 export async function addProduct(product: Product): Promise<void> {

@@ -1,4 +1,4 @@
-# Hot Cache — Last Updated: 2026-09-30
+# Hot Cache — Last Updated: 2026-10-07
 
 Read this first. It's the current state in one page; `README.md` has setup,
 stack, layout, CMS, env vars and conventions in depth; `index.md` maps the
@@ -77,8 +77,11 @@ branch `main`.
   lawn mowing, then Gausium Phantas) with a progress tab bar and the quote
   card docked right; the LUBA hero is a studio render faded into a graphite
   set (`components/ui/StudioStage.tsx`); full-width banners for mowers and
-  Phantas, half tiles for Pudu and T-Chef (`components/sections/RobotShowcase.tsx`,
-  placeholders say which photo is needed). Quote form gained Phantas cleaning
+  Phantas, tiles for Pudu and T-Chef (`components/sections/RobotShowcase.tsx`).
+  A slide or banner tied to a robot (`productId`) or a category shows only
+  while that robot / a robot in that category is visible (`onShow` in
+  `data/homeShowcase.ts`), so hidden robots never leave an empty photo slot;
+  a lone tile spans the row. Quote form gained Phantas cleaning
   and T-Chef cooking. Navbar is transparent over the homepage hero until
   scroll (`header[data-clear]` in globals.css). The announcement bar is hidden
   (not rendered in `app/[locale]/layout.tsx`), so its CMS section currently
@@ -143,6 +146,18 @@ branch `main`.
   4. `supabase/add-recommender.sql` — `fit` column, `recommendation_requests`
      table, facts for Phantas and A1. Additive; safe any time after step 3.
      **Ran on live 2026-10-02** (3 robots with facts).
+  4b. `supabase/fill-robot-pages.sql` — the full page content (text, photos,
+     key figures, feature sections, spec table) for Gausium Phantas, T-Chef
+     TC-E10A and Aventurier A1-Youth, generated from the old code-built pages.
+     Leaves price, visible, fit and order alone; the rows stay hidden, so it
+     is safe before the merge and safe to re-run. **Not yet run on live.**
+     Tested on a local Postgres 18 after steps 1–4.
+  Launch order: run 4b → merge this branch to main (ask the owner first) →
+  step 5 → switch the three on (`update products set visible = true where id
+  in ('gausium-phantas','aventurier-a1-youth','t-chef-tc-e10a')`, or tick
+  Visible in Admin). A1-Basic and the four Pudu robots stay hidden until their
+  photos and specs arrive (owner, 2026-10-07); the Delivery tab and the Pudu
+  homepage tile appear by themselves once one is visible.
   5. `supabase/variant-to-product-type.sql` — `variant` becomes the product
      type (mower, pool, cleaner, equipment, cooking, delivery, installation,
      demo), never a model name. Run it right AFTER this branch's code is live
@@ -213,37 +228,37 @@ branch `main`.
 - Navbar (2026-09-30, branch): one tab per `nav: true` category in
   `data/categories.ts`, labelled by `categories.<slug>.nav` in messages:
   Lawn Mowers, Cleaner, Smart Equipment, Cooker, Delivery (the Pudu robots);
-  Thai labels are drafts. Plus one "About" menu that also holds Contact and
+  a tab shows only while its category has a visible product (Delivery is
+  hidden until a Pudu robot is switched on); Thai labels are drafts. Plus one "About" menu that also holds Contact and
   Support — all eight didn't fit on one line in Thai. Tabs show from xl
   (1280px); below that they're in the drawer. Category panels and the accent
   track are positioned against the `<header>` (the `<nav>` is deliberately not
   positioned) so panels span the full width. The Thai tab row has ~40px to
   spare at 1280px — re-measure if labels get longer. The search field sits in
   a fixed slot and opens leftwards over the tabs (it must not widen the bar).
-- Models without a catalogue product (Phantas, Aventurier A1-Basic/A1-Youth,
-  T-Chef TC-E10A, Pudu1/Pudu2/Bella/Ketty) live in `data/lineup.ts`: the
-  navbar and category pages list them, and "Get a quote" sends `modelId`
-  (checked server-side) so the sales email names the model. A category shows
-  lineup models only while it has no catalogue products; when real products
-  are added in Admin, add all of that category's models and drop its lineup
-  entries.
-- Gausium Phantas has a product page built in code (Admin → Products is
-  blocked by Cloudflare in testing): content in `data/modelPages.ts` (specs
-  from the business's spec sheet; Thai lines are drafts), layout in
-  `components/model/ModelPageView.tsx`, route
-  `app/[locale]/products/gausium-phantas/`. That static route wins over
-  `products/[id]` — delete it when Phantas is added in Admin. Photos in
-  `public/models/phantas/`.
-- T-Chef TC-E10A also has a code-built page (same setup; content from T-Chef's
-  official page, photos in `public/models/t-chef/`): delete the route
-  `app/[locale]/products/t-chef-tc-e10a/` once T-Chef is added in Admin.
-- Phantas, Aventurier, T-Chef and the Pudu robots are second-hand stock,
-  labelled "Pre-owned" (Thai draft: ผ่านการใช้งาน) everywhere they appear —
-  cards, navbar menus, the Phantas page (badge + first spec row), the
-  homepage slide and banners, and the sales email (decision 2026-10-01).
-  Flag: `preOwned` in `data/lineup.ts` / `data/modelPages.ts`;
-  `components/ui/PreOwnedBadge.tsx`. Open question: the hero promise
-  "Warranty in Thailand" — what warranty applies to pre-owned units?
+- **Every robot is an Admin product** (branch, 2026-10-07). The code-only
+  robots (`data/lineup.ts`), the code-built pages (`data/modelPages.ts`,
+  `components/model/ModelPageView.tsx`, the static `products/gausium-phantas`,
+  `t-chef-tc-e10a`, `aventurier-a1-youth` routes) and the quote form's
+  `modelId` are gone. Navbar, category pages, homepage and quote form read
+  only Supabase products; hidden products appear nowhere (`showsOnStorefront`
+  in `lib/productStore.ts`; `SHOW_HIDDEN_PRODUCTS=1` shows them on previews).
+- **Full-screen product page** (Admin → Products → page builder → "Full-screen
+  page"): when a product's `page.showcase` is set, `products/[id]` renders
+  `components/product/ShowcasePage.tsx` (DJI-style dark header with the
+  robot, the line above the name, up to 4 key figures, optional colours;
+  one full-width photo per Feature section that has an image; spec table).
+  Feature sections without an image, What's in the box and FAQ still show
+  under it. Off = the standard gallery page. Validated in
+  `lib/productValidation.ts` (`parsePage`). Photos stay in `public/models/`
+  and `public/studio/`.
+- How each robot is sold is the product's `conditions` column (`new`,
+  `pre-owned` or both; helpers in `data/conditions.ts`). The label shows on
+  cards and menus only when pre-owned is among them (`showsCondition`); the
+  full-screen header and spec table always show it; the quote form asks
+  brand-new or pre-owned when both apply. Thai "ผ่านการใช้งาน" is a draft.
+  Open question: the hero promise "Warranty in Thailand" — what warranty
+  applies to pre-owned units?
 
 ## Conventions for agents
 

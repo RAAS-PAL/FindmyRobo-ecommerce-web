@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Calendar, Pause, Play } from "lucide-react";
@@ -8,7 +8,8 @@ import { Link } from "@/i18n/navigation";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { pick } from "@/data/siteContent";
-import { heroSlides } from "@/data/homeShowcase";
+import { heroSlides, onShow } from "@/data/homeShowcase";
+import { useProducts } from "@/components/ProductsProvider";
 import ShowcasePhoto from "@/components/ui/ShowcasePhoto";
 import HeroQuote from "@/components/quote/HeroQuote";
 
@@ -49,6 +50,9 @@ export default function HeroSection() {
   const locale = useLocale();
   const { home } = useSiteContent();
   const { openQuote } = useQuote();
+  // a robot's slide only while that robot is on show (not hidden in Admin)
+  const { products } = useProducts();
+  const slides = useMemo(() => onShow(heroSlides, products), [products]);
   // The server can't know either, so it renders the still, paused state and
   // the browser picks up from there once hydrated (no markup mismatch).
   const reduceMotion = useSyncExternalStore(
@@ -71,9 +75,9 @@ export default function HeroSection() {
   const autoplay = !reduceMotion && !userPaused;
   const running = autoplay && !hovered && !focused && !formOpen;
 
-  const next = useCallback(() => setIndex((i) => (i + 1) % heroSlides.length), []);
+  const next = useCallback(() => setIndex((i) => (i + 1) % slides.length), [slides.length]);
 
-  const slide = heroSlides[index];
+  const slide = slides[index % slides.length];
   const headline = slide.headline ? pick(slide.headline, locale) : pick(home.heroHeadline, locale);
   const accent = slide.accent ? pick(slide.accent, locale) : pick(home.heroAccent, locale);
   const sub = slide.sub ? pick(slide.sub, locale) : pick(home.heroSub, locale);
@@ -98,7 +102,7 @@ export default function HeroSection() {
         // screen (nothing sits above the navbar)
         className="relative h-[calc(75vw+69px)] sm:h-[calc(56.25vw+69px)] lg:h-svh lg:min-h-[42rem] lg:max-h-[66rem]"
       >
-        {heroSlides.map((s, i) => (
+        {slides.map((s, i) => (
           <div
             key={s.id}
             aria-hidden={i !== index}
@@ -173,7 +177,7 @@ export default function HeroSection() {
                   ) : (
                     <button
                       type="button"
-                      onClick={() => openQuote({ interest: slide.interest, modelId: slide.modelId })}
+                      onClick={() => openQuote({ interest: slide.interest, productId: slide.productId })}
                       className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-content/20 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/50 lg:border-white/40 lg:text-white lg:hover:border-white"
                     >
                       {t("getQuote")}
@@ -197,7 +201,7 @@ export default function HeroSection() {
           {/* ---- tabs: which family is on show, and how long until the next ---- */}
           <div className="mt-8 flex items-stretch gap-3 lg:mt-10">
             <div role="tablist" aria-label={t("slidesLabel")} className="grid flex-1 grid-cols-2 gap-3">
-              {heroSlides.map((s, i) => {
+              {slides.map((s, i) => {
                 const active = i === index;
                 return (
                   <button

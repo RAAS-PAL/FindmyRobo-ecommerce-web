@@ -6,7 +6,9 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import RobotIllustration from "@/components/ui/RobotIllustration";
-import { type Locale, type Product, type SpecKey } from "@/data/products";
+import { productLabel, type Locale, type Product, type SpecKey } from "@/data/products";
+import { showsCondition } from "@/data/conditions";
+import ConditionLine from "@/components/ui/ConditionLine";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
 
 /**
@@ -52,9 +54,10 @@ export default function FeaturedProductCard({
     MAX_CARD_SPECS
   );
 
-  // Home card prefers a dedicated lifestyle photo; falls back to the product
-  // render used everywhere else.
-  const cardImage = product.homeImage ?? product.imageUrl;
+  // Home card prefers a dedicated lifestyle photo. Without one, the product's
+  // transparent cut-out stands on a dark studio set (stretched full-bleed it
+  // would be cropped against nothing).
+  const label = productLabel(product);
   const hoverVideo = product.hoverVideo;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [active, setActive] = useState(false);
@@ -99,14 +102,24 @@ export default function FeaturedProductCard({
       <Link href={`/products/${product.id}`} onClick={onLinkClick} className="block h-full w-full">
         {/* full-bleed background: home photo (or product render), else the
             variant illustration */}
-        {cardImage ? (
+        {product.homeImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={cardImage}
-            alt={product.name}
+            src={product.homeImage}
+            alt={label}
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
+        ) : product.imageUrl ? (
+          <span className="absolute inset-0 bg-[radial-gradient(85%_65%_at_50%_68%,#272c37_0%,#14171d_55%,#0b0d10_100%)]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={product.imageUrl}
+              alt={label}
+              loading="lazy"
+              className="absolute bottom-[15%] left-[8%] h-[46%] w-[84%] object-contain object-bottom transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          </span>
         ) : (
           <span className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-10">
             <RobotIllustration variant={product.variant} className="h-full w-auto" />
@@ -150,8 +163,11 @@ export default function FeaturedProductCard({
         <span className="absolute inset-0 z-[2] flex flex-col justify-between p-6 sm:p-7">
           <span className="flex flex-col items-start gap-3">
             <span className="font-display text-2xl font-extrabold leading-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:text-3xl">
-              {product.name}
+              {label}
             </span>
+            {showsCondition(product.conditions) && (
+              <ConditionLine conditions={product.conditions} tone="dark" />
+            )}
             <span className="max-w-[88%] text-[13.5px] font-medium leading-snug text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)]">
               {product.tagline[locale]}
             </span>

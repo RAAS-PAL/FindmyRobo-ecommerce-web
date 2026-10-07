@@ -14,7 +14,9 @@ deployment: `README.md`.
 - `page.tsx` — homepage sections (`components/sections/*`)
 - `shop/`, `shop/[category]/` — listings (coming-soon categories get a teaser)
 - `products/[id]/` — product page (gallery, specs, tech anatomy, FAQ, reviews,
-  floating bar); `products/request-a-demo` is the demo booking product
+  floating bar), or the full-screen design (`components/product/ShowcasePage.tsx`)
+  when the product's page has `showcase` content; `products/request-a-demo`
+  is the demo booking product
 - `about/`, `contact-sales/`, `location/`, `refund-policy/`, `compare/`,
   `search/`, `order-status/`
 - `login/`, `signup/`, `forgot-password/`, `reset-password/`, `account/`
@@ -49,8 +51,9 @@ deployment: `README.md`.
   registered address, Google Maps place + URLs, organisation
 - `data/siteContent.ts`, `data/about.ts` — built-in content (CMS fallback)
 - `data/categories.ts` — categories and the navbar's tab order (`nav: true`);
-  `data/lineup.ts` — models sold before they have catalogue products;
-  `data/homeShowcase.ts` — homepage hero slides and banners; `data/products.ts`,
+  `data/conditions.ts` — how a robot is sold (brand-new / pre-owned);
+  `data/homeShowcase.ts` — homepage hero slides and banners (each shows only
+  while its robot is visible); `data/products.ts`,
   `products.json` — fallback catalogue (live catalogue is in Supabase)
 - `data/techAnatomy.ts`, `data/returnPolicy.ts`
 - `messages/en.json`, `messages/th.json` — all UI copy (identical key sets)

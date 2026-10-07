@@ -7,10 +7,8 @@ import { routing } from "@/i18n/routing";
 import CategoryTabs from "@/components/ui/CategoryTabs";
 import FadeIn from "@/components/ui/FadeIn";
 import ProductCard from "@/components/ui/ProductCard";
-import LineupCard from "@/components/ui/LineupCard";
 import { collapseInstallTiers, isInstallTier } from "@/lib/installTiers";
 import { categories, type CategorySlug } from "@/data/categories";
-import { lineupFor } from "@/data/lineup";
 import { getProductsByCategory } from "@/lib/productStore";
 import { pageAlternates } from "@/lib/seo";
 
@@ -47,12 +45,10 @@ export default async function CategoryPage({
 
   const t = await getTranslations("shop");
   const tc = await getTranslations("categories");
-  const tn = await getTranslations("nav");
   const slug = cat.slug as CategorySlug;
+  // Robots on show only: a category whose robots are all still hidden (no
+  // photos or specs yet) shows the coming-soon panel instead of empty cards.
   const items = await getProductsByCategory(slug);
-  // Models we sell that aren't in the catalogue yet (no product pages): shown
-  // until the category has catalogue products of its own.
-  const models = cat.available && items.length === 0 ? lineupFor(slug) : [];
 
   return (
     <main className="bg-cloud">
@@ -84,12 +80,6 @@ export default async function CategoryPage({
               />
             ))}
           </div>
-        ) : models.length > 0 ? (
-          <div className="mt-10 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {models.map((model) => (
-              <LineupCard key={model.id} model={model} />
-            ))}
-          </div>
         ) : (
           <FadeIn className="mt-10">
             <div className="flex flex-col items-center rounded-3xl border border-forest-100 bg-surface px-6 py-20 text-center">
@@ -108,7 +98,7 @@ export default async function CategoryPage({
                   className="flex min-h-[48px] items-center gap-2 rounded-full bg-accent px-7 text-sm font-bold text-on-accent transition-shadow duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)]"
                 >
                   <Calendar className="h-4 w-4" aria-hidden="true" />
-                  {tn("bookDemo")}
+                  {t("bookDemo")}
                 </Link>
                 <Link
                   href="/shop"

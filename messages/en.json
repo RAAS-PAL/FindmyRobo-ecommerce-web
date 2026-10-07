@@ -527,7 +527,8 @@
         "faqQuestion": "Question",
         "faqAnswer": "Answer",
         "anatomyModel": "Which robot's diagram",
-        "anatomyModelHint": "Only pick this product's own model. Another model's parts and figures would be wrong for this robot."
+        "anatomyModelHint": "Only pick this product's own model. Another model's parts and figures would be wrong for this robot.",
+        "eyebrowOptional": "Small line above the heading (optional, full-screen page only)"
       },
       "positions": {
         "right": "Image on the right",
@@ -557,6 +558,31 @@
       "intro": {
         "title": "Intro video",
         "note": "shown under the product information (optional)"
+      },
+      "showcasePage": {
+        "title": "Full-screen page",
+        "note": "a dark header with the robot and its key figures, then one full-width photo per Feature section that has an image",
+        "enable": "Use the full-screen page for this product",
+        "enableHint": "Off: the product keeps the standard page (photo gallery beside the details). The spec table, What's in the box and FAQ below are used either way.",
+        "eyebrow": "Line above the name",
+        "eyebrowHint": "e.g. “Gausium · Commercial cleaning robot”. Required for the full-screen page.",
+        "heroImage": "Header image URL (optional)",
+        "heroImageHint": "A transparent cut-out of the robot. Blank uses the main product image.",
+        "figuresTitle": "Key figures",
+        "figuresNote": "up to 4, shown in a row under the header",
+        "figureLabel": "Figure {number}",
+        "figureValue": "Value",
+        "figureName": "What it is",
+        "addFigure": "Add figure",
+        "removeFigure": "Remove figure {number}",
+        "colorsTitle": "Colours",
+        "colorsNote": "only for a robot sold in two or more colours: the header then shows it in each",
+        "colorLabel": "Colour {number}",
+        "colorName": "Colour name",
+        "colorSwatch": "Swatch",
+        "colorImage": "Cut-out image URL",
+        "addColor": "Add colour",
+        "removeColor": "Remove colour {number}"
       },
       "content": {
         "title": "Content sections",
@@ -594,7 +620,9 @@
         "group": "Specification group {number} and all of its rows will be removed. The change takes effect when you save the product.",
         "row": "Row {number} will be removed from this specification group. The change takes effect when you save the product.",
         "boxItem": "Item {number} will be removed from what's in the box. The change takes effect when you save the product.",
-        "faq": "Question {number} will be removed. The change takes effect when you save the product."
+        "faq": "Question {number} will be removed. The change takes effect when you save the product.",
+        "figure": "Figure {number} will be removed. The change takes effect when you save the product.",
+        "color": "Colour {number} will be removed. The change takes effect when you save the product."
       },
       "anatomyModels": {
         "none": "None (section hidden)",
@@ -1025,6 +1053,7 @@
     "comingSoonTitle": "Coming soon to Thailand",
     "comingSoonBody": "We are working with our partners to bring this category to you. Book a demo to hear about it first.",
     "backToShop": "Browse all robots",
+    "bookDemo": "Book a demo",
     "metaTitle": "Shop Robots — FindMyRobo",
     "installCardName": "Installation Service",
     "installCardTagline": "Professional on-site setup — choose your coverage area on the next page.",

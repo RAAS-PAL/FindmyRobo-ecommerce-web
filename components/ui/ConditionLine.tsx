@@ -1,10 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { StockCondition } from "@/data/lineup";
+import type { StockCondition } from "@/data/conditions";
 
 /**
- * How a lineup model is sold: one square label per way it is sold
+ * How a robot is sold: one square label per way it is sold
  * ("Brand-new", "Pre-owned", or both). Square corners, so it reads as a
  * status on the card rather than a sentence under the name.
  */

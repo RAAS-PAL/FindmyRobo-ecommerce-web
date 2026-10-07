@@ -13,7 +13,8 @@ import {
   X,
 } from "lucide-react";
 import { useProducts } from "@/components/ProductsProvider";
-import { getLineupModel, lineupModelName, type StockCondition } from "@/data/lineup";
+import { showsCondition, type StockCondition } from "@/data/conditions";
+import { productLabel, SERVICE_CATEGORY } from "@/data/products";
 import ConditionLine from "@/components/ui/ConditionLine";
 import {
   CATEGORY_INTEREST,
@@ -97,7 +98,6 @@ export default function QuoteForm({
   productId,
   forId,
   interest,
-  modelId,
   onExpandedChange,
 }: {
   variant?: "card" | "panel";
@@ -105,8 +105,6 @@ export default function QuoteForm({
   forId?: string;
   /** Preselected robot family (a homepage banner's button). */
   interest?: QuoteRequest["interest"];
-  /** A lineup model's button (no catalogue product yet): answers "which robot". */
-  modelId?: string;
   /** Card only: told when it opens or closes, so the page can make room. */
   onExpandedChange?: (expanded: boolean) => void;
 }) {
@@ -121,9 +119,11 @@ export default function QuoteForm({
   const { getProduct } = useProducts();
   const product = productId ? getProduct(productId) : undefined;
   const forProduct = forId ? getProduct(forId) : undefined;
-  const model = !product && modelId ? getLineupModel(modelId) : undefined;
+  // A robot (not a service) is sold new, pre-owned or both: the form shows how,
+  // and asks which when it's both.
+  const sold = product && product.category !== SERVICE_CATEGORY ? product : undefined;
   // What the button asked about — shown at the top, and the answer to "which robot".
-  const selection = product?.name ?? (model ? lineupModelName(model) : undefined);
+  const selection = product ? productLabel(product) : undefined;
   const panel = variant === "panel";
 
   const [expanded, setExpandedState] = useState(false);
@@ -138,14 +138,12 @@ export default function QuoteForm({
   const [form, setForm] = useState<QuoteRequest>(() => ({
     ...EMPTY_QUOTE,
     productId: product?.id ?? "",
-    modelId: model?.id ?? "",
     forId: forProduct?.id ?? "",
-    condition: model?.conditions.length === 1 ? model.conditions[0] : "",
+    condition: sold?.conditions.length === 1 ? sold.conditions[0] : "",
     // The robot's category still sets its follow-up (a mower's lawn area,
     // a Pudu's venue), so it is kept even though the choice isn't shown.
     interest:
       (product && CATEGORY_INTEREST[product.category]) ||
-      (model && CATEGORY_INTEREST[model.category]) ||
       interest ||
       "",
   }));
@@ -248,7 +246,7 @@ export default function QuoteForm({
     });
   };
 
-  const needsCondition = !!model && model.conditions.length > 1;
+  const needsCondition = !!sold && sold.conditions.length > 1;
 
   const chooseCondition = (condition: StockCondition) => {
     setForm((current) => ({ ...current, condition }));
@@ -393,8 +391,8 @@ export default function QuoteForm({
                     <p className="font-display text-[15px] leading-snug font-bold text-content">
                       {selection}
                     </p>
-                    {model && model.conditions.length === 1 && (
-                      <ConditionLine conditions={model.conditions} className="mt-0.5" />
+                    {sold && sold.conditions.length === 1 && showsCondition(sold.conditions) && (
+                      <ConditionLine conditions={sold.conditions} className="mt-0.5" />
                     )}
                     {forProduct && (
                       <p className="text-[12px] font-medium text-accent-600">
@@ -405,7 +403,7 @@ export default function QuoteForm({
                 </div>
               )}
 
-              {model && model.conditions.length > 1 && (
+              {sold && sold.conditions.length > 1 && (
                 <div className="mt-3.5 flex flex-col gap-1.5">
                   <p id={fieldId("condition")} className="text-[12px] font-medium tracking-wide text-ink-muted">
                     {tcond("ask")}
@@ -418,7 +416,7 @@ export default function QuoteForm({
                     aria-labelledby={fieldId("condition")}
                     className="flex flex-wrap gap-1.5"
                   >
-                    {model.conditions.map((condition) => {
+                    {sold.conditions.map((condition) => {
                       const selected = form.condition === condition;
                       return (
                         <button
@@ -509,7 +507,7 @@ export default function QuoteForm({
                         className={inputClass(!!errors.email)}
                       />
                     </Field>
-                    {/* a product or model from the button already answers "which robot" */}
+                    {/* a product from the button already answers "which robot" */}
                     {!selection && (
                       <div className="col-span-2">
                         <div className="flex flex-col gap-1.5">

@@ -6,7 +6,9 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
-import { type Locale, type Product } from "@/data/products";
+import { productLabel, type Locale, type Product } from "@/data/products";
+import { showsCondition } from "@/data/conditions";
+import ConditionLine from "@/components/ui/ConditionLine";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
 
 export default function ProductCard({
@@ -75,6 +77,14 @@ export default function ProductCard({
             big ? "min-h-[312px]" : "min-h-60"
           }`}
         >
+          {/* second-hand stock is labelled wherever it appears */}
+          {showsCondition(product.conditions) && (
+            <ConditionLine
+              conditions={product.conditions}
+              stack
+              className="absolute top-3 left-3 z-10"
+            />
+          )}
           {product.preorder && (
             <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent-300">
               {t("preorder")}
@@ -115,7 +125,7 @@ export default function ProductCard({
             {tc(`${product.category}.name`)}
           </span>
           <span className="font-display text-[15px] font-bold leading-snug text-content">
-            {displayName ?? product.name}
+            {displayName ?? productLabel(product)}
           </span>
           <span className="text-[13px] leading-relaxed text-ink-muted">
             {displayTagline ?? product.tagline[locale]}

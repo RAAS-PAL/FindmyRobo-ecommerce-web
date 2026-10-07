@@ -1,5 +1,7 @@
 import type { Bilingual } from "@/data/siteContent";
 import type { QuoteInterest } from "@/lib/quoteRequest";
+import type { CategorySlug } from "@/data/categories";
+import type { Product } from "@/data/products";
 
 /**
  * Homepage robot showcase: the hero slides and the product-family banners
@@ -121,8 +123,9 @@ export interface HeroSlide extends ShowcasePhoto {
   href: string;
   /** Preselects the quote form's robot. */
   interest: QuoteInterest;
-  /** A single model's slide or banner: names it in the quote (data/lineup.ts). */
-  modelId?: string;
+  /** A single robot's slide: shown only while that product is on show, and
+   *  its quote button names it. */
+  productId?: string;
 }
 
 export interface RobotFamily extends ShowcasePhoto {
@@ -135,8 +138,27 @@ export interface RobotFamily extends ShowcasePhoto {
   /** "Learn more" target; null when there is no page yet. */
   href: string | null;
   interest: QuoteInterest;
-  /** A single model's slide or banner: names it in the quote (data/lineup.ts). */
-  modelId?: string;
+  /** A single robot's banner: shown only while that product is on show, and
+   *  its quote button names it. */
+  productId?: string;
+  /** A family's banner: shown only while that category has a robot on show. */
+  category?: CategorySlug;
+}
+
+/**
+ * The slides and banners whose robots are on the storefront. One whose robot
+ * is still hidden in Admin (no photos or specs yet) is left out, and comes
+ * back by itself once the robot is switched on.
+ */
+export function onShow<T extends { productId?: string; category?: CategorySlug }>(
+  items: T[],
+  products: Pick<Product, "id" | "category">[]
+): T[] {
+  return items.filter(
+    (item) =>
+      (!item.productId || products.some((p) => p.id === item.productId)) &&
+      (!item.category || products.some((p) => p.category === item.category))
+  );
 }
 
 export const heroSlides: HeroSlide[] = [
@@ -179,7 +201,7 @@ export const heroSlides: HeroSlide[] = [
     },
     href: "/products/gausium-phantas",
     interest: "commercial-cleaning",
-    modelId: "gausium-phantas",
+    productId: "gausium-phantas",
     image: null,
     // Gausium's transparent product render (2026-09-30); its own soft floor
     // glow reads as a spotlight on the dark set
@@ -223,7 +245,7 @@ export const featuredFamilies: RobotFamily[] = [
     },
     href: "/products/gausium-phantas",
     interest: "commercial-cleaning",
-    modelId: "gausium-phantas",
+    productId: "gausium-phantas",
     // Same office render as the product page, widened a little further so
     // the robot sits smaller in this banner. The product page keeps office.webp.
     image: "/models/phantas/office-home.webp",
@@ -243,6 +265,8 @@ export const moreFamilies: RobotFamily[] = [
     },
     href: "/shop/delivery-robots",
     interest: "pudu-delivery",
+    // left out until a Pudu robot is on show (it has no photo yet either)
+    category: "delivery-robots",
     image: null,
     shot: {
       en: "Bella or Ketty carrying dishes in a restaurant · 4:3 · robot centred, full height in frame",
@@ -260,7 +284,7 @@ export const moreFamilies: RobotFamily[] = [
     },
     href: "/products/t-chef-tc-e10a",
     interest: "cooking",
-    modelId: "t-chef-tc-e10a",
+    productId: "t-chef-tc-e10a",
     // The machine (cut out of the business's high-res render) on a light
     // studio backdrop drawn by the card. No lifestyle photo yet.
     image: null,
