@@ -84,8 +84,8 @@ export default function ProductReorder({ products }: { products: Product[] }) {
             }}
             className={`flex items-center gap-3 rounded-2xl border bg-surface p-3 transition ${
               draggedId === product.id
-                ? "border-gold opacity-50"
-                : "border-forest-100 hover:border-gold/60"
+                ? "border-accent opacity-50"
+                : "border-forest-100 hover:border-accent/60"
             }`}
           >
             <GripVertical className="h-5 w-5 shrink-0 cursor-grab text-ink-muted active:cursor-grabbing" aria-hidden="true" />
@@ -107,7 +107,7 @@ export default function ProductReorder({ products }: { products: Product[] }) {
                 onClick={() => move(index, index - 1)}
                 disabled={index === 0}
                 aria-label={t("moveUp", { name: product.name })}
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-gold-600 disabled:cursor-not-allowed disabled:opacity-25"
+                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600 disabled:cursor-not-allowed disabled:opacity-25"
               >
                 <ArrowUp className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -116,7 +116,7 @@ export default function ProductReorder({ products }: { products: Product[] }) {
                 onClick={() => move(index, index + 1)}
                 disabled={index === items.length - 1}
                 aria-label={t("moveDown", { name: product.name })}
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-gold-600 disabled:cursor-not-allowed disabled:opacity-25"
+                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600 disabled:cursor-not-allowed disabled:opacity-25"
               >
                 <ArrowDown className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -131,7 +131,7 @@ export default function ProductReorder({ products }: { products: Product[] }) {
           type="button"
           onClick={save}
           disabled={busy || items.length === 0}
-          className="flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-gold px-7 text-sm font-bold text-forest-950 transition-shadow hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-accent px-7 text-sm font-bold text-on-accent transition-shadow hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Save className="h-4 w-4" aria-hidden="true" />}
           {busy ? t("saving") : t("save")}

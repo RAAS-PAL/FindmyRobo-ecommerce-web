@@ -48,9 +48,10 @@ export default function LineChatButton() {
         aria-expanded={open}
         aria-controls={popoverId}
         aria-label={t("lineShowQr", { id: lineId })}
-        className="mt-1.5 flex h-10 w-full cursor-pointer items-center gap-2.5 rounded-full border border-[#06C755]/50 bg-surface py-1 pr-3.5 pl-1 text-[13.5px] font-bold text-content transition-colors hover:bg-[#06C755]/10 focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-[#06C755]/50"
+        // grey, not LINE green: a quiet second option beside the blue quote card
+        className="mt-1.5 flex h-10 w-full cursor-pointer items-center gap-2.5 rounded-full border border-forest-100 bg-surface py-1 pr-3.5 pl-1 text-[13.5px] font-bold text-content transition-colors hover:bg-cloud focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40"
       >
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#06C755] text-white">
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-forest-700 text-white">
           <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
         </span>
         <span>LINE {lineId}</span>
@@ -84,7 +85,7 @@ export default function LineChatButton() {
               href={lineUrl}
               target="_blank"
               rel="noopener noreferrer"
-              // dark text, like the site's gold buttons: white on LINE green
+              // dark text: white on LINE green
               // is too faint to read at this size
               className="mt-3 flex h-10 items-center justify-center gap-1.5 rounded-full bg-[#06C755] text-[13px] font-bold text-forest-950 transition-opacity hover:opacity-90"
             >

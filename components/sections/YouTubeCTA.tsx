@@ -20,7 +20,7 @@ export default function YouTubeCTA() {
     >
       {/* ambient glows */}
       <div
-        className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-gold/[0.14] blur-[90px]"
+        className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-accent/[0.14] blur-[90px]"
         aria-hidden="true"
       />
       <div
@@ -36,7 +36,7 @@ export default function YouTubeCTA() {
         className="relative mx-auto flex max-w-3xl flex-col items-center px-4 text-center sm:px-6"
       >
         <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-forest-950 shadow-[0_16px_32px_-16px_rgba(0,0,0,0.5)]">
-          <Play className="h-7 w-7 fill-gold text-gold" aria-hidden="true" />
+          <Play className="h-7 w-7 fill-accent text-accent-300" aria-hidden="true" />
         </span>
         <h2 className="mt-7 font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
           {t("heading")}

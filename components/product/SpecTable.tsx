@@ -24,7 +24,7 @@ export default function SpecTable({
         {productName}
       </h2>
       <div className="mt-10 overflow-hidden rounded-2xl border border-forest-100">
-        <p className="bg-gold px-6 py-4 text-center text-[17.5px] font-bold text-forest-950">
+        <p className="bg-accent px-6 py-4 text-center text-[17.5px] font-bold text-on-accent">
           {heading}
         </p>
         <dl>

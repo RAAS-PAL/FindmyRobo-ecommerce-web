@@ -40,8 +40,8 @@ export default function AdminLanguageSwitcher({
       title={t("switchLanguage")}
       className={`flex min-h-10 cursor-pointer items-center gap-2 rounded-full px-3.5 text-[13px] font-semibold transition-colors disabled:cursor-wait disabled:opacity-60 ${
         variant === "dark"
-          ? "text-white/80 hover:bg-white/10 hover:text-gold"
-          : "border border-forest-100 bg-surface text-content hover:border-gold hover:text-gold-600"
+          ? "text-white/80 hover:bg-white/10 hover:text-accent-300"
+          : "border border-forest-100 bg-surface text-content hover:border-accent hover:text-accent-600"
       }`}
     >
       <Languages className="h-4 w-4" aria-hidden="true" />

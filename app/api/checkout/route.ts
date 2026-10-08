@@ -85,6 +85,12 @@ export async function POST(request: Request) {
         { status: 409 }
       );
     }
+    if (product.price === null) {
+      return NextResponse.json(
+        { error: `"${product.name}" has no price yet; please ask us for a quote` },
+        { status: 409 }
+      );
+    }
     const forProduct = item.forId ? byId.get(item.forId) : undefined;
     items.push({
       id: product.id,

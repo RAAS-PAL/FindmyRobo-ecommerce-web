@@ -18,12 +18,12 @@ export default async function ReorderProductsPage() {
     <div className="mx-auto max-w-3xl">
       <Link
         href="/admin"
-        className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-ink-muted transition-colors hover:text-gold-600"
+        className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-ink-muted transition-colors hover:text-accent-600"
       >
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         {t("backToProducts")}
       </Link>
-      <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
+      <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-600">
         {t("eyebrow")}
       </p>
       <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-content">

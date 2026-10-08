@@ -61,7 +61,7 @@ const SUPPORT_HREFS: (string | null)[] = [
  * translated array. Keep this in step with the `about` array in
  * messages/{en,th}.json; adding a label without a href here falls back to "#".
  */
-const ABOUT_HREFS = ["/about", "/#contact", "/#support", "/shop"];
+const ABOUT_HREFS = ["/about", "/#contact", "/#support", "/recommend"];
 
 /**
  * Icon + accessible name per platform. What actually renders is the
@@ -137,7 +137,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
                       target="_blank"
                       rel="noopener noreferrer me"
                       aria-label={label}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:border-gold hover:text-gold"
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:border-accent hover:text-accent-300"
                     >
                       <Icon className="h-4.5 w-4.5" />
                     </a>
@@ -150,7 +150,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
           {/* products — the only list here with real destinations; the rest
               stay "#" until their pages exist. */}
           <nav aria-label={t("productsTitle")} className="lg:col-span-2">
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">
               {t("productsTitle")}
             </h3>
             <ul className="mt-5 space-y-3">
@@ -158,7 +158,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
                 <li key={product.id}>
                   <Link
                     href={`/products/${product.id}`}
-                    className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-gold"
+                    className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-accent-300"
                   >
                     {product.name}
                   </Link>
@@ -167,7 +167,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
               <li>
                 <Link
                   href="/shop"
-                  className="inline-block py-0.5 text-sm font-semibold text-gold/80 transition-colors hover:text-gold"
+                  className="inline-block py-0.5 text-sm font-semibold text-accent-300/80 transition-colors hover:text-accent-300"
                 >
                   {t("viewAll")}
                 </Link>
@@ -179,7 +179,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
               is still null. See that list for what each one is waiting on. */}
           {supportLinks.length > 0 && (
             <nav aria-label={t("supportTitle")} className="lg:col-span-2">
-              <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">
                 {t("supportTitle")}
               </h3>
               <ul className="mt-5 space-y-3">
@@ -187,7 +187,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
                   <li key={label}>
                     <a
                       href={href}
-                      className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-gold"
+                      className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-accent-300"
                     >
                       {label}
                     </a>
@@ -199,7 +199,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
 
           {/* about */}
           <nav aria-label={t("aboutTitle")} className="lg:col-span-2">
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">
               {t("aboutTitle")}
             </h3>
             <ul className="mt-5 space-y-3">
@@ -207,7 +207,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
                 <li key={item}>
                   <Link
                     href={ABOUT_HREFS[index] ?? "#"}
-                    className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-gold"
+                    className="inline-block py-0.5 text-sm text-white/70 transition-colors hover:text-accent-300"
                   >
                     {item}
                   </Link>
@@ -225,7 +225,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
           >
             <h3
               id="footer-contact-heading"
-              className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gold"
+              className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-300"
             >
               {t("contactTitle")}
             </h3>
@@ -233,18 +233,18 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
               <li>
                 <a
                   href={`tel:${phone.replace(/\s/g, "")}`}
-                  className="inline-flex items-center gap-2.5 py-0.5 transition-colors hover:text-gold"
+                  className="inline-flex items-center gap-2.5 py-0.5 transition-colors hover:text-accent-300"
                 >
-                  <Phone className="h-4 w-4 shrink-0 text-gold/70" aria-hidden="true" />
+                  <Phone className="h-4 w-4 shrink-0 text-accent-300/70" aria-hidden="true" />
                   {phone}
                 </a>
               </li>
               <li>
                 <a
                   href={`mailto:${email}`}
-                  className="inline-flex items-center gap-2.5 break-all py-0.5 transition-colors hover:text-gold"
+                  className="inline-flex items-center gap-2.5 break-all py-0.5 transition-colors hover:text-accent-300"
                 >
-                  <Mail className="h-4 w-4 shrink-0 text-gold/70" aria-hidden="true" />
+                  <Mail className="h-4 w-4 shrink-0 text-accent-300/70" aria-hidden="true" />
                   {email}
                 </a>
               </li>
@@ -253,9 +253,9 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
                   href={salesMapUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex gap-2.5 py-0.5 leading-relaxed transition-colors hover:text-gold"
+                  className="flex gap-2.5 py-0.5 leading-relaxed transition-colors hover:text-accent-300"
                 >
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold/70" aria-hidden="true" />
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-300/70" aria-hidden="true" />
                   <address className="not-italic">
                     {addressLines.map((line) => (
                       <span key={line} className="block">

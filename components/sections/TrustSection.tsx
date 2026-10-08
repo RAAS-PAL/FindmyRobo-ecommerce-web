@@ -23,7 +23,7 @@ export default function TrustSection() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-5xl">
@@ -32,7 +32,7 @@ export default function TrustSection() {
           <p className="mt-6 max-w-lg text-base leading-relaxed text-ink-muted sm:text-lg">
             {pick(home.trustBody, locale)}
           </p>
-          <div className="mt-8 h-1 w-24 rounded-full bg-gold" aria-hidden="true" />
+          <div className="mt-8 h-1 w-24 rounded-full bg-accent" aria-hidden="true" />
         </motion.div>
 
         {/* stats */}
@@ -50,7 +50,7 @@ export default function TrustSection() {
                 to={stat.value}
                 decimals={stat.decimals}
                 suffix={stat.suffix}
-                className="font-mono text-3xl font-semibold tabular-nums text-gold sm:text-4xl"
+                className="font-mono text-3xl font-semibold tabular-nums text-accent-300 sm:text-4xl"
               />
               <p className="mt-2 text-sm font-medium text-white/75">{stat.label}</p>
             </motion.div>

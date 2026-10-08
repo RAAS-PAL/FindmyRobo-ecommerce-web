@@ -34,7 +34,7 @@ export default function AdminTabs() {
             aria-current={tab.active ? "page" : undefined}
             className={`flex min-h-[38px] items-center gap-2 rounded-full px-3.5 text-[13px] font-semibold transition-colors sm:px-4 ${
               tab.active
-                ? "bg-white/10 text-gold"
+                ? "bg-white/10 text-accent-300"
                 : "text-white/70 hover:bg-white/5 hover:text-white"
             }`}
           >

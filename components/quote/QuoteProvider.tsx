@@ -1,12 +1,18 @@
 "use client";
 
 import { createContext, useContext, useMemo, useState } from "react";
+import type { QuoteInterest } from "@/lib/quoteRequest";
 
-/** What the quote panel was opened for — nothing, a product, or a service for a robot. */
+/**
+ * What the quote panel was opened for — nothing, a product, a service for a
+ * robot, or a robot family (a homepage banner).
+ */
 export interface QuoteTarget {
   productId?: string;
   /** For a service (demo, installation): the robot it is for. */
   forId?: string;
+  /** Preselects "which robot"; the visitor can still change it. */
+  interest?: QuoteInterest;
 }
 
 interface QuoteContextValue {

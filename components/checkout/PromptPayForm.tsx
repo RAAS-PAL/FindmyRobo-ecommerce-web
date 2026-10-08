@@ -105,7 +105,7 @@ export default function PromptPayForm({
   if (loading) {
     return (
       <div className="flex flex-col items-center gap-3 py-12">
-        <LoaderCircle className="h-6 w-6 animate-spin text-gold-600" aria-hidden="true" />
+        <LoaderCircle className="h-6 w-6 animate-spin text-accent-600" aria-hidden="true" />
         <p className="text-[13px] text-ink-muted">{t("promptpay.generating")}</p>
       </div>
     );
@@ -123,7 +123,7 @@ export default function PromptPayForm({
         <button
           type="button"
           onClick={retry}
-          className="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border-2 border-forest px-6 text-[14px] font-semibold text-content transition-colors hover:border-gold hover:text-gold-600"
+          className="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border-2 border-forest px-6 text-[14px] font-semibold text-content transition-colors hover:border-accent hover:text-accent-600"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
           {t("promptpay.retry")}
@@ -158,12 +158,12 @@ export default function PromptPayForm({
       </p>
 
       <p className="mt-5 flex items-center gap-2 text-[12.5px] text-ink-muted">
-        <LoaderCircle className="h-3.5 w-3.5 animate-spin text-gold-600" aria-hidden="true" />
+        <LoaderCircle className="h-3.5 w-3.5 animate-spin text-accent-600" aria-hidden="true" />
         {t("promptpay.waiting")}
       </p>
 
       <p className="mt-4 flex items-start gap-2 text-left text-[12px] leading-relaxed text-ink-muted">
-        <Smartphone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold-600" aria-hidden="true" />
+        <Smartphone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-600" aria-hidden="true" />
         {t("promptpay.keepOpen")}
       </p>
     </div>

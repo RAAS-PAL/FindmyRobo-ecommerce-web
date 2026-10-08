@@ -83,7 +83,7 @@ export function productJsonLd(
       // Google that the page itself refuses to show would be exactly the kind
       // of mismatch structured data is penalised for. When showPrices flips on,
       // the price appears here in the same deploy it appears on the page.
-      ...(siteConfig.showPrices ? { price: product.price } : {}),
+      ...(siteConfig.showPrices && product.price !== null ? { price: product.price } : {}),
       availability: product.preorder
         ? `${SCHEMA}/PreOrder`
         : `${SCHEMA}/InStock`,

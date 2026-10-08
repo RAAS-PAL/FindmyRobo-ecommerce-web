@@ -16,7 +16,7 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
       href={pathname}
       locale={other}
       aria-label={other === "th" ? "เปลี่ยนเป็นภาษาไทย" : "Switch to English"}
-      className={`flex min-h-[44px] items-center gap-1.5 rounded-full border border-forest-100 px-3.5 font-mono text-[12px] font-semibold uppercase tracking-wider text-content transition-colors hover:border-gold-600 hover:text-gold-600 ${className}`}
+      className={`flex min-h-[44px] items-center gap-1.5 rounded-full border border-forest-100 px-3.5 font-mono text-[12px] font-semibold uppercase tracking-wider text-content transition-colors hover:border-accent-600 hover:text-accent-600 ${className}`}
     >
       <Globe className="h-4 w-4" aria-hidden="true" />
       {t("switchLocale")}

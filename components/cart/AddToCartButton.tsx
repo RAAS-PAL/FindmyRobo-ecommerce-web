@@ -60,7 +60,7 @@ export default function AddToCartButton({
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className="flex min-h-[52px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-7 text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-none"
+      className="flex min-h-[52px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-7 text-[15px] font-bold text-on-accent transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgb(var(--accent-rgb)/0.7)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-none"
     >
       {added ? (
         <>

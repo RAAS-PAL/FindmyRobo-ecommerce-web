@@ -53,7 +53,7 @@ export default function QuoteDrawer() {
             aria-modal="true"
             aria-label={t("eyebrow")}
           >
-            <div className="h-0.5 shrink-0 bg-gold" aria-hidden="true" />
+            <div className="h-0.5 shrink-0 bg-accent" aria-hidden="true" />
             <div className="flex items-center justify-between border-b border-forest-100 px-5 py-4">
               <span className="font-display text-xl font-extrabold tracking-tight text-content">
                 {t("eyebrow")}
@@ -70,10 +70,11 @@ export default function QuoteDrawer() {
             <div className="flex-1 overflow-y-auto px-5 py-5">
               {/* keyed so opening it for another product starts a fresh form */}
               <QuoteForm
-                key={`${target.productId ?? ""}:${target.forId ?? ""}`}
+                key={`${target.productId ?? ""}:${target.forId ?? ""}:${target.interest ?? ""}`}
                 variant="panel"
                 productId={target.productId}
                 forId={target.forId}
+                interest={target.interest}
               />
             </div>
           </motion.aside>

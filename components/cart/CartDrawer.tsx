@@ -42,13 +42,13 @@ export default function CartDrawer() {
             {/* header */}
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <span className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-gold text-forest-950">
+                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-on-accent">
                   <CartIcon className="h-4.5 w-4.5" />
                 </span>
                 <span className="font-display text-base font-extrabold text-white">
                   {drawerTitle}
                   {count > 0 && (
-                    <span className="ml-2 font-mono text-sm font-semibold text-gold">
+                    <span className="ml-2 font-mono text-sm font-semibold text-accent-300">
                       ({count})
                     </span>
                   )}
@@ -74,7 +74,7 @@ export default function CartDrawer() {
                 <Link
                   href="/shop"
                   onClick={closeDrawer}
-                  className="flex min-h-[48px] items-center justify-center gap-1.5 rounded-full bg-gold px-7 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+                  className="flex min-h-[48px] items-center justify-center gap-1.5 rounded-full bg-accent px-7 text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)]"
                 >
                   {t("emptyCta")}
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -101,7 +101,7 @@ export default function CartDrawer() {
                           <Link
                             href={`/products/${item.id}`}
                             onClick={closeDrawer}
-                            className="font-display text-[13.5px] font-bold leading-snug text-white transition-colors hover:text-gold"
+                            className="font-display text-[13.5px] font-bold leading-snug text-white transition-colors hover:text-accent-300"
                           >
                             {item.product.name}
                           </Link>
@@ -115,7 +115,7 @@ export default function CartDrawer() {
                           </button>
                         </div>
                         {item.forProduct && (
-                          <p className="mt-0.5 text-[11.5px] font-medium text-gold/90">
+                          <p className="mt-0.5 text-[11.5px] font-medium text-accent-300/90">
                             {t("forRobot", { name: item.forProduct.name })}
                           </p>
                         )}
@@ -130,7 +130,7 @@ export default function CartDrawer() {
                               type="button"
                               onClick={() => setQty(item.key, item.qty - 1)}
                               aria-label={t("qtyDecrease")}
-                              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-gold"
+                              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-accent-300"
                             >
                               <Minus className="h-3.5 w-3.5" aria-hidden="true" />
                             </button>
@@ -141,13 +141,13 @@ export default function CartDrawer() {
                               type="button"
                               onClick={() => setQty(item.key, item.qty + 1)}
                               aria-label={t("qtyIncrease")}
-                              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-gold"
+                              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-accent-300"
                             >
                               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                             </button>
                           </div>
                           {siteConfig.showPrices && (
-                            <span className="font-mono text-[15px] font-semibold tabular-nums text-gold">
+                            <span className="font-mono text-[15px] font-semibold tabular-nums text-accent-300">
                               {formatBaht(item.qty * item.product.price)}
                             </span>
                           )}
@@ -181,7 +181,7 @@ export default function CartDrawer() {
                   <Link
                     href="/checkout"
                     onClick={closeDrawer}
-                    className="mt-4 flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)]"
+                    className="mt-4 flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-accent text-[15px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_32px_-6px_rgb(var(--accent-rgb)/0.7)]"
                   >
                     {siteConfig.showPrices ? t("checkout") : tq("submitCta")}
                     <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />

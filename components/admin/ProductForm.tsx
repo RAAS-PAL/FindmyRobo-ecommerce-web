@@ -29,10 +29,13 @@ const SPEC_LABEL_KEYS = {
 } as const satisfies Record<SpecKey, string>;
 
 const VARIANT_LABEL_KEYS = {
-  luba: "variants.luba",
-  mini: "variants.mini",
+  mower: "variants.mower",
   pool: "variants.pool",
-  install: "variants.install",
+  cleaner: "variants.cleaner",
+  equipment: "variants.equipment",
+  cooking: "variants.cooking",
+  delivery: "variants.delivery",
+  installation: "variants.installation",
   demo: "variants.demo",
 } as const satisfies Record<(typeof ROBOT_VARIANTS)[number], string>;
 
@@ -52,13 +55,13 @@ const slugify = (name: string) =>
     .slice(0, 60);
 
 const inputClass =
-  "min-h-[46px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[46px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 const textareaClass =
-  "w-full rounded-xl border border-forest-100 bg-surface px-4 py-3 text-[14px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "w-full rounded-xl border border-forest-100 bg-surface px-4 py-3 text-[14px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 const labelClass = "mb-1.5 block text-[13px] font-semibold text-content";
 const hintClass = "mt-1 text-[11.5px] text-ink-muted";
 const uploadButtonClass =
-  "mt-2 flex min-h-[42px] cursor-pointer items-center gap-2 rounded-full border border-forest-100 px-4 text-[13px] font-semibold text-content transition-colors hover:border-gold disabled:cursor-not-allowed disabled:opacity-50";
+  "mt-2 flex min-h-[42px] cursor-pointer items-center gap-2 rounded-full border border-forest-100 px-4 text-[13px] font-semibold text-content transition-colors hover:border-accent disabled:cursor-not-allowed disabled:opacity-50";
 
 class UploadStatusError extends Error {
   constructor(readonly status: number) {
@@ -107,9 +110,13 @@ export default function ProductForm({ initial }: { initial?: Product }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState(initial?.name ?? "");
-  // "image" is a UI-only choice: the real variant stays as the fallback art
-  const [artChoice, setArtChoice] = useState<(typeof ROBOT_VARIANTS)[number] | "image">(
-    initial?.imageUrl ? "image" : initial?.variant ?? "luba"
+  // product type (the `variant` column); also picks the stand-in drawing
+  const [variant, setVariant] = useState<(typeof ROBOT_VARIANTS)[number]>(
+    initial?.variant ?? "mower"
+  );
+  // UI-only: show the type's drawing, or the product's own image
+  const [artChoice, setArtChoice] = useState<"drawing" | "image">(
+    initial?.imageUrl ? "image" : "drawing"
   );
   const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? "");
   const [homeImage, setHomeImage] = useState(initial?.homeImage ?? "");
@@ -120,8 +127,6 @@ export default function ProductForm({ initial }: { initial?: Product }) {
   const mainFileRef = useRef<HTMLInputElement>(null);
   const homeFileRef = useRef<HTMLInputElement>(null);
   const galleryFileRef = useRef<HTMLInputElement>(null);
-  const fallbackVariant =
-    artChoice === "image" ? initial?.variant ?? "luba" : artChoice;
   // rich detail page (video, content sections, spec table) — see PageBuilder
   const [pageDraft, setPageDraft] = useState<DraftPage>(() => pageToDraft(initial?.page));
 
@@ -244,10 +249,9 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             id="price"
             name="price"
             type="number"
-            required
             min={1}
             step={1}
-            defaultValue={initial?.price}
+            defaultValue={initial?.price ?? ""}
             placeholder={t("placeholders.price")}
             className={inputClass}
           />
@@ -298,13 +302,52 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           />
           <p className={hintClass}>{t("hints.brand")}</p>
         </div>
+        <fieldset>
+          <legend className={labelClass}>{t("fields.conditions")}</legend>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            {(
+              [
+                ["condition_new", "new", "conditionNew"],
+                ["condition_preowned", "pre-owned", "conditionPreowned"],
+              ] as const
+            ).map(([field, value, label]) => (
+              <label key={field} className="flex items-center gap-2 text-[13.5px] text-content">
+                <input
+                  type="checkbox"
+                  name={field}
+                  value="1"
+                  defaultChecked={(initial?.conditions ?? ["new"]).includes(value)}
+                  className="h-4.5 w-4.5 rounded border-forest-100 accent-accent"
+                />
+                {t(`fields.${label}`)}
+              </label>
+            ))}
+          </div>
+          <p className={hintClass}>{t("hints.conditions")}</p>
+        </fieldset>
+        <div>
+          <label htmlFor="variant" className={labelClass}>
+            {t("fields.productType")}
+          </label>
+          <select
+            id="variant"
+            name="variant"
+            value={variant}
+            onChange={(e) => setVariant(e.target.value as typeof variant)}
+            className={inputClass}
+          >
+            {ROBOT_VARIANTS.map((v) => (
+              <option key={v} value={v}>
+                {t(VARIANT_LABEL_KEYS[v])}
+              </option>
+            ))}
+          </select>
+          <p className={hintClass}>{t("hints.productType")}</p>
+        </div>
         <div>
           <label htmlFor="artChoice" className={labelClass}>
             {t("fields.productVisual")}
           </label>
-          {/* the submitted variant is always a real illustration (the fallback
-              when an image URL is set or later removed) */}
-          <input type="hidden" name="variant" value={fallbackVariant} />
           <div className="flex items-center gap-4">
             <select
               id="artChoice"
@@ -312,11 +355,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
               onChange={(e) => setArtChoice(e.target.value as typeof artChoice)}
               className={inputClass}
             >
-              {ROBOT_VARIANTS.map((v) => (
-                <option key={v} value={v}>
-                  {t(VARIANT_LABEL_KEYS[v])}
-                </option>
-              ))}
+              <option value="drawing">{t("fields.typeDrawing")}</option>
               <option value="image">{t("fields.customImage")}</option>
             </select>
             <span className="flex h-14 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-1.5">
@@ -328,7 +367,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
                   className="h-full w-auto object-contain"
                 />
               ) : (
-                <RobotIllustration variant={fallbackVariant} className="h-full w-auto" />
+                <RobotIllustration variant={variant} className="h-full w-auto" />
               )}
             </span>
           </div>
@@ -499,6 +538,51 @@ export default function ProductForm({ initial }: { initial?: Product }) {
           </datalist>
           <p className={hintClass}>{t("hints.hoverVideo")}</p>
         </div>
+        <fieldset className="sm:col-span-2 rounded-2xl border border-forest-100 p-4">
+          <legend className="px-1 text-[13px] font-semibold text-content">
+            {t("fit.title")}
+          </legend>
+          <p className={`${hintClass} mt-0 mb-3`}>{t("fit.hint")}</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {(
+              [
+                ["fit_maxAreaM2", "maxAreaM2"],
+                ["fit_maxSlopePct", "maxSlopePct"],
+                ["fit_cleaningRateM2h", "cleaningRateM2h"],
+              ] as const
+            ).map(([field, key]) => (
+              <div key={field}>
+                <label htmlFor={field} className={labelClass}>
+                  {t(`fit.${key}`)}
+                </label>
+                <input
+                  id={field}
+                  name={field}
+                  type="number"
+                  min={1}
+                  step="any"
+                  defaultValue={initial?.fit?.[key] ?? ""}
+                  className={inputClass}
+                />
+              </div>
+            ))}
+            <div>
+              <label htmlFor="fit_operation" className={labelClass}>
+                {t("fit.operation")}
+              </label>
+              <select
+                id="fit_operation"
+                name="fit_operation"
+                defaultValue={initial?.fit?.operation ?? ""}
+                className={inputClass}
+              >
+                <option value="">{t("fit.operationUnset")}</option>
+                <option value="autonomous">{t("fit.autonomous")}</option>
+                <option value="walk-behind">{t("fit.walkBehind")}</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
         <div className="flex items-center gap-2.5">
           <input
             id="preorder"
@@ -506,7 +590,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
             type="checkbox"
             value="1"
             defaultChecked={!!initial?.preorder}
-            className="h-4.5 w-4.5 rounded border-forest-100 accent-[#f5c842]"
+            className="h-4.5 w-4.5 rounded border-forest-100 accent-accent"
           />
           <label htmlFor="preorder" className="text-[13.5px] font-medium text-content">
             {t("fields.preorder")}
@@ -522,7 +606,7 @@ export default function ProductForm({ initial }: { initial?: Product }) {
               type="checkbox"
               value="true"
               defaultChecked={initial?.visible ?? true}
-              className="h-4.5 w-4.5 rounded border-forest-100 accent-[#f5c842]"
+              className="h-4.5 w-4.5 rounded border-forest-100 accent-accent"
             />
             <span className="text-[13.5px] font-medium text-content">
               {t("fields.visible")}
@@ -651,14 +735,14 @@ export default function ProductForm({ initial }: { initial?: Product }) {
         <button
           type="button"
           onClick={() => router.push("/admin")}
-          className="flex min-h-[48px] cursor-pointer items-center rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-gold"
+          className="flex min-h-[48px] cursor-pointer items-center rounded-full border border-forest-100 px-6 text-[13.5px] font-semibold text-content transition-colors hover:border-accent"
         >
           {t("actions.cancel")}
         </button>
         <button
           type="submit"
           disabled={busy}
-          className="flex min-h-[48px] cursor-pointer items-center gap-2 rounded-full bg-gold px-8 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-h-[48px] cursor-pointer items-center gap-2 rounded-full bg-accent px-8 text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {busy ? (
             <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />

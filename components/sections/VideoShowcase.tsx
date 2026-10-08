@@ -139,7 +139,7 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
           </span>
           {video.tag && (
             <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-black/45 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur-sm">
-              <Tag className="h-3 w-3 text-gold" aria-hidden="true" />
+              <Tag className="h-3 w-3 text-accent-300" aria-hidden="true" />
               {video.tag}
             </span>
           )}
@@ -157,7 +157,7 @@ export default function VideoShowcase() {
     <section className="bg-surface py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">

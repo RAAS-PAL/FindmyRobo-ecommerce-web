@@ -67,7 +67,7 @@ export default async function AdminOrdersPage({
   return (
     <>
       <div>
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-600">
           {t("eyebrow")}
         </p>
         <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-content">
@@ -82,7 +82,7 @@ export default async function AdminOrdersPage({
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-forest-100 bg-surface p-5">
           <div className="flex items-center gap-2 text-ink-muted">
-            <Wallet className="h-4 w-4 text-gold-600" aria-hidden="true" />
+            <Wallet className="h-4 w-4 text-accent-600" aria-hidden="true" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">
               {t("stats.revenue")}
             </span>
@@ -96,7 +96,7 @@ export default async function AdminOrdersPage({
         </div>
         <div className="rounded-2xl border border-forest-100 bg-surface p-5">
           <div className="flex items-center gap-2 text-ink-muted">
-            <Receipt className="h-4 w-4 text-gold-600" aria-hidden="true" />
+            <Receipt className="h-4 w-4 text-accent-600" aria-hidden="true" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">
               {t("stats.total")}
             </span>
@@ -107,7 +107,7 @@ export default async function AdminOrdersPage({
         </div>
         <div className="rounded-2xl border border-forest-100 bg-surface p-5">
           <div className="flex items-center gap-2 text-ink-muted">
-            <Package className="h-4 w-4 text-gold-600" aria-hidden="true" />
+            <Package className="h-4 w-4 text-accent-600" aria-hidden="true" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">
               {t("stats.pending")}
             </span>
@@ -132,8 +132,8 @@ export default async function AdminOrdersPage({
               href={filterHref(f)}
               className={`flex min-h-[38px] items-center gap-2 rounded-full border px-4 text-[12.5px] font-semibold transition-colors ${
                 isActive
-                  ? "border-gold bg-gold/15 text-gold-600"
-                  : "border-forest-100 bg-surface text-ink-muted hover:border-gold/50 hover:text-content"
+                  ? "border-accent bg-accent/15 text-accent-600"
+                  : "border-forest-100 bg-surface text-ink-muted hover:border-accent/50 hover:text-content"
               }`}
             >
               {f === "all" ? t("filters.all") : t(`status.${f}`)}
@@ -183,7 +183,7 @@ export default async function AdminOrdersPage({
                       className="block"
                       aria-label={t("table.viewOrder", { id: order.id })}
                     >
-                      <span className="block font-mono text-[12.5px] font-bold text-content group-hover:text-gold-600">
+                      <span className="block font-mono text-[12.5px] font-bold text-content group-hover:text-accent-600">
                         {order.id}
                       </span>
                       <span className="mt-0.5 block truncate text-[12px] text-ink-muted">
@@ -218,7 +218,7 @@ export default async function AdminOrdersPage({
                     <Link
                       href={`/admin/orders/${order.id}`}
                       aria-label={t("table.viewOrder", { id: order.id })}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-gold/15 hover:text-gold-600"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-accent/15 hover:text-accent-600"
                     >
                       <ChevronRight className="h-4 w-4" aria-hidden="true" />
                     </Link>

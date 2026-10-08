@@ -6,11 +6,9 @@ import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google"
 import "../globals.css";
 import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/siteUrl";
-import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MotionProvider from "@/components/MotionProvider";
-import { ThemeScript } from "@/components/ThemeProvider";
 import ProductsProvider from "@/components/ProductsProvider";
 import CartProvider from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
@@ -115,19 +113,11 @@ export default async function LocaleLayout({
   ]);
 
   return (
-    // suppressHydrationWarning: themeInitScript sets the .dark class on <html>
-    // before React hydrates, so the server/client class lists differ by design.
     <html
       lang={locale}
-      suppressHydrationWarning
       className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        {/* Sets the theme before first paint. Not next/script's beforeInteractive:
-            in the app router that is still an inline <script> in this tree, so
-            when switching language remounts this layout in the browser React
-            warns about it, and dark mode was lost. */}
-        <ThemeScript />
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
             <ProductsProvider products={products}>
@@ -141,7 +131,14 @@ export default async function LocaleLayout({
                 <CartProvider>
                   <QuoteProvider>
                     <CompareProvider>
-                      <AnnouncementBar />
+                      {/* AnnouncementBar is hidden in the 2026-09-30 redesign:
+                          the page opens straight onto the navbar over the
+                          hero (DJI-style), and HeroSection's full-screen
+                          height assumes nothing above the bar. The component
+                          and its CMS section (Admin → Content → Announcement
+                          bar) are kept: re-import it and put
+                          <AnnouncementBar /> back here to bring it back —
+                          until then that CMS section has no effect. */}
                       <Navbar />
                       {children}
                       {/* Products are already loaded here for ProductsProvider —

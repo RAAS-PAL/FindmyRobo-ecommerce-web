@@ -1,11 +1,47 @@
 import type { CategorySlug } from "@/data/categories";
+import type { StockCondition } from "@/data/conditions";
 
 /**
- * Visual style for the placeholder SVG illustration only — not the category.
- * "install" and "demo" are used by service products (see the "services"
- * category), which are sold alongside robots.
+ * The type of product (database column `variant`), never a model name: it
+ * picks the stand-in drawing when a product has no photo, and marks the two
+ * kinds of service product ("installation" and "demo", in the "services"
+ * category) that checkout and the demo panel look for. Anything tied to one
+ * model (its hover video, its parts diagram) is set on the product itself.
+ *
+ * Until supabase/variant-to-product-type.sql has run, rows may still carry
+ * the old values; lib/productStore.ts reads those as the new ones.
  */
-export type RobotVariant = "luba" | "mini" | "pool" | "install" | "demo";
+export type RobotVariant =
+  | "mower"
+  | "pool"
+  | "cleaner"
+  | "equipment"
+  | "cooking"
+  | "delivery"
+  | "installation"
+  | "demo";
+
+/**
+ * Facts the robot recommender matches on (lib/recommend.ts), as numbers.
+ * Each must come from the manufacturer's spec sheet; leave a field out when
+ * the sheet doesn't give it — the recommender then says "to be confirmed"
+ * rather than guessing. Mowers fall back to their `area` and `slope` specs.
+ */
+export interface RobotFit {
+  /** Largest area it is rated for, m² (a mower's lawn area). */
+  maxAreaM2?: number;
+  /** Steepest slope it handles, % (mowers). */
+  maxSlopePct?: number;
+  /** Floor it cleans per hour at best, m²/h (floor cleaners). */
+  cleaningRateM2h?: number;
+  /** Floor cleaners: drives itself, or is pushed by staff. */
+  operation?: "autonomous" | "walk-behind";
+}
+
+/** Robots with an interactive parts diagram (data/techAnatomy.ts). */
+export type AnatomyModel = "luba-3" | "luba-mini-2";
+
+export const ANATOMY_MODELS: AnatomyModel[] = ["luba-3", "luba-mini-2"];
 
 /**
  * Quick specs. No longer rendered on the product page — that shows only the
@@ -37,7 +73,15 @@ export type LocalizedText = Record<Locale, string>;
  */
 export type PageBlock =
   | { type: "banner"; image: string }
-  | { type: "feature"; heading: LocalizedText; body: LocalizedText; image?: string }
+  | {
+      type: "feature";
+      heading: LocalizedText;
+      body: LocalizedText;
+      image?: string;
+      /** Small line above the heading. Full-screen pages only (see
+       *  ShowcaseContent): there each feature with a photo is a section. */
+      eyebrow?: LocalizedText;
+    }
   | {
       type: "cardGrid";
       heading?: LocalizedText;
@@ -53,11 +97,11 @@ export type PageBlock =
   | { type: "imageText"; image: string; body: LocalizedText; imageSide: "left" | "right" }
   | { type: "video"; heading?: LocalizedText; url: string; caption?: LocalizedText }
   | {
-      /** The interactive "under the hood" anatomy. Carries no configuration —
-       *  its content is chosen from the product's `variant` (see
-       *  data/techAnatomy.ts), so the block only decides WHERE on the page it
-       *  appears. Renders nothing for a variant with no anatomy defined. */
+      /** The interactive "under the hood" anatomy of one model
+       *  (data/techAnatomy.ts). Renders nothing without a model: a diagram
+       *  must be of the product's own model, never a sibling's. */
       type: "anatomy";
+      model?: AnatomyModel;
     };
 
 export const PAGE_BLOCK_TYPES = [
@@ -91,11 +135,48 @@ export interface FaqItem {
   answer: LocalizedText;
 }
 
+/** One key figure under a full-screen page's header, e.g. "2–4 h" / Runtime. */
+export interface ShowcaseFigure {
+  value: string;
+  label: LocalizedText;
+}
+
+/** One body colour, for a robot sold in more than one. */
+export interface ShowcaseColor {
+  label: LocalizedText;
+  /** Swatch fill shown next to the colour name, e.g. "#85909c". */
+  swatch: string;
+  /** Transparent cut-out of the robot in this colour. */
+  image: string;
+}
+
+/**
+ * Content for the full-screen product page (components/product/ShowcasePage):
+ * a dark studio header with the robot, its key figures, one full-width photo
+ * per feature section, then the spec table. A product that has this gets that
+ * design; one without keeps the standard page (gallery beside the details).
+ * Edited in Admin → Products → "Full-screen page".
+ */
+export interface ShowcaseContent {
+  /** Short line above the name, e.g. "Gausium · Commercial cleaning robot". */
+  eyebrow: LocalizedText;
+  /** Transparent cut-out for the header; the product's main image if unset. */
+  heroImage?: string;
+  /** Up to four, in order. */
+  figures: ShowcaseFigure[];
+  /** Two or more colours: the header shows the robot in each, named. */
+  colors?: ShowcaseColor[];
+}
+
+export const MAX_SHOWCASE_FIGURES = 4;
+
 /**
  * Optional rich detail-page content. When absent the product page falls back
  * to the compact layout (description + features + the small specs band).
  */
 export interface ProductPage {
+  /** Full-screen page design; see ShowcaseContent. */
+  showcase?: ShowcaseContent;
   /** Review/demo video near the top (YouTube URL or /path or https mp4). */
   videoUrl?: string;
   videoCaption?: LocalizedText;
@@ -120,7 +201,9 @@ export interface Product {
   /** Admin-controlled storefront position; lower values appear first. */
   displayOrder?: number;
   name: string;
-  price: number;
+  /** Whole baht; null while the price is not known yet ("Price on request",
+   *  and the product can't go in the cart). */
+  price: number | null;
   category: CategorySlug;
   variant: RobotVariant;
   /**
@@ -170,6 +253,11 @@ export interface Product {
    * DEFAULT_BRAND below.
    */
   brand?: string;
+  /** How it is sold: new, pre-owned, or both (the `conditions` column;
+   *  rows saved before it existed read as new). */
+  conditions: StockCondition[];
+  /** Recommender facts; see RobotFit. */
+  fit?: RobotFit;
   specs: Partial<Record<SpecKey, string>>;
   tagline: LocalizedText;
   description: LocalizedText;
@@ -188,10 +276,13 @@ export const SPEC_KEYS: SpecKey[] = [
 ];
 
 export const ROBOT_VARIANTS: RobotVariant[] = [
-  "luba",
-  "mini",
+  "mower",
   "pool",
-  "install",
+  "cleaner",
+  "equipment",
+  "cooking",
+  "delivery",
+  "installation",
   "demo",
 ];
 
@@ -205,4 +296,26 @@ export const SERVICE_CATEGORY = "services" as const;
  */
 export const DEFAULT_BRAND = "Mammotion";
 
+/** A product whose price is set — the only kind the cart and checkout take. */
+export type PricedProduct = Product & { price: number };
+
+export const hasPrice = (product: Product): product is PricedProduct =>
+  product.price !== null;
+
 export const formatBaht = (price: number) => `฿${price.toLocaleString("en-US")}`;
+
+/**
+ * How to name a product to people: "Gausium Phantas", "Pudu Bella" — the
+ * brand is part of how people ask for these — but plain "Pudu1" when the name
+ * already starts with it. Mammotion's own robots and the services keep their
+ * names as they are ("LUBA 3 AWD 5000").
+ */
+export function productLabel(product: Pick<Product, "name" | "brand" | "category">): string {
+  const brand = product.brand;
+  if (!brand || brand === DEFAULT_BRAND || product.category === SERVICE_CATEGORY) {
+    return product.name;
+  }
+  return product.name.toLowerCase().startsWith(brand.toLowerCase())
+    ? product.name
+    : `${brand} ${product.name}`;
+}

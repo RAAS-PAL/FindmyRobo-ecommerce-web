@@ -1,44 +1,45 @@
 @import "tailwindcss";
 
-/* Class-based dark mode: an inline script in the layout puts .dark on <html>
-   before paint, so there is no flash of the wrong theme. */
+/* One theme only (2026-09-30: dark mode removed). The dark variant stays
+   bound to a .dark class that nothing sets, so leftover `dark:` utilities are
+   inert instead of following the visitor's OS setting (Tailwind's default). */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* RoboMart TH palette — fresh garden: light surfaces, forest green + yellow
-     (CEO rebrand 2026-07-08: lighter look, green + yellow, premium)
+  /* Palette: GRAPHITE + ELECTRIC BLUE (2026-09-30, replacing black + gold).
 
-     DARK MODE: the palette below is the LIGHT theme. The .dark block further
-     down re-points these same tokens at the brand's deep-navy scale, so most
-     components need no dark: variants — `bg-cloud`, `border-forest-100`,
-     `text-ink-muted` etc. all re-theme themselves.
+     One light theme, deliberately not pure white: the page and panels sit on
+     a soft cool grey so the white of the robots and the blue stand out.
+       --color-surface  page, cards, panels, the solid navbar
+       --color-cloud    alternate bands and quiet fills, a step darker
+       --color-content  primary text
 
-     Two meanings could not share a token and were split out as semantic ones:
-       --color-surface  (cards/panels)  — white in light, raised navy in dark
-       --color-content  (primary text)  — forest in light, near-white in dark
-     ...because `bg-forest` (a dark surface) and `text-forest` (dark text on a
-     light surface) need OPPOSITE treatment in dark mode. */
-  /* EXPERIMENT (light-mode "green → black"): the forest scale is remapped to a
-     neutral charcoal/grey scale — same lightness per step, green hue removed —
-     so the brand reads BLACK + gold instead of green + gold. Gold and the white
-     surface are unchanged, and the .dark block below is untouched. To go back
-     to green, restore this block from git (the original greens are in history). */
-  --color-forest-950: #0a0a0b;
-  --color-forest-900: #151517;
-  --color-forest: #17181b;
-  --color-forest-800: #2f3034;
-  --color-forest-700: #46484e;
-  --color-forest-300: #bbbdc3;
-  --color-forest-100: #e4e5e8;
-  --color-gold: #f5c842;
-  --color-gold-300: #ffe08a;
-  --color-gold-600: #8a6a00; /* darkened amber: 4.5:1+ on white for text accents */
-  --color-cloud: #f6f6f7;
-  --color-ink-muted: #5b5f66;
+     `forest-*` is the neutral scale (a legacy name — it was green, then black;
+     now a cool graphite). The brand colour is `accent-*`: change these few
+     lines, --accent-rgb and .bg-accent-gradient to re-colour the whole site.
+     Earlier palettes (green + yellow, black + gold) are in git history. */
+  --color-forest-950: #0b0d10;
+  --color-forest-900: #121418;
+  --color-forest: #16181d;
+  --color-forest-800: #2a2d34;
+  --color-forest-700: #3e424b;
+  --color-forest-300: #b5bac4;
+  --color-forest-100: #dadee5; /* borders: visible on the grey page */
+
+  /* brand accent — electric blue */
+  --color-accent: #2e6bff; /* fills: buttons, bars, dots, focus ring */
+  --color-accent-strong: #1f55e6; /* hover/pressed fill */
+  --color-accent-300: #5c90ff; /* accent TEXT on dark surfaces (and over photos): 6:1 on near-black */
+  --color-accent-600: #1f4fd6; /* accent TEXT on light surfaces: 6:1 on white */
+  --color-on-accent: #ffffff; /* text/icons sitting on an accent fill */
+  --color-accent-50: #e6ecf9; /* faint accent wash: section bands */
+
+  --color-cloud: #e8ebf0;
+  --color-ink-muted: #5a606b;
 
   /* semantic — see note above */
-  --color-surface: #ffffff;
-  --color-content: #17181b;
+  --color-surface: #f3f5f8;
+  --color-content: #121418;
 
   /* Thai fallbacks: Barlow/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
   --font-display: var(--font-barlow), var(--font-prompt), system-ui, sans-serif;
@@ -55,28 +56,57 @@
   --radius-3xl: 1rem;
 }
 
-/* ---------- dark theme: neutral black + gold (matches the light theme) ----------
-   The brand moved to black + gold, so dark mode is a neutral charcoal/near-black
-   scale (no blue tint) instead of the original navy. Gold accents are unchanged;
-   gold-600 still flips to a light amber so it reads on the dark surfaces.
-   Contrast (AA): content #f1f2f4 on #18191c ~15:1 · muted #9a9ca2 ~6.5:1 ·
-   gold #ffe08a high · surface lifts off the near-black canvas. */
-.dark {
-  color-scheme: dark;
+/* The accent as bare RGB channels, for glows and translucent shadows:
+   rgb(var(--accent-rgb) / 0.5). Keep in step with --color-accent. */
+:root {
+  --accent-rgb: 46 107 255;
+}
 
-  --color-forest-950: #070708; /* deepest surfaces: footer, drawer, hero scrim */
-  --color-forest-900: #131316;
-  --color-forest: #1b1c20; /* mid brand surface (gradient tiles, badges) */
-  --color-forest-800: #2a2b30;
-  --color-forest-700: #3a3b41;
-  --color-forest-300: #a1a3a9;
-  --color-forest-100: #2d2e33; /* borders — visible on the near-black canvas */
-  --color-gold-600: #ffe08a; /* accent text, lightened for dark surfaces */
-  --color-cloud: #0a0a0b; /* page canvas */
-  --color-ink-muted: #9a9ca2;
+/* The primary call-to-action fill: electric blue into cyan. Used on the few
+   buttons that start a quote or lead into a product family — everything else
+   uses the flat --color-accent, so the gradient stays special. The wider
+   background lets hover slide the gradient instead of swapping colours.
+   A utility, so it takes variants and sorts with a button's other classes. */
+/* Accent words set over photos and dark surfaces: the flat blue sinks into
+   green lawn, so this runs lighter, blue into cyan. On light surfaces use
+   text-accent-600 instead. */
+@utility text-accent-gradient {
+  background-image: linear-gradient(100deg, #6f9dff 0%, #4fb8ff 55%, #3fd4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* room for Thai marks below the line, which background-clip would crop */
+  padding-bottom: 0.08em;
+  /* a text-shadow would paint over the clipped gradient and grey it out, so
+     legibility over photos comes from a drop-shadow on the glyphs instead */
+  text-shadow: none;
+  filter: drop-shadow(0 1px 10px rgb(0 0 0 / 0.35));
+}
 
-  --color-surface: #18191c; /* cards, raised above the canvas */
-  --color-content: #f1f2f4; /* near-white, neutral (not blue-tinted) */
+@utility bg-accent-gradient {
+  background-color: var(--color-accent);
+  background-image: linear-gradient(
+    115deg,
+    #1f4fff 0%,
+    #2e6bff 34%,
+    #169dff 72%,
+    #1fcbff 100%
+  );
+  background-size: 135% 100%;
+  background-position: 0% 50%;
+  color: var(--color-on-accent);
+  box-shadow:
+    0 8px 22px -12px rgb(var(--accent-rgb) / 0.9),
+    inset 0 1px 0 rgb(255 255 255 / 0.18);
+  transition:
+    background-position 0.5s ease,
+    box-shadow 0.3s ease;
+  &:hover {
+    background-position: 100% 50%;
+    box-shadow:
+      0 12px 28px -12px rgb(var(--accent-rgb) / 1),
+      inset 0 1px 0 rgb(255 255 255 / 0.22);
+  }
 }
 
 /* @layer base so a `bg-*` utility on <body> still wins — unlayered rules beat
@@ -91,26 +121,41 @@
 }
 
 ::selection {
-  background: var(--color-gold);
-  color: #0a0a0b;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-gold);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
-/* ---------- utilities ---------- */
-
-/* Hero copy sitting on the autoplaying video. The clips are dark and the dark
-   theme's scrim is navy, so the scrim alone can't be trusted for every frame —
-   this shadow keeps white/gold text readable over any of them, in both themes.
-   Purely a legibility aid; it disappears against the light hero (no video). */
-.hero-legible {
-  text-shadow:
-    0 2px 18px rgba(3, 8, 24, 0.7),
-    0 1px 4px rgba(3, 8, 24, 0.55);
+/* ---------- navbar over the homepage hero ----------
+   Navbar sets data-clear on the homepage until the page scrolls. While the
+   bar isn't hovered or focused, it drops its background and re-points the
+   colour tokens it uses to white, so every link, icon and outline inside
+   turns light at once (its dropdowns only open on hover or focus, i.e. on
+   the solid bar). Unlayered, so it beats the bar's own bg-* utilities. */
+header[data-clear="true"]:not(:hover):not(:focus-within) {
+  --color-content: #ffffff;
+  --color-ink-muted: rgb(255 255 255 / 0.78);
+  --color-forest-100: rgb(255 255 255 / 0.3);
+  --color-cloud: rgb(255 255 255 / 0.1);
+  --color-accent-600: #8db0ff;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
+.nav-logo-on-dark,
+header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-light {
+  display: none;
+}
+header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-dark {
+  display: block;
+}
+
+/* ---------- utilities ---------- */
 
 .no-scrollbar {
   scrollbar-width: none;
@@ -121,7 +166,7 @@
 }
 
 /* Sliding underline for nav links */
-/* Navbar: a gold track along the bar's bottom edge that glides to the link
+/* Navbar: an accent track along the bar's bottom edge that glides to the link
    under the pointer (or keyboard focus) and rests under the current section —
    the way a mower drives its line across a lawn. The end it travels towards
    leads and the other follows, so it stretches as it moves; a glowing head
@@ -133,8 +178,8 @@
   z-index: 60;
   height: 3px;
   border-radius: 9999px;
-  background: var(--color-gold);
-  box-shadow: 0 0 10px rgba(245, 200, 66, 0.55);
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgb(var(--accent-rgb) / 0.55);
   opacity: 0;
   transform: scaleX(0.3);
   pointer-events: none;
@@ -168,7 +213,7 @@
   margin-top: -3px;
   border-radius: 9999px;
   background: #fff4c2;
-  box-shadow: 0 0 8px 2px rgba(245, 200, 66, 0.85);
+  box-shadow: 0 0 8px 2px rgb(var(--accent-rgb) / 0.85);
 }
 .nav-track[data-dir="left"]::after {
   right: auto;
@@ -280,7 +325,7 @@
   animation-delay: var(--fly-delay, 0s);
 }
 
-/* Hero quote card: a point of gold light runs round the card's edge — the way
+/* Hero quote card: a point of accent light runs round the card's edge — the way
    a robot mower traces its lawn boundary — over a slow pool of light beneath.
    The ring is a conic gradient masked down to the border; its glow comes from
    a drop-shadow on the parent, since a filter here would be masked away. */
@@ -302,7 +347,7 @@
   background: conic-gradient(
     from var(--trace-angle),
     transparent 0turn 0.7turn,
-    var(--color-gold) 0.93turn,
+    var(--color-accent) 0.93turn,
     #fff4c2 0.985turn,
     transparent 1turn
   );
@@ -331,23 +376,44 @@
   animation: pool-breathe 5s ease-in-out infinite;
 }
 
-/* Where the homepage hero's frosted half ends — and where the nav's grey
-   wedge lands, so the two edges read as one line. At rest it just clears the
-   quote card (17.5rem, centred on 25%) and the lean of the frost's edge; while
-   someone is filling the card in, HeroQuote sets data-quote-open and it widens
-   to the full half. The nav and the hero are both full width, so the
-   percentages resolve to the same point in each.
-   --hero-lean is the edge's angle off vertical; the nav wedge leans by the
-   same amount so the two edges form one straight line. --hero-split-mid is
-   where that leaning edge sits halfway down the (one-screen) hero — the
-   quote column centres on it, so the card sits in the middle of the frost. */
-:root {
-  --hero-split: min(50%, 25% + 16rem);
-  --hero-lean: 6deg;
-  --hero-split-mid: calc(var(--hero-split) - (50svh - 50px) * tan(var(--hero-lean)));
+/* Homepage hero: the accent bar on the active slide's tab fills over the slide's
+   time on screen; HeroSection advances when it ends (animationend) and pauses
+   it with animation-play-state. Reduced motion never gets the class. */
+/* Hero quote card from lg: dark glass over the dark studio hero instead of a
+   light box pasted on it. Re-points the tokens the form uses, so its fields,
+   labels, steps and borders all turn at once (the card's own background is
+   set in QuoteForm); native controls (the venue select) follow color-scheme.
+   Phones keep the light card: there it sits on the light page. */
+@media (min-width: 64rem) {
+  .hero-quote-dark {
+    color-scheme: dark;
+    --color-surface: #1b1f28;
+    --color-content: #f1f3f6;
+    --color-ink-muted: #9aa0ab;
+    --color-forest-100: rgb(255 255 255 / 0.12);
+    --color-forest-300: #6b7280;
+    --color-cloud: rgb(255 255 255 / 0.06);
+    --color-accent-600: #8db0ff;
+  }
 }
-:root[data-quote-open] {
-  --hero-split: 50%;
+
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.hero-progress {
+  animation-name: hero-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-progress {
+    animation: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

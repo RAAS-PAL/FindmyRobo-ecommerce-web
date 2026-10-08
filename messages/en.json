@@ -26,10 +26,15 @@
     "createAccount": "Create account",
     "signOut": "Sign out",
     "signedInAs": "Signed in as",
-    "darkMode": "Dark mode",
     "quotationLabel": "Quotation list, {count} items",
     "aboutUs": "About Us",
-    "getQuote": "Get a quote"
+    "getQuote": "Get a quote",
+    "viewAll": "View all",
+    "groupCompany": "About FindMyRobo",
+    "groupContact": "Contact & support",
+    "productsHeading": "Products",
+    "groupChoose": "Help choosing",
+    "finder": "Find my robot"
   },
   "auth": {
     "login": {
@@ -213,8 +218,6 @@
     "navigation": {
       "adminLabel": "Admin",
       "viewStore": "View store",
-      "themeToDark": "Switch to dark mode",
-      "themeToLight": "Switch to light mode",
       "switchLanguage": "Switch admin language to Thai",
       "switchLocale": "ไทย",
       "switchError": "Could not change the admin language.",
@@ -419,13 +422,21 @@
         "thaiTagline": "Tagline (Thai)",
         "thaiDescription": "Description (Thai)",
         "thaiFeatureBullets": "Feature bullets (Thai) — one per line",
-        "brand": "Brand"
+        "brand": "Brand",
+        "productType": "Product type",
+        "typeDrawing": "Drawing for its type",
+        "conditions": "Sold as",
+        "conditionNew": "Brand-new",
+        "conditionPreowned": "Pre-owned"
       },
       "variants": {
-        "luba": "Large mower",
-        "mini": "Compact mower",
+        "mower": "Lawn mower",
         "pool": "Pool robot",
-        "install": "Installation service",
+        "cleaner": "Cleaning robot",
+        "equipment": "Cleaning equipment",
+        "cooking": "Cooking robot",
+        "delivery": "Delivery robot",
+        "installation": "Installation service",
         "demo": "Demo booking"
       },
       "specLabels": {
@@ -446,7 +457,9 @@
         "placeholderArt": "Placeholder art until real product photos land.",
         "visible": "Hide it to keep working on it without listing it in the shop, or to pull it from sale without deleting it.",
         "sku": "The code Sokochan's warehouse uses for this product. Required to ship it — leave blank for services.",
-        "brand": "The manufacturer, as Google should see it in the product’s structured data. Defaults to Mammotion — only change it for a robot from another maker."
+        "brand": "The manufacturer, as Google should see it in the product’s structured data. Defaults to Mammotion — only change it for a robot from another maker.",
+        "productType": "The kind of product, not the model. Picks the drawing shown when there is no photo; checkout uses \"Installation service\" and \"Demo booking\".",
+        "conditions": "Tick both when it is sold either way."
       },
       "actions": {
         "uploading": "Uploading…",
@@ -470,6 +483,17 @@
         "galleryUrls": "https://example.com/robot-side.jpg\nhttps://example.com/robot-top.jpg",
         "englishTagline": "All-wheel drive precision for large Thai gardens",
         "englishFeatureBullets": "AWD climbs slopes up to 80%\nNo boundary wire needed"
+      },
+      "fit": {
+        "title": "Recommendation facts",
+        "hint": "Numbers the robot recommender matches on, from the manufacturer's spec sheet only. Leave blank when the sheet doesn't say; mowers fall back to their coverage and slope specs.",
+        "maxAreaM2": "Max. area (m²)",
+        "maxSlopePct": "Max. slope (%)",
+        "cleaningRateM2h": "Cleaning rate (m²/h, best case)",
+        "operation": "How it runs (floor cleaners)",
+        "operationUnset": "Not set",
+        "autonomous": "Drives itself",
+        "walkBehind": "Pushed by staff"
       }
     },
     "pageBuilder": {
@@ -501,7 +525,10 @@
         "boxItemName": "Item name",
         "boxItemQty": "Quantity",
         "faqQuestion": "Question",
-        "faqAnswer": "Answer"
+        "faqAnswer": "Answer",
+        "anatomyModel": "Which robot's diagram",
+        "anatomyModelHint": "Only pick this product's own model. Another model's parts and figures would be wrong for this robot.",
+        "eyebrowOptional": "Small line above the heading (optional, full-screen page only)"
       },
       "positions": {
         "right": "Image on the right",
@@ -531,6 +558,31 @@
       "intro": {
         "title": "Intro video",
         "note": "shown under the product information (optional)"
+      },
+      "showcasePage": {
+        "title": "Full-screen page",
+        "note": "a dark header with the robot and its key figures, then one full-width photo per Feature section that has an image",
+        "enable": "Use the full-screen page for this product",
+        "enableHint": "Off: the product keeps the standard page (photo gallery beside the details). The spec table, What's in the box and FAQ below are used either way.",
+        "eyebrow": "Line above the name",
+        "eyebrowHint": "e.g. “Gausium · Commercial cleaning robot”. Required for the full-screen page.",
+        "heroImage": "Header image URL (optional)",
+        "heroImageHint": "A transparent cut-out of the robot. Blank uses the main product image.",
+        "figuresTitle": "Key figures",
+        "figuresNote": "up to 4, shown in a row under the header",
+        "figureLabel": "Figure {number}",
+        "figureValue": "Value",
+        "figureName": "What it is",
+        "addFigure": "Add figure",
+        "removeFigure": "Remove figure {number}",
+        "colorsTitle": "Colours",
+        "colorsNote": "only for a robot sold in two or more colours: the header then shows it in each",
+        "colorLabel": "Colour {number}",
+        "colorName": "Colour name",
+        "colorSwatch": "Swatch",
+        "colorImage": "Cut-out image URL",
+        "addColor": "Add colour",
+        "removeColor": "Remove colour {number}"
       },
       "content": {
         "title": "Content sections",
@@ -568,7 +620,14 @@
         "group": "Specification group {number} and all of its rows will be removed. The change takes effect when you save the product.",
         "row": "Row {number} will be removed from this specification group. The change takes effect when you save the product.",
         "boxItem": "Item {number} will be removed from what's in the box. The change takes effect when you save the product.",
-        "faq": "Question {number} will be removed. The change takes effect when you save the product."
+        "faq": "Question {number} will be removed. The change takes effect when you save the product.",
+        "figure": "Figure {number} will be removed. The change takes effect when you save the product.",
+        "color": "Colour {number} will be removed. The change takes effect when you save the product."
+      },
+      "anatomyModels": {
+        "none": "None (section hidden)",
+        "luba-3": "LUBA 3",
+        "luba-mini-2": "LUBA Mini 2 AWD 1500"
       }
     },
     "confirmDialog": {
@@ -837,22 +896,37 @@
   "categories": {
     "robot-mowers": {
       "name": "Robotic Lawn Mowers",
+      "nav": "Lawn Mowers",
       "description": "Wire-free AWD mowers for every Thai garden"
-    },
-    "pool-cleaners": {
-      "name": "Pool Cleaners",
-      "description": "Effortless crystal-clear pools"
     },
     "cleaning-robots": {
       "name": "Cleaning Robots",
-      "description": "Floor and window robots for the home"
+      "nav": "Cleaner",
+      "description": "Gausium Phantas, autonomous floor cleaning for commercial spaces"
+    },
+    "smart-equipment": {
+      "name": "Smart Equipment",
+      "nav": "Smart Equipment",
+      "description": "Aventurier A1-Basic and A1-Youth"
+    },
+    "cooking-robots": {
+      "name": "Cooking Robots",
+      "nav": "Cooker",
+      "description": "The T-Chef TC-E10A cooking robot"
     },
     "delivery-robots": {
       "name": "Delivery Robots",
-      "description": "Autonomous delivery for business"
+      "nav": "Delivery",
+      "description": "Pudu delivery robots for business"
+    },
+    "pool-cleaners": {
+      "name": "Pool Cleaners",
+      "nav": "Pool Cleaners",
+      "description": "Effortless crystal-clear pools"
     },
     "services": {
       "name": "Services",
+      "nav": "Services",
       "description": "Professional installation and in-home demos"
     }
   },
@@ -880,6 +954,9 @@
     "interestPlaceholder": "Select a robot",
     "interests": {
       "lawn-mowing": "Lawn mowing",
+      "commercial-cleaning": "Cleaning robot",
+      "smart-equipment": "Smart equipment",
+      "cooking": "Cooking robot",
       "pudu-delivery": "Pudu delivery"
     },
     "areaLabel": "Lawn area",
@@ -926,6 +1003,21 @@
     "noteLabel": "Note",
     "notePlaceholder": "Anything else we should know — your garden, timing, or questions"
   },
+  "showcase": {
+    "slidesLabel": "Featured robots",
+    "showSlide": "Show {name}",
+    "pause": "Pause the slideshow",
+    "play": "Play the slideshow",
+    "explore": "Explore",
+    "learnMore": "Learn more",
+    "getQuote": "Get a quote",
+    "bookDemo": "Book a demo",
+    "photoComing": "Photo coming",
+    "moreHeading": "More robots from FindMyRobo",
+    "moreSub": "Delivery and kitchen robots for businesses — quoted to your site.",
+    "finderPrompt": "Not sure which robot fits?",
+    "finderLink": "Find yours"
+  },
   "products": {
     "eyebrow": "The Lineup",
     "heading": "Popular Robots for Every Need",
@@ -961,9 +1053,12 @@
     "comingSoonTitle": "Coming soon to Thailand",
     "comingSoonBody": "We are working with our partners to bring this category to you. Book a demo to hear about it first.",
     "backToShop": "Browse all robots",
+    "bookDemo": "Book a demo",
     "metaTitle": "Shop Robots — FindMyRobo",
     "installCardName": "Installation Service",
-    "installCardTagline": "Professional on-site setup — choose your coverage area on the next page."
+    "installCardTagline": "Professional on-site setup — choose your coverage area on the next page.",
+    "modelPageSoon": "Full product page coming soon. Ask us for details and pricing.",
+    "modelsLabel": "Models"
   },
   "search": {
     "eyebrow": "Catalog Search",
@@ -1148,5 +1243,165 @@
   "refundPolicy": {
     "metaTitle": "Return, Exchange, Claim & Refund Policy — FindMyRobo",
     "eyebrow": "Policy"
+  },
+  "modelPage": {
+    "breadcrumb": "Breadcrumb",
+    "shop": "Shop",
+    "getQuote": "Get a quote",
+    "bookDemo": "Book a demo",
+    "learnMore": "Learn more",
+    "specsHeading": "Specifications",
+    "ctaHeading": "Want {name} at your site?",
+    "ctaBody": "Tell us about your space and we’ll reply with a quotation within one business day."
+  },
+  "condition": {
+    "preOwned": "Pre-owned",
+    "new": "Brand-new",
+    "either": "Brand-new or pre-owned",
+    "label": "Condition",
+    "ask": "Brand-new or pre-owned?"
+  },
+  "recommend": {
+    "metaTitle": "Find the right robot",
+    "metaDescription": "Answer a few questions about your lawn, floors, kitchen or venue and see which robots fit, with the reasons. FindMyRobo, Thailand.",
+    "eyebrow": "Robot finder",
+    "heading": "Find the right robot",
+    "sub": "A few questions about the job, and we'll show which of our robots fit, and why.",
+    "stepOf": "Step {step} of {total}",
+    "back": "Back",
+    "seeResults": "See my robots",
+    "startAgain": "Start again",
+    "viewRobot": "View robot",
+    "sqm": "m²",
+    "job": {
+      "question": "What do you need a robot for?",
+      "lawn": {
+        "title": "Mowing a lawn",
+        "hint": "Gardens, estates, resorts"
+      },
+      "floor": {
+        "title": "Cleaning floors",
+        "hint": "Offices, hotels, shops, factories"
+      },
+      "cooking": {
+        "title": "Cooking",
+        "hint": "Restaurant and canteen kitchens"
+      },
+      "delivery": {
+        "title": "Delivering and serving",
+        "hint": "Restaurants, hotels, hospitals"
+      }
+    },
+    "lawn": {
+      "areaQuestion": "How big is the lawn?",
+      "areaHint": "Roughly is fine. Leave it blank if you're not sure.",
+      "slopeQuestion": "How steep is the steepest part?",
+      "slope": {
+        "flat": {
+          "title": "Flat",
+          "hint": "Up to about 10%"
+        },
+        "moderate": {
+          "title": "Gentle slopes",
+          "hint": "Up to about 30%"
+        },
+        "steep": {
+          "title": "Steep",
+          "hint": "Up to about 50%"
+        },
+        "very-steep": {
+          "title": "Very steep",
+          "hint": "Up to about 80%"
+        },
+        "unsure": {
+          "title": "Not sure",
+          "hint": "We'll check with you"
+        }
+      }
+    },
+    "floor": {
+      "areaQuestion": "How much floor needs cleaning each time?",
+      "areaHint": "Roughly is fine. Leave it blank if you're not sure.",
+      "operationQuestion": "How should it work?",
+      "operation": {
+        "autonomous": {
+          "title": "Cleans by itself",
+          "hint": "A robot that drives on its own"
+        },
+        "walk-behind": {
+          "title": "Staff push it",
+          "hint": "A machine your team walks behind"
+        },
+        "either": {
+          "title": "Either",
+          "hint": "Show me both"
+        }
+      }
+    },
+    "delivery": {
+      "venueQuestion": "Where will it work?",
+      "venue": {
+        "restaurant": "Restaurant",
+        "hotel": "Hotel",
+        "office": "Office",
+        "hospital": "Hospital",
+        "mall": "Shopping mall",
+        "other": "Somewhere else"
+      }
+    },
+    "results": {
+      "title": "Your best matches",
+      "sub": {
+        "lawn": "Ranked by how each mower's rated area and slope match your lawn.",
+        "floor": "Ranked by how each one runs and how long your floor would take.",
+        "cooking": "The cooking robots we sell.",
+        "delivery": "Our delivery robots. Our team will confirm which model suits your venue's layout."
+      },
+      "closeTitle": "No exact match: the closest options",
+      "closeSub": "None of our robots meets every answer. These come closest; leave your details and we'll suggest a setup.",
+      "noneTitle": "We don't list a robot for this yet",
+      "noneSub": "Leave your details and our team will get back to you.",
+      "footnote": "Figures are the manufacturers' own. Our team confirms the right model, price and availability before you buy."
+    },
+    "reasons": {
+      "areaCovers": "Rated for up to {capacity, number} m², your lawn is {area, number} m²",
+      "areaTooSmall": "Rated for up to {capacity, number} m², smaller than your {area, number} m²",
+      "areaUnknown": "Rated area to be confirmed by our team",
+      "slopeHandles": "Handles slopes up to {limit}%, yours is up to about {need}%",
+      "slopeTooSteep": "Handles slopes up to {limit}%, yours is up to about {need}%",
+      "slopeUnknown": "Slope rating to be confirmed by our team",
+      "operationSelf": "Drives itself: no one needs to push it",
+      "operationPush": "Pushed by staff",
+      "operationSelfMiss": "Drives itself; you asked for one staff push",
+      "operationPushMiss": "Pushed by staff; you asked for one that drives itself",
+      "operationUnknown": "How it runs to be confirmed by our team",
+      "rateHours": "About {hours, number} h for {area, number} m² at its top rate of {rate, number} m²/h",
+      "rateUnknown": "Cleaning rate to be confirmed by our team"
+    },
+    "contact": {
+      "title": "Want our team to contact you?",
+      "sub": "We'll call you about these results, prices and setup. No obligation.",
+      "fields": {
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "note": "Anything else we should know?"
+      },
+      "optional": "optional",
+      "consent": "I agree that Raas Pal Company Limited may keep these details and my answers to contact me about robots for my needs. I can ask for them to be deleted at any time.",
+      "submit": "Send to our team",
+      "sending": "Sending…",
+      "sentTitle": "Thank you, we've got it.",
+      "sentBody": "Our team will call you within one working day.",
+      "errors": {
+        "required": "Please fill this in.",
+        "phone": "Enter a Thai phone number, e.g. 081 234 5678.",
+        "email": "Check the email address.",
+        "consent": "Please tick the box so we may contact you.",
+        "send": "Sorry, that didn't go through. Please try again, or call us."
+      },
+      "offer": "Optional. If you'd like a call about prices and the right setup, leave your details.",
+      "open": "Yes, contact me"
+    }
   }
 }

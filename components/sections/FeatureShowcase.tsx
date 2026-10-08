@@ -48,7 +48,7 @@ export default function FeatureShowcase() {
       <div className="sticky top-0 flex h-[100svh] flex-col items-center justify-center px-4 py-14 sm:px-6">
         {/* section heading */}
         <div className="text-center">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
             {t("eyebrow")}
           </p>
           <h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
@@ -104,7 +104,7 @@ export default function FeatureShowcase() {
             <span
               key={i}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === active ? "w-6 bg-gold" : "w-1.5 bg-white/30"
+                i === active ? "w-6 bg-accent" : "w-1.5 bg-white/30"
               }`}
               aria-hidden="true"
             />

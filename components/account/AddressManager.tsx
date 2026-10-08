@@ -21,7 +21,7 @@ const emptyDraft = (email: string, fullName: string): AddressDraft => ({
 });
 
 const inputClass =
-  "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 
 export default function AddressManager({
   initialAddresses,
@@ -164,7 +164,7 @@ export default function AddressManager({
     <section aria-labelledby="addresses-heading" className="rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-gold-600">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-600">
             {t("delivery")}
           </p>
           <h2 id="addresses-heading" className="mt-1 font-display text-xl font-extrabold text-content">
@@ -176,7 +176,7 @@ export default function AddressManager({
           <button
             type="button"
             onClick={openNew}
-            className="flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full bg-gold px-4 text-xs font-bold text-forest-950"
+            className="flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full bg-accent px-4 text-xs font-bold text-on-accent"
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
             {t("addAddress")}
@@ -198,7 +198,7 @@ export default function AddressManager({
       </div>
 
       {setupRequired ? (
-        <div className="mt-5 rounded-xl border border-dashed border-gold/60 bg-gold/10 p-4 text-sm leading-relaxed text-content">
+        <div className="mt-5 rounded-xl border border-dashed border-accent/60 bg-accent/10 p-4 text-sm leading-relaxed text-content">
           {t("addressesSetup")}
         </div>
       ) : editingId !== undefined ? (
@@ -243,7 +243,7 @@ export default function AddressManager({
             <button type="button" onClick={closeForm} className="min-h-11 cursor-pointer rounded-full border border-forest-100 px-5 text-xs font-semibold text-content">
               {t("cancel")}
             </button>
-            <button type="submit" disabled={busy} className="flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-gold px-6 text-xs font-bold text-forest-950 disabled:opacity-50">
+            <button type="submit" disabled={busy} className="flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-accent px-6 text-xs font-bold text-on-accent disabled:opacity-50">
               {busy && <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />}
               {t("saveAddress")}
             </button>
@@ -251,10 +251,10 @@ export default function AddressManager({
         </form>
       ) : addresses.length === 0 ? (
         <div className="mt-6 flex flex-col items-center rounded-xl border border-dashed border-forest-100 px-6 py-10 text-center">
-          <MapPin className="h-8 w-8 text-gold-600" aria-hidden="true" />
+          <MapPin className="h-8 w-8 text-accent-600" aria-hidden="true" />
           <p className="mt-3 text-sm font-semibold text-content">{t("noAddresses")}</p>
           <p className="mt-1 text-xs text-ink-muted">{t("noAddressesSub")}</p>
-          <button type="button" onClick={openNew} className="mt-4 flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-gold px-5 text-xs font-bold text-forest-950">
+          <button type="button" onClick={openNew} className="mt-4 flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-accent px-5 text-xs font-bold text-on-accent">
             <Plus className="h-4 w-4" aria-hidden="true" /> {t("addAddress")}
           </button>
         </div>
@@ -264,11 +264,11 @@ export default function AddressManager({
             <article key={item.id} className="rounded-xl border border-forest-100 bg-cloud/55 p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-gold-600" aria-hidden="true" />
+                  <MapPin className="h-4 w-4 text-accent-600" aria-hidden="true" />
                   <h3 className="text-sm font-bold text-content">{item.label}</h3>
                 </div>
                 {item.isDefault && (
-                  <span className="rounded-full bg-gold/20 px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-wider text-gold-600">
+                  <span className="rounded-full bg-accent/20 px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-wider text-accent-600">
                     {t("defaultAddress")}
                   </span>
                 )}

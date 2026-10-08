@@ -59,11 +59,11 @@ export default function PaymentResult({
     <div className="mx-auto max-w-lg rounded-3xl border border-forest-100 bg-surface p-8 text-center sm:p-12">
       <span
         className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full ${
-          paid ? "bg-gold/20" : pending ? "bg-forest-100" : "bg-red-100"
+          paid ? "bg-accent/20" : pending ? "bg-forest-100" : "bg-red-100"
         }`}
       >
         {paid ? (
-          <CircleCheck className="h-8 w-8 text-gold-600" aria-hidden="true" />
+          <CircleCheck className="h-8 w-8 text-accent-600" aria-hidden="true" />
         ) : pending ? (
           <LoaderCircle className="h-7 w-7 animate-spin text-ink-muted" aria-hidden="true" />
         ) : (
@@ -90,7 +90,7 @@ export default function PaymentResult({
         {!paid && !pending && (
           <Link
             href="/checkout"
-            className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-gold px-7 text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
+            className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent px-7 text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)]"
           >
             {t("tryAgain")}
           </Link>
@@ -99,8 +99,8 @@ export default function PaymentResult({
           href="/shop"
           className={`flex min-h-[48px] items-center justify-center gap-1.5 rounded-full px-7 text-[14px] font-bold transition-all duration-300 ${
             paid
-              ? "bg-gold text-forest-950 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)]"
-              : "border border-forest-100 text-content hover:border-gold"
+              ? "bg-accent text-on-accent hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)]"
+              : "border border-forest-100 text-content hover:border-accent"
           }`}
         >
           {t("viewOrders")}

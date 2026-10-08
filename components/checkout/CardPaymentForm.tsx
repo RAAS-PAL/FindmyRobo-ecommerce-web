@@ -35,7 +35,7 @@ declare global {
 }
 
 const inputClass =
-  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content placeholder:text-ink-muted/60 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content placeholder:text-ink-muted/60 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 const labelClass = "mb-1.5 block text-[13px] font-semibold text-content";
 
 /** Digits only, grouped in 4s, for display. */
@@ -213,7 +213,7 @@ export default function CardPaymentForm({
         <button
           type="submit"
           disabled={busy || !ready}
-          className="flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-bold text-forest-950 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgba(245,200,66,0.7)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+          className="flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[15px] font-bold text-on-accent transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_32px_-6px_rgb(var(--accent-rgb)/0.7)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
         >
           {busy ? (
             <LoaderCircle className="h-4.5 w-4.5 animate-spin" aria-hidden="true" />
@@ -226,7 +226,7 @@ export default function CardPaymentForm({
         </button>
 
         <p className="flex items-start gap-2 text-[12px] leading-relaxed text-ink-muted">
-          <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold-600" aria-hidden="true" />
+          <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-600" aria-hidden="true" />
           {t("securityNote")}
         </p>
         {!ready && (

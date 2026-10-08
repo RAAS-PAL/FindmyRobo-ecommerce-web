@@ -71,7 +71,7 @@ export default async function ComparePage({
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
           <FadeIn>
             <div className="mx-auto flex max-w-lg flex-col items-center rounded-2xl border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
-              <ArrowLeftRight className="h-10 w-10 text-gold-600" aria-hidden="true" />
+              <ArrowLeftRight className="h-10 w-10 text-accent-600" aria-hidden="true" />
               <h1 className="mt-4 font-display text-2xl font-extrabold text-content">
                 {t("emptyTitle")}
               </h1>
@@ -80,7 +80,7 @@ export default async function ComparePage({
               </p>
               <Link
                 href="/shop"
-                className="mt-6 flex min-h-12 items-center rounded-full bg-gold px-6 text-sm font-bold text-forest-950"
+                className="mt-6 flex min-h-12 items-center rounded-full bg-accent px-6 text-sm font-bold text-on-accent"
               >
                 {t("browse")}
               </Link>
@@ -98,7 +98,7 @@ export default async function ComparePage({
     <main className="min-h-[65vh] bg-cloud">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
         <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-content sm:text-5xl">
@@ -120,17 +120,17 @@ export default async function ComparePage({
                         <ProductVisual product={robot} className="h-full w-auto max-w-full" />
                       </div>
                       <p className="mt-4 font-display text-lg font-extrabold leading-snug text-content">
-                        <Link href={`/products/${robot.id}`} className="hover:text-gold-600">
+                        <Link href={`/products/${robot.id}`} className="hover:text-accent-600">
                           {robot.name}
                         </Link>
                       </p>
                       <PriceOrQuote
                         amount={robot.price}
                         className="mt-1 block font-mono text-xl font-semibold tabular-nums text-content"
-                        quoteClassName="mt-1 block text-sm font-bold text-gold-600"
+                        quoteClassName="mt-1 block text-sm font-bold text-accent-600"
                       />
                       {robot.preorder && (
-                        <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-gold-600">
+                        <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-600">
                           {t("preorder")}
                         </p>
                       )}
@@ -174,7 +174,7 @@ export default async function ComparePage({
                             className="flex items-start gap-2 text-[12.5px] leading-relaxed text-ink-muted"
                           >
                             <Check
-                              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold-600"
+                              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-600"
                               aria-hidden="true"
                             />
                             {feature}
@@ -193,7 +193,7 @@ export default async function ComparePage({
                         <AddToCartButton productId={robot.id} />
                         <Link
                           href={`/products/${robot.id}`}
-                          className="flex min-h-[44px] items-center justify-center rounded-full border-2 border-forest px-5 text-[13px] font-semibold text-content transition-colors hover:border-gold hover:text-gold-600"
+                          className="flex min-h-[44px] items-center justify-center rounded-full border-2 border-forest px-5 text-[13px] font-semibold text-content transition-colors hover:border-accent hover:text-accent-600"
                         >
                           {t("viewProduct")}
                         </Link>

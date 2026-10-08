@@ -1,4 +1,4 @@
-# Hot Cache — Last Updated: 2026-09-30
+# Hot Cache — Last Updated: 2026-10-08
 
 Read this first. It's the current state in one page; `README.md` has setup,
 stack, layout, CMS, env vars and conventions in depth; `index.md` maps the
@@ -32,10 +32,12 @@ branch `main`.
   bar, About, contact/socials (incl. the LINE QR), SEO and media. Publishing
   revalidates the site — no deploy needed. `data/*.ts` and `messages/*.json`
   ARE compiled in and need a deploy.
-- **Theme:** light mode is the default; brand reads black + gold. The
-  `forest-*` tokens in `app/globals.css` were remapped to a charcoal scale
-  ("green → black" experiment, still live); gold `#f5c842`. Dark mode is a
-  neutral near-black. Fonts: Barlow (display/body) with Prompt / Noto Sans Thai
+- **Theme (on branch `claude/project-brief-review-sfx73n`, not yet on main):**
+  one light theme only (dark mode removed), soft grey page (`--color-surface`
+  `#f3f5f8`), graphite neutrals, electric-blue brand colour. The brand colour
+  is one token, `accent-*` (plus `--accent-rgb`, `bg-accent-gradient`,
+  `text-accent-gradient`) in `app/globals.css`: change it there to re-colour
+  the site. Main still has black + gold with dark mode. Fonts: Barlow (display/body) with Prompt / Noto Sans Thai
   for Thai glyphs, IBM Plex Mono for eyebrows/labels.
 
 ## How work ships
@@ -70,6 +72,24 @@ branch `main`.
 
 ## Recent work (2026-09-24 → 09-30), newest first
 
+- **Homepage redesign, DJI-style** (branch `claude/project-brief-review-sfx73n`,
+  Vercel preview only): hero slides per robot family (`data/homeShowcase.ts`:
+  lawn mowing, then Gausium Phantas) with a progress tab bar and the quote
+  card docked right; the LUBA hero is a studio render faded into a graphite
+  set (`components/ui/StudioStage.tsx`); full-width banners for mowers and
+  Phantas, tiles for Pudu and T-Chef (`components/sections/RobotShowcase.tsx`).
+  A slide or banner tied to a robot (`productId`) or a category shows only
+  while that robot / a robot in that category is visible (`onShow` in
+  `data/homeShowcase.ts`), so hidden robots never leave an empty photo slot;
+  a lone tile spans the row. Quote form gained Phantas cleaning
+  and T-Chef cooking. Navbar is transparent over the homepage hero until
+  scroll (`header[data-clear]` in globals.css). The announcement bar is hidden
+  (not rendered in `app/[locale]/layout.tsx`), so its CMS section currently
+  does nothing. The hero photo sits in a box below the navbar and above the
+  headline (`studioPhoto` in `data/homeShowcase.ts`) and scales to fit it.
+  Copy for Phantas/Pudu/T-Chef is descriptive only until spec sheets arrive;
+  their Thai lines are drafts.
+
 - **Navbar** (`components/layout/Navbar.tsx`, `.nav-track` in globals.css): a
   3px gold track on the bar's bottom edge glides to the hovered/focused link
   (leading end first, glowing head) and rests under the current section
@@ -78,7 +98,7 @@ branch `main`.
   "Get a quote" pill (gold disc on phones).
 - **Profile menu** (`components/layout/ProfileMenu.tsx`): hover (mouse) or
   click/tap opens Sign in / Create account, or My account / Sign out when
-  signed in, plus the Dark mode switch. The bar's "Book a Demo" button and
+  signed in (the Dark mode switch was removed with dark mode). The bar's "Book a Demo" button and
   standalone theme button were removed (Book a Demo stays under Contact and in
   the hero). "FindMyRobo TV" was removed from the menu.
 - **Location page** `/location` (`components/contact/LocationBody.tsx`): Google
@@ -96,6 +116,12 @@ branch `main`.
     this wide so the card sits centred in the frost).
   - Below lg: no frost at all; the headline block is content-height so the
     quote card follows the buttons.
+  - 2026-10-08: the hero no longer adds a "Get a quote" button beside Learn
+    more. The quote card is already on the slide, and the navbar still has
+    one. Lawn mowing still shows Book a demo. The slide tabs render only when
+    there is more than one slide, so a single slide does not leave a blank
+    half. A homepage banner with no photo (Pudu) stays off. Shop filter pills
+    follow the navbar: a category with nothing on show is not listed.
   - The section is `overflow: clip` (not hidden) on purpose: a hidden box is
     still a scroll container, and focusing the form once scrolled the hero's
     own content up, out of reach.
@@ -104,16 +130,74 @@ branch `main`.
   instant jump before the keyboard opens (card top just under the sticky
   header); otherwise a smooth glide to centre. Phone placeholder
   `+66 123456789` (validation accepts +66… and 0…). Optional note field.
-- **Dark mode kept across language switches** (`ThemeScript` in
-  `components/ThemeProvider.tsx`): switching `/`↔`/en` remounts the root
-  `[locale]` layout in the browser; the old next/script `beforeInteractive`
-  tag re-rendered as an inert inline `<script>` (React warning) and `.dark`
-  was lost.
 - 2026-09-28: About story copy (with a guarded CMS migration), quote-only
   flow, PRD + Office lock files gitignored, repo made public.
 - 2026-09-24: Payload CMS replaced a hand-built content editor.
 
 ## Open items / next candidates
+
+- **Robots into the database (2026-10-02, in progress).** SQL is run by hand
+  in Supabase, after a backup, in this order:
+  1. `supabase/add-multi-brand-catalogue.sql` — brand + conditions columns,
+     new robot types. **Ran on live 2026-10-02.** (No `sku` column on purpose.)
+  2. `supabase/allow-unknown-price.sql` — `price` may be null (not known
+     yet): shown as "Price on request", kept out of cart and checkout
+     (`hasPrice` / `PricedProduct` in data/products.ts). Run before step 3.
+     **Ran on live 2026-10-02.**
+     Until this branch is on main, the OLD live admin list can't show a
+     product without a price.
+  3. `supabase/seed-lineup-robots.sql` — the 8 code-only robots, HIDDEN,
+     with no price (set prices in Admin). Nothing to edit before running. **Ran on live
+     2026-10-02** (8 robots in, hidden, no price; c40 hidden).
+  4. `supabase/add-recommender.sql` — `fit` column, `recommendation_requests`
+     table, facts for Phantas and A1. Additive; safe any time after step 3.
+     **Ran on live 2026-10-02** (3 robots with facts).
+  4b. `supabase/fill-robot-pages.sql` — the full page content (text, photos,
+     key figures, feature sections, spec table) for Gausium Phantas, T-Chef
+     TC-E10A and Aventurier A1-Youth, generated from the old code-built pages.
+     Leaves price, visible, fit and order alone; the rows stay hidden, so it
+     is safe before the merge and safe to re-run. **Ran on live 2026-10-08**
+     (Phantas, T-Chef TC-E10A and A1-Youth filled, still hidden).
+     Tested on a local Postgres 18 after steps 1–4.
+  Launch order: run 4b → merge this branch to main (ask the owner first) →
+  step 5 → switch the three on (`update products set visible = true where id
+  in ('gausium-phantas','aventurier-a1-youth','t-chef-tc-e10a')`, or tick
+  Visible in Admin). A1-Basic and the four Pudu robots stay hidden until their
+  photos and specs arrive (owner, 2026-10-07); the Delivery tab and the Pudu
+  homepage tile appear by themselves once one is visible.
+  5. `supabase/variant-to-product-type.sql` — `variant` becomes the product
+     type (mower, pool, cleaner, equipment, cooking, delivery, installation,
+     demo), never a model name. Run it right AFTER this branch's code is live
+     on main: old main code doesn't know the new values. Until then
+     `lib/productStore.ts` reads luba/mini/install as the new values and keeps
+     each LUBA's clip and diagram (LEGACY_VARIANTS, delete after step 5).
+     The parts diagram is now picked per page section (`anatomy` block
+     `model`), only for the model it describes: YUKA Mini 2 and LUBA Mini 2
+     AWD 1000 get none. Live row `c40` (Cleaner, price 999999) looks like a
+     test product — hide it before going live (it would also be offered by
+     the recommender for floor cleaning).
+     Preview-only: set `SHOW_HIDDEN_PRODUCTS=1` on Vercel's Preview
+     environment to see hidden robots on preview deployments (ignored on
+     production).
+
+- **Robot recommender — built 2026-10-02 (hybrid, phase 1).** `/recommend`
+  (EN/TH), linked from the hero ("Not sure which robot fits?"), About menu →
+  "Find my robot", and the footer. Steps: job (lawn / floor / cooking /
+  delivery) → follow-ups (area + slope; area + self-driving or pushed; venue;
+  cooking has none and goes straight to results) → 1 to 3 robots with
+  reasons. No new/pre-owned question (owner, 2026-10-02: customers shouldn't
+  have to think about it; the cards still show how each is sold). Rules + score in `lib/recommend.ts`
+  (pure; the API re-runs it); facts per product in `fit` (Admin → Products →
+  "Recommendation facts"; mowers fall back to their area/slope specs); a
+  missing figure shows "to be confirmed", never a guess. Answers saved to
+  `recommendation_requests` on results. Contact is optional: under the
+  results only an offer ("Yes, contact me") until tapped; then name, phone,
+  optional email, PDPA consent, emailed to sales. No budget question
+  until prices exist. Phase 2 (LLM wording / free text) not started.
+  Needs `supabase/add-recommender.sql` (after the seed). Open: PDPA consent
+  wording and the Privacy Policy page (footer still has none) for legal review;
+  Thai copy is a draft; T-Chef and Pudu have no facts the questions use, so
+  they match on job + condition only.
 
 - Save quote requests to a DB table + an `/admin` list for sales follow-up;
   fail loudly (not silently) when `RESEND_API_KEY` is missing.
@@ -148,8 +232,40 @@ branch `main`.
 - Supabase SQL is applied by hand (README → Database setup); run
   `supabase/add-product-brand.sql` before adding a non-Mammotion product.
 - `HeroSection.tsx` headline separator contains a literal NBSP (U+00A0).
-- The Products mega-menu is index 0 of `navLinks` (positioned off `<nav>`, not
-  its `<li>`); other code assumes that.
+- Navbar (2026-09-30, branch): one tab per `nav: true` category in
+  `data/categories.ts`, labelled by `categories.<slug>.nav` in messages:
+  Lawn Mowers, Cleaner, Smart Equipment, Cooker, Delivery (the Pudu robots);
+  a tab shows only while its category has a visible product (Delivery is
+  hidden until a Pudu robot is switched on); Thai labels are drafts. Plus one "About" menu that also holds Contact and
+  Support — all eight didn't fit on one line in Thai. Tabs show from xl
+  (1280px); below that they're in the drawer. Category panels and the accent
+  track are positioned against the `<header>` (the `<nav>` is deliberately not
+  positioned) so panels span the full width. The Thai tab row has ~40px to
+  spare at 1280px — re-measure if labels get longer. The search field sits in
+  a fixed slot and opens leftwards over the tabs (it must not widen the bar).
+- **Every robot is an Admin product** (branch, 2026-10-07). The code-only
+  robots (`data/lineup.ts`), the code-built pages (`data/modelPages.ts`,
+  `components/model/ModelPageView.tsx`, the static `products/gausium-phantas`,
+  `t-chef-tc-e10a`, `aventurier-a1-youth` routes) and the quote form's
+  `modelId` are gone. Navbar, category pages, homepage and quote form read
+  only Supabase products; hidden products appear nowhere (`showsOnStorefront`
+  in `lib/productStore.ts`; `SHOW_HIDDEN_PRODUCTS=1` shows them on previews).
+- **Full-screen product page** (Admin → Products → page builder → "Full-screen
+  page"): when a product's `page.showcase` is set, `products/[id]` renders
+  `components/product/ShowcasePage.tsx` (DJI-style dark header with the
+  robot, the line above the name, up to 4 key figures, optional colours;
+  one full-width photo per Feature section that has an image; spec table).
+  Feature sections without an image, What's in the box and FAQ still show
+  under it. Off = the standard gallery page. Validated in
+  `lib/productValidation.ts` (`parsePage`). Photos stay in `public/models/`
+  and `public/studio/`.
+- How each robot is sold is the product's `conditions` column (`new`,
+  `pre-owned` or both; helpers in `data/conditions.ts`). The label shows on
+  cards and menus only when pre-owned is among them (`showsCondition`); the
+  full-screen header and spec table always show it; the quote form asks
+  brand-new or pre-owned when both apply. Thai "ผ่านการใช้งาน" is a draft.
+  Open question: the hero promise "Warranty in Thailand" — what warranty
+  applies to pre-owned units?
 
 ## Conventions for agents
 

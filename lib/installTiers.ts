@@ -1,4 +1,4 @@
-import { SERVICE_CATEGORY, type Product } from "@/data/products";
+import { hasPrice, SERVICE_CATEGORY, type PricedProduct, type Product } from "@/data/products";
 
 /**
  * Installation coverage tiers.
@@ -18,11 +18,12 @@ export const parseArea = (spec?: string) =>
   spec ? Number(spec.replace(/[^0-9]/g, "")) : NaN;
 
 export const isInstallTier = (product: Product) =>
-  product.category === SERVICE_CATEGORY && product.variant === "install";
+  product.category === SERVICE_CATEGORY && product.variant === "installation";
 
 /** Every installation tier with a usable coverage figure, smallest first. */
-export function installTiers(products: Product[]): Product[] {
+export function installTiers(products: Product[]): PricedProduct[] {
   return products
+    .filter(hasPrice)
     .filter((p) => isInstallTier(p) && !Number.isNaN(parseArea(p.specs.area)))
     .sort((a, b) => parseArea(a.specs.area) - parseArea(b.specs.area));
 }

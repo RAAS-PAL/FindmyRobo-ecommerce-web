@@ -32,7 +32,7 @@ export default async function AdminLoginPage() {
             height={320}
             className="hidden h-8 w-auto dark:block"
           />
-          <span className="font-display text-lg font-extrabold tracking-tight text-gold-600">
+          <span className="font-display text-lg font-extrabold tracking-tight text-accent-600">
             {t("adminLabel")}
           </span>
         </div>

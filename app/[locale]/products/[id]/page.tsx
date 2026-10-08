@@ -14,6 +14,7 @@ import InstallPurchasePanel from "@/components/cart/InstallPurchasePanel";
 import ProductCard from "@/components/ui/ProductCard";
 import ProductGallery from "@/components/product/ProductGallery";
 import ProductPageBlocks from "@/components/product/ProductPageBlocks";
+import ShowcasePage from "@/components/product/ShowcasePage";
 import ExpandOnScroll from "@/components/product/ExpandOnScroll";
 import SpecTable from "@/components/product/SpecTable";
 import BoxContents from "@/components/product/BoxContents";
@@ -28,7 +29,7 @@ import {
   type PageBlock,
 } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
-import { getAllProducts, getProductById } from "@/lib/productStore";
+import { getAllProducts, getProductById, showsOnStorefront } from "@/lib/productStore";
 import { localizedUrl, metaDescription, pageAlternates } from "@/lib/seo";
 import { breadcrumbJsonLd, productJsonLd } from "@/lib/structuredData";
 import { getSiteContent } from "@/lib/siteContentStore";
@@ -48,7 +49,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, id } = await params;
   const product = await getProductById(id);
-  if (!product || product.visible === false) return {};
+  if (!product || !showsOnStorefront(product)) return {};
 
   // Description and share image come from the product record itself, so every
   // product — including ones added later — gets its own search snippet and its
@@ -91,7 +92,7 @@ export default async function ProductPage({
 
   const product = await getProductById(id);
   // hidden products are unreachable by direct URL, not just unlisted
-  if (!product || product.visible === false) notFound();
+  if (!product || !showsOnStorefront(product)) notFound();
 
   const t = await getTranslations("productDetail");
   const tc = await getTranslations("categories");
@@ -106,7 +107,7 @@ export default async function ProductPage({
   const isDemo = isService && product.variant === "demo";
   // Installation also prices by area, and the coverage band is chosen inside
   // InstallPurchasePanel rather than by browsing to a different tier product.
-  const isInstall = isService && product.variant === "install";
+  const isInstall = isService && product.variant === "installation";
   const related = allProducts
     .filter((p) => p.id !== product.id)
     .sort((a, b) =>
@@ -118,34 +119,77 @@ export default async function ProductPage({
   // same names, same order — because Google checks the two against each other.
   const categoryName = tc(`${product.category}.name`);
   const l = locale as Locale;
+  const structuredData = (
+    <>
+      <JsonLd data={productJsonLd(product, l, categoryName)} />
+      <JsonLd
+        data={breadcrumbJsonLd(l, [
+          { name: t("home"), path: "/" },
+          { name: t("shop"), path: "/shop" },
+          { name: categoryName, path: `/shop/${product.category}` },
+          { name: product.name, path: `/products/${product.id}` },
+        ])}
+      />
+    </>
+  );
+
+  // Full-screen page (Admin → Products → "Full-screen page"): its feature
+  // sections with a photo become the page's photo sections; any other
+  // sections, what's in the box and the FAQ follow in their usual form.
+  const showcase = page?.showcase;
+  if (showcase) {
+    const otherBlocks = (page?.blocks ?? []).filter((b) => !(b.type === "feature" && b.image));
+    return (
+      <>
+        {structuredData}
+        <ShowcasePage
+          product={product}
+          showcase={showcase}
+          afterFeatures={
+            otherBlocks.length > 0 ? (
+              <ProductPageBlocks blocks={otherBlocks} locale={l} productName={product.name} />
+            ) : undefined
+          }
+          afterSpecs={
+            (page?.boxItems?.length ?? 0) > 0 || (page?.faqs?.length ?? 0) > 0 ? (
+              <>
+                {page?.boxItems && page.boxItems.length > 0 && (
+                  <FadeIn>
+                    <BoxContents items={page.boxItems} heading={t("boxHeading")} locale={l} />
+                  </FadeIn>
+                )}
+                {page?.faqs && page.faqs.length > 0 && (
+                  <FadeIn>
+                    <FaqSection faqs={page.faqs} heading={t("faqHeading")} locale={l} />
+                  </FadeIn>
+                )}
+              </>
+            ) : undefined
+          }
+        />
+      </>
+    );
+  }
 
   return (
     <>
-    <JsonLd data={productJsonLd(product, l, categoryName)} />
-    <JsonLd
-      data={breadcrumbJsonLd(l, [
-        { name: t("home"), path: "/" },
-        { name: t("shop"), path: "/shop" },
-        { name: categoryName, path: `/shop/${product.category}` },
-        { name: product.name, path: `/products/${product.id}` },
-      ])}
-    />
+    {structuredData}
     {/* overflow-x-clip contains ExpandOnScroll's full-bleed w-screen panel */}
     <main className="overflow-x-clip bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* breadcrumb */}
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-[13px] text-ink-muted">
-          <Link href="/" className="transition-colors hover:text-gold-600">
+          <Link href="/" className="transition-colors hover:text-accent-600">
             {t("home")}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <Link href="/shop" className="transition-colors hover:text-gold-600">
+          <Link href="/shop" className="transition-colors hover:text-accent-600">
             {t("shop")}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           <Link
             href={`/shop/${product.category}`}
-            className="transition-colors hover:text-gold-600"
+            className="transition-colors hover:text-accent-600"
           >
             {tc(`${product.category}.name`)}
           </Link>
@@ -190,7 +234,7 @@ export default async function ProductPage({
 
           {/* info */}
           <FadeIn delay={0.1} className="flex flex-col">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-600">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-600">
               {tc(`${product.category}.name`)}
             </p>
             <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-4xl">
@@ -217,7 +261,7 @@ export default async function ProductPage({
               </div>
             )}
             {product.preorder && (
-              <p className="mt-2 text-[13px] font-medium text-gold-600">{t("preorderNote")}</p>
+              <p className="mt-2 text-[13px] font-medium text-accent-600">{t("preorderNote")}</p>
             )}
 
             <div className="mt-8">
@@ -234,7 +278,7 @@ export default async function ProductPage({
                   <AddToCartButton productId={product.id} />
                   <Link
                     href="/products/request-a-demo"
-                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-gold hover:text-gold-600 dark:border-white/30 dark:hover:border-gold"
+                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-accent hover:text-accent-600 dark:border-white/30 dark:hover:border-accent"
                   >
                     <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
                     {t("ctaDemo")}
@@ -260,8 +304,8 @@ export default async function ProductPage({
               <ul className="mt-4 space-y-3">
                 {features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3 text-sm leading-relaxed text-ink-muted">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/20">
-                      <Check className="h-3 w-3 text-gold-600" aria-hidden="true" />
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/20">
+                      <Check className="h-3 w-3 text-accent-600" aria-hidden="true" />
                     </span>
                     {feature}
                   </li>
@@ -292,7 +336,6 @@ export default async function ProductPage({
                 blocks={blocks}
                 locale={locale as Locale}
                 productName={product.name}
-                variant={product.variant}
               />
             </div>
           ) : null;
@@ -361,7 +404,7 @@ export default async function ProductPage({
         </div>
       </div>
     </main>
-    {!isService && (
+    {!isService && product.price !== null && (
       <FloatingAddToCart
         productId={product.id}
         name={product.name}

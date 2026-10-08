@@ -2,11 +2,17 @@ import { categories } from "@/data/categories";
 import {
   PAGE_BLOCK_TYPES,
   ROBOT_VARIANTS,
+  ANATOMY_MODELS,
+  MAX_SHOWCASE_FIGURES,
   SPEC_KEYS,
+  type AnatomyModel,
+  type ShowcaseColor,
+  type ShowcaseFigure,
   type BoxItem,
   type FaqItem,
   type LocalizedText,
   type PageBlock,
+  type RobotFit,
   type Product,
   type ProductPage,
   type SpecGroup,
@@ -50,6 +56,7 @@ const asLines = (v: unknown) =>
     .filter(Boolean);
 
 const URL_RE = /^(https?:\/\/|\/)[^\s]+$/i;
+const HEX_RE = /^#[0-9a-f]{6}$/i;
 
 /** Localized text from the page builder: EN required, TH falls back to EN. */
 function asLocalized(v: unknown): LocalizedText | null {
@@ -70,6 +77,51 @@ export function parsePage(raw: unknown): ProductPage | undefined | string {
   if (typeof raw !== "object" || raw === null) return undefined;
   const input = raw as Record<string, unknown>;
   const page: ProductPage = {};
+
+  // Full-screen page: sent only while switched on, and it needs the line above
+  // the name. Figures and colours missing a part are dropped like any
+  // half-filled row.
+  if (typeof input.showcase === "object" && input.showcase !== null) {
+    const s = input.showcase as Record<string, unknown>;
+    const eyebrow = asLocalized(s.eyebrow);
+    if (!eyebrow) {
+      return "Full-screen page: fill in the line above the name, or switch the full-screen page off";
+    }
+    {
+      const heroImage = asText(s.heroImage);
+      if (heroImage && !URL_RE.test(heroImage)) {
+        return "Full-screen page: the header image URL must start with https:// or /";
+      }
+      const figures: ShowcaseFigure[] = [];
+      for (const item of Array.isArray(s.figures) ? s.figures : []) {
+        if (typeof item !== "object" || item === null) continue;
+        const o = item as Record<string, unknown>;
+        const value = asText(o.value);
+        const label = asLocalized(o.label);
+        if (value && label) figures.push({ value, label });
+      }
+      const colors: ShowcaseColor[] = [];
+      for (const [i, item] of (Array.isArray(s.colors) ? s.colors : []).entries()) {
+        if (typeof item !== "object" || item === null) continue;
+        const o = item as Record<string, unknown>;
+        const label = asLocalized(o.label);
+        const image = asText(o.image);
+        if (!label || !image) continue;
+        if (!URL_RE.test(image)) {
+          return `Full-screen page: colour ${i + 1} image URL must start with https:// or /`;
+        }
+        const swatch = asText(o.swatch);
+        colors.push({ label, image, swatch: HEX_RE.test(swatch) ? swatch : "#d1d5db" });
+      }
+      page.showcase = {
+        eyebrow,
+        ...(heroImage ? { heroImage } : {}),
+        figures: figures.slice(0, MAX_SHOWCASE_FIGURES),
+        // one colour is just the robot: the header shows the main image instead
+        ...(colors.length > 1 ? { colors } : {}),
+      };
+    }
+  }
 
   const videoUrl = asText(input.videoUrl);
   if (videoUrl) {
@@ -94,13 +146,20 @@ export function parsePage(raw: unknown): ProductPage | undefined | string {
       const body = asLocalized(b.body);
 
       if (type === "anatomy") {
-        // No configuration: the content comes from the product's variant, so
-        // the block only records its position among the others.
-        blocks.push({ type });
+        // which model's diagram; none renders nothing (see TechAnatomy)
+        const model = asText(b.model) as AnatomyModel;
+        blocks.push(ANATOMY_MODELS.includes(model) ? { type, model } : { type });
       } else if (type === "banner" && image) {
         blocks.push({ type, image });
       } else if (type === "feature" && heading && body) {
-        blocks.push({ type, heading, body, ...(image ? { image } : {}) });
+        const eyebrow = asLocalized(b.eyebrow);
+        blocks.push({
+          type,
+          heading,
+          body,
+          ...(image ? { image } : {}),
+          ...(eyebrow ? { eyebrow } : {}),
+        });
       } else if (type === "imageText" && image && body) {
         const imageSide = asText(b.imageSide) === "left" ? "left" : "right";
         blocks.push({ type, image, body, imageSide });
@@ -212,15 +271,18 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   const name = asText(body.name);
   if (!name) return "Product name is required";
 
-  const price = Number(body.price);
-  if (!Number.isFinite(price) || price <= 0) return "Price must be a positive number";
+  // blank = not known yet (stored as null, shown as "Price on request")
+  const rawPrice = asText(String(body.price ?? ""));
+  const price = rawPrice === "" ? null : Number(rawPrice);
+  if (price !== null && (!Number.isFinite(price) || price <= 0))
+    return "Price must be a positive number, or left blank";
 
   const category = asText(body.category);
   if (!categories.some((c) => c.slug === category)) return "Unknown category";
 
   const variant = asText(body.variant);
   if (!ROBOT_VARIANTS.includes(variant as Product["variant"]))
-    return "Unknown illustration variant";
+    return "Unknown product type";
 
   const taglineEn = asText(body.taglineEn);
   const taglineTh = asText(body.taglineTh);
@@ -274,6 +336,29 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   const page = parsePage(body.page);
   if (typeof page === "string") return page;
 
+  // How it is sold: one checkbox each; at least one.
+  const conditions: Product["conditions"] = [];
+  if (body.condition_new) conditions.push("new");
+  if (body.condition_preowned) conditions.push("pre-owned");
+  if (conditions.length === 0) return "Tick at least one: new or pre-owned";
+
+  // Recommender facts: blank fields are left out, never stored as 0.
+  const fit: RobotFit = {};
+  for (const [field, key] of [
+    ["fit_maxAreaM2", "maxAreaM2"],
+    ["fit_maxSlopePct", "maxSlopePct"],
+    ["fit_cleaningRateM2h", "cleaningRateM2h"],
+  ] as const) {
+    const raw = asText(body[field]).replace(/,/g, "");
+    if (!raw) continue;
+    const value = Number(raw);
+    if (!Number.isFinite(value) || value <= 0)
+      return "Recommendation facts must be positive numbers, or left blank";
+    fit[key] = value;
+  }
+  const operation = asText(body.fit_operation);
+  if (operation === "autonomous" || operation === "walk-behind") fit.operation = operation;
+
   // Visible unless explicitly turned off. The form pairs a hidden "false" input
   // with the checkbox so an unchecked box arrives as "false" rather than absent;
   // any other value (incl. a payload that omits it entirely) defaults to shown.
@@ -291,7 +376,7 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
   return {
     id,
     name,
-    price: Math.round(price),
+    price: price === null ? null : Math.round(price),
     category: category as Product["category"],
     variant: variant as Product["variant"],
     ...(imageUrl ? { imageUrl } : {}),
@@ -302,6 +387,8 @@ export function parseProduct(body: Record<string, unknown>): Product | string {
     visible,
     ...(sku ? { sku } : {}),
     ...(brand ? { brand } : {}),
+    conditions,
+    ...(Object.keys(fit).length > 0 ? { fit } : {}),
     specs,
     tagline: { en: taglineEn, th: taglineTh },
     description: { en: descriptionEn, th: descriptionTh },

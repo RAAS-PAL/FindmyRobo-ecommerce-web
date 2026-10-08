@@ -6,7 +6,9 @@ import { getSiteContent } from "@/lib/siteContentStore";
 import JsonLd from "@/components/seo/JsonLd";
 import HeroSection from "@/components/sections/HeroSection";
 import ProductGrid from "@/components/sections/ProductGrid";
-import FeatureShowcase from "@/components/sections/FeatureShowcase";
+import { FamilyBanner, MoreFamilies } from "@/components/sections/RobotShowcase";
+import { featuredFamilies, moreFamilies, onShow } from "@/data/homeShowcase";
+import { getAllProducts } from "@/lib/productStore";
 import VideoShowcase from "@/components/sections/VideoShowcase";
 import TrustSection from "@/components/sections/TrustSection";
 import WhyUsSection from "@/components/sections/WhyUsSection";
@@ -31,7 +33,10 @@ export default async function Home({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const { contact } = await getSiteContent();
+  const [{ contact }, products] = await Promise.all([getSiteContent(), getAllProducts()]);
+  // banners for robots still hidden in Admin (no photos yet) are left out
+  const [phantas] = onShow([featuredFamilies[1]], products);
+  const more = onShow(moreFamilies, products);
 
   return (
     <main>
@@ -40,8 +45,14 @@ export default async function Home({
           per site is the convention. */}
       <JsonLd data={organizationJsonLd(contact)} />
       <HeroSection />
+      {/* Priority order (2026-09-30): the mower lineup straight after the
+          hero (its cards carry the mowers, so they have no banner of their
+          own), then the full-width Phantas banner, then Pudu and T-Chef
+          sharing a row. The mower technology scroll story (FeatureShowcase)
+          left the homepage — it suits the mower category page. */}
       <ProductGrid />
-      <FeatureShowcase />
+      {phantas && <FamilyBanner family={phantas} />}
+      {more.length > 0 && <MoreFamilies families={more} />}
       <VideoShowcase />
       <TrustSection />
       <WhyUsSection />

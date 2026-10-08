@@ -6,7 +6,7 @@ import { Bot, Calendar, Ruler } from "lucide-react";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { Link } from "@/i18n/navigation";
 import { useProducts } from "@/components/ProductsProvider";
-import { formatBaht, SERVICE_CATEGORY } from "@/data/products";
+import { formatBaht, hasPrice, SERVICE_CATEGORY } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
 
 /** "5,000 m²" → 5000; NaN when the spec is missing/unparsable. */
@@ -32,6 +32,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
   const tiers = useMemo(
     () =>
       products
+        .filter(hasPrice)
         .filter(
           (p) =>
             p.category === SERVICE_CATEGORY &&
@@ -64,7 +65,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
   return (
     <div className="flex flex-col gap-5">
       {/* price of the selected area band */}
-      {selected && siteConfig.showPrices && (
+      {selected && selected.price !== null && siteConfig.showPrices && (
         <p className="font-mono text-3xl font-semibold tabular-nums text-content">
           {formatBaht(selected.price)}
         </p>
@@ -74,7 +75,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
       {tiers.length > 0 && (
         <fieldset>
           <legend className="mb-1.5 flex items-center gap-2 text-[13px] font-semibold text-content">
-            <Ruler className="h-4 w-4 text-gold-600" aria-hidden="true" />
+            <Ruler className="h-4 w-4 text-accent-600" aria-hidden="true" />
             {t("demoAreaLabel")}
           </legend>
           <div className="grid gap-2">
@@ -85,8 +86,8 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
                   key={tier.id}
                   className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border px-4 py-3 transition-colors ${
                     active
-                      ? "border-gold bg-gold/10"
-                      : "border-forest-100 hover:border-gold/50"
+                      ? "border-accent bg-accent/10"
+                      : "border-forest-100 hover:border-accent/50"
                   }`}
                 >
                   <span className="flex items-center gap-2.5">
@@ -99,11 +100,11 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
                     />
                     <span
                       className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                        active ? "border-gold" : "border-forest-200"
+                        active ? "border-accent" : "border-forest-200"
                       }`}
                       aria-hidden="true"
                     >
-                      {active && <span className="h-2 w-2 rounded-full bg-gold" />}
+                      {active && <span className="h-2 w-2 rounded-full bg-accent" />}
                     </span>
                     <span className="text-[13.5px] font-medium text-content">
                       {tier.specs.area}
@@ -128,7 +129,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
           <p className="text-[13.5px] leading-relaxed text-content">{t("demoNoRobots")}</p>
           <Link
             href="/contact-sales"
-            className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full bg-gold px-6 text-[13.5px] font-bold text-forest-950 transition-transform duration-300 hover:scale-[1.02]"
+            className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full bg-accent px-6 text-[13.5px] font-bold text-on-accent transition-transform duration-300 hover:scale-[1.02]"
           >
             {t("demoNoRobotsCta")}
           </Link>
@@ -141,14 +142,14 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
               htmlFor="demo-robot"
               className="mb-1.5 flex items-center gap-2 text-[13px] font-semibold text-content"
             >
-              <Bot className="h-4 w-4 text-gold-600" aria-hidden="true" />
+              <Bot className="h-4 w-4 text-accent-600" aria-hidden="true" />
               {t("demoRobotLabel")}
             </label>
             <select
               id="demo-robot"
               value={robotId}
               onChange={(e) => setRobotId(e.target.value)}
-              className="min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25"
+              className="min-h-[48px] w-full rounded-xl border border-forest-100 bg-surface px-4 text-[14px] text-content transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
             >
               <option value="" disabled>
                 {t("selectRobotPlaceholder")}

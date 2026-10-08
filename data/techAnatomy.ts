@@ -1,4 +1,4 @@
-import type { RobotVariant } from "@/data/products";
+import type { AnatomyModel } from "@/data/products";
 
 /**
  * "Under the hood" — the interactive anatomy shown on a robot's product page.
@@ -11,9 +11,10 @@ import type { RobotVariant } from "@/data/products";
  * warranty-adjacent promises a customer can hold the company to. If a claim
  * cannot be sourced, leave it out and ask the supplier.
  *
- * WHICH SET A PRODUCT GETS is decided by its `variant`, so nothing has to be
- * configured per product in the admin panel — a new LUBA 3 listing picks up the
- * LUBA 3 anatomy automatically. Variants with no entry simply render nothing.
+ * WHICH SET A PRODUCT GETS is chosen on its page's "Under the hood" section in
+ * Admin (the block's `model`). Each set describes one model only, so only that
+ * model's products should pick it: another model's parts and figures would be
+ * claims about the wrong machine.
  *
  * ⚠️ STILL UNCONFIRMED (LUBA 3 only), flagged for the supplier:
  *   - LiDAR range: brochure spec table says 70 m, marketing page says 100 m.
@@ -405,8 +406,8 @@ const lubaMini2: AnatomySet = {
   ],
 };
 
-/** Anatomy by robot variant. Variants absent here render no section at all. */
-export const anatomyByVariant: Partial<Record<RobotVariant, AnatomySet>> = {
-  luba: luba3,
-  mini: lubaMini2,
+/** Anatomy by model; see AnatomyModel in data/products.ts. */
+export const anatomyByModel: Record<AnatomyModel, AnatomySet> = {
+  "luba-3": luba3,
+  "luba-mini-2": lubaMini2,
 };

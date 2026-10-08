@@ -4,13 +4,15 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  BadgeCheck,
+  ArrowRight,
   BookOpen,
   Building2,
+  Compass,
   CalendarDays,
   ChevronDown,
   Handshake,
   Headset,
+  LifeBuoy,
   MapPin,
   Menu,
   MessageCircle,
@@ -19,8 +21,10 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Link, usePathname } from "@/i18n/navigation";
-import { categories, categoryHref } from "@/data/categories";
+import { categoryHref, navCategories, type CategorySlug } from "@/data/categories";
+import { showsCondition } from "@/data/conditions";
 import { siteConfig } from "@/data/siteConfig";
+import { DEFAULT_BRAND, productLabel, type Product } from "@/data/products";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 import ProfileMenu from "@/components/layout/ProfileMenu";
 import { useCart } from "@/components/cart/CartProvider";
@@ -28,59 +32,42 @@ import CartIcon from "@/components/cart/CartIcon";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { useProducts } from "@/components/ProductsProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
+import ConditionLine from "@/components/ui/ConditionLine";
 import CatalogSearch from "@/components/layout/CatalogSearch";
-import type { CategorySlug } from "@/data/categories";
-import type { Locale } from "@/data/products";
 
 interface NavChild {
   label: string;
   href: string;
-  description?: string;
-  comingSoon?: boolean;
   icon?: LucideIcon;
+}
+
+interface NavGroup {
+  heading: string;
+  items: NavChild[];
+}
+
+/** One robot in a category's menu. */
+interface MenuModel {
+  key: string;
+  name: string;
+  /** Shown above the name for brands other than Mammotion. */
+  brand?: string;
+  href: string;
+  product: Product;
 }
 
 interface NavItem {
   label: string;
-  href: string;
-  children?: NavChild[];
-  /** The page being viewed belongs to this section — the gold track rests under it. */
+  /** A product category: its tab opens a full-width panel of its models. */
+  category?: CategorySlug;
+  models?: MenuModel[];
+  /** Otherwise a dropdown of link groups (the About menu). */
+  groups?: NavGroup[];
+  /** The page being viewed belongs to this section — the accent track rests under it. */
   current?: boolean;
 }
 
-function SoonBadge({ label }: { label: string }) {
-  return (
-    <span className="ml-2 shrink-0 rounded-full bg-gold/25 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-gold-600">
-      {label}
-    </span>
-  );
-}
-
-function DropdownChild({
-  item,
-  soonLabel,
-  onNavigate,
-}: {
-  item: NavChild;
-  soonLabel: string;
-  onNavigate?: () => void;
-}) {
-  if (item.comingSoon) {
-    return (
-      <span
-        aria-disabled="true"
-        className="flex items-center justify-between rounded-lg px-3 py-2.5 text-[13px] text-ink-muted/60"
-      >
-        <span>
-          {item.label}
-          {item.description && (
-            <span className="mt-0.5 block text-[11px] text-ink-muted/50">{item.description}</span>
-          )}
-        </span>
-        <SoonBadge label={soonLabel} />
-      </span>
-    );
-  }
+function DropdownChild({ item, onNavigate }: { item: NavChild; onNavigate?: () => void }) {
   const Icon = item.icon;
   return (
     <Link
@@ -89,38 +76,32 @@ function DropdownChild({
       className="group/item flex items-center gap-3 rounded-lg px-2.5 py-2 text-[13.5px] font-semibold text-content/85 transition-colors hover:bg-cloud hover:text-content"
     >
       {Icon && (
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cloud text-content/60 transition-colors duration-200 group-hover/item:bg-gold/30 group-hover/item:text-gold-600">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cloud text-content/60 transition-colors duration-200 group-hover/item:bg-accent/30 group-hover/item:text-accent-600">
           <Icon className="h-4 w-4" aria-hidden="true" />
         </span>
       )}
-      <span>
-        {item.label}
-        {item.description && (
-          <span className="mt-0.5 block text-[11px] font-normal text-ink-muted/70">
-            {item.description}
-          </span>
-        )}
-      </span>
+      {item.label}
     </Link>
   );
 }
 
+/** Small uppercase label over a group of links. */
+const groupHeadingClass =
+  "font-mono text-[10.5px] font-semibold tracking-[0.2em] text-ink-muted uppercase [&:lang(th)]:tracking-[0.04em]";
+
 export default function Navbar() {
   const t = useTranslations("nav");
   const tc = useTranslations("categories");
-  const locale = useLocale() as Locale;
+  const locale = useLocale();
   const { products } = useProducts();
   const { count, openDrawer } = useCart();
   const { openQuote } = useQuote();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [desktopMenu, setDesktopMenu] = useState<number | null>(null);
-  const [previewCategory, setPreviewCategory] = useState<CategorySlug>(
-    categories[0].slug
-  );
 
-  // Hover menus close on a short delay, so moving the cursor from the trigger
-  // down to the panel (across the small gap) doesn't dismiss them mid-travel.
+  // Hover menus close on a short delay, so the pointer can cross from a tab to
+  // its panel (or brush past the edge) without dismissing it mid-travel.
   const menuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const openMenu = (index: number) => {
     if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
@@ -130,6 +111,7 @@ export default function Navbar() {
     if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
     menuCloseTimer.current = setTimeout(() => setDesktopMenu(null), 220);
   };
+  const closeMenu = () => setDesktopMenu(null);
   useEffect(
     () => () => {
       if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
@@ -137,8 +119,8 @@ export default function Navbar() {
     []
   );
 
-  // index into navLinks; Shop (0) starts expanded in the drawer
-  const [expanded, setExpanded] = useState<number | null>(0);
+  // index into navLinks open in the phone drawer; all start closed
+  const [expanded, setExpanded] = useState<number | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -147,59 +129,93 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Which section the page belongs to (the demo booking lives under /products
-  // but is listed under Contact).
   const pathname = usePathname();
-  const inContact =
+  // DJI-style: on the homepage, before any scroll, the bar sits clear over
+  // the dark hero (white text, no background — styles in globals.css under
+  // header[data-clear]). Scrolling makes it solid, and so does hovering or
+  // focusing anything in it, so its menus always open on a solid bar.
+  const clear = pathname === "/" && !scrolled;
+
+  // Which section the page belongs to: a category page, or a product's page
+  // (by that product's category). The About menu also holds the contact
+  // pages — the demo booking lives under /products but is listed there.
+  const viewedProduct = pathname.startsWith("/products/")
+    ? products.find((product) => pathname === `/products/${product.id}`)
+    : undefined;
+  const currentCategory = pathname.startsWith("/shop/")
+    ? pathname.split("/")[2]
+    : viewedProduct?.category;
+  const inAbout =
+    pathname === "/about" ||
     pathname === "/contact-sales" ||
     pathname === "/location" ||
+    pathname === "/recommend" ||
     pathname.startsWith("/products/request-a-demo");
 
-  /* "Shop" is generated from the category data — new categories appear here automatically */
+  // A category's robots: the products shown on the storefront (hidden ones,
+  // e.g. robots still waiting for photos, are not in `products`).
+  const modelsFor = (slug: CategorySlug): MenuModel[] =>
+    products
+      .filter((product) => product.category === slug)
+      .map((product) => ({
+        key: product.id,
+        name: product.name,
+        ...(product.brand && product.brand !== DEFAULT_BRAND ? { brand: product.brand } : {}),
+        href: `/products/${product.id}`,
+        product,
+      }));
+
+  /* One tab per navbar category (data/categories.ts), then About, which also
+     holds contact and support: all eight did not fit on one line in Thai. */
+  // A category with nothing on show yet has no tab (it comes back by itself
+  // once a robot in it is switched on in Admin).
   const navLinks: NavItem[] = [
-    {
-      label: t("shop"),
-      href: "/shop",
-      current: !inContact && (pathname.startsWith("/shop") || pathname.startsWith("/products")),
-      children: categories.map((c) => ({
-        label: tc(`${c.slug}.name`),
-        href: categoryHref(c.slug),
-        description: tc(`${c.slug}.description`),
-        comingSoon: !c.available,
-      })),
-    },
+    ...navCategories
+      .map((category) => ({
+        label: tc(`${category.slug}.nav`),
+        category: category.slug,
+        models: modelsFor(category.slug),
+        current: currentCategory === category.slug,
+      }))
+      .filter((link) => link.models.length > 0),
     {
       label: t("about"),
-      href: "/#about",
-      current: pathname === "/about",
-      children: [
-        // The full page first; the three below are still homepage anchors.
-        { label: t("aboutUs"), href: "/about", icon: Building2 },
-        { label: t("aboutStory"), href: "/#about", icon: BookOpen },
-        { label: t("aboutWhyUs"), href: "/#support", icon: BadgeCheck },
-        { label: t("aboutPartners"), href: "/#about", icon: Handshake },
+      current: inAbout,
+      groups: [
+        {
+          heading: t("groupChoose"),
+          items: [{ label: t("finder"), href: "/recommend", icon: Compass }],
+        },
+        {
+          heading: t("groupCompany"),
+          items: [
+            // The full page first; the two below are still homepage anchors.
+            { label: t("aboutUs"), href: "/about", icon: Building2 },
+            { label: t("aboutStory"), href: "/#about", icon: BookOpen },
+            { label: t("aboutPartners"), href: "/#about", icon: Handshake },
+          ],
+        },
+        {
+          heading: t("groupContact"),
+          items: [
+            { label: t("contactSales"), href: "/contact-sales", icon: Headset },
+            { label: t("contactTouch"), href: "/#contact", icon: MessageCircle },
+            { label: t("contactDemo"), href: "/products/request-a-demo", icon: CalendarDays },
+            { label: t("contactLocations"), href: "/location", icon: MapPin },
+            { label: t("support"), href: "/#support", icon: LifeBuoy },
+          ],
+        },
       ],
     },
-    {
-      label: t("contact"),
-      href: "/#contact",
-      current: inContact,
-      children: [
-        { label: t("contactSales"), href: "/contact-sales", icon: Headset },
-        { label: t("contactTouch"), href: "/#contact", icon: MessageCircle },
-        { label: t("contactDemo"), href: "/products/request-a-demo", icon: CalendarDays },
-        { label: t("contactLocations"), href: "/location", icon: MapPin },
-      ],
-    },
-    { label: t("support"), href: "/#support" },
   ];
 
-  /* The gold track along the bar's bottom edge (styles: .nav-track in
-     globals.css). It glides to the link under the pointer or keyboard focus,
-     stays under a link while its menu is open, and otherwise rests under the
+  /* The accent track along the bar's bottom edge (styles: .nav-track in
+     globals.css). It glides to the tab under the pointer or keyboard focus,
+     stays under a tab while its menu is open, and otherwise rests under the
      current section — or fades out where there isn't one. Positioned straight
-     on the DOM, so following the pointer never re-renders the navbar. */
-  const navRef = useRef<HTMLElement>(null);
+     on the DOM, so following the pointer never re-renders the navbar. It is
+     placed against the <header>, its containing block. */
+  const headerRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLSpanElement>(null);
   const triggerRefs = useRef<(HTMLElement | null)[]>([]);
   const [pointed, setPointed] = useState<number | null>(null);
@@ -207,24 +223,24 @@ export default function Navbar() {
   const trackTarget = pointed ?? desktopMenu ?? (currentIndex >= 0 ? currentIndex : null);
 
   useLayoutEffect(() => {
-    const nav = navRef.current;
+    const header = headerRef.current;
     const track = trackRef.current;
-    if (!nav || !track) return;
+    if (!header || !track) return;
     const place = (glide: boolean) => {
       const trigger = trackTarget === null ? null : triggerRefs.current[trackTarget];
       if (!trigger || !trigger.offsetParent) {
         track.dataset.shown = "false";
         return;
       }
-      const n = nav.getBoundingClientRect();
+      const h = header.getBoundingClientRect();
       const r = trigger.getBoundingClientRect();
-      const left = r.left - n.left;
+      const left = r.left - h.left;
       const wasShown = track.dataset.shown === "true";
       track.dataset.dir = left >= parseFloat(track.style.left || "0") ? "right" : "left";
       // appearing (or the window resizing): jump into place, don't glide there
       track.dataset.instant = String(!glide || !wasShown);
       track.style.left = `${left}px`;
-      track.style.right = `${n.right - r.right}px`;
+      track.style.right = `${h.right - r.right}px`;
       track.dataset.shown = "true";
     };
     place(true);
@@ -236,33 +252,25 @@ export default function Navbar() {
   return (
     <>
     <header
+      ref={headerRef}
+      data-clear={clear}
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled
           ? "border-forest-100 bg-surface/85 shadow-[0_8px_28px_-16px_rgba(0,0,0,0.25)] backdrop-blur-xl"
           : "border-forest-100/70 bg-surface"
       }`}
     >
-      <nav
-        ref={navRef}
-        className="relative flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6 xl:px-10"
-      >
-        <span ref={trackRef} aria-hidden="true" className="nav-track hidden lg:block" />
-        {/* soft grey wedge over the left half (light mode only): a subtle panel
-            that ends in an angled edge near the middle; the rest stays white.
-            It leans like the homepage hero's frosted side and its bottom
-            corner sits on --hero-split, where that frost starts, so the two
-            edges form one straight line — and it slides with the frost when
-            that widens. Skewed from the bottom-left corner, so its top leans
-            right; -left-4 keeps the leaning left edge off-screen. -z-10 keeps
-            it behind the bar content; dark mode hides it. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 -left-4 -z-10 w-[calc(var(--hero-split)+1rem)] origin-bottom-left bg-[#eef0f2] transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none dark:hidden"
-          style={{ transform: "skewX(calc(-1 * var(--hero-lean)))" }}
-        />
-
-        {/* left group: logo + primary links, kept together on the left edge */}
-        <div className="flex items-center gap-4 xl:gap-9">
+      <span ref={trackRef} aria-hidden="true" className="nav-track hidden xl:block" />
+      {/* The bar's background spans the screen; its contents sit in the same
+          centred column as the page (max-w-7xl, same padding), DJI-style, so
+          on wide screens the logo lines up with the hero title and the quote
+          button with the hero's quote card instead of hugging the edges.
+          Not positioned: the category panels and the track are placed against
+          the <header>, so a panel can span the full width. */}
+      <nav className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        {/* left group: logo + tabs. Full height, so each tab's hover area runs
+            down to the bar's bottom edge, where its panel starts. */}
+        <div className="flex items-center gap-4 self-stretch xl:gap-7">
         {/* logo */}
         <Link href="/" className="flex shrink-0 items-center" aria-label="FindMyRobo home">
           <Image
@@ -271,49 +279,53 @@ export default function Navbar() {
             width={1200}
             height={320}
             priority
-            className="h-10 w-auto sm:h-12 dark:hidden"
+            // a touch smaller from xl, where it shares the bar with the tabs
+            className="nav-logo-on-light h-10 w-auto sm:h-12 xl:h-10"
           />
+          {/* the white version, for the clear bar over the hero */}
           <Image
             src="/main-logo-dark.png"
-            alt="FindMyRobo"
+            alt=""
             width={1200}
             height={320}
             priority
-            className="hidden h-10 w-auto sm:h-12 dark:block"
+            className="nav-logo-on-dark h-10 w-auto sm:h-12 xl:h-10"
           />
         </Link>
 
-        {/* desktop links */}
+        {/* desktop tabs — from xl; below that they are in the drawer */}
         <ul
-          className="hidden items-center gap-4 lg:flex xl:gap-6"
+          className="hidden gap-5 self-stretch xl:flex"
           onMouseLeave={() => setPointed(null)}
           onBlur={(event) => {
             if (!event.currentTarget.contains(event.relatedTarget)) setPointed(null);
           }}
         >
-          {navLinks.map((link, linkIndex) => (
-            <li
-              key={link.label}
-              className={linkIndex === 0 ? "static" : "relative"}
-              onMouseEnter={() => {
-                setPointed(linkIndex);
-                if (link.children) openMenu(linkIndex);
-              }}
-              onFocus={() => setPointed(linkIndex)}
-              onMouseLeave={() => link.children && scheduleCloseMenu()}
-              onBlur={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget)) {
-                  setDesktopMenu(null);
-                }
-              }}
-              onKeyDown={(event) => {
-                if (event.key === "Escape") {
-                  setDesktopMenu(null);
-                  (event.currentTarget.querySelector("button") as HTMLButtonElement | null)?.focus();
-                }
-              }}
-            >
-              {link.children ? (
+          {navLinks.map((link, linkIndex) => {
+            const isOpen = desktopMenu === linkIndex;
+            return (
+              <li
+                key={link.label}
+                // A category's panel spans the whole header, so its <li> must
+                // not become the panel's containing block; the About dropdown
+                // hangs from its own tab.
+                className={`flex items-center ${link.category ? "static" : "relative"}`}
+                onMouseEnter={() => {
+                  setPointed(linkIndex);
+                  openMenu(linkIndex);
+                }}
+                onFocus={() => setPointed(linkIndex)}
+                onMouseLeave={scheduleCloseMenu}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget)) closeMenu();
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    closeMenu();
+                    (event.currentTarget.querySelector("button") as HTMLButtonElement | null)?.focus();
+                  }
+                }}
+              >
                 <button
                   ref={(el) => {
                     triggerRefs.current[linkIndex] = el;
@@ -323,228 +335,122 @@ export default function Navbar() {
                     if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
                     setDesktopMenu((current) => (current === linkIndex ? null : linkIndex));
                   }}
-                  aria-expanded={desktopMenu === linkIndex}
-                  aria-haspopup="menu"
+                  aria-expanded={isOpen}
                   className={`flex cursor-pointer items-center gap-1 whitespace-nowrap py-2 text-[14px] font-semibold transition-colors hover:text-content ${
-                    link.current || desktopMenu === linkIndex ? "text-content" : "text-content/80"
+                    link.current || isOpen ? "text-content" : "text-content/80"
                   }`}
                 >
                   {link.label}
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 text-gold-600 transition-transform duration-200 ${
-                      desktopMenu === linkIndex ? "rotate-180" : ""
-                    }`}
-                    aria-hidden="true"
-                  />
+                  {link.groups && (
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 text-accent-600 transition-transform duration-200 ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                      aria-hidden="true"
+                    />
+                  )}
                 </button>
-              ) : (
-                <Link
-                  ref={(el) => {
-                    triggerRefs.current[linkIndex] = el;
-                  }}
-                  href={link.href}
-                  className={`flex items-center gap-1 whitespace-nowrap py-2 text-[14px] font-semibold transition-colors hover:text-content ${
-                    link.current ? "text-content" : "text-content/80"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              )}
-              {link.children && (
-                <div
-                  className={`absolute top-full z-50 transition-all duration-200 ${
-                    linkIndex === 0
-                      ? // Shop mega-menu is positioned off the <nav>, so top-full
-                        // already sits at the navbar's bottom edge — no pt, so the
-                        // panel is flush against the bar with no gap.
-                        "left-4 right-4 mx-auto w-[920px] max-w-[calc(100%-2rem)]"
-                      : // Simple dropdowns hang off their own button; pt-4 clears
-                        // the rest of the navbar height below the trigger, so
-                        // the panel starts right at the bar's bottom edge, under
-                        // the gold track — like the mega-menu.
-                        "left-1/2 -translate-x-1/2 pt-4"
-                  } ${
-                    desktopMenu === linkIndex
-                      ? "visible translate-y-0 opacity-100"
-                      : "invisible translate-y-2 opacity-0"
-                  }`}
-                >
-                  {linkIndex === 0 ? (
-                    <div className="grid w-full grid-cols-[240px_1fr] overflow-hidden rounded-2xl border border-forest-100 bg-surface/95 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-                      <div className="border-r border-forest-100 p-2.5">
-                        {categories.map((category) => {
-                          const active = previewCategory === category.slug;
-                          const inner = (
-                            <>
-                              <span className="flex items-center text-[13px] font-semibold">
-                                {tc(`${category.slug}.name`)}
-                                {!category.available && <SoonBadge label={t("soon")} />}
-                              </span>
-                              <span className="mt-1 block text-[10.5px] leading-snug text-ink-muted/70">
-                                {tc(`${category.slug}.description`)}
-                              </span>
-                            </>
-                          );
-                          // Coming-soon categories are inert labels — no hover,
-                          // focus, or click reaction, and nothing to shop yet.
-                          return category.available ? (
-                            <Link
-                              key={category.slug}
-                              href={categoryHref(category.slug)}
-                              onClick={() => setDesktopMenu(null)}
-                              onMouseEnter={() => setPreviewCategory(category.slug)}
-                              onFocus={() => setPreviewCategory(category.slug)}
-                              className={`block rounded-xl px-3.5 py-3 transition-colors ${
-                                active
-                                  ? "bg-cloud text-gold-600"
-                                  : "text-content/85 hover:bg-cloud hover:text-gold-600"
-                              }`}
-                            >
-                              {inner}
-                            </Link>
-                          ) : (
-                            <span
-                              key={category.slug}
-                              aria-disabled="true"
-                              className="block cursor-default select-none rounded-xl px-3.5 py-3 text-left text-ink-muted/50"
-                            >
-                              {inner}
-                            </span>
-                          );
-                        })}
-                      </div>
 
-                      <div className="min-h-[330px] p-5">
-                        <div className="mb-4 flex items-end justify-between gap-4">
-                          <div>
-                            <p className="font-display text-lg font-bold text-content">
-                              {tc(`${previewCategory}.name`)}
-                            </p>
-                            <p className="mt-1 text-xs text-ink-muted">
-                              {tc(`${previewCategory}.description`)}
-                            </p>
-                          </div>
-                          {categories.find((c) => c.slug === previewCategory)?.available ? (
-                            <Link
-                              href={categoryHref(previewCategory)}
-                              onClick={() => setDesktopMenu(null)}
-                              className="shrink-0 text-xs font-semibold text-gold-600 hover:text-content"
-                            >
-                              {t("shop")} →
-                            </Link>
-                          ) : (
-                            <SoonBadge label={t("soon")} />
-                          )}
+                {link.category && link.models ? (
+                  // DJI-style: a full-width panel of the category's models,
+                  // laid out in the page column like the bar above it.
+                  <div
+                    className={`absolute inset-x-0 top-full z-50 transition-all duration-200 ${
+                      isOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
+                    }`}
+                  >
+                    <div className="border-t border-forest-100 bg-surface shadow-[0_28px_48px_-28px_rgba(0,0,0,0.35)]">
+                      <div className="mx-auto flex max-w-7xl gap-10 px-8 py-8">
+                        <div className="w-56 shrink-0">
+                          <p className="font-display text-xl font-extrabold tracking-tight text-content">
+                            {tc(`${link.category}.name`)}
+                          </p>
+                          <p className="mt-2 text-[13px] leading-relaxed text-ink-muted">
+                            {tc(`${link.category}.description`)}
+                          </p>
+                          <Link
+                            href={categoryHref(link.category)}
+                            onClick={closeMenu}
+                            className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-bold text-accent-600 transition-colors hover:text-content"
+                          >
+                            {t("viewAll")}
+                            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                          </Link>
                         </div>
-
-                        {(() => {
-                          const available =
-                            categories.find((c) => c.slug === previewCategory)?.available ?? false;
-                          const catProducts = products
-                            .filter((product) => product.category === previewCategory)
-                            .slice(0, 3);
-
-                          // Available category → normal clickable product cards.
-                          if (available) {
-                            return (
-                              <div className="grid grid-cols-3 gap-3">
-                                {catProducts.map((product) => (
-                                  <Link
-                                    key={product.id}
-                                    href={`/products/${product.id}`}
-                                    onClick={() => setDesktopMenu(null)}
-                                    className="group/card overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3 transition hover:-translate-y-0.5 hover:border-gold-600/40 hover:shadow-md"
-                                  >
-                                    <div className="flex h-28 items-center justify-center">
-                                      <ProductVisual product={product} className="h-full w-full" />
-                                    </div>
-                                    <p className="mt-2 line-clamp-2 text-xs font-bold leading-snug text-content">
-                                      {product.name}
-                                    </p>
-                                    <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-ink-muted">
-                                      {product.tagline[locale]}
-                                    </p>
-                                  </Link>
-                                ))}
-                              </div>
-                            );
-                          }
-
-                          // Coming-soon category → a blurred, unclickable teaser (real
-                          // cards where they exist, skeletons filling the rest of the
-                          // row). The panel header already carries the "Soon" badge.
-                          const items = [...catProducts, null, null, null].slice(0, 3);
-                          return (
-                            <div
-                              aria-hidden="true"
-                              className="pointer-events-none grid select-none grid-cols-3 gap-3 opacity-70 blur-[3px]"
-                            >
-                              {items.map((product, k) => (
-                                <div
-                                  key={product ? product.id : `soon-${k}`}
-                                  className="overflow-hidden rounded-xl border border-forest-100 bg-cloud/65 p-3"
+                        <ul className="grid flex-1 grid-cols-5 gap-4">
+                          {link.models.map((model) => (
+                            <li key={model.key}>
+                              <Link
+                                href={model.href}
+                                onClick={closeMenu}
+                                className="flex h-full flex-col rounded-xl border border-forest-100 bg-cloud/50 p-3 transition hover:-translate-y-0.5 hover:border-accent-600/40 hover:bg-surface hover:shadow-md"
+                              >
+                                <span className="relative flex h-28 items-center justify-center">
+                                  <ProductVisual product={model.product} className="h-full w-full" />
+                                </span>
+                                {model.brand && (
+                                  <span className={`mt-2.5 ${groupHeadingClass}`}>{model.brand}</span>
+                                )}
+                                <span
+                                  className={`${
+                                    model.brand ? "mt-0.5" : "mt-2.5"
+                                  } line-clamp-2 text-[13px] leading-snug font-bold text-content`}
                                 >
-                                  {product ? (
-                                    <>
-                                      <div className="flex h-28 items-center justify-center">
-                                        <ProductVisual product={product} className="h-full w-full" />
-                                      </div>
-                                      <p className="mt-2 line-clamp-2 text-xs font-bold leading-snug text-content">
-                                        {product.name}
-                                      </p>
-                                      <p className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-ink-muted">
-                                        {product.tagline[locale]}
-                                      </p>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <div className="h-28 rounded-lg bg-forest-100/70" />
-                                      <div className="mt-2 h-3 w-3/4 rounded bg-forest-100/70" />
-                                      <div className="mt-1.5 h-2.5 w-1/2 rounded bg-forest-100/60" />
-                                    </>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        })()}
+                                  {model.name}
+                                </span>
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
-                  ) : (
-                    <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-                      {link.children.map((item) => (
-                        <DropdownChild
-                          key={item.label}
-                          item={item}
-                          soonLabel={t("soon")}
-                          onNavigate={() => setDesktopMenu(null)}
-                        />
+                  </div>
+                ) : link.groups ? (
+                  <div
+                    className={`absolute top-full left-1/2 z-50 -translate-x-1/2 transition-all duration-200 ${
+                      isOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"
+                    }`}
+                  >
+                    <div className="grid w-[33rem] grid-cols-2 gap-2 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2.5 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+                      {link.groups.map((group) => (
+                        <div key={group.heading}>
+                          <p className={`px-2.5 pt-1.5 pb-2 ${groupHeadingClass}`}>{group.heading}</p>
+                          {group.items.map((item) => (
+                            <DropdownChild key={item.label} item={item} onNavigate={closeMenu} />
+                          ))}
+                        </div>
                       ))}
                     </div>
-                  )}
-                </div>
-              )}
-            </li>
-          ))}
+                  </div>
+                ) : null}
+              </li>
+            );
+          })}
         </ul>
         </div>
 
         {/* right cluster — tight on phones, given more air from lg */}
-        <div className="flex items-center gap-2.5 sm:gap-3 lg:gap-4 xl:gap-6">
-          {/* Collapsed to a magnifier button; the field slides open on hover
-              (group-hover) or when focused/clicked (focus). The extra right
-              margin: it and the language pill are both outlined, so the
-              plain gap between them reads tighter than the gaps between the
-              bare icons that follow. */}
-          <CatalogSearch
-            className="group hidden xl:mr-5 xl:block"
-            inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-60 group-hover:cursor-text group-hover:pr-4 focus:w-60 focus:cursor-text focus:pr-4 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
-            dropdownClassName="right-0 w-[360px]"
-          />
+        <div className="flex items-center gap-2.5 sm:gap-3 lg:gap-4">
+          {/* A fixed 44px slot for the search: the field opens leftwards over
+              the tabs (on hover or focus) instead of widening the bar and
+              shoving the tabs aside. */}
+          <div className="relative hidden h-11 w-11 shrink-0 xl:block">
+            {/* Anchored by its right edge, so it grows leftwards. The anchor
+                is this wrapper, not CatalogSearch itself: its root is always
+                `relative`, which beat an `absolute` passed in, and the field
+                grew rightwards over the buttons. */}
+            <div className="absolute top-0 right-0 z-10">
+              <CatalogSearch
+                className="group"
+                inputClassName="h-11 w-11 cursor-pointer rounded-full border border-forest-100 bg-cloud pl-10 pr-0 text-[13px] text-content placeholder:text-ink-muted/70 transition-all duration-300 group-hover:w-64 group-hover:cursor-text group-hover:pr-4 focus:w-64 focus:cursor-text focus:pr-4 focus:border-accent-600/60 focus:bg-surface focus:outline-none"
+                dropdownClassName="right-0 w-[360px]"
+              />
+            </div>
+          </div>
 
           <LanguageSwitcher className="hidden md:flex" />
 
-          {/* sign in / account, and the light-dark switch */}
+          {/* sign in / account */}
           <ProfileMenu />
 
           {siteConfig.cartEnabled ? (
@@ -555,23 +461,23 @@ export default function Navbar() {
                 siteConfig.showPrices ? "cartLabel" : "quotationLabel",
                 { count }
               )}
-              className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-gold-600"
+              className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud hover:text-accent-600"
             >
               <CartIcon className="h-5 w-5" />
               {count > 0 && (
-                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-0.5 font-mono text-[10px] font-bold text-forest-950">
+                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-0.5 font-mono text-[10px] font-bold text-on-accent">
                   {count}
                 </span>
               )}
             </button>
           ) : (
             // Cart switched off: the same spot opens the quote form instead —
-            // the site's one call to action, so it's the one gold thing on the
-            // bar: a labelled pill from sm, a gold disc on phones.
+            // the site's one call to action, so it's the one accent-coloured thing on the
+            // bar: a labelled pill from sm, an accent disc on phones.
             <button
               type="button"
               onClick={() => openQuote()}
-              className="flex h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-3 text-[13.5px] font-bold whitespace-nowrap text-forest-950 shadow-[0_6px_18px_-10px_rgba(245,200,66,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-gold-300 hover:shadow-[0_12px_26px_-10px_rgba(245,200,66,0.95)] active:translate-y-0 active:scale-[0.97] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:px-5"
+              className="flex h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent-gradient px-3 text-[13.5px] font-bold whitespace-nowrap transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:px-5"
             >
               <CartIcon className="h-[18px] w-[18px] shrink-0" />
               <span className="max-sm:sr-only">{t("getQuote")}</span>
@@ -582,7 +488,7 @@ export default function Navbar() {
             type="button"
             onClick={() => setOpen(true)}
             aria-label={t("openMenu")}
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud lg:hidden"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-content transition-colors hover:bg-cloud xl:hidden"
           >
             <Menu className="h-6 w-6" aria-hidden="true" />
           </button>
@@ -590,10 +496,10 @@ export default function Navbar() {
       </nav>
     </header>
 
-      {/* mobile drawer — rendered OUTSIDE <header>: when scrolled the header
-          gets backdrop-blur, which would otherwise become the containing block
-          for these position:fixed elements and clip the drawer to the header's
-          height instead of the viewport. */}
+      {/* drawer (below xl) — rendered OUTSIDE <header>: when scrolled the
+          header gets backdrop-blur, which would otherwise become the
+          containing block for these position:fixed elements and clip the
+          drawer to the header's height instead of the viewport. */}
       <AnimatePresence>
         {open && (
           <>
@@ -603,7 +509,7 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-50 bg-forest-950/50 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-50 bg-forest-950/50 backdrop-blur-sm xl:hidden"
               aria-hidden="true"
             />
             <motion.aside
@@ -611,27 +517,18 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-y-0 right-0 z-50 flex w-[85%] max-w-sm flex-col bg-surface shadow-2xl lg:hidden"
+              className="fixed inset-y-0 right-0 z-50 flex w-[85%] max-w-sm flex-col bg-surface shadow-2xl xl:hidden"
               role="dialog"
               aria-label="Menu"
             >
               <div className="flex items-center justify-between border-b border-forest-100 px-5 py-4">
-                <span className="flex items-center">
-                  <Image
-                    src="/main-logo-light.png"
-                    alt="FindMyRobo"
-                    width={1200}
-                    height={320}
-                    className="h-8 w-auto dark:hidden"
-                  />
-                  <Image
-                    src="/main-logo-dark.png"
-                    alt="FindMyRobo"
-                    width={1200}
-                    height={320}
-                    className="hidden h-8 w-auto dark:block"
-                  />
-                </span>
+                <Image
+                  src="/main-logo-light.png"
+                  alt="FindMyRobo"
+                  width={1200}
+                  height={320}
+                  className="h-8 w-auto"
+                />
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -645,79 +542,98 @@ export default function Navbar() {
               <div className="flex-1 overflow-y-auto px-5 py-6">
                 <CatalogSearch
                   className="mb-6 block"
-                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-sm text-content placeholder:text-ink-muted/70 focus:border-gold-600/60 focus:bg-surface focus:outline-none"
+                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-cloud pl-10 pr-4 text-sm text-content placeholder:text-ink-muted/70 focus:border-accent-600/60 focus:bg-surface focus:outline-none"
                   dropdownClassName="inset-x-0 w-full"
                   onNavigate={() => setOpen(false)}
                 />
+                <p className={`mb-1 px-4 ${groupHeadingClass}`}>{t("productsHeading")}</p>
                 <ul className="space-y-1">
                   {navLinks.map((link, i) => (
                     <motion.li
                       key={link.label}
                       initial={{ opacity: 0, x: 24 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.08 + i * 0.05, duration: 0.3 }}
+                      transition={{ delay: 0.08 + i * 0.04, duration: 0.3 }}
                     >
-                      {link.children ? (
-                        <>
-                          <button
-                            type="button"
-                            onClick={() => setExpanded(expanded === i ? null : i)}
-                            aria-expanded={expanded === i}
-                            className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-[15px] font-bold text-content transition-colors hover:bg-cloud hover:text-gold-600"
+                      {/* the categories, then a rule before About */}
+                      {!link.category && <div className="mx-4 my-3 h-px bg-forest-100" aria-hidden="true" />}
+                      <button
+                        type="button"
+                        onClick={() => setExpanded(expanded === i ? null : i)}
+                        aria-expanded={expanded === i}
+                        className="flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-left text-[15px] font-bold text-content transition-colors hover:bg-cloud hover:text-accent-600"
+                      >
+                        {link.label}
+                        <ChevronDown
+                          className={`h-4 w-4 shrink-0 text-accent-600 transition-transform duration-200 ${
+                            expanded === i ? "rotate-180" : ""
+                          }`}
+                          aria-hidden="true"
+                        />
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {expanded === i && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                            className="overflow-hidden pl-4"
                           >
-                            {link.label}
-                            <ChevronDown
-                              className={`h-4 w-4 text-gold-600 transition-transform duration-200 ${
-                                expanded === i ? "rotate-180" : ""
-                              }`}
-                              aria-hidden="true"
-                            />
-                          </button>
-                          <AnimatePresence initial={false}>
-                            {expanded === i && (
-                              <motion.ul
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: "auto", opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                                className="overflow-hidden pl-4"
-                              >
-                                {link.children.map((item) => (
-                                  <li key={item.label}>
-                                    {item.comingSoon ? (
-                                      <span className="flex min-h-[44px] items-center px-4 text-[14px] text-ink-muted/60">
-                                        {item.label}
-                                        <SoonBadge label={t("soon")} />
-                                      </span>
-                                    ) : (
-                                      <Link
-                                        href={item.href}
-                                        onClick={() => setOpen(false)}
-                                        className="flex min-h-[44px] items-center rounded-lg px-4 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-gold-600"
-                                      >
-                                        {item.label}
-                                      </Link>
-                                    )}
+                            {link.category && link.models ? (
+                              <ul>
+                                {link.models.map((model) => (
+                                  <li key={model.key}>
+                                    <Link
+                                      href={model.href}
+                                      onClick={() => setOpen(false)}
+                                      className="flex min-h-[44px] flex-col justify-center rounded-lg px-4 py-2 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
+                                    >
+                                      <span>{productLabel(model.product)}</span>
+                                      {showsCondition(model.product.conditions) && (
+                                        <ConditionLine conditions={model.product.conditions} />
+                                      )}
+                                    </Link>
                                   </li>
                                 ))}
-                              </motion.ul>
+                                <li>
+                                  <Link
+                                    href={categoryHref(link.category)}
+                                    onClick={() => setOpen(false)}
+                                    className="flex min-h-[44px] items-center gap-1.5 rounded-lg px-4 text-[14px] font-semibold text-accent-600 transition-colors hover:bg-cloud"
+                                  >
+                                    {t("viewAll")}
+                                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                                  </Link>
+                                </li>
+                              </ul>
+                            ) : (
+                              link.groups?.map((group) => (
+                                <div key={group.heading} className="pb-1">
+                                  <p className={`px-4 pt-3 pb-1 ${groupHeadingClass}`}>{group.heading}</p>
+                                  <ul>
+                                    {group.items.map((item) => (
+                                      <li key={item.label}>
+                                        <Link
+                                          href={item.href}
+                                          onClick={() => setOpen(false)}
+                                          className="flex min-h-[44px] items-center rounded-lg px-4 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
+                                        >
+                                          {item.label}
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))
                             )}
-                          </AnimatePresence>
-                        </>
-                      ) : (
-                        <Link
-                          href={link.href}
-                          onClick={() => setOpen(false)}
-                          className="flex min-h-[48px] items-center rounded-xl px-4 text-[15px] font-bold text-content transition-colors hover:bg-cloud hover:text-gold-600"
-                        >
-                          {link.label}
-                        </Link>
-                      )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </motion.li>
                   ))}
                 </ul>
 
-                {/* the light-dark switch is in the profile menu, on the bar */}
                 <div className="mt-6 flex items-center gap-3 border-t border-forest-100 pt-6">
                   <LanguageSwitcher className="w-fit" />
                 </div>

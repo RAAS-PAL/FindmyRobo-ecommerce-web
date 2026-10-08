@@ -108,7 +108,7 @@ export default function FulfillmentPanel({
           value={carrier}
           disabled={busy}
           onChange={(e) => setCarrier(e.target.value as ShippingCarrier)}
-          className="min-h-[44px] flex-1 rounded-xl border border-forest-100 bg-surface px-4 text-[13.5px] font-semibold text-content transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25 disabled:opacity-50"
+          className="min-h-[44px] flex-1 rounded-xl border border-forest-100 bg-surface px-4 text-[13.5px] font-semibold text-content transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25 disabled:opacity-50"
         >
           {CARRIERS.map((c) => (
             <option key={c} value={c}>
@@ -120,7 +120,7 @@ export default function FulfillmentPanel({
           type="button"
           onClick={send}
           disabled={busy}
-          className="flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-full bg-gold px-5 text-[13px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+          className="flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-5 text-[13px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
         >
           {busy ? (
             <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />

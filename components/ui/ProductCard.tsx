@@ -6,20 +6,10 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
-import { type Locale, type Product } from "@/data/products";
+import { productLabel, type Locale, type Product } from "@/data/products";
+import { showsCondition } from "@/data/conditions";
+import ConditionLine from "@/components/ui/ConditionLine";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
-
-/**
- * TEMPORARY demo clips so the hover-to-play effect is visible locally before
- * real per-product videos are set on `product.hoverVideo` (ideally via the
- * admin panel). Keyed by robot variant; only the mower variants have a clip.
- * Swap in short, lightweight per-product videos for production — the hero
- * clips reused here are large (they only load on hover, but still).
- */
-const DEMO_HOVER_VIDEO: Partial<Record<Product["variant"], string>> = {
-  luba: "/videos/hero-banner-luba3.mp4",
-  mini: "/videos/hero-luba-mini.mp4",
-};
 
 export default function ProductCard({
   product,
@@ -46,8 +36,7 @@ export default function ProductCard({
   const tc = useTranslations("categories");
   const locale = useLocale() as Locale;
 
-  // Real per-product clip wins; otherwise fall back to the variant demo above.
-  const hoverVideo = product.hoverVideo ?? DEMO_HOVER_VIDEO[product.variant];
+  const hoverVideo = product.hoverVideo;
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Play from the start on hover/focus; reset when the pointer leaves so the
@@ -80,7 +69,7 @@ export default function ProductCard({
     >
       <Link
         href={`/products/${product.id}`}
-        className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-gold hover:shadow-[0_24px_48px_-16px_rgba(0,0,0,0.25)]"
+        className="flex h-full flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-accent hover:shadow-[0_24px_48px_-16px_rgba(0,0,0,0.25)]"
       >
         {/* image area — image at rest, hover reveals a looping clip of the robot */}
         <div
@@ -88,8 +77,16 @@ export default function ProductCard({
             big ? "min-h-[312px]" : "min-h-60"
           }`}
         >
+          {/* second-hand stock is labelled wherever it appears */}
+          {showsCondition(product.conditions) && (
+            <ConditionLine
+              conditions={product.conditions}
+              stack
+              className="absolute top-3 left-3 z-10"
+            />
+          )}
           {product.preorder && (
-            <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-gold">
+            <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent-300">
               {t("preorder")}
             </span>
           )}
@@ -117,18 +114,18 @@ export default function ProductCard({
           <span className="absolute inset-x-0 bottom-0 z-10 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-focus-within:translate-y-0">
             <span className="flex min-h-[44px] w-full items-center justify-center gap-1.5 bg-forest py-3 text-sm font-semibold text-white">
               {t("viewProduct")}
-              <ArrowUpRight className="h-4 w-4 text-gold" aria-hidden="true" />
+              <ArrowUpRight className="h-4 w-4 text-accent-300" aria-hidden="true" />
             </span>
           </span>
         </div>
 
         {/* details */}
         <span className="flex flex-1 flex-col gap-1.5 p-5">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-gold-600">
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-600">
             {tc(`${product.category}.name`)}
           </span>
           <span className="font-display text-[15px] font-bold leading-snug text-content">
-            {displayName ?? product.name}
+            {displayName ?? productLabel(product)}
           </span>
           <span className="text-[13px] leading-relaxed text-ink-muted">
             {displayTagline ?? product.tagline[locale]}
@@ -137,7 +134,7 @@ export default function ProductCard({
             <PriceOrQuote
               amount={product.price}
               className="font-mono text-lg font-semibold tabular-nums text-content"
-              quoteClassName="text-[13.5px] font-bold text-gold-600"
+              quoteClassName="text-[13.5px] font-bold text-accent-600"
             />
           </span>
         </span>

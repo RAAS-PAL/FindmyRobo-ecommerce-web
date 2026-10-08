@@ -2,7 +2,14 @@
 
 import { useTranslations } from "next-intl";
 import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
-import type { LocalizedText, PageBlock, ProductPage } from "@/data/products";
+import {
+  ANATOMY_MODELS,
+  MAX_SHOWCASE_FIGURES,
+  type AnatomyModel,
+  type LocalizedText,
+  type PageBlock,
+  type ProductPage,
+} from "@/data/products";
 import { useConfirm } from "@/components/admin/ConfirmProvider";
 
 /**
@@ -38,6 +45,31 @@ export interface DraftBlock {
   captionEn: string;
   captionTh: string;
   cards: DraftCard[];
+  /** anatomy only: which model's parts diagram; "" = none */
+  model: AnatomyModel | "";
+  /** feature only: small line above the heading (full-screen page) */
+  eyebrowEn: string;
+  eyebrowTh: string;
+}
+export interface DraftFigure {
+  value: string;
+  labelEn: string;
+  labelTh: string;
+}
+export interface DraftColor {
+  labelEn: string;
+  labelTh: string;
+  swatch: string;
+  image: string;
+}
+/** The full-screen page's own fields (ProductPage.showcase). */
+export interface DraftShowcase {
+  enabled: boolean;
+  eyebrowEn: string;
+  eyebrowTh: string;
+  heroImage: string;
+  figures: DraftFigure[];
+  colors: DraftColor[];
 }
 export interface DraftSpecRow {
   labelEn: string;
@@ -63,6 +95,7 @@ export interface DraftFaq {
   answerTh: string;
 }
 export interface DraftPage {
+  showcase: DraftShowcase;
   blocks: DraftBlock[];
   specGroups: DraftSpecGroup[];
   boxItems: DraftBoxItem[];
@@ -81,7 +114,14 @@ export const emptyBlock = (type: PageBlock["type"]): DraftBlock => ({
   captionEn: "",
   captionTh: "",
   cards: [],
+  model: "",
+  eyebrowEn: "",
+  eyebrowTh: "",
 });
+
+const emptyFigure = (): DraftFigure => ({ value: "", labelEn: "", labelTh: "" });
+
+const emptyColor = (): DraftColor => ({ labelEn: "", labelTh: "", swatch: "#d1d5db", image: "" });
 
 const emptyRow = (): DraftSpecRow => ({ labelEn: "", labelTh: "", valueEn: "", valueTh: "" });
 
@@ -117,7 +157,25 @@ export function pageToDraft(page?: ProductPage): DraftPage {
         },
       ]
     : [];
+  const showcase = page?.showcase;
   return {
+    showcase: {
+      enabled: !!showcase,
+      eyebrowEn: loc(showcase?.eyebrow).en,
+      eyebrowTh: loc(showcase?.eyebrow).th,
+      heroImage: showcase?.heroImage ?? "",
+      figures: (showcase?.figures ?? []).map((f) => ({
+        value: f.value,
+        labelEn: f.label.en,
+        labelTh: f.label.th,
+      })),
+      colors: (showcase?.colors ?? []).map((c) => ({
+        labelEn: c.label.en,
+        labelTh: c.label.th,
+        swatch: c.swatch,
+        image: c.image,
+      })),
+    },
     blocks: [
       ...legacyVideo,
       ...(page?.blocks ?? []).map((b) => ({
@@ -131,6 +189,9 @@ export function pageToDraft(page?: ProductPage): DraftPage {
       bodyTh: "body" in b ? loc(b.body).th : "",
       captionEn: b.type === "video" ? loc(b.caption).en : "",
       captionTh: b.type === "video" ? loc(b.caption).th : "",
+      model: b.type === "anatomy" && b.model ? b.model : ("" as const),
+      eyebrowEn: b.type === "feature" ? loc(b.eyebrow).en : "",
+      eyebrowTh: b.type === "feature" ? loc(b.eyebrow).th : "",
       cards:
         b.type === "cardGrid"
           ? b.cards.map((c) => ({
@@ -179,7 +240,23 @@ export function pageToDraft(page?: ProductPage): DraftPage {
 /** Draft → payload for the API (parsePage on the server does final cleanup). */
 export function draftToPage(draft: DraftPage): Record<string, unknown> {
   const l = (en: string, th: string) => ({ en: en.trim(), th: th.trim() });
+  const s = draft.showcase;
   return {
+    // sent only while switched on; the server requires its line above the name
+    ...(s.enabled
+      ? {
+          showcase: {
+            eyebrow: l(s.eyebrowEn, s.eyebrowTh),
+            heroImage: s.heroImage.trim(),
+            figures: s.figures.map((f) => ({ value: f.value.trim(), label: l(f.labelEn, f.labelTh) })),
+            colors: s.colors.map((c) => ({
+              label: l(c.labelEn, c.labelTh),
+              swatch: c.swatch.trim(),
+              image: c.image.trim(),
+            })),
+          },
+        }
+      : {}),
     blocks: draft.blocks.map((b) => ({
       type: b.type,
       image: b.image.trim(),
@@ -188,6 +265,8 @@ export function draftToPage(draft: DraftPage): Record<string, unknown> {
       heading: l(b.headingEn, b.headingTh),
       body: l(b.bodyEn, b.bodyTh),
       caption: l(b.captionEn, b.captionTh),
+      eyebrow: l(b.eyebrowEn, b.eyebrowTh),
+      model: b.model,
       cards: b.cards.map((c) => ({
         image: c.image.trim(),
         caption: l(c.captionEn, c.captionTh),
@@ -217,9 +296,9 @@ export function draftToPage(draft: DraftPage): Record<string, unknown> {
 /* ---------- small shared UI ---------- */
 
 const inputClass =
-  "min-h-[42px] w-full rounded-xl border border-forest-100 bg-surface px-3.5 text-[13.5px] text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-[42px] w-full rounded-xl border border-forest-100 bg-surface px-3.5 text-[13.5px] text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 const textareaClass =
-  "w-full rounded-xl border border-forest-100 bg-surface px-3.5 py-2.5 text-[13.5px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "w-full rounded-xl border border-forest-100 bg-surface px-3.5 py-2.5 text-[13.5px] leading-relaxed text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 const miniLabel = "mb-1 block text-[11.5px] font-semibold text-ink-muted";
 
 function IconButton({
@@ -240,7 +319,7 @@ function IconButton({
       title={label}
       onClick={onClick}
       disabled={disabled}
-      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-gold/15 hover:text-gold-600 disabled:cursor-not-allowed disabled:opacity-30"
+      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-accent/15 hover:text-accent-600 disabled:cursor-not-allowed disabled:opacity-30"
     >
       {children}
     </button>
@@ -335,6 +414,24 @@ function BlockEditor({
 
   return (
     <div className="space-y-3">
+      {block.type === "anatomy" && (
+        <div>
+          <label className={miniLabel}>{t("fields.anatomyModel")}</label>
+          <select
+            value={block.model}
+            onChange={(e) => set({ model: e.target.value as DraftBlock["model"] })}
+            className={inputClass}
+          >
+            <option value="">{t("anatomyModels.none")}</option>
+            {ANATOMY_MODELS.map((m) => (
+              <option key={m} value={m}>
+                {t(`anatomyModels.${m}`)}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1 text-[11.5px] text-ink-muted">{t("fields.anatomyModelHint")}</p>
+        </div>
+      )}
       {(block.type === "banner" ||
         block.type === "feature" ||
         block.type === "imageText") && (
@@ -363,6 +460,16 @@ function BlockEditor({
             <option value="left">{t("positions.left")}</option>
           </select>
         </div>
+      )}
+
+      {block.type === "feature" && (
+        <EnThPair
+          label={t("fields.eyebrowOptional")}
+          en={block.eyebrowEn}
+          th={block.eyebrowTh}
+          onEn={(v) => set({ eyebrowEn: v })}
+          onTh={(v) => set({ eyebrowTh: v })}
+        />
       )}
 
       {(block.type === "feature" ||
@@ -502,13 +609,225 @@ function BlockEditor({
           <button
             type="button"
             onClick={() => set({ cards: [...block.cards, emptyCard()] })}
-            className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+            className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             {t("actions.addCard")}
           </button>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ---------- full-screen page ---------- */
+
+function ShowcaseEditor({
+  showcase,
+  onChange,
+}: {
+  showcase: DraftShowcase;
+  onChange: (next: DraftShowcase) => void;
+}) {
+  const t = useTranslations("admin.pageBuilder");
+  const confirm = useConfirm();
+  const set = (patch: Partial<DraftShowcase>) => onChange({ ...showcase, ...patch });
+
+  const confirmRemove = async (messageKey: string, number: number, remove: () => void) => {
+    const ok = await confirm({
+      title: t("confirm.removeTitle"),
+      message: t(`confirm.${messageKey}`, { number }),
+      confirmLabel: t("confirm.removeButton"),
+    });
+    if (ok) remove();
+  };
+
+  const setFigure = (i: number, patch: Partial<DraftFigure>) => {
+    const figures = [...showcase.figures];
+    figures[i] = { ...figures[i], ...patch };
+    set({ figures });
+  };
+  const setColor = (i: number, patch: Partial<DraftColor>) => {
+    const colors = [...showcase.colors];
+    colors[i] = { ...colors[i], ...patch };
+    set({ colors });
+  };
+
+  return (
+    <div className="space-y-3">
+      <h3 className="text-[13.5px] font-bold text-content">
+        {t("showcasePage.title")}
+        <span className="ml-2 font-normal text-ink-muted">{t("showcasePage.note")}</span>
+      </h3>
+      <div className="rounded-2xl border border-forest-100 bg-surface p-4">
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            checked={showcase.enabled}
+            onChange={(e) => set({ enabled: e.target.checked })}
+            className="mt-0.5 h-4 w-4 accent-[rgb(var(--accent-rgb))]"
+          />
+          <span>
+            <span className="block text-[13.5px] font-semibold text-content">
+              {t("showcasePage.enable")}
+            </span>
+            <span className="mt-0.5 block text-[11.5px] text-ink-muted">
+              {t("showcasePage.enableHint")}
+            </span>
+          </span>
+        </label>
+
+        {showcase.enabled && (
+          <div className="mt-4 space-y-5 border-t border-forest-100 pt-4">
+            <div>
+              <EnThPair
+                label={t("showcasePage.eyebrow")}
+                en={showcase.eyebrowEn}
+                th={showcase.eyebrowTh}
+                onEn={(v) => set({ eyebrowEn: v })}
+                onTh={(v) => set({ eyebrowTh: v })}
+              />
+              <p className="mt-1 text-[11.5px] text-ink-muted">{t("showcasePage.eyebrowHint")}</p>
+            </div>
+
+            <div>
+              <label className={miniLabel}>{t("showcasePage.heroImage")}</label>
+              <input
+                value={showcase.heroImage}
+                onChange={(e) => set({ heroImage: e.target.value })}
+                placeholder={t("placeholders.url")}
+                className={inputClass}
+              />
+              <p className="mt-1 text-[11.5px] text-ink-muted">{t("showcasePage.heroImageHint")}</p>
+            </div>
+
+            {/* key figures */}
+            <div className="space-y-3">
+              <p className="text-[12.5px] font-bold text-content">
+                {t("showcasePage.figuresTitle")}
+                <span className="ml-2 font-normal text-ink-muted">
+                  {t("showcasePage.figuresNote")}
+                </span>
+              </p>
+              {showcase.figures.map((figure, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-2 rounded-xl border border-forest-100 bg-cloud/60 p-3"
+                >
+                  <div className="flex-1 space-y-3">
+                    <p className="text-[11.5px] font-bold tracking-wide text-accent-600 uppercase">
+                      {t("showcasePage.figureLabel", { number: i + 1 })}
+                    </p>
+                    <div className="sm:w-1/2">
+                      <label className={miniLabel}>{t("showcasePage.figureValue")}</label>
+                      <input
+                        value={figure.value}
+                        onChange={(e) => setFigure(i, { value: e.target.value })}
+                        placeholder="2–4 h"
+                        className={inputClass}
+                      />
+                    </div>
+                    <EnThPair
+                      label={t("showcasePage.figureName")}
+                      en={figure.labelEn}
+                      th={figure.labelTh}
+                      onEn={(v) => setFigure(i, { labelEn: v })}
+                      onTh={(v) => setFigure(i, { labelTh: v })}
+                    />
+                  </div>
+                  <IconButton
+                    label={t("showcasePage.removeFigure", { number: i + 1 })}
+                    onClick={() =>
+                      confirmRemove("figure", i + 1, () =>
+                        set({ figures: showcase.figures.filter((_, j) => j !== i) })
+                      )
+                    }
+                  >
+                    <Trash2 className="h-4 w-4" aria-hidden="true" />
+                  </IconButton>
+                </div>
+              ))}
+              {showcase.figures.length < MAX_SHOWCASE_FIGURES && (
+                <button
+                  type="button"
+                  onClick={() => set({ figures: [...showcase.figures, emptyFigure()] })}
+                  className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
+                >
+                  <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                  {t("showcasePage.addFigure")}
+                </button>
+              )}
+            </div>
+
+            {/* colours */}
+            <div className="space-y-3">
+              <p className="text-[12.5px] font-bold text-content">
+                {t("showcasePage.colorsTitle")}
+                <span className="ml-2 font-normal text-ink-muted">
+                  {t("showcasePage.colorsNote")}
+                </span>
+              </p>
+              {showcase.colors.map((color, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-2 rounded-xl border border-forest-100 bg-cloud/60 p-3"
+                >
+                  <div className="flex-1 space-y-3">
+                    <p className="text-[11.5px] font-bold tracking-wide text-accent-600 uppercase">
+                      {t("showcasePage.colorLabel", { number: i + 1 })}
+                    </p>
+                    <EnThPair
+                      label={t("showcasePage.colorName")}
+                      en={color.labelEn}
+                      th={color.labelTh}
+                      onEn={(v) => setColor(i, { labelEn: v })}
+                      onTh={(v) => setColor(i, { labelTh: v })}
+                    />
+                    <div className="grid gap-3 sm:grid-cols-[8rem_1fr]">
+                      <div>
+                        <label className={miniLabel}>{t("showcasePage.colorSwatch")}</label>
+                        <input
+                          type="color"
+                          value={/^#[0-9a-f]{6}$/i.test(color.swatch) ? color.swatch : "#d1d5db"}
+                          onChange={(e) => setColor(i, { swatch: e.target.value })}
+                          className="h-[42px] w-full cursor-pointer rounded-xl border border-forest-100 bg-surface p-1"
+                        />
+                      </div>
+                      <div>
+                        <label className={miniLabel}>{t("showcasePage.colorImage")}</label>
+                        <input
+                          value={color.image}
+                          onChange={(e) => setColor(i, { image: e.target.value })}
+                          placeholder={t("placeholders.url")}
+                          className={inputClass}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <IconButton
+                    label={t("showcasePage.removeColor", { number: i + 1 })}
+                    onClick={() =>
+                      confirmRemove("color", i + 1, () =>
+                        set({ colors: showcase.colors.filter((_, j) => j !== i) })
+                      )
+                    }
+                  >
+                    <Trash2 className="h-4 w-4" aria-hidden="true" />
+                  </IconButton>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => set({ colors: [...showcase.colors, emptyColor()] })}
+                className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
+              >
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                {t("showcasePage.addColor")}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -550,6 +869,8 @@ export default function PageBuilder({
 
   return (
     <div className="space-y-8">
+      <ShowcaseEditor showcase={draft.showcase} onChange={(showcase) => set({ showcase })} />
+
       {/* content blocks — including videos; add a "video" section and move it
           wherever you want. (The old fixed top-of-page video field was folded
           into these blocks so everything shares one order.) */}
@@ -563,7 +884,7 @@ export default function PageBuilder({
         {draft.blocks.map((block, i) => (
           <div key={i} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-accent-600">
                 {t("content.sectionLabel", {
                   number: i + 1,
                   type: t(BLOCK_LABEL_KEYS[block.type]),
@@ -612,7 +933,7 @@ export default function PageBuilder({
               key={type}
               type="button"
               onClick={() => set({ blocks: [...draft.blocks, emptyBlock(type)] })}
-              className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+              className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
             >
               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
               {t(BLOCK_LABEL_KEYS[type])}
@@ -632,7 +953,7 @@ export default function PageBuilder({
         {draft.specGroups.map((group, gi) => (
           <div key={gi} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-accent-600">
                 {t("specs.groupLabel", { number: gi + 1 })}
               </p>
               <div className="flex items-center">
@@ -747,7 +1068,7 @@ export default function PageBuilder({
                   specGroups[gi] = { ...group, rows: [...group.rows, emptyRow()] };
                   set({ specGroups });
                 }}
-                className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+                className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                 {t("actions.addRow")}
@@ -765,7 +1086,7 @@ export default function PageBuilder({
               ],
             })
           }
-          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
           {t("actions.addSpecGroup")}
@@ -781,7 +1102,7 @@ export default function PageBuilder({
         {draft.boxItems.map((item, i) => (
           <div key={i} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-accent-600">
                 {t("box.itemLabel", { number: i + 1 })}
               </p>
               <div className="flex items-center">
@@ -860,7 +1181,7 @@ export default function PageBuilder({
         <button
           type="button"
           onClick={() => set({ boxItems: [...draft.boxItems, emptyBoxItem()] })}
-          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
           {t("actions.addBoxItem")}
@@ -876,7 +1197,7 @@ export default function PageBuilder({
         {draft.faqs.map((item, i) => (
           <div key={i} className="rounded-2xl border border-forest-100 bg-surface p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-[12px] font-bold uppercase tracking-wide text-gold-600">
+              <p className="text-[12px] font-bold uppercase tracking-wide text-accent-600">
                 {t("faq.itemLabel", { number: i + 1 })}
               </p>
               <div className="flex items-center">
@@ -944,7 +1265,7 @@ export default function PageBuilder({
         <button
           type="button"
           onClick={() => set({ faqs: [...draft.faqs, emptyFaq()] })}
-          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-gold"
+          className="flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 px-4 text-[12.5px] font-semibold text-content transition-colors hover:border-accent"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
           {t("actions.addFaq")}

@@ -1,6 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import type { CategorySlug } from "@/data/categories";
-import type { Product, ProductPage } from "@/data/products";
+import type { AnatomyModel, Product, ProductPage, RobotFit } from "@/data/products";
+import { isStockCondition } from "@/data/conditions";
 
 /**
  * Supabase-backed product store — the single read/write path for product
@@ -20,7 +21,7 @@ interface ProductRow {
   id: string;
   sort_order?: number;
   name: string;
-  price: number;
+  price: number | null;
   category: string;
   variant: string;
   image_url: string | null;
@@ -31,6 +32,8 @@ interface ProductRow {
   visible?: boolean;
   sku?: string | null;
   brand?: string | null;
+  conditions?: string[] | null;
+  fit?: RobotFit | null;
   specs: Product["specs"];
   tagline: Product["tagline"];
   description: Product["description"];
@@ -38,29 +41,67 @@ interface ProductRow {
   page: ProductPage | null;
 }
 
+/**
+ * Rows saved before supabase/variant-to-product-type.sql still say which LUBA
+ * they are in `variant` ("luba" = LUBA 3, "mini" = LUBA Mini 2), and rely on it
+ * for their hover clip and parts diagram. Read them as the new product types
+ * and carry those two over, so the site looks the same before and after the
+ * migration. Delete once the migration has run.
+ */
+const LEGACY_VARIANTS: Record<
+  string,
+  { variant: Product["variant"]; hoverVideo?: string; anatomy?: AnatomyModel }
+> = {
+  luba: { variant: "mower", hoverVideo: "/videos/hero-banner-luba3.mp4", anatomy: "luba-3" },
+  mini: { variant: "mower", hoverVideo: "/videos/hero-luba-mini.mp4", anatomy: "luba-mini-2" },
+  install: { variant: "installation" },
+};
+
+function withLegacyAnatomy(page: ProductPage, model: AnatomyModel | undefined): ProductPage {
+  if (!model || !page.blocks) return page;
+  return {
+    ...page,
+    blocks: page.blocks.map((b) =>
+      b.type === "anatomy" && !b.model ? { ...b, model } : b
+    ),
+  };
+}
+
+/** new first, then pre-owned; an empty or missing list reads as new. */
+function conditionsOf(raw: string[] | null | undefined): Product["conditions"] {
+  const list = (raw ?? []).filter(isStockCondition);
+  const ordered = (["new", "pre-owned"] as const).filter((c) => list.includes(c));
+  return ordered.length > 0 ? [...ordered] : ["new"];
+}
+
 function rowToProduct(row: ProductRow): Product {
+  const legacy = LEGACY_VARIANTS[row.variant];
+  const hoverVideo = row.hover_video || legacy?.hoverVideo;
+  const page = row.page ? withLegacyAnatomy(row.page, legacy?.anatomy) : null;
   return {
     id: row.id,
     ...(typeof row.sort_order === "number" ? { displayOrder: row.sort_order } : {}),
     name: row.name,
     price: row.price,
     category: row.category as CategorySlug,
-    variant: row.variant as Product["variant"],
+    variant: legacy?.variant ?? (row.variant as Product["variant"]),
     ...(row.image_url ? { imageUrl: row.image_url } : {}),
     ...(row.home_image ? { homeImage: row.home_image } : {}),
     ...(row.images?.length ? { images: row.images } : {}),
-    ...(row.hover_video ? { hoverVideo: row.hover_video } : {}),
+    ...(hoverVideo ? { hoverVideo } : {}),
     preorder: row.preorder,
     // absent column (pre-migration) reads as visible so the storefront never
     // blanks out before add-product-visibility.sql is applied
     visible: row.visible ?? true,
     ...(row.sku ? { sku: row.sku } : {}),
     ...(row.brand ? { brand: row.brand } : {}),
+    conditions: conditionsOf(row.conditions),
+    ...(row.fit && Object.keys(row.fit).length > 0 ? { fit: row.fit } : {}),
     specs: row.specs ?? {},
     tagline: row.tagline,
     description: row.description,
     features: row.features,
-    ...(row.page ? { page: row.page } : {}),
+    ...(page ? { page } : {}),
   };
 }
 
@@ -72,7 +113,15 @@ const isMissingSortOrder = (error: { code?: string; message?: string } | null) =
 // (undefined column) and PostgREST reports PGRST204 (not in the schema cache) —
 // either way the message names the column. We strip the named column and retry
 // so a product save keeps working before its migration is applied.
-const DEGRADABLE_COLUMNS = ["visible", "sku", "hover_video", "home_image", "brand"] as const;
+const DEGRADABLE_COLUMNS = [
+  "visible",
+  "sku",
+  "hover_video",
+  "home_image",
+  "brand",
+  "conditions",
+  "fit",
+] as const;
 
 function missingOptionalColumn(
   error: { code?: string; message?: string } | null
@@ -98,6 +147,8 @@ function productFields(
     visible: product.visible ?? true,
     sku: product.sku ?? null,
     brand: product.brand ?? null,
+    conditions: product.conditions,
+    fit: product.fit ?? {},
     specs: product.specs,
     tagline: product.tagline,
     description: product.description,
@@ -136,8 +187,22 @@ async function fetchAllProducts(): Promise<Product[]> {
  * the `visible` column doesn't exist yet (absent → treated as visible).
  */
 export async function getAllProducts(): Promise<Product[]> {
-  return (await fetchAllProducts()).filter((p) => p.visible !== false);
+  const all = await fetchAllProducts();
+  return SHOW_HIDDEN ? all : all.filter((p) => p.visible !== false);
 }
+
+/**
+ * Preview-only switch: set SHOW_HIDDEN_PRODUCTS=1 on Vercel's Preview
+ * environment to see hidden products (e.g. robots added but not launched) on
+ * a preview deployment. Never on production, whatever the variable says.
+ */
+const SHOW_HIDDEN =
+  process.env.SHOW_HIDDEN_PRODUCTS === "1" && process.env.VERCEL_ENV !== "production";
+
+/** Whether a product is reachable on the storefront (its page, its quote):
+ *  visible, or hidden but shown on a preview with SHOW_HIDDEN_PRODUCTS. */
+export const showsOnStorefront = (product: Product) =>
+  SHOW_HIDDEN || product.visible !== false;
 
 /** Admin catalog — includes hidden products so staff can manage and reveal them. */
 export async function getAllProductsForAdmin(): Promise<Product[]> {
@@ -174,8 +239,10 @@ export async function getProductsByCategory(
   }
   const { data, error } = result;
   if (error) throw new Error(`Failed to load ${category} products: ${error.message}`);
-  // storefront read — hidden products are excluded
-  return (data ?? []).map(rowToProduct).filter((p) => p.visible !== false);
+  // storefront read — hidden products are excluded (except on a preview with
+  // SHOW_HIDDEN_PRODUCTS, like getAllProducts)
+  const products = (data ?? []).map(rowToProduct);
+  return SHOW_HIDDEN ? products : products.filter((p) => p.visible !== false);
 }
 
 export async function addProduct(product: Product): Promise<void> {

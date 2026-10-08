@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import FadeIn from "@/components/ui/FadeIn";
-import { anatomyByVariant } from "@/data/techAnatomy";
-import type { Locale, RobotVariant } from "@/data/products";
+import { anatomyByModel } from "@/data/techAnatomy";
+import type { AnatomyModel, Locale } from "@/data/products";
 
 /**
  * "Under the hood" — the product renders with numbered hotspots. Selecting a
@@ -20,13 +20,12 @@ import type { Locale, RobotVariant } from "@/data/products";
  * inside the same layer so they travel with the image, and carry an inverse
  * scale so they stay a constant size on screen.
  *
- * Renders nothing for a variant with no anatomy defined, so it can be dropped
- * onto every product page unconditionally.
+ * Renders nothing without a model, so a section left without one is harmless.
  */
-export default function TechAnatomy({ variant }: { variant: RobotVariant }) {
+export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
   const t = useTranslations("techAnatomy");
   const locale = useLocale() as Locale;
-  const set = anatomyByVariant[variant];
+  const set = model ? anatomyByModel[model] : undefined;
   const [activeId, setActiveId] = useState(set?.hotspots[0]?.id ?? "");
 
   if (!set || set.hotspots.length === 0) return null;
@@ -42,7 +41,7 @@ export default function TechAnatomy({ variant }: { variant: RobotVariant }) {
     <section id="technology" className="bg-forest-950 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
             {t("eyebrow")} — {set.model}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
@@ -126,8 +125,8 @@ export default function TechAnatomy({ variant }: { variant: RobotVariant }) {
                       <span
                         className={`flex h-full w-full items-center justify-center rounded-full border-2 transition-colors ${
                           isActive
-                            ? "border-gold bg-gold text-forest-950"
-                            : "border-gold/70 bg-forest-950/80 text-gold backdrop-blur-sm hover:bg-gold/30"
+                            ? "border-accent bg-accent text-on-accent"
+                            : "border-accent/70 bg-forest-950/80 text-accent-300 backdrop-blur-sm hover:bg-accent/30"
                         }`}
                       >
                         {index + 1}
@@ -157,8 +156,8 @@ export default function TechAnatomy({ variant }: { variant: RobotVariant }) {
                         aria-pressed={isActive}
                         className={`flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full border px-4 text-[12.5px] font-semibold transition-colors ${
                           isActive
-                            ? "border-gold bg-gold text-forest-950"
-                            : "border-white/20 text-white/70 hover:border-gold hover:text-gold"
+                            ? "border-accent bg-accent text-on-accent"
+                            : "border-white/20 text-white/70 hover:border-accent hover:text-accent-300"
                         }`}
                       >
                         <span className="font-mono text-[11px]">{index + 1}</span>
@@ -187,7 +186,7 @@ export default function TechAnatomy({ variant }: { variant: RobotVariant }) {
                       {active.body[locale]}
                     </p>
                     <div className="mt-6 border-t border-white/10 pt-5">
-                      <p className="font-mono text-3xl font-extrabold text-gold sm:text-4xl">
+                      <p className="font-mono text-3xl font-extrabold text-accent-300 sm:text-4xl">
                         {active.stat}
                       </p>
                       <p className="mt-1 text-[12.5px] text-white/50">

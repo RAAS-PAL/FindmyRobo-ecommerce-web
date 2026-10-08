@@ -255,7 +255,7 @@ export default function ProductGallery({
     "relative flex min-h-[460px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-100 via-neutral-200 to-neutral-300 p-5 dark:from-forest-950 dark:via-forest dark:to-forest-800 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
   const glow = (
     <div
-      className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/10 blur-[90px] dark:bg-gold/25"
+      className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 blur-[90px] dark:bg-accent/25"
       aria-hidden="true"
     />
   );
@@ -356,7 +356,7 @@ export default function ProductGallery({
             <span
               key={src}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === index ? "w-5 bg-gold" : "w-1.5 bg-white/35"
+                i === index ? "w-5 bg-accent" : "w-1.5 bg-white/35"
               }`}
             />
           ))}
@@ -374,7 +374,7 @@ export default function ProductGallery({
               aria-current={i === index}
               className={`h-14 w-16 shrink-0 cursor-pointer overflow-hidden rounded-lg bg-white/5 p-1 ring-1 transition-all duration-200 ${
                 i === index
-                  ? "ring-2 ring-gold"
+                  ? "ring-2 ring-accent"
                   : "opacity-70 ring-white/15 hover:opacity-100 hover:ring-white/40"
               }`}
             >

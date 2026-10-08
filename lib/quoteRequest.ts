@@ -1,11 +1,30 @@
+import type { CategorySlug } from "@/data/categories";
+import { isStockCondition, type StockCondition } from "@/data/conditions";
+
 /**
  * The quote form — on the homepage hero, and in the quote panel that every
  * "interested" button opens. Contact details plus the robot the visitor wants,
  * then the follow-up that robot needs. Checkout shipping stays separate.
  */
 
-export const QUOTE_INTERESTS = ["lawn-mowing", "pudu-delivery"] as const;
+/** Order is how the form lists them: the navbar's category order. */
+export const QUOTE_INTERESTS = [
+  "lawn-mowing",
+  "commercial-cleaning",
+  "smart-equipment",
+  "cooking",
+  "pudu-delivery",
+] as const;
 export type QuoteInterest = (typeof QUOTE_INTERESTS)[number];
+
+/** Which "robot" answer a product or model of each category gives. */
+export const CATEGORY_INTEREST: Partial<Record<CategorySlug, QuoteInterest>> = {
+  "robot-mowers": "lawn-mowing",
+  "cleaning-robots": "commercial-cleaning",
+  "smart-equipment": "smart-equipment",
+  "cooking-robots": "cooking",
+  "delivery-robots": "pudu-delivery",
+};
 
 export const PUDU_VENUES = [
   "restaurant",
@@ -41,6 +60,12 @@ export interface QuoteRequest {
   productId: string;
   /** For a service (demo, installation): the robot it is for. */
   forId: string;
+  /**
+   * New or pre-owned, when the robot is sold that way. Required only when
+   * it is sold as both; a robot sold one way only has it filled in
+   * by the server.
+   */
+  condition: StockCondition | "";
 }
 
 export type QuoteField = keyof QuoteRequest;
@@ -58,10 +83,11 @@ export const EMPTY_QUOTE: QuoteRequest = {
   note: "",
   productId: "",
   forId: "",
+  condition: "",
 };
 
-const PHONE_RE = /^(\+66[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?\d{4}|0\d{1,2}[\s-]?\d{3}[\s-]?\d{4})$/;
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const PHONE_RE = /^(\+66[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?\d{4}|0\d{1,2}[\s-]?\d{3}[\s-]?\d{4})$/;
+export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function positiveNumber(value: string): boolean {
   const n = Number(value.replace(/,/g, "").trim());
@@ -85,12 +111,13 @@ export function isPuduVenue(value: string): value is PuduVenue {
  * Field → error key. Contact errors match `checkout.errors.*`.
  * Robot follow-ups use `heroQuote.errors.*`.
  *
- * `productChosen`: the visitor came from a product's button, so that product
- * answers "which robot" and the interest choice is not asked.
+ * `productChosen`: the visitor came from a product's
+ * button, so that answers "which robot" and the interest choice is not asked.
+ * `needsCondition`: the model is sold both new and pre-owned, so they pick one.
  */
 export function validateQuote(
   form: QuoteRequest,
-  { productChosen = false }: { productChosen?: boolean } = {}
+  { productChosen = false, needsCondition = false }: { productChosen?: boolean; needsCondition?: boolean } = {}
 ): Partial<Record<QuoteField, string>> {
   const errors: Partial<Record<QuoteField, string>> = {};
   if (!form.fullName.trim()) errors.fullName = "required";
@@ -99,6 +126,7 @@ export function validateQuote(
   if (!form.phone.trim()) errors.phone = "required";
   else if (!PHONE_RE.test(form.phone.trim())) errors.phone = "phone";
   if (!form.interest && !productChosen) errors.interest = "required";
+  if (needsCondition && !form.condition) errors.condition = "required";
 
   if (form.interest === "lawn-mowing") {
     if (!form.areaM2.trim()) errors.areaM2 = "required";
@@ -121,6 +149,7 @@ export function asQuote(raw: unknown): QuoteRequest {
   const str = (key: string) => (typeof v[key] === "string" ? v[key].trim() : "");
   const interest = str("interest");
   const venue = str("venue");
+  const condition = str("condition");
   return {
     fullName: str("fullName"),
     company: str("company"),
@@ -134,5 +163,6 @@ export function asQuote(raw: unknown): QuoteRequest {
     note: str("note").slice(0, QUOTE_NOTE_MAX),
     productId: str("productId"),
     forId: str("forId"),
+    condition: isStockCondition(condition) ? condition : "",
   };
 }

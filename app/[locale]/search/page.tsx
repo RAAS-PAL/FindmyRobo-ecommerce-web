@@ -53,7 +53,7 @@ export default async function SearchPage({
     <main className="min-h-[65vh] bg-cloud">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
         <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-600">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-content sm:text-5xl">
@@ -69,7 +69,7 @@ export default async function SearchPage({
         {!query ? (
           <FadeIn delay={0.08}>
             <div className="mt-12 flex flex-col items-center rounded-2xl border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
-              <Search className="h-10 w-10 text-gold-600" aria-hidden="true" />
+              <Search className="h-10 w-10 text-accent-600" aria-hidden="true" />
               <h2 className="mt-4 font-display text-xl font-bold text-content">{t("emptyTitle")}</h2>
               <p className="mt-2 max-w-md text-sm leading-relaxed text-ink-muted">{t("emptyBody")}</p>
             </div>
@@ -77,12 +77,12 @@ export default async function SearchPage({
         ) : results.length === 0 ? (
           <FadeIn delay={0.08}>
             <div className="mt-12 flex flex-col items-center rounded-2xl border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
-              <SearchX className="h-10 w-10 text-gold-600" aria-hidden="true" />
+              <SearchX className="h-10 w-10 text-accent-600" aria-hidden="true" />
               <h2 className="mt-4 font-display text-xl font-bold text-content">{t("noResultsTitle")}</h2>
               <p className="mt-2 max-w-md text-sm leading-relaxed text-ink-muted">
                 {t("noResultsBody", { query })}
               </p>
-              <Link href="/shop" className="mt-6 flex min-h-12 items-center rounded-lg bg-gold px-6 text-sm font-bold text-forest-950">
+              <Link href="/shop" className="mt-6 flex min-h-12 items-center rounded-lg bg-accent px-6 text-sm font-bold text-on-accent">
                 {t("browseAll")}
               </Link>
             </div>

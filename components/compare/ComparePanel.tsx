@@ -98,7 +98,7 @@ export default function ComparePanel({
                     aria-pressed={selected}
                     className={`flex w-full cursor-pointer items-center gap-3 rounded-xl p-2.5 text-left transition-colors ${
                       selected
-                        ? "bg-gold/15"
+                        ? "bg-accent/15"
                         : blocked
                           ? "opacity-40"
                           : "hover:bg-cloud"
@@ -114,13 +114,13 @@ export default function ComparePanel({
                       <PriceOrQuote
                         amount={robot.price}
                         className="block font-mono text-[12px] tabular-nums text-ink-muted"
-                        quoteClassName="block text-[11.5px] font-semibold text-gold-600"
+                        quoteClassName="block text-[11.5px] font-semibold text-accent-600"
                       />
                     </span>
                     <span
                       className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-colors ${
                         selected
-                          ? "border-gold bg-gold text-forest-950"
+                          ? "border-accent bg-accent text-on-accent"
                           : "border-forest-100 text-ink-muted"
                       }`}
                       aria-hidden="true"
@@ -158,7 +158,7 @@ export default function ComparePanel({
                 type="button"
                 onClick={compareNow}
                 disabled={!ready}
-                className="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+                className="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
               >
                 {ready ? t("compareNow") : t("needTwo")}
                 {ready && <ArrowRight className="h-4 w-4" aria-hidden="true" />}

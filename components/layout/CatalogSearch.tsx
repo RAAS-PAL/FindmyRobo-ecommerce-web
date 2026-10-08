@@ -154,7 +154,7 @@ export default function CatalogSearch({
                       {tc(`${product.category}.name`)}
                     </span>
                   </span>
-                  <ArrowRight className="h-4 w-4 shrink-0 text-gold-600" aria-hidden="true" />
+                  <ArrowRight className="h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
                 </Link>
               ))}
             </div>
@@ -166,7 +166,7 @@ export default function CatalogSearch({
           <button
             type="button"
             onClick={goToResults}
-            className="flex min-h-12 w-full cursor-pointer items-center justify-between border-t border-forest-100 bg-cloud/60 px-4 text-xs font-bold text-content transition-colors hover:text-gold-600"
+            className="flex min-h-12 w-full cursor-pointer items-center justify-between border-t border-forest-100 bg-cloud/60 px-4 text-xs font-bold text-content transition-colors hover:text-accent-600"
           >
             {t("searchViewAll", { query: term })}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

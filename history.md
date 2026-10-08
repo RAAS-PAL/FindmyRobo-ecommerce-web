@@ -2,6 +2,28 @@
 
 Newest first. Current state and open items live in `hot.md`.
 
+## 2026-10-08 — Hero quote buttons, no empty slots
+- Commercial-cleaning (and every non-mower) hero slide no longer shows a
+  second "Get a quote" next to Learn more. The quote card stays on the hero
+  and the navbar still has one. Lawn mowing still shows Book a demo.
+- A homepage banner with no photo (Pudu) stays off, even if a robot in that
+  family is switched on. The hero shows slide tabs only when there is more
+  than one slide. Shop filter pills hide a category that has nothing on show.
+
+## 2026-10-01 → 10-07 — Every robot in the catalogue (branch `claude/project-brief-review-sfx73n`)
+- Product pages for Gausium Phantas, T-Chef TC-E10A (the business's
+  high-res render) and Aventurier A1-Youth (grey + white), first built in code
+- Catalogue holds every brand: brand + conditions columns, price may be
+  unknown ("Price on request"), product type instead of model name; the 8
+  code-only robots seeded hidden (SQL steps 1–4 ran on live 2026-10-02)
+- Robot finder at `/recommend` (rules + per-product facts, optional contact)
+- Code-only robots and pages removed: the three pages moved into the database
+  (`supabase/fill-robot-pages.sql`) and Admin gained a "Full-screen page"
+  section to edit them; hidden robots no longer leave empty slots in the
+  navbar, homepage or category pages
+- Fixed the coming-soon category panel's button label (`nav.bookDemo` went
+  with the navbar's Book a Demo button)
+
 ## 2026-09-28 → 09-30 — Quote-only launch polish (committed straight to main)
 - Quote-only flow: cart hidden (`cartEnabled: false`), every interested button
   opens one quote form; quotes email the sales team only (no customer email

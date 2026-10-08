@@ -53,7 +53,7 @@ export default function LoginForm() {
     `min-h-[48px] w-full rounded-xl border bg-surface px-4 text-[14px] text-content transition-colors focus:outline-none focus:ring-2 ${
       invalid
         ? "border-red-400 focus:ring-red-200"
-        : "border-forest-100 focus:border-gold focus:ring-gold/25"
+        : "border-forest-100 focus:border-accent focus:ring-accent/25"
     }`;
 
   return (
@@ -99,7 +99,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={busy || email.length === 0 || password.length === 0}
-        className="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {busy ? (
           <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />

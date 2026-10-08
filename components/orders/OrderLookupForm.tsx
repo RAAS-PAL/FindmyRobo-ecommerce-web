@@ -8,7 +8,7 @@ import { siteConfig } from "@/data/siteConfig";
 import type { OrderLine, OrderStatus } from "@/lib/checkout";
 
 const inputClass =
-  "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25";
+  "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 
 interface LookupResult {
   id: string;
@@ -25,7 +25,7 @@ interface LookupResult {
 }
 
 const statusTone: Record<OrderStatus, string> = {
-  pending_payment: "bg-gold/20 text-gold-600",
+  pending_payment: "bg-accent/20 text-accent-600",
   paid: "bg-forest-100 text-forest-700",
   failed: "bg-red-100 text-red-700",
   expired: "bg-forest-100 text-ink-muted",
@@ -128,7 +128,7 @@ export default function OrderLookupForm() {
         <button
           type="submit"
           disabled={busy || !orderId.trim() || !email.trim()}
-          className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gold text-[14px] font-bold text-forest-950 transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgba(245,200,66,0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {busy ? (
             <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -164,14 +164,14 @@ export default function OrderLookupForm() {
           </div>
 
           {order.status === "pending_payment" && (
-            <p className="mt-4 rounded-xl border border-gold bg-gold/10 p-3.5 text-[12.5px] leading-relaxed text-content">
+            <p className="mt-4 rounded-xl border border-accent bg-accent/10 p-3.5 text-[12.5px] leading-relaxed text-content">
               {t("pendingNote")}
             </p>
           )}
 
           {order.fulfillment?.trackingNumber && (
             <p className="mt-4 flex items-center gap-2 text-[13px] text-content">
-              <Truck className="h-4 w-4 text-gold-600" aria-hidden="true" />
+              <Truck className="h-4 w-4 text-accent-600" aria-hidden="true" />
               <span className="font-semibold">{t("tracking")}</span>
               <span className="font-mono">{order.fulfillment.trackingNumber}</span>
               {order.fulfillment.carrier && (
