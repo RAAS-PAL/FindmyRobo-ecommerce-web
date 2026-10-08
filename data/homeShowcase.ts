@@ -150,15 +150,25 @@ export interface RobotFamily extends ShowcasePhoto {
  * is still hidden in Admin (no photos or specs yet) is left out, and comes
  * back by itself once the robot is switched on.
  */
-export function onShow<T extends { productId?: string; category?: CategorySlug }>(
-  items: T[],
-  products: Pick<Product, "id" | "category">[]
-): T[] {
-  return items.filter(
-    (item) =>
+export function onShow<
+  T extends {
+    productId?: string;
+    category?: CategorySlug;
+    image: string | null;
+    cutout?: { src: string };
+    studioPhoto?: { src: string };
+    studio?: readonly unknown[];
+  },
+>(items: T[], products: Pick<Product, "id" | "category">[]): T[] {
+  return items.filter((item) => {
+    const listed =
       (!item.productId || products.some((p) => p.id === item.productId)) &&
-      (!item.category || products.some((p) => p.category === item.category))
-  );
+      (!item.category || products.some((p) => p.category === item.category));
+    // A "photo coming" frame is for layout review. It must not ship as a
+    // blank card once a robot in that family is switched on.
+    const pictured = Boolean(item.image || item.cutout || item.studioPhoto || item.studio?.length);
+    return listed && pictured;
+  });
 }
 
 export const heroSlides: HeroSlide[] = [
@@ -265,7 +275,8 @@ export const moreFamilies: RobotFamily[] = [
     },
     href: "/shop/delivery-robots",
     interest: "pudu-delivery",
-    // left out until a Pudu robot is on show (it has no photo yet either)
+    // No photo yet, so the homepage tile stays off even after a Pudu robot
+    // is switched on. A "photo coming" card would be an empty slot.
     category: "delivery-robots",
     image: null,
     shot: {

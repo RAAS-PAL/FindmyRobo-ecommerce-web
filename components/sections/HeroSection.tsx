@@ -190,9 +190,16 @@ export default function HeroSection() {
             </AnimatePresence>
           </div>
 
-          {/* ---- tabs: which family is on show, and how long until the next ---- */}
+          {/* Tabs only when there is something to switch. One slide would
+              otherwise sit in a two-column row and leave the other half blank. */}
+          {slides.length > 1 && (
           <div className="mt-8 flex items-stretch gap-3 lg:mt-10">
-            <div role="tablist" aria-label={t("slidesLabel")} className="grid flex-1 grid-cols-2 gap-3">
+            <div
+              role="tablist"
+              aria-label={t("slidesLabel")}
+              className="grid flex-1 gap-3"
+              style={{ gridTemplateColumns: `repeat(${slides.length}, minmax(0, 1fr))` }}
+            >
               {slides.map((s, i) => {
                 const active = i === index;
                 return (
@@ -248,6 +255,7 @@ export default function HeroSection() {
               )}
             </button>
           </div>
+          )}
         </div>
       </div>
 

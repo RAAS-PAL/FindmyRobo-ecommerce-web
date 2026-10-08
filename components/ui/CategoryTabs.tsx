@@ -3,15 +3,19 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { categories, type CategorySlug } from "@/data/categories";
+import { useProducts } from "@/components/ProductsProvider";
 
 /**
- * Filter pills for the shop pages. Coming-soon categories are shown
- * (so visitors see the store is bigger than mowers) but not clickable.
+ * Filter pills for the shop pages. A category marked available but with no
+ * robot on the storefront is left out, the same way the navbar drops an empty
+ * tab. Coming-soon categories stay, labelled and not clickable.
  */
 export default function CategoryTabs({ active }: { active?: CategorySlug }) {
   const t = useTranslations("shop");
   const tc = useTranslations("categories");
   const tn = useTranslations("nav");
+  const { products } = useProducts();
+  const stocked = new Set(products.map((product) => product.category));
 
   const base =
     "flex min-h-[44px] items-center gap-2 rounded-full border px-5 text-[13.5px] font-semibold transition-colors";
@@ -28,8 +32,23 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
       >
         {t("all")}
       </Link>
-      {categories.map((c) =>
-        c.available ? (
+      {categories.map((c) => {
+        if (c.available && !stocked.has(c.slug)) return null;
+        if (!c.available) {
+          return (
+            <span
+              key={c.slug}
+              aria-disabled="true"
+              className={`${base} cursor-default border-forest-100 bg-cloud whitespace-nowrap text-ink-muted/60`}
+            >
+              {tc(`${c.slug}.name`)}
+              <span className="rounded-full bg-accent/20 px-2 py-0.5 font-mono text-[9px] font-semibold tracking-wider text-accent-600 uppercase">
+                {tn("soon")}
+              </span>
+            </span>
+          );
+        }
+        return (
           <Link
             key={c.slug}
             href={`/shop/${c.slug}`}
@@ -41,19 +60,8 @@ export default function CategoryTabs({ active }: { active?: CategorySlug }) {
           >
             {tc(`${c.slug}.name`)}
           </Link>
-        ) : (
-          <span
-            key={c.slug}
-            aria-disabled="true"
-            className={`${base} whitespace-nowrap cursor-default border-forest-100 bg-cloud text-ink-muted/60`}
-          >
-            {tc(`${c.slug}.name`)}
-            <span className="rounded-full bg-accent/20 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-accent-600">
-              {tn("soon")}
-            </span>
-          </span>
-        )
-      )}
+        );
+      })}
     </div>
   );
 }

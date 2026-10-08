@@ -118,7 +118,10 @@ branch `main`.
     quote card follows the buttons.
   - 2026-10-08: the hero no longer adds a "Get a quote" button beside Learn
     more. The quote card is already on the slide, and the navbar still has
-    one. Lawn mowing still shows Book a demo.
+    one. Lawn mowing still shows Book a demo. The slide tabs render only when
+    there is more than one slide, so a single slide does not leave a blank
+    half. A homepage banner with no photo (Pudu) stays off. Shop filter pills
+    follow the navbar: a category with nothing on show is not listed.
   - The section is `overflow: clip` (not hidden) on purpose: a hidden box is
     still a scroll container, and focusing the form once scrolled the hero's
     own content up, out of reach.
@@ -153,7 +156,8 @@ branch `main`.
      key figures, feature sections, spec table) for Gausium Phantas, T-Chef
      TC-E10A and Aventurier A1-Youth, generated from the old code-built pages.
      Leaves price, visible, fit and order alone; the rows stay hidden, so it
-     is safe before the merge and safe to re-run. **Not yet run on live.**
+     is safe before the merge and safe to re-run. **Ran on live 2026-10-08**
+     (Phantas, T-Chef TC-E10A and A1-Youth filled, still hidden).
      Tested on a local Postgres 18 after steps 1–4.
   Launch order: run 4b → merge this branch to main (ask the owner first) →
   step 5 → switch the three on (`update products set visible = true where id
