@@ -2,6 +2,11 @@
 
 Newest first. Current state and open items live in `hot.md`.
 
+## 2026-10-08 — Hero quote buttons
+- Commercial-cleaning (and every non-mower) hero slide no longer shows a
+  second "Get a quote" next to Learn more. The quote card stays on the hero
+  and the navbar still has one. Lawn mowing still shows Book a demo.
+
 ## 2026-10-01 → 10-07 — Every robot in the catalogue (branch `claude/project-brief-review-sfx73n`)
 - Product pages for Gausium Phantas, T-Chef TC-E10A (the business's
   high-res render) and Aventurier A1-Youth (grey + white), first built in code

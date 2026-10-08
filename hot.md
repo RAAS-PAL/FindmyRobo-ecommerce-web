@@ -1,4 +1,4 @@
-# Hot Cache — Last Updated: 2026-10-07
+# Hot Cache — Last Updated: 2026-10-08
 
 Read this first. It's the current state in one page; `README.md` has setup,
 stack, layout, CMS, env vars and conventions in depth; `index.md` maps the
@@ -116,6 +116,9 @@ branch `main`.
     this wide so the card sits centred in the frost).
   - Below lg: no frost at all; the headline block is content-height so the
     quote card follows the buttons.
+  - 2026-10-08: the hero no longer adds a "Get a quote" button beside Learn
+    more. The quote card is already on the slide, and the navbar still has
+    one. Lawn mowing still shows Book a demo.
   - The section is `overflow: clip` (not hidden) on purpose: a hidden box is
     still a scroll container, and focusing the form once scrolled the hero's
     own content up, out of reach.

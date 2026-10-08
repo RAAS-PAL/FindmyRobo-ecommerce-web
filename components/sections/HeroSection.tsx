@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Calendar, Pause, Play } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useSiteContent } from "@/components/SiteContentProvider";
-import { useQuote } from "@/components/quote/QuoteProvider";
 import { pick } from "@/data/siteContent";
 import { heroSlides, onShow } from "@/data/homeShowcase";
 import { useProducts } from "@/components/ProductsProvider";
@@ -49,7 +48,6 @@ export default function HeroSection() {
   const t = useTranslations("showcase");
   const locale = useLocale();
   const { home } = useSiteContent();
-  const { openQuote } = useQuote();
   // a robot's slide only while that robot is on show (not hidden in Admin)
   const { products } = useProducts();
   const slides = useMemo(() => onShow(heroSlides, products), [products]);
@@ -159,6 +157,8 @@ export default function HeroSection() {
                   {sub}
                 </p>
                 <div className="mt-6 flex flex-wrap items-center gap-3">
+                  {/* Lawn mowing books a demo. Other slides don't add a second
+                      Get a quote: the card is already on the hero. */}
                   <Link
                     href={slide.href}
                     className="inline-flex min-h-12 items-center gap-2 rounded-full bg-accent-gradient px-7 text-[15px] font-bold"
@@ -166,7 +166,7 @@ export default function HeroSection() {
                     {t("learnMore")}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
-                  {slide.interest === "lawn-mowing" ? (
+                  {slide.interest === "lawn-mowing" && (
                     <Link
                       href="/products/request-a-demo"
                       className="inline-flex min-h-12 items-center gap-2 rounded-full border border-content/20 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/50 lg:border-white/40 lg:text-white lg:hover:border-white"
@@ -174,14 +174,6 @@ export default function HeroSection() {
                       <Calendar className="h-4 w-4" aria-hidden="true" />
                       {t("bookDemo")}
                     </Link>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => openQuote({ interest: slide.interest, productId: slide.productId })}
-                      className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-content/20 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/50 lg:border-white/40 lg:text-white lg:hover:border-white"
-                    >
-                      {t("getQuote")}
-                    </button>
                   )}
                 </div>
                 <Link
