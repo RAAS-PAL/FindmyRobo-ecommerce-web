@@ -2,6 +2,21 @@
 
 Newest first. Current state and open items live in `hot.md`.
 
+## 2026-10-08 — Colour names on the A1 hero stay still
+- Grey and White were inside the hero's looping float, so the small tracked
+  type repainted on fractional pixels and looked like a low-frame stutter.
+  Only the photos bob now (`animate-hero-float`).
+
+## 2026-10-08 — Phantas, A1-Youth and T-Chef switched on
+- Preview branch merged to main (PR #1). `variant-to-product-type.sql` and
+  `visible = true` for `gausium-phantas`, `aventurier-a1-youth` and
+  `t-chef-tc-e10a` ran on live. A1-Basic, the four Pudu robots and `c40`
+  stay hidden.
+- The visibility SQL did not change the homepage: those pages are baked at
+  deploy, and a SQL editor update does not call `revalidatePath`. Production
+  was rebuilt (`e-commerce-raaspal-651gp8zwx`) and the live homepage, navbar
+  and shop then listed the three robots.
+
 ## 2026-10-08 — Hero quote buttons, no empty slots
 - Commercial-cleaning (and every non-mower) hero slide no longer shows a
   second "Get a quote" next to Learn more. The quote card stays on the hero

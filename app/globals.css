@@ -397,6 +397,21 @@ header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-dark {
   }
 }
 
+/* Product hero: the photo bobs. Colour names are not in this element —
+   tracked type on a moving layer stutters (fractional-pixel repaints). */
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+.animate-hero-float {
+  animation: hero-float 6s ease-in-out 1.2s infinite;
+}
+
 @keyframes hero-progress {
   from {
     transform: scaleX(0);
@@ -417,6 +432,7 @@ header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-dark {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .animate-hero-float,
   .animate-marquee,
   .animate-mow,
   .animate-trail,

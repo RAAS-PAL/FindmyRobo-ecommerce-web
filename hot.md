@@ -7,8 +7,9 @@ code; `history.md` is the dated log.
 ## What this is
 
 FindMyRobo (findmyrobo.com): the bilingual Thai/English storefront of Raas Pal
-Company Limited, selling Mammotion robot mowers in Thailand (pool, cleaning and
-delivery robots are listed as "coming soon"). Thai is the default at `/`,
+Company Limited. Live catalogue: Mammotion robot mowers, Gausium Phantas,
+Aventurier A1-Youth and T-Chef TC-E10A. Pool cleaners, A1-Basic, the four
+Pudu robots and the test product `c40` stay hidden. Thai is the default at `/`,
 English at `/en`. Next.js 16.3 App Router, React 19, Tailwind v4, next-intl 4,
 Supabase (auth, products, orders), Payload CMS 3 embedded at `/cms`, Resend
 email. pnpm 12, Node ≥ 24, ESM. Repo `RAAS-PAL/FindmyRobo-ecommerce-web`, only
@@ -32,13 +33,13 @@ branch `main`.
   bar, About, contact/socials (incl. the LINE QR), SEO and media. Publishing
   revalidates the site — no deploy needed. `data/*.ts` and `messages/*.json`
   ARE compiled in and need a deploy.
-- **Theme (on branch `claude/project-brief-review-sfx73n`, not yet on main):**
-  one light theme only (dark mode removed), soft grey page (`--color-surface`
-  `#f3f5f8`), graphite neutrals, electric-blue brand colour. The brand colour
-  is one token, `accent-*` (plus `--accent-rgb`, `bg-accent-gradient`,
+- **Theme (live on main since the 2026-10-08 merge):** one light theme only
+  (dark mode removed), soft grey page (`--color-surface` `#f3f5f8`), graphite
+  neutrals, electric-blue brand colour. The brand colour is one token,
+  `accent-*` (plus `--accent-rgb`, `bg-accent-gradient`,
   `text-accent-gradient`) in `app/globals.css`: change it there to re-colour
-  the site. Main still has black + gold with dark mode. Fonts: Barlow (display/body) with Prompt / Noto Sans Thai
-  for Thai glyphs, IBM Plex Mono for eyebrows/labels.
+  the site. Fonts: Barlow (display/body) with Prompt / Noto Sans Thai for
+  Thai glyphs, IBM Plex Mono for eyebrows/labels.
 
 ## How work ships
 
@@ -159,12 +160,19 @@ branch `main`.
      is safe before the merge and safe to re-run. **Ran on live 2026-10-08**
      (Phantas, T-Chef TC-E10A and A1-Youth filled, still hidden).
      Tested on a local Postgres 18 after steps 1–4.
-  Launch order: run 4b → merge this branch to main (ask the owner first) →
-  step 5 → switch the three on (`update products set visible = true where id
-  in ('gausium-phantas','aventurier-a1-youth','t-chef-tc-e10a')`, or tick
-  Visible in Admin). A1-Basic and the four Pudu robots stay hidden until their
-  photos and specs arrive (owner, 2026-10-07); the Delivery tab and the Pudu
-  homepage tile appear by themselves once one is visible.
+  Launch order is done (2026-10-08): 4b ran, preview branch merged to main
+  (PR #1), step 5 ran, and the three robots were set `visible = true`.
+  A1-Basic, the four Pudu robots and `c40` stay hidden. The Delivery tab and
+  the Pudu homepage tile stay off until a Pudu robot is visible AND the tile
+  has a real photo (`onShow` in `data/homeShowcase.ts`).
+  **SQL visibility does not refresh the homepage.** Storefront pages are
+  baked at deploy. A raw `UPDATE products SET visible` shows up on a product
+  URL that was not in that build, but the homepage, navbar and shop stay on
+  the snapshot until an Admin product save (`revalidatePath("/", "layout")`)
+  or a production rebuild. After the visibility SQL the homepage was still
+  lawn-only; production was rebuilt the same day
+  (`e-commerce-raaspal-651gp8zwx`) and findmyrobo.com then showed Phantas,
+  A1-Youth and TC-E10A.
   5. `supabase/variant-to-product-type.sql` — `variant` becomes the product
      type (mower, pool, cleaner, equipment, cooking, delivery, installation,
      demo), never a model name. Run it right AFTER this branch's code is live

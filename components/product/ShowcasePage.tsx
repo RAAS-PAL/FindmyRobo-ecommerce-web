@@ -92,17 +92,21 @@ function FeaturePhoto({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-/** One body colour in the hero, named so the two can be told apart. */
+/** One body colour in the hero, named so the two can be told apart.
+ *  Only the photo floats. The name stays put: a looping translate on small
+ *  tracked type repaints the letters on fractional pixels and they stutter. */
 function HeroColor({ color, alt, label }: { color: ShowcaseColor; alt: string; label: string }) {
   return (
     <figure className="flex min-w-0 flex-1 flex-col items-center">
-      {/* eslint-disable-next-line @next/next/no-img-element -- any Admin URL */}
-      <img
-        src={color.image}
-        alt={alt}
-        fetchPriority="high"
-        className="h-[min(42svh,22rem)] w-auto max-w-full object-contain sm:h-[min(52svh,28rem)] lg:h-[min(64svh,34rem)]"
-      />
+      <div className="animate-hero-float">
+        {/* eslint-disable-next-line @next/next/no-img-element -- any Admin URL */}
+        <img
+          src={color.image}
+          alt={alt}
+          fetchPriority="high"
+          className="h-[min(42svh,22rem)] w-auto max-w-full object-contain sm:h-[min(52svh,28rem)] lg:h-[min(64svh,34rem)]"
+        />
+      </div>
       <figcaption className="mt-3 flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.18em] text-white/80 uppercase [&:lang(th)]:tracking-[0.04em]">
         <span
           aria-hidden="true"
@@ -262,40 +266,39 @@ export default function ShowcasePage({
               transition={{ duration: 1.6, ease: EASE }}
               className="absolute inset-[8%] rounded-full bg-[radial-gradient(closest-side,rgb(var(--accent-rgb)/0.28),rgb(var(--accent-rgb)/0.08)_55%,transparent)] blur-2xl"
             />
-            {/* arrives rising into place, then floats */}
+            {/* arrives rising into place; the photo then floats on its own */}
             <motion.div
               initial={{ opacity: 0, y: 60, scale: 0.92 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 1.1, ease: EASE }}
               className="relative"
             >
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 6, ease: "easeInOut", repeat: Infinity, delay: 1.2 }}
-              >
-                {colors ? (
-                  <div className="flex items-end justify-center gap-1 sm:gap-4">
-                    {colors.map((color) => (
-                      <HeroColor
-                        key={color.image}
-                        color={color}
-                        alt={`${label}, ${text(color.label)}`}
-                        label={text(color.label)}
-                      />
-                    ))}
-                  </div>
-                ) : heroImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- any Admin URL
-                  <img
-                    src={heroImage}
-                    alt={label}
-                    fetchPriority="high"
-                    className="h-auto w-full"
-                  />
-                ) : (
-                  <ProductVisual product={product} className="aspect-[4/3] h-auto w-full" />
-                )}
-              </motion.div>
+              {colors ? (
+                <div className="flex items-end justify-center gap-1 sm:gap-4">
+                  {colors.map((color) => (
+                    <HeroColor
+                      key={color.image}
+                      color={color}
+                      alt={`${label}, ${text(color.label)}`}
+                      label={text(color.label)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="animate-hero-float">
+                  {heroImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- any Admin URL
+                    <img
+                      src={heroImage}
+                      alt={label}
+                      fetchPriority="high"
+                      className="h-auto w-full"
+                    />
+                  ) : (
+                    <ProductVisual product={product} className="aspect-[4/3] h-auto w-full" />
+                  )}
+                </div>
+              )}
             </motion.div>
           </div>
         </div>
