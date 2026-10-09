@@ -290,7 +290,9 @@ export default function ShowcasePage({
                     src={heroImage}
                     alt={label}
                     fetchPriority="high"
-                    className="h-auto w-full"
+                    // capped like the colour shots: a tall photo stays in the
+                    // hero instead of growing to the column's full width
+                    className="h-auto max-h-[min(42svh,22rem)] w-full object-contain sm:max-h-[min(52svh,28rem)] lg:max-h-[min(64svh,34rem)]"
                   />
                 ) : (
                   <ProductVisual product={product} className="aspect-[4/3] h-auto w-full" />
