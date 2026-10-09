@@ -2,6 +2,7 @@ import type { Bilingual } from "@/data/siteContent";
 import type { QuoteInterest } from "@/lib/quoteRequest";
 import type { CategorySlug } from "@/data/categories";
 import type { Product } from "@/data/products";
+import { media } from "@/lib/media";
 
 /**
  * Homepage robot showcase: the hero slides and the product-family banners
@@ -270,15 +271,17 @@ export const moreFamilies: RobotFamily[] = [
     eyebrow: { en: "Pudu Robotics · Pre-owned", th: "Pudu Robotics · ผ่านการใช้งาน" },
     title: { en: "Delivery robots", th: "หุ่นยนต์ขนส่ง" },
     tagline: {
-      en: "Bella, Ketty and more — for restaurants, hotels and offices.",
-      th: "Bella, Ketty และรุ่นอื่น ๆ สำหรับร้านอาหาร โรงแรม และสำนักงาน",
+      en: "BellaBot, KettyBot and more — for restaurants, hotels and offices.",
+      th: "BellaBot, KettyBot และรุ่นอื่น ๆ สำหรับร้านอาหาร โรงแรม และสำนักงาน",
     },
     href: "/shop/delivery-robots",
     interest: "pudu-delivery",
-    // No photo yet, so the homepage tile stays off even after a Pudu robot
-    // is switched on. A "photo coming" card would be an empty slot.
     category: "delivery-robots",
+    // BellaBot cut out of Pudu's product render, on the light studio backdrop
+    // the card draws (as the T-Chef tile). No clean lifestyle photo yet: the
+    // ones on file carry brochure text or a customer's branding.
     image: null,
+    cutout: { src: media("Pudu/BellaBot/BellaBot-cutout-web.webp"), width: 697, height: 1600 },
     shot: {
       en: "Bella or Ketty carrying dishes in a restaurant · 4:3 · robot centred, full height in frame",
       th: "Bella หรือ Ketty กำลังเสิร์ฟอาหารในร้าน · 4:3 · หุ่นยนต์อยู่กลางภาพ เห็นเต็มตัว",
