@@ -75,10 +75,10 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                     style={{ pointerEvents: "none" }}
                   >
                     {/^https?:\/\//.test(v.src) ? (
-                      // Remote (Cloudinary): served as-is. next/image would
+                      // Remote (S3 media): served as-is. next/image would
                       // re-encode an already-optimised file, and a second lossy
-                      // pass is what softened these at 3x zoom. Put the
-                      // transform in the URL instead (f_auto,q_auto:best).
+                      // pass is what softened these at 3x zoom. Upload the
+                      // compressed `-web.webp` copy instead.
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={v.src}

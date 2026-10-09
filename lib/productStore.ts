@@ -2,6 +2,7 @@ import { createServiceClient } from "@/lib/supabase/service";
 import type { CategorySlug } from "@/data/categories";
 import type { AnatomyModel, Product, ProductPage, RobotFit } from "@/data/products";
 import { isStockCondition } from "@/data/conditions";
+import { rebaseMedia } from "@/lib/media";
 
 /**
  * Supabase-backed product store — the single read/write path for product
@@ -74,7 +75,9 @@ function conditionsOf(raw: string[] | null | undefined): Product["conditions"] {
   return ordered.length > 0 ? [...ordered] : ["new"];
 }
 
-function rowToProduct(row: ProductRow): Product {
+function rowToProduct(saved: ProductRow): Product {
+  // Photo and video links follow NEXT_PUBLIC_MEDIA_BASE_URL (lib/media.ts).
+  const row = rebaseMedia(saved);
   const legacy = LEGACY_VARIANTS[row.variant];
   const hoverVideo = row.hover_video || legacy?.hoverVideo;
   const page = row.page ? withLegacyAnatomy(row.page, legacy?.anatomy) : null;

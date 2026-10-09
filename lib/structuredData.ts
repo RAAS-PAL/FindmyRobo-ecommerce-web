@@ -22,7 +22,7 @@ import { siteUrl } from "@/lib/siteUrl";
 
 const SCHEMA = "https://schema.org";
 
-/** /public paths become absolute; Cloudinary and other full URLs pass through. */
+/** /public paths become absolute; S3 media and other full URLs pass through. */
 const absolute = (src: string) => (/^https?:\/\//i.test(src) ? src : `${siteUrl}${src}`);
 
 /**
