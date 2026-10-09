@@ -1,6 +1,7 @@
 import { about, type AboutStat, type AboutValue, type Bilingual, type Milestone, type TeamMember } from "@/data/about";
 import { siteConfig } from "@/data/siteConfig";
 import type { Locale } from "@/data/products";
+import { media } from "@/lib/media";
 
 /**
  * EDITABLE SITE CONTENT — the shapes the storefront renders, and their defaults.
@@ -209,11 +210,11 @@ export const DEFAULT_CONTENT: SiteContent = {
       en: "The best mowing robots you can find in Thailand — operating independently, with no need for constant human supervision.",
       th: "ยกระดับการดูแลสนามด้วยหุ่นยนต์ตัดหญ้าอัจฉริยะ ทำงานอัตโนมัติอย่างมั่นใจ โดยไม่ต้องคอยดูแลตลอดเวลา",
     },
-    // Hosted on Cloudinary with q_auto (best quality-per-byte) + ac_none
-    // (no audio track), so they load fast and don't use Vercel bandwidth.
+    // S3 media (lib/media.ts). The `-web` copies are compressed with no audio
+    // track, so they load fast and don't use Vercel bandwidth.
     heroVideos: [
-      "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/ac_none/v1785773065/0803_1_bkaoz9.mp4",
-      "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/ac_none/v1785770343/0803_rgjdz9.mp4",
+      media("Mammotion/Luba3/0803_1_bkaoz9-web.mp4"),
+      media("Mammotion/LubaMini2 1500/0803_rgjdz9-web.mp4"),
     ],
     // Images are PLACEHOLDERS — replace with real feature/cutaway shots.
     featureShowcase: [
@@ -244,31 +245,31 @@ export const DEFAULT_CONTENT: SiteContent = {
     ],
     videoGallery: [
       {
-        url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785810911/0804_le3wbx.mp4",
+        url: media("Mammotion/Luba3/0804_le3wbx.mp4"),
         poster: "/posters/lubaback1.png",
         title: "Enjoy Every Moment",
         tag: "LUBA 3 AWD",
       },
       {
-        url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/q_auto/v1785491668/0731_5_yzbrty.mp4",
+        url: media("Mammotion/LubaMini2 1500/0731_5_yzbrty-web.mp4"),
         poster: "/posters/onebangkok1.webp",
         title: "Obstacle Avoidance Footage",
         tag: "LUBA mini 2 AWD 1500",
       },
       {
-        url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785812434/0804_1_f4vev2.mp4",
+        url: media("Mammotion/Luba3/0804_1_f4vev2.mp4"),
         poster: "/posters/luba32.png",
         title: "Obstacle Avoidance Footage",
         tag: "LUBA 3 AWD",
       },
       {
-        url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1785811377/20260714_123412_zn9qe3.mp4",
+        url: media("Mammotion/LubaMini2 1500/20260714_123412_zn9qe3.mp4"),
         poster: "/posters/lubamini21500.png",
         title: "One Bangkok",
         tag: "LUBA mini 2 AWD 1500",
       },
       {
-        url: "https://res.cloudinary.com/ddb7pxqfd/video/upload/v1786096962/0731_7_atlvly.mp4",
+        url: media("Mammotion/LubaMini2 1500/0731_7_atlvly.mp4"),
         poster: "/posters/lubamini21500onebangkok.png",
         title: "One Bangkok",
         tag: "LUBA mini 2 AWD 1500",
