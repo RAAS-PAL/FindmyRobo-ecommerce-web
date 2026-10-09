@@ -1,10 +1,20 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { mediaBaseUrl } from "./lib/media";
 import { withPayload } from "@payloadcms/next/withPayload";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
+const media = new URL(mediaBaseUrl);
+
 const nextConfig: NextConfig = {
+  // next/image may optimise files from the S3 media host (lib/media.ts), e.g.
+  // the homepage tiles' cut-outs. It follows NEXT_PUBLIC_MEDIA_BASE_URL.
+  images: {
+    remotePatterns: [
+      { protocol: media.protocol.replace(":", "") as "https" | "http", hostname: media.hostname, pathname: "/**" },
+    ],
+  },
   async headers() {
     return [
       {
