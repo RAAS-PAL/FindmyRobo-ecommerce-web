@@ -9,8 +9,8 @@ import { L } from "../fields";
  * bucket the product photos already use (payload/storage/supabase.ts), so the
  * site keeps one place for files and needs no extra storage account.
  *
- * Videos are not uploaded here on purpose: they go to Cloudinary, which
- * compresses them for phones (see the hero video field).
+ * Videos are not uploaded here on purpose: they go to the S3 media bucket
+ * (lib/media.ts), compressed first for phones (see the hero video field).
  */
 export const Media: CollectionConfig = {
   slug: "media",

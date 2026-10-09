@@ -50,8 +50,8 @@ export const Home: GlobalConfig = {
               maxRows: 6,
               admin: {
                 description: L(
-                  "Played in order, then looped; none shows the animated lawn instead. Upload videos to Cloudinary and put q_auto/ac_none/ right after /upload/ in the link — it compresses the video and drops the sound. A raw phone video will stall on mobile.",
-                  "เล่นตามลำดับแล้ววนซ้ำ ถ้าไม่มีจะแสดงภาพสนามหญ้าแบบเคลื่อนไหว ให้อัปโหลดวิดีโอขึ้น Cloudinary แล้วใส่ q_auto/ac_none/ ต่อจาก /upload/ ในลิงก์ เพื่อบีบอัดและตัดเสียง วิดีโอจากมือถือที่ไม่ได้บีบอัดจะกระตุกบนมือถือ"
+                  "Played in order, then looped; none shows the animated lawn instead. Compress the video and drop the sound first, upload it to the findmyrobo-media S3 bucket, then paste its CloudFront link (https://d5hk9n8my7l32.cloudfront.net/…). S3 serves the file exactly as uploaded — a raw phone video will stall on mobile.",
+                  "เล่นตามลำดับแล้ววนซ้ำ ถ้าไม่มีจะแสดงภาพสนามหญ้าแบบเคลื่อนไหว ให้บีบอัดวิดีโอและตัดเสียงก่อน แล้วอัปโหลดขึ้น S3 bucket findmyrobo-media จากนั้นวางลิงก์ CloudFront (https://d5hk9n8my7l32.cloudfront.net/…) S3 จะส่งไฟล์ตามที่อัปโหลดทุกประการ วิดีโอจากมือถือที่ไม่ได้บีบอัดจะกระตุกบนมือถือ"
                 ),
               },
               fields: [link("url", L("Video link", "ลิงก์วิดีโอ"), { required: true })],
