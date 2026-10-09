@@ -360,7 +360,7 @@ export interface Home {
     th?: string | null;
   };
   /**
-   * Played in order, then looped; none shows the animated lawn instead. Upload videos to Cloudinary and put q_auto/ac_none/ right after /upload/ in the link — it compresses the video and drops the sound. A raw phone video will stall on mobile.
+   * Played in order, then looped; none shows the animated lawn instead. Compress the video and drop the sound first, upload it to the findmyrobo-media S3 bucket, then paste its CloudFront link (https://d5hk9n8my7l32.cloudfront.net/…). S3 serves the file exactly as uploaded — a raw phone video will stall on mobile.
    */
   heroVideos?:
     | {

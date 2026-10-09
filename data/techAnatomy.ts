@@ -1,4 +1,5 @@
 import type { AnatomyModel } from "@/data/products";
+import { media } from "@/lib/media";
 
 /**
  * "Under the hood" — the interactive anatomy shown on a robot's product page.
@@ -61,33 +62,29 @@ const VIEW_LABELS: Record<ViewId, Bilingual> = {
 };
 
 /**
- * Cloudinary delivery.
- *
- * f_auto picks WebP or AVIF per browser. q_auto:best rather than plain q_auto
- * because these renders are magnified up to ~3×, and the normal setting — tuned
- * for viewing at natural size — leaves artefacts that become obvious zoomed in.
+ * S3 delivery (lib/media.ts). Each render has a `-web.webp` copy next to the
+ * PNG original: WebP at Cloudinary's q_auto:best, which these were served at
+ * before the move — a plain q_auto, tuned for natural size, leaves artefacts
+ * that become obvious at up to ~3× zoom.
  *
  * TechAnatomy serves https:// sources directly instead of through next/image:
  * re-encoding an already-optimised file is a second lossy pass, and that is
  * exactly what softened these when they were local.
  */
-const cld = (path: string) =>
-  `https://res.cloudinary.com/ddb7pxqfd/image/upload/f_auto,q_auto:best/${path}`;
-
 const LUBA3_URLS: Record<ViewId, string> = {
-  frontLeft: cld("v1785746889/luba3-1_y5n1uc.png"),
-  top: cld("v1784180517/luba3-2_uuukgg.png"),
-  sideLeft: cld("v1785750522/luba3-3_jd3ef9.png"),
-  sideRight: cld("v1784180517/luba3-4_m3d2l2.png"),
-  under: cld("v1784181000/luba3-5_bv5dfg.png"),
+  frontLeft: media("Mammotion/Luba3/luba3-1_y5n1uc-web.webp"),
+  top: media("Mammotion/Luba3/luba3-2_uuukgg-web.webp"),
+  sideLeft: media("Mammotion/Luba3/luba3-3_jd3ef9-web.webp"),
+  sideRight: media("Mammotion/Luba3/luba3-4_m3d2l2-web.webp"),
+  under: media("Mammotion/Luba3/luba3-5_bv5dfg-web.webp"),
 };
 
 const MINI2_URLS: Record<ViewId, string> = {
-  frontLeft: cld("v1785747825/3e91f791-5c40-42bd-aa9c-9b9860eceff8_nzlyly.png"),
-  top: cld("v1786597489/luba-robot-background-removed_uxb1ub.png"),
-  sideLeft: cld("v1785747683/2_k6bkaj.png"),
-  sideRight: cld("v1785669635/7952672d-c8f4-4f5c-8e03-02f3d123fca3_uefwx2.png"),
-  under: cld("v1785669962/f425735b-d975-4a6b-bf79-12aab8bae15c_gfwjrt.png"),
+  frontLeft: media("Mammotion/LubaMini2 1500/front-left-web.webp"),
+  top: media("Mammotion/LubaMini2 1500/luba-robot-background-removed_uxb1ub-web.webp"),
+  sideLeft: media("Mammotion/LubaMini2 1500/left-web.webp"),
+  sideRight: media("Mammotion/LubaMini2 1500/right-web.webp"),
+  under: media("Mammotion/LubaMini2 1500/under-web.webp"),
 };
 
 /**

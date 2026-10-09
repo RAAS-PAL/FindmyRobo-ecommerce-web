@@ -9,6 +9,7 @@ import {
   type SiteContent,
 } from "@/data/siteContent";
 import { draftFromPayload } from "@/lib/payloadContent";
+import { rebaseMedia } from "@/lib/media";
 import { PREVIEW_PARAM, PREVIEW_SESSION_KEY } from "@/lib/cmsPreview";
 
 interface SiteContentContextValue {
@@ -80,7 +81,7 @@ export default function SiteContentProvider({
           serverURL: origin,
         });
         if (ticket !== latest) return;
-        setDrafts((prev) => ({ ...prev, [section]: draftFromPayload(section, merged) }));
+        setDrafts((prev) => ({ ...prev, [section]: rebaseMedia(draftFromPayload(section, merged)) }));
       } catch (error) {
         console.error("Live Preview: could not apply the draft", error);
       }
