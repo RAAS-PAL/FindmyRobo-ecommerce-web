@@ -2,7 +2,6 @@ import type { Bilingual } from "@/data/siteContent";
 import type { QuoteInterest } from "@/lib/quoteRequest";
 import type { CategorySlug } from "@/data/categories";
 import type { Product } from "@/data/products";
-import { media } from "@/lib/media";
 
 /**
  * Homepage robot showcase: the hero slides and the product-family banners
@@ -268,7 +267,7 @@ export const featuredFamilies: RobotFamily[] = [
 export const moreFamilies: RobotFamily[] = [
   {
     id: "pudu",
-    eyebrow: { en: "Pudu Robotics · Pre-owned", th: "Pudu Robotics · ผ่านการใช้งาน" },
+    eyebrow: { en: "Pudu · Yunji · Pre-owned", th: "Pudu · Yunji · ผ่านการใช้งาน" },
     title: { en: "Delivery robots", th: "หุ่นยนต์ขนส่ง" },
     tagline: {
       en: "BellaBot, KettyBot and more — for restaurants, hotels and offices.",
@@ -277,11 +276,13 @@ export const moreFamilies: RobotFamily[] = [
     href: "/shop/delivery-robots",
     interest: "pudu-delivery",
     category: "delivery-robots",
-    // BellaBot cut out of Pudu's product render, on the light studio backdrop
-    // the card draws (as the T-Chef tile). No clean lifestyle photo yet: the
-    // ones on file carry brochure text or a customer's branding.
+    // The five delivery robots as a team, BellaBot in front, at their real
+    // heights: one group cut-out (made from the logo-free product cut-outs) on
+    // the light studio backdrop the card draws, as the T-Chef tile. No clean
+    // lifestyle photo yet: the ones on file carry brochure text or a
+    // customer's branding.
     image: null,
-    cutout: { src: media("Pudu/BellaBot/BellaBot-cutout.webp"), width: 689, height: 1600 },
+    cutout: { src: "/studio/delivery-lineup.webp", width: 2151, height: 1064 },
     shot: {
       en: "Bella or Ketty carrying dishes in a restaurant · 4:3 · robot centred, full height in frame",
       th: "Bella หรือ Ketty กำลังเสิร์ฟอาหารในร้าน · 4:3 · หุ่นยนต์อยู่กลางภาพ เห็นเต็มตัว",
