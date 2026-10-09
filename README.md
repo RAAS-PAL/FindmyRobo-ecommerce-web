@@ -123,6 +123,31 @@ there is no separate service to host or pay for.
   content and images into the CMS (`payload/seed.ts`), so editors start from
   the live copy. It converts oversized images to WebP on the way in.
 
+## Media (S3)
+
+Product photos, renders and videos live in the private S3 bucket `findmyrobo-media`
+(Singapore), served through CloudFront at `https://d5hk9n8my7l32.cloudfront.net`.
+Nothing new goes to Cloudinary.
+
+- **Folders** mirror the shared media folder: `<Brand>/<Product>/<file>`, e.g.
+  `Pudu/BellaBot/BellaBot.png`.
+- **Link** = the CloudFront address + the file's key, spaces written `%20`. The S3
+  console's "Object URL" answers 403 because the bucket is private: swap its start for
+  the CloudFront address.
+- **Compress before uploading.** S3 serves files exactly as uploaded. Videos: the ffmpeg
+  recipe in `data/siteContent.ts` (no audio, `+faststart`). Photos: WebP or JPEG. Keep the
+  original and put the small copy beside it as `<name>-web.<ext>`.
+- **Upload** in the S3 console (drag into the folder), or
+  `aws s3 cp file.webp "s3://findmyrobo-media/<Brand>/<Product>/" --cache-control "public, max-age=604800"`.
+- **Use it:** product photos in `/admin` → Products; hero and gallery videos in `/cms` →
+  Home; in code, `media("<Brand>/<Product>/<file>")` from `lib/media.ts`.
+- **Replace** a file by uploading it under a new name and updating the link. Overwriting
+  the same name keeps the old copy cached for up to 7 days (a CloudFront invalidation
+  clears it).
+- **Delete:** versioning is on, so "Show versions" in the console brings a file back.
+- **Moving the host** (e.g. a custom domain): set `NEXT_PUBLIC_MEDIA_BASE_URL` — see
+  Environment.
+
 ## Environment
 
 Copy `.env.example` to `.env.local`. That file is the authoritative reference —
