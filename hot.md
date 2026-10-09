@@ -173,15 +173,17 @@ branch `main`.
   lawn-only; production was rebuilt the same day
   (`e-commerce-raaspal-651gp8zwx`) and findmyrobo.com then showed Phantas,
   A1-Youth and TC-E10A.
-  4c. `supabase/fill-bellabot-page.sql` (2026-10-09) — BellaBot's full-screen
-     page: facts from Pudu's BellaBot page, six feature photos (Pudu studio
-     shots with the Pudu marks and award badge painted out, in
-     `public/models/pudu/bellabot/`), the logo-free S3 cut-out as header and
-     card photo, spec table, FAQs. Renames `pudu-bella` to "BellaBot"; leaves
-     price, visible, conditions, fit and order alone. **Not yet run on live.**
-     Needs the photos deployed first (they ship with the code). Then tick
-     Visible in Admin (not SQL, so the homepage and navbar refresh). Robot
-     pages are being redone one by one; BellaBot is the first.
+  4c. `supabase/fill-pudu-pages.sql` (2026-10-09) — full-screen pages for
+     BellaBot (`pudu-bella`) and PuduBot 2 (`pudu-2`): facts from Pudu's
+     product pages, feature photos (Pudu's shots with the Pudu marks and award
+     badges painted out, in `public/models/pudu/<robot>/`), the logo-free S3
+     cut-outs as header and card photo, spec tables, FAQs. Renames the two
+     products; leaves price, visible, conditions, fit and order alone. **Not
+     yet run on live.** Needs the photos deployed first (they ship with the
+     code). Then tick Visible in Admin (not SQL, so the homepage and navbar
+     refresh). Robot pages are being redone one by one; add the next robot
+     to the same file. Pudu's PuduBot 2 battery figures disagree (12 h no
+     load / 15 h full load / "24 h"); the page uses 12 h without a load.
   5. `supabase/variant-to-product-type.sql` — `variant` becomes the product
      type (mower, pool, cleaner, equipment, cooking, delivery, installation,
      demo), never a model name. Run it right AFTER this branch's code is live
