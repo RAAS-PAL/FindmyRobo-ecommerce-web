@@ -281,7 +281,7 @@ export const moreFamilies: RobotFamily[] = [
     // the card draws (as the T-Chef tile). No clean lifestyle photo yet: the
     // ones on file carry brochure text or a customer's branding.
     image: null,
-    cutout: { src: media("Pudu/BellaBot/BellaBot-cutout-web.webp"), width: 697, height: 1600 },
+    cutout: { src: media("Pudu/BellaBot/BellaBot-cutout.webp"), width: 689, height: 1600 },
     shot: {
       en: "Bella or Ketty carrying dishes in a restaurant · 4:3 · robot centred, full height in frame",
       th: "Bella หรือ Ketty กำลังเสิร์ฟอาหารในร้าน · 4:3 · หุ่นยนต์อยู่กลางภาพ เห็นเต็มตัว",
