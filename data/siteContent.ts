@@ -96,14 +96,14 @@ export interface HomeContent {
    * animated lawn scene instead.
    *
    * ENCODING MATTERS MORE THAN THE HOST — a raw phone export stalls on mobile.
-   * Upload to Cloudinary and paste the URL with `q_auto/ac_none/` after
-   * `/upload/` (auto-compress, strip audio). For a self-hosted file, run it
-   * through ffmpeg first:
+   * S3 serves files exactly as uploaded (lib/media.ts), so compress first:
+   * run the clip through ffmpeg, upload the result to the findmyrobo-media
+   * bucket as `<name>-web.mp4`, and paste its CloudFront link in the CMS:
    *
    *   ffmpeg -ss 0 -i source.mp4 -t 12 -vf "scale=1920:-2" -r 30 \
    *     -c:v libx264 -profile:v main -pix_fmt yuv420p \
    *     -crf 27 -maxrate 2000k -bufsize 4000k \
-   *     -movflags +faststart -an public/videos/hero-N.mp4
+   *     -movflags +faststart -an hero-N-web.mp4
    *
    *   -movflags +faststart : index at the FRONT, so playback starts before the
    *                          file finishes downloading. Without it iOS Safari
