@@ -138,7 +138,7 @@ reach the browser. Summary:
 | Sokochan (2 vars) | No | Admin "Send to warehouse" shows a not-connected state |
 | `NEXT_PUBLIC_SITE_URL` | Production | Payment returns fall back to the request origin |
 | `DATABASE_URL` + `PAYLOAD_SECRET` | For the CMS | CMS off; the site shows its built-in content |
-| `NEXT_PUBLIC_MEDIA_BASE_URL` | No | Media loads from the default CloudFront address (`lib/media.ts`) |
+| `NEXT_PUBLIC_MEDIA_BASE_URL` | No | Media loads from the default CloudFront address. Set it to move every media link (code, products, CMS) without a code change; redeploy after changing it on Vercel (`lib/media.ts`) |
 
 Anything without a `NEXT_PUBLIC_` prefix is server-only. `SUPABASE_SECRET_KEY`
 bypasses row-level security and `OMISE_SECRET_KEY` moves money — neither may
