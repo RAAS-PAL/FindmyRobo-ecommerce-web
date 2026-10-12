@@ -20,7 +20,9 @@
     "closeMenu": "Close menu",
     "soon": "Soon",
     "switchLocale": "ไทย",
+    "language": "Language",
     "profileMenu": "Account and settings",
+    "darkMode": "Dark mode",
     "account": "My account",
     "signIn": "Sign in",
     "createAccount": "Create account",
@@ -989,6 +991,7 @@
     "selectionLabel": "You’re asking about",
     "closePanel": "Close quote form",
     "reassure": "Free · No obligation · Reply within 1 business day",
+    "stripPlaceholder": "Your name or phone number",
     "promisesLabel": "Why buy from us",
     "promises": {
       "warranty": "Warranty in Thailand",

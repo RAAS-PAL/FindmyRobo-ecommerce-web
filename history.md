@@ -2,6 +2,45 @@
 
 Newest first. Current state and open items live in `hot.md`.
 
+## 2026-10-12 — Showroom hero, and dark mode is back
+- The owner found the hero "off and so dark": a small render in a black
+  void with a full-size quote form beside the headline. Proposed and built
+  the "showroom" hero: one robot family at a time as a large transparent
+  cut-out on a lit canvas (sky-blue→cyan glow continuing the navbar, a floor
+  shadow), copy on the left, a one-line **quote strip** instead of the card
+  (opens into the full form, prefilled with what was typed), chips to switch
+  families (no autoplay), and the three promises + LINE as a trust row. Two
+  new slides: the delivery team and T-Chef (Thai copy drafts).
+- Dark mode returned at the owner's request (it had been removed on
+  2026-09-30): one token set, dark values under `[data-theme="dark"]`, an
+  inline script before first paint, a switch in the profile menu. Light is a
+  blue-grey page, dark a deep navy. The YouTube band's cream wash became a
+  token so it has a dark pair.
+
+## 2026-10-12 — Navbar settles on "clean"
+- The owner disliked the navy box behind the logo, then the gradient itself.
+  Mocked up three box-free gradient options, then three solid ones on the
+  live page; the owner chose "clean": a solid white bar (navy in dark mode),
+  the full-colour logo, blue only on the current section's dot and the
+  Get a quote button. `--nav-*` tokens now have light and dark values.
+- Also this day: the language button shows the current language with a
+  list to change it; the navbar's Get a quote folds away while the hero's
+  quote strip is on screen; the hero's family chips became robot cards.
+
+## 2026-10-11 — One navbar in the headline gradient
+- Restyled from a 21st.dev template, then reworked with the owner over four
+  rounds: everything (logo, robot menus, About, search, language, account,
+  Get a quote) now sits in one bar hanging from the top edge, with
+  inward-curved top corners, in the hero headlines' light blue-to-cyan
+  gradient (owner's pick, after navy and then a vivid blue). On that light
+  blue everything is navy: the logo in a navy block, a navy Get a quote, a
+  navy dot on the current section. Menus grow into white panels of photo
+  cards; search opens inside the bar. The phone drawer matches.
+- Gone with it: the white bar behind the tab, the clear-over-dark-hero mode
+  (and its 2026-10-08 product-page version, never committed), the frosted
+  notches and the gold `.nav-track`. The bar is 60px (`--nav-h`); the
+  homepage and full-screen product heroes pull up under it.
+
 ## 2026-10-08 — Colour names on the A1 hero stay still
 - Grey and White were inside the hero's looping float, so the small tracked
   type repainted on fractional pixels and looked like a low-frame stutter.

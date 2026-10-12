@@ -183,12 +183,12 @@ export default function ShowcasePage({
   return (
     <main>
       {/* ---- hero: the product on the dark studio set ---- */}
-      <section className="relative overflow-hidden bg-[#0b0d10] text-white">
+      <section className="relative -mt-[var(--nav-h)] overflow-hidden bg-[#0b0d10] pt-[var(--nav-h)] text-white">
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-[radial-gradient(70%_80%_at_68%_45%,#1d2230_0%,#12151c_50%,#0b0d10_100%)]"
         />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-6 px-4 pt-8 pb-14 sm:px-6 lg:min-h-[calc(100svh-69px)] lg:max-h-[56rem] lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:px-8 lg:py-12">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-6 px-4 pt-8 pb-14 sm:px-6 lg:min-h-[calc(100svh-var(--nav-h))] lg:max-h-[56rem] lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:px-8 lg:py-12">
           <motion.div
             className="order-2 lg:order-1"
             variants={heroCopy}

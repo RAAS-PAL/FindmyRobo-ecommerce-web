@@ -20,7 +20,9 @@
     "closeMenu": "ปิดเมนู",
     "soon": "เร็วๆ นี้",
     "switchLocale": "EN",
+    "language": "ภาษา",
     "profileMenu": "บัญชีและการตั้งค่า",
+    "darkMode": "โหมดมืด",
     "account": "บัญชีของฉัน",
     "signIn": "เข้าสู่ระบบ",
     "createAccount": "สร้างบัญชี",
@@ -989,6 +991,7 @@
     "selectionLabel": "รายการที่คุณสนใจ",
     "closePanel": "ปิดแบบฟอร์มขอใบเสนอราคา",
     "reassure": "ฟรี · ไม่มีข้อผูกมัด · ตอบกลับภายใน 1 วันทำการ",
+    "stripPlaceholder": "ชื่อหรือเบอร์โทรของคุณ",
     "promisesLabel": "ทำไมต้องซื้อกับเรา",
     "promises": {
       "warranty": "รับประกันในประเทศไทย",

@@ -64,27 +64,6 @@ export interface StudioPhoto {
   fade?: boolean;
 }
 
-/**
- * Where a hero slide's studio photo may sit. The hero runs up under the
- * navbar, so the box starts below the bar (69px) and ends above the headline.
- * desktop.left: the box starts on the hero title's line, i.e. the
- * page's content column (max-w-7xl, centred) plus its lg:px-8 padding — keep
- * in step with the copy block in HeroSection. desktop.bottom: the headline
- * block is about 23rem tall on any screen.
- */
-const HERO_PHOTO_BOX: Pick<StudioPhoto, "phone" | "desktop"> = {
-  phone: { top: "69px", right: "0%", bottom: "0%", left: "0%" },
-  desktop: {
-    // a clear band under the navbar, so the robot doesn't crowd it
-    top: "calc(69px + 7%)",
-    // stop short of the quote card's column (20rem card + 2.5rem air), so the
-    // robot is centred in the space between the title's edge and the card
-    right: "calc(max(0px, (100% - 80rem) / 2) + 2rem + 22.5rem)",
-    bottom: "max(38%, 24rem)",
-    left: "calc(max(0px, (100% - 80rem) / 2) + 2rem)",
-  },
-};
-
 export interface ShowcasePhoto {
   image: string | null;
   /**
@@ -126,6 +105,8 @@ export interface HeroSlide extends ShowcasePhoto {
   /** A single robot's slide: shown only while that product is on show, and
    *  its quote button names it. */
   productId?: string;
+  /** A family's slide: shown only while that category has a robot on show. */
+  category?: CategorySlug;
 }
 
 export interface RobotFamily extends ShowcasePhoto {
@@ -172,6 +153,10 @@ export function onShow<
 }
 
 export const heroSlides: HeroSlide[] = [
+  // Each slide is a transparent cut-out (`cutout`) of the family's robot on
+  // the hero's lit canvas (HeroSection). Lawn mowing leads with the CMS
+  // headline; the others carry their own copy. A slide shows only while its
+  // robot (productId) or a robot in its category is on show in Admin.
   {
     id: "lawn",
     tab: { en: "Lawn mowing", th: "หุ่นยนต์ตัดหญ้า" },
@@ -181,21 +166,9 @@ export const heroSlides: HeroSlide[] = [
     sub: null,
     href: "/shop/robot-mowers",
     interest: "lawn-mowing",
-    // Studio set, not a lawn photo: green grass fought the blue palette, and
-    // cut-outs pasted into garden scenes look composited. One robot, above
-    // the headline and clear of the quote card. Not mirrored to face into
-    // the page: that would print MAMMOTION / LUBA backwards.
     image: null,
-    // studio render of the LUBA 3 AWD (generated from the product photo,
-    // details checked against it)
-    studioPhoto: {
-      src: "/studio/luba-studio-photo.webp",
-      alt: "Mammotion LUBA robot mower",
-      width: 1672,
-      height: 941,
-      ...HERO_PHOTO_BOX,
-    },
-    studioLight: "neutral",
+    // the LUBA 3 AWD cut-out (not mirrored: that would print MAMMOTION backwards)
+    cutout: { src: "/studio/luba-orange.webp", width: 1846, height: 958 },
     shot: { en: "", th: "" },
   },
   {
@@ -213,17 +186,46 @@ export const heroSlides: HeroSlide[] = [
     interest: "commercial-cleaning",
     productId: "gausium-phantas",
     image: null,
-    // Gausium's transparent product render (2026-09-30); its own soft floor
-    // glow reads as a spotlight on the dark set
-    studioPhoto: {
-      src: "/studio/phantas-studio.webp",
-      alt: "Gausium Phantas cleaning robot",
-      width: 1400,
-      height: 1173,
-      fade: false,
-      ...HERO_PHOTO_BOX,
+    // Gausium's transparent product render, with its own soft floor glow
+    cutout: { src: "/studio/phantas-studio.webp", width: 1400, height: 1173 },
+    shot: { en: "", th: "" },
+  },
+  {
+    id: "delivery",
+    tab: { en: "Delivery robots", th: "หุ่นยนต์ส่งของ" },
+    eyebrow: { en: "Pudu · Yunji · Pre-owned", th: "Pudu · Yunji · ผ่านการใช้งาน" },
+    headline: { en: "Delivery robots.", th: "หุ่นยนต์ส่งของ" },
+    accent: { en: "Dishes to the table, by themselves.", th: "เสิร์ฟถึงโต๊ะ ได้ด้วยตัวเอง" },
+    // Thai: DRAFT for the Thai team
+    sub: {
+      en: "BellaBot, KettyBot, PuduBot and more for restaurants, hotels and offices — pre-owned, serviced and quoted to your site.",
+      th: "BellaBot, KettyBot, PuduBot และรุ่นอื่น ๆ สำหรับร้านอาหาร โรงแรม และสำนักงาน เครื่องผ่านการใช้งาน ตรวจเช็กแล้ว เสนอราคาตามพื้นที่ของคุณ",
     },
-    studioLight: "neutral",
+    href: "/shop/delivery-robots",
+    interest: "pudu-delivery",
+    category: "delivery-robots",
+    image: null,
+    // the five delivery robots as a team, BellaBot in front (logo-free cut-outs)
+    cutout: { src: "/studio/delivery-lineup.webp", width: 2151, height: 1064 },
+    shot: { en: "", th: "" },
+  },
+  {
+    id: "cooking",
+    tab: { en: "Cooking robot", th: "หุ่นยนต์ทำอาหาร" },
+    eyebrow: { en: "T-Chef · Brand-new or pre-owned", th: "T-Chef · เครื่องใหม่ หรือผ่านการใช้งาน" },
+    headline: { en: "T-Chef TC-E10A.", th: "T-Chef TC-E10A" },
+    accent: { en: "Stir-fry, cooked by itself.", th: "ผัดเสร็จเอง ไม่ต้องยืนเฝ้า" },
+    // figures from T-Chef's product page (see supabase/fill-robot-pages.sql);
+    // Thai: DRAFT for the Thai team
+    sub: {
+      en: "A compact intelligent cooking robot: 11 stir-fry modes, automatic food delivery, up to 1 kg a batch.",
+      th: "หุ่นยนต์ทำอาหารอัจฉริยะขนาดเล็ก โหมดผัด 11 แบบ ส่งอาหารอัตโนมัติ ปรุงได้ครั้งละ 1 กก.",
+    },
+    href: "/products/t-chef-tc-e10a",
+    interest: "cooking",
+    productId: "t-chef-tc-e10a",
+    image: null,
+    cutout: { src: "/studio/t-chef-studio.webp", width: 1400, height: 1079 },
     shot: { en: "", th: "" },
   },
 ];

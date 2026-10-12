@@ -16,7 +16,7 @@ export default function YouTubeCTA() {
   return (
     <section
       id="youtube"
-      className="relative overflow-hidden bg-gradient-to-br from-surface via-cloud to-[#f8f2e3] py-20 sm:py-28 dark:to-forest-900"
+      className="relative overflow-hidden bg-gradient-to-br from-surface via-cloud to-[var(--warm-wash)] py-20 sm:py-28 dark:to-forest-900"
     >
       {/* ambient glows */}
       <div

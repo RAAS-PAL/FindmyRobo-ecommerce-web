@@ -1,16 +1,19 @@
 @import "tailwindcss";
 
-/* One theme only (2026-09-30: dark mode removed). The dark variant stays
-   bound to a .dark class that nothing sets, so leftover `dark:` utilities are
-   inert instead of following the visitor's OS setting (Tailwind's default). */
-@custom-variant dark (&:where(.dark, .dark *));
+/* Light and dark (dark mode back on 2026-10-12, owner's request). The theme
+   is the `data-theme` attribute on <html>: the inline THEME_SCRIPT
+   (lib/theme.ts) sets it before first paint from localStorage, else from the
+   OS; the profile menu switches it. `dark:` utilities follow the attribute. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
   /* Palette: GRAPHITE + ELECTRIC BLUE (2026-09-30, replacing black + gold).
 
-     One light theme, deliberately not pure white: the page and panels sit on
-     a soft cool grey so the white of the robots and the blue stand out.
-       --color-surface  page, cards, panels, the solid navbar
+     Light theme values here; the dark set is under [data-theme="dark"] below
+     (same token names, so every section changes together). Light is
+     deliberately not pure white: the page and panels sit on a soft blue-grey
+     so the white of the robots and the blue stand out.
+       --color-surface  page, cards, panels
        --color-cloud    alternate bands and quiet fills, a step darker
        --color-content  primary text
 
@@ -24,7 +27,7 @@
   --color-forest-800: #2a2d34;
   --color-forest-700: #3e424b;
   --color-forest-300: #b5bac4;
-  --color-forest-100: #dadee5; /* borders: visible on the grey page */
+  --color-forest-100: #d3dae6; /* borders: visible on the tinted page */
 
   /* brand accent — electric blue */
   --color-accent: #2e6bff; /* fills: buttons, bars, dots, focus ring */
@@ -32,13 +35,13 @@
   --color-accent-300: #5c90ff; /* accent TEXT on dark surfaces (and over photos): 6:1 on near-black */
   --color-accent-600: #1f4fd6; /* accent TEXT on light surfaces: 6:1 on white */
   --color-on-accent: #ffffff; /* text/icons sitting on an accent fill */
-  --color-accent-50: #e6ecf9; /* faint accent wash: section bands */
+  --color-accent-50: #e3eafc; /* faint accent wash: section bands */
 
-  --color-cloud: #e8ebf0;
-  --color-ink-muted: #5a606b;
+  --color-cloud: #e2e8f1;
+  --color-ink-muted: #56607a;
 
   /* semantic — see note above */
-  --color-surface: #f3f5f8;
+  --color-surface: #eef2f8;
   --color-content: #121418;
 
   /* Thai fallbacks: Barlow/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
@@ -59,7 +62,78 @@
 /* The accent as bare RGB channels, for glows and translucent shadows:
    rgb(var(--accent-rgb) / 0.5). Keep in step with --color-accent. */
 :root {
+  /* The sticky navbar's height (Navbar.tsx, h-(--nav-h)). Dark heroes run up
+     under it with a negative margin of the same amount. */
+  --nav-h: 60px;
+  /* The light accent gradient: the headline accent words
+     (.text-accent-gradient). */
+  --accent-light-gradient: linear-gradient(100deg, #6f9dff 0%, #4fb8ff 55%, #3fd4ff 100%);
+  /* The navbar ("clean", owner's pick 2026-10-12, after a navy tab, a vivid
+     blue bar and two gradients): one solid bar hanging from the top edge —
+     white in light mode, navy in dark — holding the logo (full colour), the
+     menus, search, language, account and Get a quote. Colour is kept for
+     meaning: blue only on the current section's dot and the Get a quote
+     button. Open panels and the phone drawer are --nav-panel with
+     --nav-card cards. AA: --nav-ink on the bar 8.8:1 (light) / 10.4:1 (dark);
+     --nav-tab-muted and --nav-tab-faint on the panel ≥4.5:1 in both. Dark
+     values are under [data-theme="dark"] below. */
+  --nav-bar: #ffffff;
+  --nav-navy: #0a1a4a;
+  --nav-ink: #3d4a6b;
+  --nav-highlight: #e3eafc;
+  --nav-panel: #f5f8ff;
+  --nav-card: #ffffff;
+  --nav-line: rgb(10 26 74 / 0.12);
+  --nav-hover: rgb(10 26 74 / 0.06);
+  --nav-link: #1f4fd6;
+  --nav-tab-muted: #3d5591;
+  --nav-tab-faint: #5b6fa3;
   --accent-rgb: 46 107 255;
+
+  /* Homepage hero canvas (.hero-canvas / .hero-floor): a sky-blue → cyan glow
+     behind the robot, continuing the navbar's gradient, and the floor shadow
+     under it. Stronger in the dark set below. */
+  --hero-glow-1: rgb(79 184 255 / 0.44);
+  --hero-glow-2: rgb(111 157 255 / 0.24);
+  --hero-floor: rgb(10 26 74 / 0.22);
+  /* the warm wash the YouTube band fades into */
+  --warm-wash: #f8f2e3;
+}
+
+/* Dark theme: deep navy, not black, so the blue glows and the white robots
+   still sit on colour. The `forest-*` darks stay dark (they are the dark
+   cards, footer and product heroes) but turn navy to match. Text pairs:
+   content 15:1, ink-muted 7.3:1, accent-600 7.1:1 on the surface. */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-surface: #0f1527;
+  --color-cloud: #171e36;
+  --color-content: #eef2ff;
+  --color-ink-muted: #a4aecb;
+  --color-forest-950: #080b16;
+  --color-forest-900: #0c1121;
+  --color-forest: #131a2e;
+  --color-forest-800: #243052;
+  --color-forest-700: #3b4a76;
+  --color-forest-300: #6b7aa6;
+  --color-forest-100: #263150;
+  --color-accent-600: #8db0ff;
+  --color-accent-50: #16203f;
+  --hero-glow-1: rgb(79 184 255 / 0.5);
+  --hero-glow-2: rgb(111 157 255 / 0.3);
+  --hero-floor: rgb(0 0 0 / 0.6);
+  --warm-wash: #1a1b2a;
+  --nav-bar: #161e38;
+  --nav-navy: #ffffff;
+  --nav-ink: #c3cde8;
+  --nav-highlight: rgb(255 255 255 / 0.1);
+  --nav-panel: #121a33;
+  --nav-card: #1b2546;
+  --nav-line: rgb(255 255 255 / 0.12);
+  --nav-hover: rgb(255 255 255 / 0.07);
+  --nav-link: #8db0ff;
+  --nav-tab-muted: #b4c0e4;
+  --nav-tab-faint: #9aa7cf;
 }
 
 /* The primary call-to-action fill: electric blue into cyan. Used on the few
@@ -71,7 +145,7 @@
    green lawn, so this runs lighter, blue into cyan. On light surfaces use
    text-accent-600 instead. */
 @utility text-accent-gradient {
-  background-image: linear-gradient(100deg, #6f9dff 0%, #4fb8ff 55%, #3fd4ff 100%);
+  background-image: var(--accent-light-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -130,31 +204,6 @@
   outline-offset: 2px;
 }
 
-/* ---------- navbar over the homepage hero ----------
-   Navbar sets data-clear on the homepage until the page scrolls. While the
-   bar isn't hovered or focused, it drops its background and re-points the
-   colour tokens it uses to white, so every link, icon and outline inside
-   turns light at once (its dropdowns only open on hover or focus, i.e. on
-   the solid bar). Unlayered, so it beats the bar's own bg-* utilities. */
-header[data-clear="true"]:not(:hover):not(:focus-within) {
-  --color-content: #ffffff;
-  --color-ink-muted: rgb(255 255 255 / 0.78);
-  --color-forest-100: rgb(255 255 255 / 0.3);
-  --color-cloud: rgb(255 255 255 / 0.1);
-  --color-accent-600: #8db0ff;
-  background-color: transparent;
-  border-color: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-}
-.nav-logo-on-dark,
-header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-light {
-  display: none;
-}
-header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-dark {
-  display: block;
-}
-
 /* ---------- utilities ---------- */
 
 .no-scrollbar {
@@ -165,59 +214,18 @@ header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-dark {
   display: none;
 }
 
-/* Sliding underline for nav links */
-/* Navbar: an accent track along the bar's bottom edge that glides to the link
-   under the pointer (or keyboard focus) and rests under the current section —
-   the way a mower drives its line across a lawn. The end it travels towards
-   leads and the other follows, so it stretches as it moves; a glowing head
-   rides the leading end. Placed by Navbar.tsx (left/right + data-*). */
-.nav-track {
-  position: absolute;
-  bottom: -1.5px;
-  /* over the open menus (z-50), which hang from this same edge */
-  z-index: 60;
-  height: 3px;
-  border-radius: 9999px;
-  background: var(--color-accent);
-  box-shadow: 0 0 10px rgb(var(--accent-rgb) / 0.55);
-  opacity: 0;
-  transform: scaleX(0.3);
-  pointer-events: none;
-  transition-property: left, right, opacity, transform;
-  transition-duration: 420ms, 420ms, 200ms, 320ms;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-.nav-track[data-shown="true"] {
-  opacity: 1;
-  transform: none;
-}
-/* the trailing edge lags the leading one */
-.nav-track[data-dir="right"] {
-  transition-duration: 460ms, 260ms, 200ms, 320ms;
-}
-.nav-track[data-dir="left"] {
-  transition-duration: 260ms, 460ms, 200ms, 320ms;
-}
-/* appearing, or the window resizing: fade/grow in place, no glide */
-.nav-track[data-instant="true"] {
-  transition-property: opacity, transform;
-  transition-duration: 200ms, 320ms;
-}
-.nav-track::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -3px;
-  width: 6px;
-  height: 6px;
-  margin-top: -3px;
-  border-radius: 9999px;
-  background: #fff4c2;
-  box-shadow: 0 0 8px 2px rgb(var(--accent-rgb) / 0.85);
-}
-.nav-track[data-dir="left"]::after {
-  right: auto;
-  left: -3px;
+/* Navbar: everything on the bar and in the phone drawer. Re-points the
+   colour tokens to the --nav-* set, so whatever inside uses them (language
+   switch, profile menu, search and its suggestions, condition labels,
+   borders) matches the bar in both themes at once. */
+.nav-scope {
+  --color-surface: var(--nav-card);
+  --color-content: var(--nav-navy);
+  --color-ink-muted: var(--nav-tab-muted);
+  --color-forest-100: var(--nav-line);
+  --color-forest-300: var(--nav-tab-faint);
+  --color-cloud: var(--nav-hover);
+  --color-accent-600: var(--nav-link);
 }
 
 /* ---------- keyframe animations ---------- */
@@ -379,22 +387,33 @@ header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-dark {
 /* Homepage hero: the accent bar on the active slide's tab fills over the slide's
    time on screen; HeroSection advances when it ends (animationend) and pauses
    it with animation-play-state. Reduced motion never gets the class. */
-/* Hero quote card from lg: dark glass over the dark studio hero instead of a
-   light box pasted on it. Re-points the tokens the form uses, so its fields,
-   labels, steps and borders all turn at once (the card's own background is
-   set in QuoteForm); native controls (the venue select) follow color-scheme.
-   Phones keep the light card: there it sits on the light page. */
-@media (min-width: 64rem) {
-  .hero-quote-dark {
-    color-scheme: dark;
-    --color-surface: #1b1f28;
-    --color-content: #f1f3f6;
-    --color-ink-muted: #9aa0ab;
-    --color-forest-100: rgb(255 255 255 / 0.12);
-    --color-forest-300: #6b7280;
-    --color-cloud: rgb(255 255 255 / 0.06);
-    --color-accent-600: #8db0ff;
-  }
+/* Homepage hero: the lit canvas. Two soft glows (the big one behind the robot
+   on the right, a smaller one up by the headline), a faint dot grid that
+   fades out towards the bottom, all on the page surface — so the bar's blue
+   has something to land on in both themes. */
+.hero-canvas {
+  background-color: var(--color-surface);
+  background-image:
+    radial-gradient(58% 60% at 72% 48%, var(--hero-glow-1), transparent 70%),
+    radial-gradient(36% 40% at 18% 18%, var(--hero-glow-2), transparent 70%),
+    linear-gradient(to bottom, transparent 60%, var(--color-surface) 100%),
+    radial-gradient(rgb(var(--accent-rgb) / 0.16) 1px, transparent 1.5px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    28px 28px;
+}
+/* The floor under the robot: an ellipse of shadow it stands on. */
+.hero-floor {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 2%;
+  height: 14%;
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, var(--hero-floor), transparent 72%);
+  pointer-events: none;
 }
 
 /* Product hero: the photo bobs. Colour names are not in this element —
@@ -446,14 +465,6 @@ header[data-clear="true"]:not(:hover):not(:focus-within) .nav-logo-on-dark {
   /* A frozen arc reads as a rendering fault, not a light — drop it. */
   .quote-trace {
     display: none;
-  }
-  /* the nav track still marks the link, it just doesn't travel */
-  .nav-track,
-  .nav-track[data-dir="right"],
-  .nav-track[data-dir="left"],
-  .nav-track[data-instant="true"] {
-    transition-property: opacity;
-    transition-duration: 150ms;
   }
   .animate-trail {
     width: 60%;

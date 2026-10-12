@@ -99,6 +99,7 @@ export default function QuoteForm({
   forId,
   interest,
   onExpandedChange,
+  initial,
 }: {
   variant?: "card" | "panel";
   productId?: string;
@@ -107,6 +108,8 @@ export default function QuoteForm({
   interest?: QuoteRequest["interest"];
   /** Card only: told when it opens or closes, so the page can make room. */
   onExpandedChange?: (expanded: boolean) => void;
+  /** What the visitor typed before the form opened (the hero's quote strip). */
+  initial?: { fullName?: string; phone?: string };
 }) {
   const t = useTranslations("heroQuote");
   const tc = useTranslations("checkout");
@@ -137,6 +140,8 @@ export default function QuoteForm({
   const open = panel || expanded;
   const [form, setForm] = useState<QuoteRequest>(() => ({
     ...EMPTY_QUOTE,
+    ...(initial?.fullName ? { fullName: initial.fullName } : {}),
+    ...(initial?.phone ? { phone: initial.phone } : {}),
     productId: product?.id ?? "",
     forId: forProduct?.id ?? "",
     condition: sold?.conditions.length === 1 ? sold.conditions[0] : "",

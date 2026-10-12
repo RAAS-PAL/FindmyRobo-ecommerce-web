@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import { LogOut, User, UserRound } from "lucide-react";
+import { LogOut, Moon, Sun, User, UserRound } from "lucide-react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { currentTheme, setTheme, subscribeTheme, type Theme } from "@/lib/theme";
 
 /**
  * The navbar's profile icon. Hovering it opens a small panel — sign in and
@@ -82,6 +83,12 @@ export default function ProfileMenu() {
     },
     []
   );
+
+  // The theme switch lives here too, so the bar stays clear of extra icons.
+  // The server renders light; the inline theme script has set the real one
+  // long before this hydrates.
+  const theme = useSyncExternalStore(subscribeTheme, currentTheme, (): Theme => "light");
+  const dark = theme === "dark";
 
   const signOut = async () => {
     close();
@@ -182,6 +189,34 @@ export default function ProfileMenu() {
                 </div>
               )}
 
+              <div className="mt-1 border-t border-forest-100 pt-1">
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={dark}
+                  onClick={() => setTheme(dark ? "light" : "dark")}
+                  className={itemClass}
+                >
+                  {dark ? (
+                    <Sun className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  ) : (
+                    <Moon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  )}
+                  {t("darkMode")}
+                  <span
+                    aria-hidden="true"
+                    className={`ml-auto flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors ${
+                      dark ? "bg-accent" : "bg-forest-300"
+                    }`}
+                  >
+                    <span
+                      className={`h-4 w-4 rounded-full bg-white shadow transition-transform ${
+                        dark ? "translate-x-4" : ""
+                      }`}
+                    />
+                  </span>
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

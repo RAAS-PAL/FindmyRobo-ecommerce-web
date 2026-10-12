@@ -21,6 +21,7 @@ import SiteContentProvider from "@/components/SiteContentProvider";
 import { getAllProducts } from "@/lib/productStore";
 import { getSiteContent } from "@/lib/siteContentStore";
 import { pick } from "@/data/siteContent";
+import ThemeScript from "@/components/ThemeScript";
 
 // Barlow is not a variable font — list the weights the UI uses (body through
 // the extrabold headings). Powers both --font-sans and --font-display.
@@ -115,9 +116,14 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
+      // the theme script sets data-theme before React hydrates
+      suppressHydrationWarning
       className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        {/* light or dark before the first paint; survives a language switch
+            (components/ThemeScript.tsx) */}
+        <ThemeScript />
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
             <ProductsProvider products={products}>

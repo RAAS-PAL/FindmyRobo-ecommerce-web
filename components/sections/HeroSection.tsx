@@ -1,267 +1,233 @@
 "use client";
 
-import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Calendar, Pause, Play } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, Calendar, Check } from "lucide-react";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import { pick } from "@/data/siteContent";
 import { heroSlides, onShow } from "@/data/homeShowcase";
 import { useProducts } from "@/components/ProductsProvider";
-import ShowcasePhoto from "@/components/ui/ShowcasePhoto";
-import HeroQuote from "@/components/quote/HeroQuote";
+import QuoteStrip from "@/components/quote/QuoteStrip";
+import LineChatButton from "@/components/quote/LineChatButton";
 
-/** How long each slide stays up before the next, while playing. */
-const SLIDE_MS = 7000;
+/** Why buy here rather than import — the About page's approved promises, shortened. */
+const PROMISES = ["warranty", "install", "aftersales"] as const;
 
-const REDUCE_QUERY = "(prefers-reduced-motion: reduce)";
-const subscribeReduce = (onChange: () => void) => {
-  const mq = window.matchMedia(REDUCE_QUERY);
-  mq.addEventListener("change", onChange);
-  return () => mq.removeEventListener("change", onChange);
-};
-const subscribeVisibility = (onChange: () => void) => {
-  document.addEventListener("visibilitychange", onChange);
-  return () => document.removeEventListener("visibilitychange", onChange);
-};
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 /**
- * Homepage hero: a photo per priority robot family (data/homeShowcase.ts),
- * one at a time, with the quote card docked on the right.
+ * Homepage hero ("showroom", 2026-10-12): one robot family at a time on a lit
+ * canvas (.hero-canvas) — copy on the left, the robot cut-out large on the
+ * right standing on a floor shadow — with the quote strip under the copy and
+ * a row of chips under both to switch families. Nothing moves on its own:
+ * the robot rises into place once, and changes only when a chip is clicked.
  *
- * From lg the copy sits over the photo's lower-left (a bottom scrim keeps it
- * readable on any photo) and the card floats on the right. Below lg the photo
- * stands alone and the copy, the tabs and then the card follow it on the page
- * surface — the photos are landscape, so overlaying copy on a phone would
- * cover the robot.
+ * The first slide's copy is the CMS hero headline, so Admin → Content →
+ * Homepage still sets the site's lead message. A family whose robot is hidden
+ * in Admin has no chip (data/homeShowcase.ts, onShow).
  *
- * The slides advance on their own. Each tab carries an accent bar that fills over
- * SLIDE_MS — the next slide comes when it's full. Hovering the copy or tabs
- * (not the photo: on desktop it fills the screen, so the pointer is nearly
- * always over it), focusing anything in the hero, filling in the quote card,
- * or the pause button all stop it;
- * with reduced motion it never starts. The first slide's copy is the CMS hero
- * headline, so Admin → Content → Homepage still sets the site's lead message.
+ * Phones: robot first, then the copy, the strip and the chips, one column.
  */
 export default function HeroSection() {
   const t = useTranslations("showcase");
+  const tq = useTranslations("heroQuote");
   const locale = useLocale();
   const { home } = useSiteContent();
-  // a robot's slide only while that robot is on show (not hidden in Admin)
   const { products } = useProducts();
-  const slides = useMemo(() => onShow(heroSlides, products), [products]);
-  // The server can't know either, so it renders the still, paused state and
-  // the browser picks up from there once hydrated (no markup mismatch).
-  const reduceMotion = useSyncExternalStore(
-    subscribeReduce,
-    () => window.matchMedia(REDUCE_QUERY).matches,
-    () => true
+  const slides = useMemo(
+    () => onShow(heroSlides, products).filter((slide) => slide.cutout),
+    [products]
   );
-  // A backgrounded tab would otherwise flick through slides nobody sees.
-  const visible = useSyncExternalStore(
-    subscribeVisibility,
-    () => document.visibilityState === "visible",
-    () => false
-  );
-
+  const reduceMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
-  const [userPaused, setUserPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [formOpen, setFormOpen] = useState(false);
-  const autoplay = !reduceMotion && !userPaused;
-  const running = autoplay && !hovered && !focused && !formOpen;
-
-  const next = useCallback(() => setIndex((i) => (i + 1) % slides.length), [slides.length]);
-
   const slide = slides[index % slides.length];
+  const cutout = slide.cutout!;
+
   const headline = slide.headline ? pick(slide.headline, locale) : pick(home.heroHeadline, locale);
   const accent = slide.accent ? pick(slide.accent, locale) : pick(home.heroAccent, locale);
   const sub = slide.sub ? pick(slide.sub, locale) : pick(home.heroSub, locale);
+  const tabName = pick(slide.tab, locale);
+
+  const fade = {
+    initial: { opacity: 0, y: 14 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -8 },
+    transition: { duration: reduceMotion ? 0 : 0.4, ease: EASE },
+  };
 
   return (
-    // overflow clip, not hidden: a hidden box is still a scroll container, and
-    // focusing the quote form once scrolled the hero's own content out of reach.
     <section
-      aria-roledescription="carousel"
       aria-label={t("slidesLabel")}
-      // -mt: the hero runs up under the navbar, which sits clear over it
-      // until the page scrolls (Navbar, data-clear); 69px = bar + border
-      className="relative -mt-[69px] overflow-hidden bg-surface supports-[overflow:clip]:overflow-clip lg:bg-forest-950"
-      onFocus={() => setFocused(true)}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node)) setFocused(false);
-      }}
+      // -mt / pt: the canvas runs up under the navbar, whose blue bar hangs
+      // over its top edge (--nav-h = the bar's height). Not clipped: the open
+      // quote card hangs below the strip, over whatever follows.
+      className="hero-canvas relative -mt-[var(--nav-h)] pt-[var(--nav-h)]"
     >
-      {/* ---- the photos, cross-fading ---- */}
-      <div
-        // photo area plus the 69px the navbar covers; from lg one full
-        // screen (nothing sits above the navbar)
-        className="relative h-[calc(75vw+69px)] sm:h-[calc(56.25vw+69px)] lg:h-svh lg:min-h-[42rem] lg:max-h-[66rem]"
-      >
-        {slides.map((s, i) => (
-          <div
-            key={s.id}
-            aria-hidden={i !== index}
-            className={`absolute inset-0 transition-opacity duration-700 ease-out motion-reduce:transition-none ${
-              i === index ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <ShowcasePhoto
-              photo={s}
-              alt={pick(s.tab, locale)}
-              sizes="100vw"
-              priority={i === 0}
-              captionAt="top"
-            />
-          </div>
-        ))}
-        {/* Bottom scrim, desktop only: the copy sits here from lg. Dark enough
-            for white text on bright lawn, gone by mid-height so the robot
-            itself stays untinted. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(to_top,rgba(10,10,11,0.85)_0%,rgba(10,10,11,0.55)_34%,rgba(10,10,11,0)_66%)] lg:block"
-        />
-      </div>
-
-      {/* ---- copy + tabs: under the photo on phones, over it from lg ---- */}
-      <div
-        className="relative z-10 mx-auto max-w-7xl px-4 pt-7 sm:px-6 lg:absolute lg:inset-x-0 lg:bottom-0 lg:px-8 lg:pt-0 lg:pb-8 lg:[text-shadow:0_1px_14px_rgba(0,0,0,0.35)]"
-        onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
-        {/* leaves the quote card's column (26.5rem open + gap) free */}
-        <div className="lg:max-w-[min(42rem,calc(100%-29rem))]">
-          <div aria-live={running ? "off" : "polite"}>
+      {/* From lg the copy and robot take the screen down to the chips, which
+          sit at the bottom of the first screen (the 14rem is their band). */}
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-4 pt-4 sm:px-6 lg:min-h-[calc(100svh-var(--nav-h)-14rem)] lg:max-h-[40rem] lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-8 lg:px-8 lg:pt-6">
+        {/* ---- the robot, standing on its floor ---- */}
+        <div className="relative order-1 lg:order-2">
+          <div className="hero-floor" aria-hidden="true" />
+          <div className="relative mx-auto aspect-[16/11] w-full max-w-[34rem] sm:max-w-[40rem] lg:max-w-none">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={slide.id}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, y: 36, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -14, scale: 0.98 }}
+                transition={{ duration: reduceMotion ? 0 : 0.65, ease: EASE }}
+                className="absolute inset-0"
               >
-                <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-ink-muted uppercase lg:text-white/85 [&:lang(th)]:tracking-[0.06em]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
-                  {pick(slide.eyebrow, locale)}
-                </p>
-                {/* one slide shows at a time, so there is always exactly one
-                    h1 — the server renders the first (the CMS headline) */}
-                <h1 className="mt-3 font-display text-[34px] leading-[1.04] font-extrabold tracking-tight text-content sm:text-5xl lg:text-[2.6rem] lg:text-white xl:text-[2.9rem]">
-                  {headline}
-                  <span className="block text-accent-600 lg:text-accent-gradient">{accent}</span>
-                </h1>
-                <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:text-base lg:text-[17px] lg:text-white/85">
-                  {sub}
-                </p>
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  {/* Lawn mowing books a demo. Other slides don't add a second
-                      Get a quote: the card is already on the hero. */}
-                  <Link
-                    href={slide.href}
-                    className="inline-flex min-h-12 items-center gap-2 rounded-full bg-accent-gradient px-7 text-[15px] font-bold"
-                  >
-                    {t("learnMore")}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                  {slide.interest === "lawn-mowing" && (
-                    <Link
-                      href="/products/request-a-demo"
-                      className="inline-flex min-h-12 items-center gap-2 rounded-full border border-content/20 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/50 lg:border-white/40 lg:text-white lg:hover:border-white"
-                    >
-                      <Calendar className="h-4 w-4" aria-hidden="true" />
-                      {t("bookDemo")}
-                    </Link>
-                  )}
+                <div className="animate-hero-float h-full w-full">
+                  <Image
+                    src={cutout.src}
+                    alt={tabName}
+                    width={cutout.width}
+                    height={cutout.height}
+                    priority={index === 0}
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    className="h-full w-full object-contain object-bottom drop-shadow-[0_24px_32px_rgb(10_26_74/0.28)]"
+                  />
                 </div>
-                <Link
-                  href="/recommend"
-                  className="mt-4 inline-flex items-center gap-1.5 text-[14px] text-ink-muted transition-colors hover:text-content lg:text-white/75 lg:hover:text-white"
-                >
-                  {t("finderPrompt")}
-                  <span className="font-semibold text-accent-600 underline-offset-4 hover:underline lg:text-accent-300">
-                    {t("finderLink")}
-                  </span>
-                  <ArrowRight className="h-3.5 w-3.5 text-accent-600 lg:text-accent-300" aria-hidden="true" />
-                </Link>
               </motion.div>
             </AnimatePresence>
           </div>
+        </div>
 
-          {/* Tabs only when there is something to switch. One slide would
-              otherwise sit in a two-column row and leave the other half blank. */}
-          {slides.length > 1 && (
-          <div className="mt-8 flex items-stretch gap-3 lg:mt-10">
-            <div
-              role="tablist"
-              aria-label={t("slidesLabel")}
-              className="grid flex-1 gap-3"
-              style={{ gridTemplateColumns: `repeat(${slides.length}, minmax(0, 1fr))` }}
-            >
-              {slides.map((s, i) => {
-                const active = i === index;
-                return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    aria-label={t("showSlide", { name: pick(s.tab, locale) })}
-                    onClick={() => setIndex(i)}
-                    className="group cursor-pointer pt-3 text-left"
+        {/* ---- copy, then the quote strip ---- */}
+        <div className="relative z-10 order-2 lg:order-1">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div key={slide.id} {...fade}>
+              <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-ink-muted uppercase [&:lang(th)]:tracking-[0.06em]">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+                {pick(slide.eyebrow, locale)}
+              </p>
+              {/* one slide shows at a time, so there is always exactly one
+                  h1 — the server renders the first (the CMS headline) */}
+              <h1 className="mt-4 font-display text-[36px] leading-[1.04] font-extrabold tracking-tight text-content sm:text-5xl lg:text-[3.1rem] xl:text-[3.5rem]">
+                {headline}
+                <span className="block text-accent-600 dark:text-accent-gradient">{accent}</span>
+              </h1>
+              <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:text-base lg:text-[17px]">
+                {sub}
+              </p>
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <Link
+                  href={slide.href}
+                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-accent-gradient px-7 text-[15px] font-bold"
+                >
+                  {t("learnMore")}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                {slide.interest === "lawn-mowing" && (
+                  <Link
+                    href="/products/request-a-demo"
+                    className="inline-flex min-h-12 items-center gap-2 rounded-full border border-content/20 bg-surface/60 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/50"
                   >
-                    <span className="relative block h-[3px] overflow-hidden rounded-full bg-content/12 lg:bg-white/25">
-                      {active && (
-                        <span
-                          key={`${s.id}-${index}`}
-                          // with reduced motion globals.css drops the fill
-                          // animation: the bar just marks the tab on show
-                          className="hero-progress absolute inset-0 origin-left rounded-full bg-accent"
-                          style={{
-                            animationDuration: `${SLIDE_MS}ms`,
-                            animationPlayState: running && visible ? "running" : "paused",
-                          }}
-                          onAnimationEnd={next}
-                        />
-                      )}
-                    </span>
-                    <span
-                      className={`mt-2.5 block text-[13.5px] font-semibold transition-colors ${
-                        active
-                          ? "text-content lg:text-white"
-                          : "text-ink-muted group-hover:text-content lg:text-white/60 lg:group-hover:text-white"
-                      }`}
-                    >
-                      {pick(s.tab, locale)}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            {/* nothing plays with reduced motion, so nothing to pause — hidden
-                in CSS, not by the hook, so server and client markup match */}
-            <button
-              type="button"
-              onClick={() => setUserPaused((p) => !p)}
-              aria-label={userPaused ? t("play") : t("pause")}
-              className="mt-1 flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center self-center rounded-full border border-content/15 text-content transition-colors hover:border-content/40 motion-reduce:hidden lg:border-white/30 lg:text-white lg:hover:border-white"
-            >
-              {userPaused ? (
-                <Play className="h-3.5 w-3.5" aria-hidden="true" />
-              ) : (
-                <Pause className="h-3.5 w-3.5" aria-hidden="true" />
-              )}
-            </button>
+                    <Calendar className="h-4 w-4" aria-hidden="true" />
+                    {t("bookDemo")}
+                  </Link>
+                )}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* data-hero-quote: while this is on screen the navbar hides its own
+              Get a quote (one way in at a time); it comes back once the
+              strip has scrolled away under the bar */}
+          <div className="mt-7" data-hero-quote>
+            <QuoteStrip interest={slide.interest} productId={slide.productId} />
           </div>
-          )}
+
+          <Link
+            href="/recommend"
+            className="mt-5 inline-flex items-center gap-1.5 text-[14px] text-ink-muted transition-colors hover:text-content"
+          >
+            {t("finderPrompt")}
+            <span className="font-semibold text-accent-600 underline-offset-4 hover:underline">
+              {t("finderLink")}
+            </span>
+            <ArrowRight className="h-3.5 w-3.5 text-accent-600" aria-hidden="true" />
+          </Link>
         </div>
       </div>
 
-      {/* ---- quote card: after the copy on phones, docked right from lg ---- */}
-      <div className="relative z-20 flex justify-center px-4 pt-8 pb-14 lg:absolute lg:inset-y-0 lg:right-[max(2rem,calc((100%-80rem)/2+2rem))] lg:items-center lg:p-0">
-        <HeroQuote onOpenChange={setFormOpen} />
+      {/* ---- the families, and why buy here ---- */}
+      <div className="mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-6 lg:pb-10">
+        {/* The families as small robot cards: a thumbnail of the robot, its
+            name and an arrow, raised off the canvas, lifting on hover — so
+            they read as things to press, not labels. The one on show is
+            filled in the accent with a ring. */}
+        {slides.length > 1 && (
+          <div
+            role="tablist"
+            aria-label={t("slidesLabel")}
+            className="no-scrollbar -mx-4 flex gap-2.5 overflow-x-auto px-4 py-1 sm:mx-0 sm:flex-wrap sm:px-0"
+          >
+            {slides.map((s, i) => {
+              const active = i === index;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  aria-label={t("showSlide", { name: pick(s.tab, locale) })}
+                  onClick={() => setIndex(i)}
+                  className={`group flex h-14 shrink-0 cursor-pointer items-center gap-3 rounded-2xl border py-1.5 pr-4 pl-1.5 text-[14px] font-semibold whitespace-nowrap transition-[transform,box-shadow,border-color,background-color] duration-200 active:scale-[0.97] motion-reduce:transition-none ${
+                    active
+                      ? "border-accent bg-accent text-on-accent shadow-[0_10px_24px_-10px_rgb(var(--accent-rgb)/0.8)] ring-4 ring-accent/15"
+                      : "border-forest-100 bg-white text-content shadow-[0_6px_16px_-10px_rgb(10_26_74/0.35)] hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-[0_12px_24px_-12px_rgb(10_26_74/0.45)] motion-reduce:hover:translate-y-0 dark:bg-forest"
+                  }`}
+                >
+                  <span
+                    className={`flex h-11 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl ${
+                      active ? "bg-white/20" : "bg-accent-50"
+                    }`}
+                  >
+                    {s.cutout && (
+                      <Image
+                        src={s.cutout.src}
+                        alt=""
+                        width={s.cutout.width}
+                        height={s.cutout.height}
+                        sizes="56px"
+                        className="h-9 w-12 object-contain transition-transform duration-300 group-hover:scale-110 motion-reduce:group-hover:scale-100"
+                      />
+                    )}
+                  </span>
+                  {pick(s.tab, locale)}
+                  <ArrowRight
+                    className={`h-4 w-4 shrink-0 transition-transform duration-200 ${
+                      active ? "opacity-90" : "text-accent-600 group-hover:translate-x-0.5"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        <div className="mt-7 flex flex-col gap-5 border-t border-forest-100 pt-6 sm:flex-row sm:items-end sm:justify-between">
+          <ul aria-label={tq("promisesLabel")} className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-x-7">
+            {PROMISES.map((key) => (
+              <li key={key} className="flex items-center gap-2.5 text-[13.5px] font-semibold text-content">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-on-accent">
+                  <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+                </span>
+                {tq(`promises.${key}`)}
+              </li>
+            ))}
+          </ul>
+          <div className="w-full max-w-xs sm:w-64">
+            <LineChatButton />
+          </div>
+        </div>
       </div>
     </section>
   );

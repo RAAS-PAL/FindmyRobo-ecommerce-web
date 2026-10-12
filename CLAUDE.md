@@ -36,15 +36,20 @@ explicitly told to.
 - Use ui-ux-pro-max skill for color/font/layout decisions
 - Use frontend-design skill for aesthetic direction
 - Ground design in real reference: Robomate Australia structure
-- Colors (2026-09-30 redesign): one light theme, no dark mode; soft grey page
-  (not pure white), graphite neutrals (`forest-*` tokens), electric-blue brand
-  colour `accent-*` (#2E6BFF) with a blue-to-cyan gradient on the main calls
-  to action. Earlier palettes (green + yellow, black + gold) are in git history.
-  The logo is still navy + gold and may change.
+- Colors (2026-09-30 redesign; dark mode back on 2026-10-12): light and dark
+  themes from one token set (`[data-theme]` in app/globals.css). Light is a
+  soft blue-grey page (never pure white); dark is deep navy (never black).
+  Graphite neutrals (`forest-*` tokens), electric-blue brand colour `accent-*`
+  (#2E6BFF) with a blue-to-cyan gradient on the main calls to action. The
+  navbar is a solid white bar (navy in dark mode) with blue only on the
+  current section and Get a quote — no gradient (owner, 2026-10-12). Earlier palettes (green +
+  yellow, black + gold) are in git history. The logo is still navy + gold.
 - Reference design: DJI (dji.com) — product-led banners; priority robots are
   lawn mowers and Gausium Phantas, then Pudu and T-Chef.
-- Hero: slides per robot family from `data/homeShowcase.ts` (studio product
-  shots, not lawn photos); the CMS hero headline is the first slide's copy
+- Hero ("showroom", 2026-10-12): one robot family at a time from
+  `data/homeShowcase.ts` (transparent cut-outs on a lit canvas, not lawn
+  photos), switched by chips, no autoplay; the quote form is a one-line strip
+  that opens into the full form; the CMS hero headline is the first slide's copy
 
 ## Brand
 - FindMyRobo / findmyrobo.com (decided 2026-08-07). Legal entity:

@@ -33,9 +33,15 @@ branch `main`.
   bar, About, contact/socials (incl. the LINE QR), SEO and media. Publishing
   revalidates the site — no deploy needed. `data/*.ts` and `messages/*.json`
   ARE compiled in and need a deploy.
-- **Theme (live on main since the 2026-10-08 merge):** one light theme only
-  (dark mode removed), soft grey page (`--color-surface` `#f3f5f8`), graphite
-  neutrals, electric-blue brand colour. The brand colour is one token,
+- **Theme (light + dark again, 2026-10-12, owner's request; branch):** one
+  token set with a dark override under `[data-theme="dark"]` in
+  `app/globals.css`. Light = soft blue-grey page (`--color-surface`
+  `#eef2f8`, never white); dark = deep navy (`#0f1527`, never black). The
+  theme is `data-theme` on `<html>`: `THEME_SCRIPT` (lib/theme.ts), inlined
+  at the top of `<body>`, sets it before first paint from localStorage
+  (`fmr-theme`) or else the OS; the switch is in the profile menu. `dark:`
+  utilities follow the attribute. Graphite neutrals, electric-blue brand
+  colour. The brand colour is one token,
   `accent-*` (plus `--accent-rgb`, `bg-accent-gradient`,
   `text-accent-gradient`) in `app/globals.css`: change it there to re-colour
   the site. Fonts: Barlow (display/body) with Prompt / Noto Sans Thai for
@@ -71,32 +77,79 @@ branch `main`.
 - Verify UI changes with a headless browser (screenshots at 1440 and 390 px,
   light + dark, `/` Thai and `/en`); the site's owner reviews by screenshot.
 
-## Recent work (2026-09-24 → 09-30), newest first
+## Recent work (2026-09-24 → 10-12), newest first
 
-- **Homepage redesign, DJI-style** (branch `claude/project-brief-review-sfx73n`,
-  Vercel preview only): hero slides per robot family (`data/homeShowcase.ts`:
-  lawn mowing, then Gausium Phantas) with a progress tab bar and the quote
-  card docked right; the LUBA hero is a studio render faded into a graphite
-  set (`components/ui/StudioStage.tsx`); full-width banners for mowers and
+- **Showroom hero** (2026-10-12, branch, replaces the dark DJI hero): one
+  robot family at a time on a lit canvas (`.hero-canvas` / `.hero-floor` in
+  globals.css: sky-blue→cyan glow continuing the navbar, a dot grid, a floor
+  shadow). Copy left, the family's transparent cut-out right
+  (`heroSlides[].cutout` in `data/homeShowcase.ts`: LUBA, Phantas, the
+  five-robot delivery lineup, T-Chef). **No autoplay**: chips under the hero
+  switch families (the robot rises in once). The quote form is the **quote
+  strip** (`components/quote/QuoteStrip.tsx`): one pill input "your name or
+  phone"; Enter or the button opens the full form (QuoteForm `variant="panel"`,
+  new `initial` prop takes what was typed — digits as the phone, else the
+  name; the slide's family preselected). From lg the form is a centred card
+  under the bar over a dimmed page (a card under the strip didn't fit);
+  below lg it opens in the flow and scrolls under the bar. The three
+  promises + LINE sit in a trust row under the chips. `HeroQuote.tsx` and
+  `.hero-quote-dark` are gone. The chips are small robot cards (thumbnail,
+  name, arrow; lift on hover; the one on show filled blue). While the strip
+  (`data-hero-quote`) is on screen the navbar's Get a quote folds away
+  (IntersectionObserver in Navbar.tsx, homepage only) and comes back once it
+  scrolls under the bar. Language switch (2026-10-12): the bar shows the
+  current language ("English" / "ไทย", each in its own script) and opens a
+  list with the current one ticked; the drawer has both side by side.
+  The theme script is `components/ThemeScript.tsx` (server HTML only; a
+  language switch remounts <html>, so it re-applies the theme on mount).
+  Hero copy for delivery/cooking slides: Thai
+  lines are DRAFTS.
+- **Homepage, the rest** (2026-09-30): full-width banners for mowers and
   Phantas, tiles for Pudu and T-Chef (`components/sections/RobotShowcase.tsx`).
   A slide or banner tied to a robot (`productId`) or a category shows only
   while that robot / a robot in that category is visible (`onShow` in
   `data/homeShowcase.ts`), so hidden robots never leave an empty photo slot;
   a lone tile spans the row. Quote form gained Phantas cleaning
-  and T-Chef cooking. Navbar is transparent over the homepage hero until
-  scroll (`header[data-clear]` in globals.css). The announcement bar is hidden
+  and T-Chef cooking. The announcement bar is hidden
   (not rendered in `app/[locale]/layout.tsx`), so its CMS section currently
-  does nothing. The hero photo sits in a box below the navbar and above the
-  headline (`studioPhoto` in `data/homeShowcase.ts`) and scales to fit it.
-  Copy for Phantas/Pudu/T-Chef is descriptive only until spec sheets arrive;
-  their Thai lines are drafts.
+  does nothing. Copy for Phantas/Pudu/T-Chef is descriptive only until spec
+  sheets arrive; their Thai lines are drafts.
 
-- **Navbar** (`components/layout/Navbar.tsx`, `.nav-track` in globals.css): a
-  3px gold track on the bar's bottom edge glides to the hovered/focused link
-  (leading end first, glowing head) and rests under the current section
-  (Products / About / Contact); About/Contact menus hang from that edge (pt-4)
-  under the track; menu items have icons; the bare quote icon is now a gold
-  "Get a quote" pill (gold disc on phones).
+- **Navbar** (`components/layout/Navbar.tsx`, restyled 2026-10-11 from a
+  21st.dev "navbar-section-2" template; settled with the owner 2026-10-11 as
+  **one blue bar holding everything**): logo · menus (category tabs, About)
+  · search · language · account · Get a quote, in a single bar hanging from
+  the top edge of the page column (max-w-7xl), inward-curved top corners,
+  rounded bottom. 60px, height in `--nav-h` (globals.css); the `<header>` is
+  fixed to that height so an open panel overlays the page instead of pushing
+  it down, and it is see-through + `pointer-events-none` outside the bar.
+  The homepage and full-screen product heroes pull up under it
+  (`-mt-[var(--nav-h)]`). Colours ("clean", owner's pick 2026-10-12 after a
+  navy tab, a vivid blue bar and two gradients were tried and rejected;
+  `--nav-*` in globals.css, light and dark sets, AA-checked): a solid bar,
+  `--nav-bar` white in light mode / `#161e38` navy in dark, with the
+  full-colour logo (white version in dark, `dark:hidden` / `dark:block`), no
+  box. Blue is kept for meaning only: the current section's dot and the
+  Get a quote button (`bg-accent`). `--nav-ink` inactive menus (8.8:1 /
+  10.4:1), `--nav-navy` active text, `--nav-highlight` the sliding pill.
+  Open panels and the phone drawer are `--nav-panel` with `--nav-card`
+  cards. `.nav-scope` re-points the shared colour tokens on the bar and in
+  the drawer (language switch, profile menu, search suggestions). The bar's
+  colour is one background on the whole shape (the bar colour sized to the
+  bar row, the panel colour below; no overflow clipping, so the profile menu
+  can hang below it); only the panel animates its
+  height (spring to the measured content, ResizeObserver). Hover (after
+  90 ms) or click opens a panel: a category's robots as photo cards plus a
+  "View all" card that stretches over empty slots; About's link groups as
+  cards; search = the field (focused on open), suggestions in the panel
+  (`static!` dropdown) and category shortcuts. Search opens by click only and
+  doesn't close on pointer-leave; any click outside the bar closes what's
+  open. A sliding highlight (`layoutId="nav-highlight"`) follows
+  pointer/focus and rests on the current section. Esc closes and refocuses
+  the tab; the shut panel is `inert`. Phones: logo, account, a blue quote
+  square, an outlined menu button; the drawer has the bar colour on top and
+  the panel colour below. Gone: the clear-over-dark-hero mode (`data-clear`),
+  the frosted notches, the navy tab, the gradients and the gold `.nav-track`.
 - **Profile menu** (`components/layout/ProfileMenu.tsx`): hover (mouse) or
   click/tap opens Sign in / Create account, or My account / Sign out when
   signed in (the Dark mode switch was removed with dark mode). The bar's "Book a Demo" button and
@@ -108,28 +161,16 @@ branch `main`.
   directions link and the embed are built from it (`salesMapUrl`,
   `salesDirectionsUrl`, `salesMapEmbedUrl`). The street address alone matched
   several "Software Park" places.
-- **Hero** (`components/sections/HeroSection.tsx`, `components/quote/*`):
-  - Desktop (lg+): the left side is a frosted panel whose edge leans 6° and
-    lines up with the nav's grey wedge as one straight line. Shared CSS vars in
-    globals.css: `--hero-split` (where frost/wedge end; narrow at rest,
-    `50%` while `html[data-quote-open]`, set by `HeroQuote`), `--hero-lean`
-    (6deg), `--hero-split-mid` (frost width halfway down — the quote column is
-    this wide so the card sits centred in the frost).
-  - Below lg: no frost at all; the headline block is content-height so the
-    quote card follows the buttons.
-  - 2026-10-08: the hero no longer adds a "Get a quote" button beside Learn
-    more. The quote card is already on the slide, and the navbar still has
-    one. Lawn mowing still shows Book a demo. The slide tabs render only when
-    there is more than one slide, so a single slide does not leave a blank
-    half. A homepage banner with no photo (Pudu) stays off. Shop filter pills
-    follow the navbar: a category with nothing on show is not listed.
-  - The section is `overflow: clip` (not hidden) on purpose: a hidden box is
-    still a scroll container, and focusing the form once scrolled the hero's
-    own content up, out of reach.
-- **Quote form** (`components/quote/QuoteForm.tsx`): expands on focus. Opening
-  it scrolls the WINDOW (never `scrollIntoView`): on touch + text field, an
-  instant jump before the keyboard opens (card top just under the sticky
-  header); otherwise a smooth glide to centre. Phone placeholder
+- **Hero history:** the 2026-09-30 frosted-panel hero and the 2026-10-08 dark
+  DJI hero (progress-bar slides, quote card docked right) were replaced by the
+  showroom hero above on 2026-10-12. Still true: Lawn mowing is the only slide
+  with Book a demo; chips render only when there is more than one slide; a
+  homepage banner with no photo stays off; shop filter pills follow the
+  navbar (a category with nothing on show is not listed).
+- **Quote form** (`components/quote/QuoteForm.tsx`): the `card` variant
+  (expands on focus, scrolls the WINDOW into view — never `scrollIntoView`)
+  is no longer used on the site; the hero uses the strip + `panel` variant,
+  and every other button opens the panel in QuoteDrawer. Phone placeholder
   `+66 123456789` (validation accepts +66… and 0…). Optional note field.
 - 2026-09-28: About story copy (with a guarded CMS migration), quote-only
   flow, PRD + Office lock files gitignored, repo made public.
@@ -257,11 +298,12 @@ branch `main`.
   a tab shows only while its category has a visible product (Delivery is
   hidden until a Pudu robot is switched on); Thai labels are drafts. Plus one "About" menu that also holds Contact and
   Support — all eight didn't fit on one line in Thai. Tabs show from xl
-  (1280px); below that they're in the drawer. Category panels and the accent
-  track are positioned against the `<header>` (the `<nav>` is deliberately not
-  positioned) so panels span the full width. The Thai tab row has ~40px to
-  spare at 1280px — re-measure if labels get longer. The search field sits in
-  a fixed slot and opens leftwards over the tabs (it must not widen the bar).
+  (1280px); below that they're in the drawer. The menus are centred between the
+  logo and the right controls inside the bar. Thai labels use 12.5px and tighter
+  padding: at 1280 they keep ~73px from the logo and the right controls —
+  re-measure if labels get longer. Screenshot trap:
+  puppeteer's default `captureBeyondViewport` re-renders the page and cuts
+  the open panel short — pass `captureBeyondViewport: false`.
 - **Every robot is an Admin product** (branch, 2026-10-07). The code-only
   robots (`data/lineup.ts`), the code-built pages (`data/modelPages.ts`,
   `components/model/ModelPageView.tsx`, the static `products/gausium-phantas`,

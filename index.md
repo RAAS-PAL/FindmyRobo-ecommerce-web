@@ -35,11 +35,13 @@ deployment: `README.md`.
 - `admin/*`, `account/*`, `orders/*`, `reviews/`
 
 ### Components
-- `layout/` — Navbar (gold track, menus, drawer), ProfileMenu, CatalogSearch,
+- `layout/` — Navbar (one blue bar: menus, search, account, quote; card panels; blue drawer), ProfileMenu, CatalogSearch,
   LanguageSwitcher, AnnouncementBar, Footer, ThemeToggle (admin only)
-- `quote/` — QuoteForm (card + panel variants), HeroQuote, QuoteDrawer,
+- `quote/` — QuoteForm (card + panel variants), QuoteStrip (the hero's
+  one-line way in), QuoteDrawer,
   QuoteProvider, LineChatButton
-- `sections/` — HeroSection and the other homepage sections
+- `sections/` — HeroSection (showroom hero: canvas, cut-out, chips, trust
+  row) and the other homepage sections
 - `contact/` — ContactSalesBody, LocationBody
 - `product/`, `cart/`, `checkout/`, `compare/`, `account/`, `auth/`, `about/`,
   `ui/`, `seo/`
@@ -57,15 +59,17 @@ deployment: `README.md`.
   `products.json` — fallback catalogue (live catalogue is in Supabase)
 - `data/techAnatomy.ts`, `data/returnPolicy.ts`
 - `messages/en.json`, `messages/th.json` — all UI copy (identical key sets)
-- `app/globals.css` — Tailwind v4 `@theme` tokens, hero vars
-  (`--hero-split`, `--hero-lean`), nav track, animations
+- `app/globals.css` — Tailwind v4 `@theme` tokens (light) + the dark set
+  under `[data-theme="dark"]`, `--nav-*` tokens, `.nav-scope`, the hero
+  canvas (`.hero-canvas`, `.hero-floor`, `--hero-glow-*`), animations
 
 ### Library — `lib/`
 - `supabase/` (client, server, service, middleware), `productStore.ts`,
   `orderStore.ts`, `addressStore.ts`, `reviewStore.ts`, `siteContentStore.ts`
 - `quoteRequest.ts` (quote validation), `checkout.ts`, `email.ts`,
   `notifications.ts`, `omise.ts`, `sokochan.ts`, `rateLimit.ts`
-- `seo.ts`, `structuredData.ts`, `siteUrl.ts`
+- `seo.ts`, `structuredData.ts`, `siteUrl.ts`, `theme.ts` (light/dark:
+  the inline script, the switch, the subscription)
 
 ### Other
 - `middleware.ts` — locale routing + Supabase session refresh
