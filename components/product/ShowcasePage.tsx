@@ -45,6 +45,31 @@ type PhotoFeature = Extract<PageBlock, { type: "feature" }> & { image: string };
  *  (uploads, anywhere else) as a plain <img>, since next/image only takes
  *  hosts listed in next.config. */
 function FillImage({ src, alt, sizes }: { src: string; alt: string; sizes: string }) {
+  // A section's "photo" may be a short clip (an .mp4 link in Admin): it
+  // plays silently on a loop, like a moving photo. With reduced motion it
+  // doesn't start. A `-web.mp4` clip takes the still beside it on S3
+  // (`-poster.webp`) as its first frame.
+  if (/\.mp4(\?|$)/i.test(src)) {
+    const poster = /-web\.mp4$/i.test(src) ? src.replace(/-web\.mp4$/i, "-poster.webp") : undefined;
+    return (
+      <video
+        src={src}
+        poster={poster}
+        aria-label={alt}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        // started from an effect-free ref: autoplay only without reduced motion
+        ref={(el) => {
+          if (el && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            el.play().catch(() => {});
+          }
+        }}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+    );
+  }
   if (src.startsWith("/")) {
     return <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />;
   }
