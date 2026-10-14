@@ -86,12 +86,14 @@ branch `main`.
   (`heroSlides[].cutout` in `data/homeShowcase.ts`: LUBA, Phantas, the
   five-robot delivery lineup, T-Chef). **No autoplay**: chips under the hero
   switch families (the robot rises in once). The quote form is the **quote
-  strip** (`components/quote/QuoteStrip.tsx`): one pill input "your name or
-  phone"; Enter or the button opens the full form (QuoteForm `variant="panel"`,
-  new `initial` prop takes what was typed — digits as the phone, else the
-  name; the slide's family preselected). From lg the form is a centred card
-  under the bar over a dimmed page (a card under the strip didn't fit);
-  below lg it opens in the flow and scrolls under the bar. The three
+  strip** (`components/quote/QuoteStrip.tsx`, "unfold in place", 2026-10-12):
+  a pill that reads like an input; clicking it unfolds the same box, in the
+  page flow, into the full form (QuoteForm `variant="panel"`, the slide's
+  family preselected) — no popup, no overlay, no square focus outline. The
+  hero folds its paragraph, buttons and finder link away meanwhile and the
+  robot stays sticky beside the form (desktop); the page scrolls just enough
+  to show the whole form. × or Esc folds it back and keeps what was typed
+  (the form stays mounted). The three
   promises + LINE sit in a trust row under the chips. `HeroQuote.tsx` and
   `.hero-quote-dark` are gone. The chips are small robot cards (thumbnail,
   name, arrow; lift on hover; the one on show filled blue). While the strip
@@ -203,7 +205,17 @@ branch `main`.
      Tested on a local Postgres 18 after steps 1–4.
   Launch order is done (2026-10-08): 4b ran, preview branch merged to main
   (PR #1), step 5 ran, and the three robots were set `visible = true`.
-  A1-Basic, the four Pudu robots and `c40` stay hidden. The Delivery tab and
+  A1-Basic, the four Pudu robots and `c40` stay hidden. **A1-Basic (owner,
+  2026-10-12), waiting only for a photo of its handle/display:** same body,
+  hardware and consumables as Youth (Aventurier's official "Artist 1
+  Specification" covers it: 40 cm, 800–1,200 m²/h, 4 L clean / 6 L dirty
+  tank, 15 kg, 8,000 Pa, 22 kg, 60 dB, IPX4, 75 min per battery Eco). Basic:
+  no Wi-Fi, display shows battery level only, 1 operating mode. Youth: Wi-Fi
+  & 4G (report checking), 3 modes. Both: 1 battery included, extra batteries
+  sold separately (the official sheet's "x2" is the global box; Thailand
+  ships one). The official sheet calls Youth "Youth/SE"; Basic isn't on
+  aventurobot.com. Build its page like the Pudu ones (SQL + Youth body
+  photos + the Basic handle photo). The Delivery tab and
   the Pudu homepage tile stay off until a Pudu robot is visible AND the tile
   has a real photo (`onShow` in `data/homeShowcase.ts`).
   **SQL visibility does not refresh the homepage.** Storefront pages are

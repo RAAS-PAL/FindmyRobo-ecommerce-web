@@ -43,6 +43,9 @@ export default function HeroSection() {
   );
   const reduceMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
+  // The quote box unfolds in place (QuoteStrip): the hero folds its paragraph
+  // and buttons away to make room, and the robot stays beside the form.
+  const [quoteOpen, setQuoteOpen] = useState(false);
   const slide = slides[index % slides.length];
   const cutout = slide.cutout!;
 
@@ -62,15 +65,20 @@ export default function HeroSection() {
     <section
       aria-label={t("slidesLabel")}
       // -mt / pt: the canvas runs up under the navbar, whose blue bar hangs
-      // over its top edge (--nav-h = the bar's height). Not clipped: the open
-      // quote card hangs below the strip, over whatever follows.
+      // over its top edge (--nav-h = the bar's height). The quote box unfolds
+      // in the flow, so the hero simply grows while it is open.
       className="hero-canvas relative -mt-[var(--nav-h)] pt-[var(--nav-h)]"
     >
       {/* From lg the copy and robot take the screen down to the chips, which
           sit at the bottom of the first screen (the 14rem is their band). */}
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-4 pt-4 sm:px-6 lg:min-h-[calc(100svh-var(--nav-h)-14rem)] lg:max-h-[40rem] lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-8 lg:px-8 lg:pt-6">
+      <div className={`mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-4 pt-4 sm:px-6 lg:min-h-[calc(100svh-var(--nav-h)-14rem)] lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-8 lg:px-8 lg:pt-6 ${
+          quoteOpen ? "" : "lg:max-h-[40rem]"
+        }`}>
         {/* ---- the robot, standing on its floor ---- */}
-        <div className="relative order-1 lg:order-2">
+        <div
+          // with the form open, the robot stays in view beside it
+          className={`relative order-1 lg:order-2 ${quoteOpen ? "lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start" : ""}`}
+        >
           <div className="hero-floor" aria-hidden="true" />
           <div className="relative mx-auto aspect-[16/11] w-full max-w-[34rem] sm:max-w-[40rem] lg:max-w-none">
             <AnimatePresence mode="wait" initial={false}>
@@ -112,6 +120,14 @@ export default function HeroSection() {
                 {headline}
                 <span className="block text-accent-600 dark:text-accent-gradient">{accent}</span>
               </h1>
+              {/* folds away while the quote box is open */}
+              <div
+                className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
+                  quoteOpen ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100"
+                }`}
+                inert={quoteOpen ? true : undefined}
+              >
+              <div className="min-h-0 overflow-hidden">
               <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:text-base lg:text-[17px]">
                 {sub}
               </p>
@@ -133,6 +149,8 @@ export default function HeroSection() {
                   </Link>
                 )}
               </div>
+              </div>
+              </div>
             </motion.div>
           </AnimatePresence>
 
@@ -140,12 +158,14 @@ export default function HeroSection() {
               Get a quote (one way in at a time); it comes back once the
               strip has scrolled away under the bar */}
           <div className="mt-7" data-hero-quote>
-            <QuoteStrip interest={slide.interest} productId={slide.productId} />
+            <QuoteStrip interest={slide.interest} productId={slide.productId} onOpenChange={setQuoteOpen} />
           </div>
 
           <Link
             href="/recommend"
-            className="mt-5 inline-flex items-center gap-1.5 text-[14px] text-ink-muted transition-colors hover:text-content"
+            className={`mt-5 inline-flex items-center gap-1.5 text-[14px] text-ink-muted transition-colors hover:text-content ${
+              quoteOpen ? "hidden" : ""
+            }`}
           >
             {t("finderPrompt")}
             <span className="font-semibold text-accent-600 underline-offset-4 hover:underline">

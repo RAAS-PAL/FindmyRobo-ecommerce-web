@@ -210,7 +210,7 @@ function SearchPanel({
     <div>
       <CatalogSearch
         className="block"
-        inputClassName="h-11 w-full rounded-xl border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-[14px] text-content placeholder:text-[color:var(--nav-tab-faint)] transition-colors focus:border-accent focus:outline-none"
+        inputClassName="h-11 w-full rounded-xl border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-[14px] text-content placeholder:text-[color:var(--nav-tab-faint)] transition-colors focus:border-accent focus:outline-none focus-visible:outline-none!"
         dropdownClassName="static! mt-3 w-full shadow-none!"
         onNavigate={onNavigate}
       />
@@ -775,7 +775,7 @@ export default function Navbar() {
               <div className="flex-1 overflow-y-auto px-5 py-6">
                 <CatalogSearch
                   className="mb-6 block"
-                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-sm text-content placeholder:text-[color:var(--nav-tab-faint)] focus:border-accent focus:outline-none"
+                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-sm text-content placeholder:text-[color:var(--nav-tab-faint)] focus:border-accent focus:outline-none focus-visible:outline-none!"
                   dropdownClassName="inset-x-0 w-full"
                   onNavigate={() => setOpen(false)}
                 />
