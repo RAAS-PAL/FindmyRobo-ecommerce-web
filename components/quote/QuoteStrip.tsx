@@ -1,163 +1,165 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 import { ArrowRight, PenLine, X } from "lucide-react";
 import QuoteForm from "@/components/quote/QuoteForm";
 import type { QuoteRequest } from "@/lib/quoteRequest";
 
 /**
- * The hero's way into the quote form: one pill-shaped line, "your name or
- * phone", with a Get a quote button. Sending it (Enter or the button) opens
- * the full form in a card hanging under the strip, with what was typed
- * already filled in — a run of digits goes in as the phone number, anything
- * else as the name. Closed again, it's a single line; the form never sits on
- * the hero at full size.
- *
- * From lg the card floats centred under the bar, over a dimmed page (the
- * strip sits too low on the hero for a card under it to fit). Below lg it
- * opens in the flow and the page scrolls so its top sits under the bar.
+ * The hero's way into the quote form ("unfold in place", 2026-10-12): a
+ * pill that reads like an input — "your name or phone" and a Get a quote
+ * button. Clicking anywhere on it unfolds the same box, in the page flow,
+ * into the full form: the pill's line becomes the form's header with a
+ * close button, the fields slide open beneath, and the page below moves
+ * down to make room (no popup, no overlay). The hero folds its paragraph and
+ * buttons away meanwhile (onOpenChange). If the form runs past the screen
+ * the page scrolls just enough to show it. Closing (× or Escape) folds it
+ * back to one line and keeps what was typed.
  */
 export default function QuoteStrip({
   interest,
   productId,
+  onOpenChange,
 }: {
   /** The robot family on show, preselected in the form. */
   interest?: QuoteRequest["interest"];
   /** A single robot's slide: the form asks about that robot. */
   productId?: string;
+  /** Told when the box unfolds or folds, so the hero can make room. */
+  onOpenChange?: (open: boolean) => void;
 }) {
   const t = useTranslations("heroQuote");
   const ts = useTranslations("showcase");
   const reduceMotion = useReducedMotion();
-  const rootRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [open, setOpen] = useState(false);
-  const [typed, setTyped] = useState("");
+  const bodyId = useId();
+  const boxRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpenState] = useState(false);
+  // The form mounts on first open and then stays, so closing never loses
+  // what was typed.
+  const [mounted, setMounted] = useState(false);
+
+  const setOpen = (next: boolean) => {
+    setOpenState(next);
+    if (next) setMounted(true);
+    onOpenChange?.(next);
+  };
 
   const close = () => {
     setOpen(false);
-    inputRef.current?.focus();
+    // after the fold, back to the pill
+    requestAnimationFrame(() => pillRef.current?.focus());
   };
 
-  // Open, the card closes on Escape or a click anywhere outside it.
+  // Opened: the cursor goes to the first empty field, and once the box has
+  // grown the page scrolls just enough to show it — its bottom on screen,
+  // but never pushing its top under the bar. Only the window scrolls.
   useEffect(() => {
     if (!open) return;
-    const onPointerDown = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-        inputRef.current?.focus();
-      }
-    };
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
-
-  // Below lg the card opens in the flow, mostly under the fold: bring its top
-  // just under the sticky bar. Only the window scrolls (not scrollIntoView,
-  // which also scrolls clipped ancestors).
-  useEffect(() => {
-    if (!open || window.matchMedia("(min-width: 64rem)").matches) return;
-    const timer = setTimeout(() => {
-      const card = cardRef.current;
-      if (!card) return;
-      const barHeight = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
-      const top = card.getBoundingClientRect().top - barHeight - 12;
-      if (Math.abs(top) < 4) return;
-      window.scrollBy({ top, behavior: reduceMotion ? "instant" : "smooth" });
+    const focusTimer = setTimeout(() => {
+      const fields = boxRef.current?.querySelectorAll<HTMLInputElement>("form input:not([type=hidden])");
+      const firstEmpty = [...(fields ?? [])].find((field) => !field.value) ?? fields?.[0];
+      firstEmpty?.focus({ preventScroll: true });
     }, 60);
-    return () => clearTimeout(timer);
+    const scrollTimer = setTimeout(() => {
+      const box = boxRef.current;
+      if (!box) return;
+      const rect = box.getBoundingClientRect();
+      const barBottom = (document.querySelector("header")?.getBoundingClientRect().height ?? 0) + 16;
+      const overflow = rect.bottom - (window.innerHeight - 24);
+      const room = rect.top - barBottom;
+      const by = rect.top < barBottom ? rect.top - barBottom : Math.min(Math.max(overflow, 0), room);
+      if (Math.abs(by) > 4) window.scrollBy({ top: by, behavior: reduceMotion ? "instant" : "smooth" });
+    }, reduceMotion ? 20 : 380);
+    return () => {
+      clearTimeout(focusTimer);
+      clearTimeout(scrollTimer);
+    };
   }, [open, reduceMotion]);
 
-  const value = typed.trim();
-  // digits (with +, spaces or dashes) read as a phone number; anything else as a name
-  const initial = /^\+?[\d\s-]{6,}$/.test(value) ? { phone: value } : value ? { fullName: value } : undefined;
-
   return (
-    <div ref={rootRef} className="relative w-full max-w-xl">
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          setOpen(true);
+    <div className="w-full max-w-xl">
+      <div
+        ref={boxRef}
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && open) {
+            event.stopPropagation();
+            close();
+          }
         }}
-        aria-label={t("eyebrow")}
-        inert={open ? true : undefined}
-        className={`flex h-14 items-center gap-2 rounded-full border border-forest-100 bg-surface/85 pr-1.5 pl-4 shadow-[0_14px_36px_-20px_rgb(10_26_74/0.5)] backdrop-blur-md transition-[opacity,border-color,box-shadow] duration-300 focus-within:border-accent/60 focus-within:shadow-[0_14px_36px_-20px_rgb(10_26_74/0.5),0_0_0_4px_rgb(var(--accent-rgb)/0.14)] ${
-          open ? "opacity-50" : ""
+        className={`overflow-hidden border bg-surface/85 backdrop-blur-md transition-[border-radius,box-shadow,border-color] duration-300 ease-out motion-reduce:transition-none ${
+          open
+            ? "rounded-2xl border-accent/40 shadow-[0_24px_60px_-28px_rgb(10_26_74/0.55),0_0_0_4px_rgb(var(--accent-rgb)/0.1)]"
+            : "rounded-[28px] border-forest-100 shadow-[0_14px_36px_-20px_rgb(10_26_74/0.5)] hover:border-accent/50 hover:shadow-[0_14px_36px_-20px_rgb(10_26_74/0.5),0_0_0_4px_rgb(var(--accent-rgb)/0.1)]"
         }`}
       >
-        <PenLine className="h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
-        <input
-          ref={inputRef}
-          type="text"
-          value={typed}
-          onChange={(event) => setTyped(event.target.value)}
-          placeholder={t("stripPlaceholder")}
-          aria-label={t("stripPlaceholder")}
-          autoComplete="off"
-          maxLength={80}
-          className="h-full min-w-0 flex-1 bg-transparent text-[15px] text-content placeholder:text-ink-muted focus:outline-none"
-        />
-        <button
-          type="submit"
-          className="flex h-11 shrink-0 items-center gap-1.5 rounded-full bg-accent-gradient px-4 text-[14px] font-bold whitespace-nowrap sm:px-5"
-        >
-          {ts("getQuote")}
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
-        </button>
-      </form>
-      <p className="mt-2 pl-4 text-[12px] font-medium text-ink-muted">{t("reassure")}</p>
-
-      <AnimatePresence>
-        {open && (
-          // Only opacity animates: a transform from framer would override the
-          // centring translate the card relies on from lg.
-          <motion.div
-            key="card"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.2 }}
+        {/* top line: the pill (closed) or the form's header (open), in the same place */}
+        <div className="relative h-14">
+          <button
+            ref={pillRef}
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-expanded={open}
+            aria-controls={bodyId}
+            inert={open ? true : undefined}
+            className={`group absolute inset-0 flex w-full cursor-text items-center gap-2 pr-1.5 pl-4 text-left transition-opacity duration-200 focus-visible:outline-none! ${
+              open ? "pointer-events-none opacity-0" : "opacity-100"
+            }`}
           >
-            {/* dims the page behind the floating card; a click on it closes */}
-            <div
-              aria-hidden="true"
+            <PenLine className="h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
+            <span className="min-w-0 flex-1 truncate text-[15px] text-ink-muted">{t("stripPlaceholder")}</span>
+            <span className="flex h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-4 text-[14px] font-bold whitespace-nowrap group-focus-visible:ring-4 group-focus-visible:ring-accent/30 sm:px-5">
+              {ts("getQuote")}
+              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
+            </span>
+          </button>
+
+          <div
+            aria-hidden={!open}
+            className={`absolute inset-0 flex items-center justify-between gap-3 pr-2.5 pl-5 transition-opacity duration-200 ${
+              open ? "opacity-100" : "pointer-events-none opacity-0"
+            }`}
+          >
+            {/* the form itself says what it needs, just under this line */}
+            <p className="min-w-0 truncate font-display text-[18px] leading-tight font-extrabold tracking-tight text-content">
+              {t("eyebrow")}
+            </p>
+            <button
+              type="button"
               onClick={close}
-              className="fixed inset-0 z-20 hidden bg-[#0a1a4a]/35 backdrop-blur-sm lg:block"
-            />
-            <div
-              ref={cardRef}
-              role="dialog"
-              aria-label={t("eyebrow")}
-              className="relative z-30 mt-3 w-full rounded-2xl border border-forest-100 bg-surface/95 p-5 shadow-[0_28px_70px_-28px_rgb(10_26_74/0.55),0_0_0_1px_rgb(var(--accent-rgb)/0.08)] backdrop-blur-xl lg:fixed lg:top-[calc(var(--nav-h)+1.5rem)] lg:left-1/2 lg:mt-0 lg:max-h-[calc(100svh-var(--nav-h)-3rem)] lg:w-[30rem] lg:-translate-x-1/2 lg:overflow-y-auto"
+              tabIndex={open ? 0 : -1}
+              aria-label={t("closePanel")}
+              className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-content"
             >
-            <div className="mb-1 flex items-start justify-between gap-3">
-              <p className="font-display text-[19px] leading-tight font-extrabold tracking-tight text-content">
-                {t("eyebrow")}
-              </p>
-              <button
-                type="button"
-                onClick={close}
-                aria-label={t("closePanel")}
-                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-content"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+
+        {/* the form, unfolding beneath (grid rows 0fr → 1fr animate to its height) */}
+        <div
+          id={bodyId}
+          className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
+            open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+          inert={open ? undefined : true}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <div className="border-t border-forest-100 px-5 pt-1 pb-5">
+              {mounted && <QuoteForm variant="panel" interest={interest} productId={productId} />}
             </div>
-            <QuoteForm variant="panel" interest={interest} productId={productId} initial={initial} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      </div>
+      <p
+        className={`pl-4 text-[12px] font-medium text-ink-muted transition-opacity duration-200 ${
+          open ? "mt-0 h-0 opacity-0" : "mt-2 opacity-100"
+        }`}
+      >
+        {t("reassure")}
+      </p>
     </div>
   );
 }
