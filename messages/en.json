@@ -570,6 +570,8 @@
         "eyebrowHint": "e.g. “Gausium · Commercial cleaning robot”. Required for the full-screen page.",
         "heroImage": "Header image URL (optional)",
         "heroImageHint": "A transparent cut-out of the robot. Blank uses the main product image.",
+        "models": "Other models (optional)",
+        "modelsHint": "Product IDs of other versions of this robot, separated by commas, e.g. aventurier-a1-youth. The header then shows a switch between them (only those on show). Add this product's ID on their pages too.",
         "figuresTitle": "Key figures",
         "figuresNote": "up to 4, shown in a row under the header",
         "figureLabel": "Figure {number}",
@@ -1255,6 +1257,7 @@
     "bookDemo": "Book a demo",
     "learnMore": "Learn more",
     "specsHeading": "Specifications",
+    "models": "Models",
     "ctaHeading": "Want {name} at your site?",
     "ctaBody": "Tell us about your space and we’ll reply with a quotation within one business day."
   },

@@ -153,15 +153,19 @@ function HeroColor({ color, alt, label }: { color: ShowcaseColor; alt: string; l
  *
  * `afterFeatures` / `afterSpecs` carry the product's other page sections
  * (non-photo sections, what's in the box, FAQ), rendered on the server.
+ * `models` (this product among them) are the versions of the robot on show,
+ * for the switch under its name.
  */
 export default function ShowcasePage({
   product,
   showcase,
+  models,
   afterFeatures,
   afterSpecs,
 }: {
   product: Product;
   showcase: ShowcaseContent;
+  models?: { id: string; name: string }[];
   afterFeatures?: React.ReactNode;
   afterSpecs?: React.ReactNode;
 }) {
@@ -253,6 +257,34 @@ export default function ShowcasePage({
               <motion.div variants={heroLine} className="mt-4">
                 <ConditionLine conditions={product.conditions} tone="dark" />
               </motion.div>
+            )}
+            {/* other versions of the robot: one page each, switched here */}
+            {models && (
+              <motion.nav
+                variants={heroLine}
+                aria-label={t("models")}
+                className="mt-5 inline-flex flex-wrap gap-1 rounded-full border border-white/15 bg-white/[0.06] p-1"
+              >
+                {models.map((model) =>
+                  model.id === product.id ? (
+                    <span
+                      key={model.id}
+                      aria-current="page"
+                      className="inline-flex min-h-10 items-center rounded-full bg-white px-5 text-[14px] font-bold text-[#0b0d10]"
+                    >
+                      {model.name}
+                    </span>
+                  ) : (
+                    <Link
+                      key={model.id}
+                      href={`/products/${model.id}`}
+                      className="inline-flex min-h-10 items-center rounded-full px-5 text-[14px] font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white"
+                    >
+                      {model.name}
+                    </Link>
+                  )
+                )}
+              </motion.nav>
             )}
             <motion.p
               variants={heroLine}

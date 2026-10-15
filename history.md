@@ -2,6 +2,20 @@
 
 Newest first. Current state and open items live in `hot.md`.
 
+## 2026-10-15 — A1-Basic page, and the A1 screens the right way round
+- The owner's Basic screen photo showed Wi-Fi and mode arrows, which the
+  model list said belonged to the Youth; the owner checked the real machines
+  and the list was the wrong way round (Basic: colour screen, Wi-Fi & 4G,
+  3 modes; Youth: status panel, no Wi-Fi, 1 mode). The live Youth page had
+  claimed Wi-Fi, 4G and 3 modes; `supabase/a1-basic-youth.sql` corrects it
+  and builds the Basic page from the Basic photos already on S3.
+- Owner asked whether two near-identical models need two pages. Kept two
+  products (shop cards, quotes, finder and Admin all work per product) with
+  the same sections, plus a model switch in the full-screen header
+  (`showcase.models`, Admin "Other models").
+- Photo-less feature sections in a row now show as one "More features" group
+  of cards (GoGoBot, PuduBot 2).
+
 ## 2026-10-14/15 — Owner's photos on the delivery robot pages
 - PuduBot, BellaBot, KettyBot and GoGoBot sections got photos that show what
   each section says (the owner's files; Pudu logos painted out), uploaded to

@@ -205,17 +205,21 @@ branch `main`.
      Tested on a local Postgres 18 after steps 1–4.
   Launch order is done (2026-10-08): 4b ran, preview branch merged to main
   (PR #1), step 5 ran, and the three robots were set `visible = true`.
-  A1-Basic, the four Pudu robots and `c40` stay hidden. **A1-Basic (owner,
-  2026-10-12), waiting only for a photo of its handle/display:** same body,
-  hardware and consumables as Youth (Aventurier's official "Artist 1
-  Specification" covers it: 40 cm, 800–1,200 m²/h, 4 L clean / 6 L dirty
-  tank, 15 kg, 8,000 Pa, 22 kg, 60 dB, IPX4, 75 min per battery Eco). Basic:
-  no Wi-Fi, display shows battery level only, 1 operating mode. Youth: Wi-Fi
-  & 4G (report checking), 3 modes. Both: 1 battery included, extra batteries
-  sold separately (the official sheet's "x2" is the global box; Thailand
-  ships one). The official sheet calls Youth "Youth/SE"; Basic isn't on
-  aventurobot.com. Build its page like the Pudu ones (SQL + Youth body
-  photos + the Basic handle photo). The Delivery tab and
+  A1-Basic, the four Pudu robots and `c40` stay hidden. **A1-Basic vs
+  A1-Youth (owner checked the real machines, 2026-10-15; the list given on
+  2026-10-12 was the wrong way round):** same body, hardware and consumables
+  (Aventurier's official "Artist 1 Specification": 40 cm, 800–1,200 m²/h,
+  4 L clean / 6 L dirty tank, 15 kg, 8,000 Pa, 22 kg, 60 dB, IPX4, 75 min per
+  battery Eco); only the handle screen differs. **Basic:** colour screen
+  (battery %, mode with arrows, signal/Wi-Fi icons), Wi-Fi & 4G (report
+  checking), 3 modes. **Youth:** plain panel printed "AVENTURIER YOUTH" (Full,
+  Lack, Blocking, battery level), no Wi-Fi, 1 mode. Mode counts and 4G come
+  from the corrected list; the screens agree. Both: 1 battery included,
+  extra batteries sold separately (the official sheet's "x2" is the global
+  box; Thailand ships one). Pages: `supabase/a1-basic-youth.sql` (fixes the
+  Youth, builds the Basic with its own S3 photos `Aventurier/A1-Basic/`; both
+  list each other in showcase `models`, the header's model switch). Needs the
+  model-switch code live first, then tick Basic Visible. The Delivery tab and
   the Pudu homepage tile stay off until a Pudu robot is visible AND the tile
   has a real photo (`onShow` in `data/homeShowcase.ts`).
   **SQL visibility does not refresh the homepage.** Storefront pages are
@@ -344,7 +348,10 @@ branch `main`.
   under it; two or more image-less Feature sections in a row become one
   "More features" group of cards (`featureGroupHeading` in
   `ProductPageBlocks.tsx`, 2026-10-15; owner found them empty and plain), a
-  lone one stays plain text. Off = the standard gallery page. Validated in
+  lone one stays plain text. Versions of one robot (A1-Basic / A1-Youth) stay
+  separate products but list each other in `showcase.models` (Admin "Other
+  models"): the header then shows a switch between those on show. Off = the
+  standard gallery page. Validated in
   `lib/productValidation.ts` (`parsePage`). Photos stay in `public/models/`
   and `public/studio/`.
 - How each robot is sold is the product's `conditions` column (`new`,
