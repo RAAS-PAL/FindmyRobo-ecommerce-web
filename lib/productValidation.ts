@@ -113,12 +113,17 @@ export function parsePage(raw: unknown): ProductPage | undefined | string {
         const swatch = asText(o.swatch);
         colors.push({ label, image, swatch: HEX_RE.test(swatch) ? swatch : "#d1d5db" });
       }
+      // other versions of the robot, by product id (ids are slugs)
+      const models = [
+        ...new Set((Array.isArray(s.models) ? s.models : []).map(asText).filter((m) => /^[a-z0-9-]+$/.test(m))),
+      ];
       page.showcase = {
         eyebrow,
         ...(heroImage ? { heroImage } : {}),
         figures: figures.slice(0, MAX_SHOWCASE_FIGURES),
         // one colour is just the robot: the header shows the main image instead
         ...(colors.length > 1 ? { colors } : {}),
+        ...(models.length > 0 ? { models } : {}),
       };
     }
   }

@@ -166,6 +166,10 @@ export interface ShowcaseContent {
   figures: ShowcaseFigure[];
   /** Two or more colours: the header shows the robot in each, named. */
   colors?: ShowcaseColor[];
+  /** Other versions of the same robot, by product id (A1-Basic and A1-Youth
+   *  differ only in the handle screen): the header shows a switch between
+   *  them, for those that are on show. Each lists the others. */
+  models?: string[];
 }
 
 export const MAX_SHOWCASE_FIGURES = 4;

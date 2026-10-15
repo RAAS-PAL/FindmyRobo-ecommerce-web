@@ -139,12 +139,19 @@ export default async function ProductPage({
   const showcase = page?.showcase;
   if (showcase) {
     const otherBlocks = (page?.blocks ?? []).filter((b) => !(b.type === "feature" && b.image));
+    // other versions of this robot that are on show, for the header's switch,
+    // in catalogue order so it reads the same on each of their pages
+    const modelIds = new Set([product.id, ...(showcase.models ?? [])]);
+    const models = allProducts
+      .filter((p) => modelIds.has(p.id))
+      .map((p) => ({ id: p.id, name: p.name }));
     return (
       <>
         {structuredData}
         <ShowcasePage
           product={product}
           showcase={showcase}
+          models={models.length > 1 ? models : undefined}
           afterFeatures={
             otherBlocks.length > 0 ? (
               <ProductPageBlocks

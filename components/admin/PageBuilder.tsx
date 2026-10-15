@@ -70,6 +70,8 @@ export interface DraftShowcase {
   heroImage: string;
   figures: DraftFigure[];
   colors: DraftColor[];
+  /** Other versions' product ids, as typed: comma-separated. */
+  models: string;
 }
 export interface DraftSpecRow {
   labelEn: string;
@@ -175,6 +177,7 @@ export function pageToDraft(page?: ProductPage): DraftPage {
         swatch: c.swatch,
         image: c.image,
       })),
+      models: (showcase?.models ?? []).join(", "),
     },
     blocks: [
       ...legacyVideo,
@@ -254,6 +257,7 @@ export function draftToPage(draft: DraftPage): Record<string, unknown> {
               swatch: c.swatch.trim(),
               image: c.image.trim(),
             })),
+            models: s.models.split(/[\s,]+/).filter(Boolean),
           },
         }
       : {}),
@@ -699,6 +703,17 @@ function ShowcaseEditor({
                 className={inputClass}
               />
               <p className="mt-1 text-[11.5px] text-ink-muted">{t("showcasePage.heroImageHint")}</p>
+            </div>
+
+            <div>
+              <label className={miniLabel}>{t("showcasePage.models")}</label>
+              <input
+                value={showcase.models}
+                onChange={(e) => set({ models: e.target.value })}
+                placeholder="aventurier-a1-youth"
+                className={inputClass}
+              />
+              <p className="mt-1 text-[11.5px] text-ink-muted">{t("showcasePage.modelsHint")}</p>
             </div>
 
             {/* key figures */}
