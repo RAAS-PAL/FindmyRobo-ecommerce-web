@@ -19,16 +19,81 @@ const pick = (t: { en: string; th: string }, locale: Locale) => t[locale] || t.e
 const isDarkBand = (block?: PageBlock) =>
   block?.type === "anatomy" || block?.type === "showcase";
 
+type FeatureBlock = Extract<PageBlock, { type: "feature" }>;
+const isTextFeature = (block: PageBlock): block is FeatureBlock =>
+  block.type === "feature" && !block.image;
+
+/** Card columns for a feature group, by how many cards it has: never a lone
+ *  card on a row of its own. */
+const GROUP_COLS: Record<number, string> = {
+  2: "sm:grid-cols-2",
+  3: "md:grid-cols-3",
+  4: "sm:grid-cols-2",
+};
+
 /* eslint-disable @next/next/no-img-element -- admin-entered URLs, any host */
 export default function ProductPageBlocks({
   blocks,
   locale,
   productName,
+  featureGroupHeading,
 }: {
   blocks: PageBlock[];
   locale: Locale;
   productName: string;
+  /** Full-screen pages: two or more feature sections in a row without a
+   *  photo are shown together as one group of cards under this heading, so
+   *  they don't read as a stretch of empty page after the photo sections. */
+  featureGroupHeading?: string;
 }) {
+  // Runs of photo-less feature sections become one group; a lone one keeps
+  // its usual form.
+  const parts: ({ block: PageBlock } | { group: FeatureBlock[] })[] = [];
+  for (const block of blocks) {
+    const last = parts.at(-1);
+    if (featureGroupHeading && isTextFeature(block)) {
+      if (last && "group" in last) last.group.push(block);
+      else parts.push({ group: [block] });
+    } else {
+      parts.push({ block });
+    }
+  }
+  const items = parts.map((part) =>
+    "group" in part && part.group.length === 1 ? { block: part.group[0] } : part
+  );
+
+  const renderGroup = (group: FeatureBlock[]) => (
+    <section className="mx-auto max-w-6xl">
+      <FadeIn>
+        <h2 className="text-center font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
+          {featureGroupHeading}
+        </h2>
+      </FadeIn>
+      <div
+        className={`mt-10 grid gap-4 sm:mt-12 sm:gap-6 ${
+          GROUP_COLS[group.length] ?? "sm:grid-cols-2 lg:grid-cols-3"
+        }`}
+      >
+        {group.map((block, j) => (
+          <FadeIn key={j} delay={j * 0.08} className="h-full">
+            <article className="h-full rounded-2xl border border-forest-100 bg-white p-6 shadow-[0_6px_16px_-10px_rgb(10_26_74/0.35)] sm:p-8 dark:bg-forest">
+              <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-accent-600 uppercase [&:lang(th)]:tracking-[0.06em]">
+                {block.eyebrow ? pick(block.eyebrow, locale) : String(j + 1).padStart(2, "0")}
+              </p>
+              <span aria-hidden="true" className="mt-3 block h-0.5 w-8 rounded-full bg-accent-gradient" />
+              <h3 className="mt-5 font-display text-xl font-extrabold tracking-tight text-content sm:text-2xl">
+                {pick(block.heading, locale)}
+              </h3>
+              <p className="mt-3 whitespace-pre-line text-[15px] leading-relaxed text-ink-muted">
+                {pick(block.body, locale)}
+              </p>
+            </article>
+          </FadeIn>
+        ))}
+      </div>
+    </section>
+  );
+
   const renderBlock = (block: PageBlock, i: number) => {
     switch (block.type) {
           case "anatomy":
@@ -176,15 +241,17 @@ export default function ProductPageBlocks({
 
   return (
     <div>
-      {blocks.map((block, i) => {
+      {items.map((item, i) => {
         // Spacing lives on a per-block wrapper rather than space-y on the
         // container, so it can be dropped between two full-bleed dark bands.
         // With a gap they read as two separate sections split by a light
         // stripe; without one they run together as a single dark passage.
-        const joinsPrevious = isDarkBand(block) && isDarkBand(blocks[i - 1]);
+        const previous = items[i - 1];
+        const joinsPrevious =
+          "block" in item && isDarkBand(item.block) && !!previous && "block" in previous && isDarkBand(previous.block);
         return (
           <div key={i} className={i === 0 || joinsPrevious ? undefined : "mt-16 sm:mt-20"}>
-            {renderBlock(block, i)}
+            {"group" in item ? renderGroup(item.group) : renderBlock(item.block, i)}
           </div>
         );
       })}
