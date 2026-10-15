@@ -147,7 +147,12 @@ export default async function ProductPage({
           showcase={showcase}
           afterFeatures={
             otherBlocks.length > 0 ? (
-              <ProductPageBlocks blocks={otherBlocks} locale={l} productName={product.name} />
+              <ProductPageBlocks
+                blocks={otherBlocks}
+                locale={l}
+                productName={product.name}
+                featureGroupHeading={t("moreFeaturesHeading")}
+              />
             ) : undefined
           }
           afterSpecs={

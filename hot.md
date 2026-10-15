@@ -237,6 +237,18 @@ branch `main`.
      refresh). Robot pages are being redone one by one; add the next robot
      to the same file. Pudu's PuduBot 2 battery figures disagree (12 h no
      load / 15 h full load / "24 h"); the page uses 12 h without a load.
+  4d. Section photos from the owner (2026-10-14/15), each SQL only sets
+     image links on the sections whose English heading matches, files on S3
+     (`Pudu/<Robot>/`): `supabase/pudu1-photos.sql` (PuduBot),
+     `supabase/bellabot-hd-media.sql` (BellaBot; needs the .mp4 section code
+     from bfb7a7b live first), `supabase/kettybot-photos.sql` (KettyBot: ad
+     screen in a blurred restaurant from Unsplash, photo Raymond Yeung, free
+     licence; restaurant scene; head; base with the RGBD cameras; "Recharges
+     itself" stays text-only), `supabase/gogobot-photos.sql` (GoGoBot: open
+     cabins with the upper label redrawn 41 L, the spec, not the photo's
+     rounded "40L"; three-quarter view in a hotel corridor from Unsplash,
+     photo Alex Naino; the other three sections stay text-only). Then Save
+     each robot in Admin.
   5. `supabase/variant-to-product-type.sql` — `variant` becomes the product
      type (mower, pool, cleaner, equipment, cooking, delivery, installation,
      demo), never a model name. Run it right AFTER this branch's code is live
@@ -329,7 +341,10 @@ branch `main`.
   robot, the line above the name, up to 4 key figures, optional colours;
   one full-width photo per Feature section that has an image; spec table).
   Feature sections without an image, What's in the box and FAQ still show
-  under it. Off = the standard gallery page. Validated in
+  under it; two or more image-less Feature sections in a row become one
+  "More features" group of cards (`featureGroupHeading` in
+  `ProductPageBlocks.tsx`, 2026-10-15; owner found them empty and plain), a
+  lone one stays plain text. Off = the standard gallery page. Validated in
   `lib/productValidation.ts` (`parsePage`). Photos stay in `public/models/`
   and `public/studio/`.
 - How each robot is sold is the product's `conditions` column (`new`,

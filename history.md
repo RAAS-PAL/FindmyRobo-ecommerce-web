@@ -2,6 +2,16 @@
 
 Newest first. Current state and open items live in `hot.md`.
 
+## 2026-10-14/15 — Owner's photos on the delivery robot pages
+- PuduBot, BellaBot, KettyBot and GoGoBot sections got photos that show what
+  each section says (the owner's files; Pudu logos painted out), uploaded to
+  S3 under new names. A section may now be an .mp4 clip (BellaBot's LiDAR
+  scan). KettyBot's ad-screen shot stands in a blurred restaurant (Unsplash,
+  Raymond Yeung), GoGoBot in a hotel corridor (Unsplash, Alex Naino).
+  GoGoBot's cabin photo said 40 L; Yunji's spec (and the photo's own
+  dimensions) say 41 L, so the label was redrawn. Applied with four small SQL
+  files (hot.md, step 4d).
+
 ## 2026-10-12 — Showroom hero, and dark mode is back
 - The owner found the hero "off and so dark": a small render in a black
   void with a full-size quote form beside the headline. Proposed and built
