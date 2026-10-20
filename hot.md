@@ -214,7 +214,12 @@ branch `main`.
   (battery %, mode with arrows, signal/Wi-Fi icons), Wi-Fi & 4G (report
   checking), 3 modes. **Youth:** plain panel printed "AVENTURIER YOUTH" (Full,
   Lack, Blocking, battery level), no Wi-Fi, 1 mode. Mode counts and 4G come
-  from the corrected list; the screens agree. Both: 1 battery included,
+  from the corrected list; the screens agree. Aventurier Australia's
+  comparison chart (aventurieraustralia.com.au, com.png) calls the
+  colour-screen model "Artist 1 Pro" and lists other mode counts (Pro 5,
+  Youth 2) and extras; the owner chose photos only from that site, not its
+  text or specs (2026-10-20). Its gallery photos are on S3
+  (`Aventurier/A1-Basic/`), applied by `supabase/a1-basic-gallery-photos.sql`. Both: 1 battery included,
   extra batteries sold separately (the official sheet's "x2" is the global
   box; Thailand ships one). Pages: `supabase/a1-basic-youth.sql` (fixes the
   Youth, builds the Basic with its own S3 photos `Aventurier/A1-Basic/`; both
