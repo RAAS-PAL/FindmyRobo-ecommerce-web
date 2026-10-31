@@ -947,6 +947,36 @@
     "ctaSecondary": "Book a Demo"
   },
   "heroQuote": {
+    "consultation": {
+      "eyebrow": "Expert advice, local support",
+      "title": "Find the right robot for your space.",
+      "description": "From your garden to your business, our team will help you choose a robot and prepare a quotation that fits your needs.",
+      "previewTitle": "A quote built around you",
+      "previewBody": "Two short steps. No commitment to buy.",
+      "previewSteps": {
+        "project": "Choose a robot and tell us about your space.",
+        "contact": "Let us know where to send your quotation."
+      },
+      "steps": {
+        "project": "Your project",
+        "contact": "Contact details"
+      },
+      "progressLabel": "Quote request progress",
+      "projectTitle": "What can we help you with?",
+      "projectHint": "Choose the type of robot you’re interested in.",
+      "contactTitle": "Let’s put your quote together",
+      "contactHint": "Our team will contact you within one business day. All fields are required unless marked optional.",
+      "edit": "Edit",
+      "namePlaceholder": "Your full name",
+      "extraDetails": "Company or a note (optional)",
+      "back": "Back",
+      "continue": "Continue to contact details",
+      "resume": "Continue your enquiry",
+      "responseTime": "Free · Reply within 1 business day",
+      "noCommitment": "A free quotation, with no obligation to buy",
+      "privacy": "Your details help our team respond to your enquiry.",
+      "successNext": "You’re all set. Our team will review your requirements and help you with the next steps."
+    },
     "eyebrow": "Get a quote",
     "sub": "A few details, and we’ll send your quotation.",
     "steps": {
@@ -1030,7 +1060,9 @@
     "viewProduct": "View Product",
     "learnMore": "Learn More",
     "scrollLeft": "Scroll products left",
-    "scrollRight": "Scroll products right"
+    "scrollRight": "Scroll products right",
+    "all": "All",
+    "filterLabel": "Show a category"
   },
   "videoShowcase": {
     "eyebrow": "From Real World Use and Demo",

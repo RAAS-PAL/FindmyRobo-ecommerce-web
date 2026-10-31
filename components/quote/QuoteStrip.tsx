@@ -3,163 +3,135 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useReducedMotion } from "framer-motion";
-import { ArrowRight, PenLine, X } from "lucide-react";
-import QuoteForm from "@/components/quote/QuoteForm";
+import { ArrowRight, Check, Clock3, X } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import type { QuoteRequest } from "@/lib/quoteRequest";
+import HomeQuoteForm from "./HomeQuoteForm";
+import LineChatButton from "./LineChatButton";
 
-/**
- * The hero's way into the quote form ("unfold in place", 2026-10-12): a
- * pill that reads like an input — "your name or phone" and a Get a quote
- * button. Clicking anywhere on it unfolds the same box, in the page flow,
- * into the full form: the pill's line becomes the form's header with a
- * close button, the fields slide open beneath, and the page below moves
- * down to make room (no popup, no overlay). The hero folds its paragraph and
- * buttons away meanwhile (onOpenChange). If the form runs past the screen
- * the page scrolls just enough to show it. Closing (× or Escape) folds it
- * back to one line and keeps what was typed.
- */
-export default function QuoteStrip({
-  interest,
-  productId,
-  onOpenChange,
-}: {
-  /** The robot family on show, preselected in the form. */
-  interest?: QuoteRequest["interest"];
-  /** A single robot's slide: the form asks about that robot. */
-  productId?: string;
-  /** Told when the box unfolds or folds, so the hero can make room. */
-  onOpenChange?: (open: boolean) => void;
-}) {
+const PROMISES = ["warranty", "install", "aftersales"] as const;
+type QuoteTarget = { interest?: QuoteRequest["interest"]; productId?: string };
+
+/** A single home-page consultation section, with an inline two-step enquiry. */
+export default function QuoteStrip({ interest, productId }: QuoteTarget) {
   const t = useTranslations("heroQuote");
   const ts = useTranslations("showcase");
   const reduceMotion = useReducedMotion();
-  const bodyId = useId();
-  const boxRef = useRef<HTMLDivElement>(null);
-  const pillRef = useRef<HTMLButtonElement>(null);
-  const [open, setOpenState] = useState(false);
-  // The form mounts on first open and then stays, so closing never loses
-  // what was typed.
-  const [mounted, setMounted] = useState(false);
-
-  const setOpen = (next: boolean) => {
-    setOpenState(next);
-    if (next) setMounted(true);
-    onOpenChange?.(next);
-  };
+  const uid = useId();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
+  // Capture the slide on first open. Switching the hero later must not change
+  // the enquiry, and folding the panel must never discard the visitor's work.
+  const [target, setTarget] = useState<QuoteTarget | null>(null);
 
   const close = () => {
     setOpen(false);
-    // after the fold, back to the pill
-    requestAnimationFrame(() => pillRef.current?.focus());
+    requestAnimationFrame(() => triggerRef.current?.focus({ preventScroll: true }));
   };
 
-  // Opened: the cursor goes to the first empty field, and once the box has
-  // grown the page scrolls just enough to show it — its bottom on screen,
-  // but never pushing its top under the bar. Only the window scrolls.
   useEffect(() => {
     if (!open) return;
-    const focusTimer = setTimeout(() => {
-      const fields = boxRef.current?.querySelectorAll<HTMLInputElement>("form input:not([type=hidden])");
-      const firstEmpty = [...(fields ?? [])].find((field) => !field.value) ?? fields?.[0];
-      firstEmpty?.focus({ preventScroll: true });
-    }, 60);
-    const scrollTimer = setTimeout(() => {
-      const box = boxRef.current;
-      if (!box) return;
-      const rect = box.getBoundingClientRect();
-      const barBottom = (document.querySelector("header")?.getBoundingClientRect().height ?? 0) + 16;
-      const overflow = rect.bottom - (window.innerHeight - 24);
-      const room = rect.top - barBottom;
-      const by = rect.top < barBottom ? rect.top - barBottom : Math.min(Math.max(overflow, 0), room);
-      if (Math.abs(by) > 4) window.scrollBy({ top: by, behavior: reduceMotion ? "instant" : "smooth" });
-    }, reduceMotion ? 20 : 380);
-    return () => {
-      clearTimeout(focusTimer);
-      clearTimeout(scrollTimer);
-    };
+    const timer = setTimeout(() => {
+      const panel = panelRef.current;
+      if (!panel) return;
+      const rect = panel.getBoundingClientRect();
+      const top = Math.max(0, document.querySelector("header")?.getBoundingClientRect().bottom ?? 0) + 20;
+      // Only move the page if the form starts out of view or extends below it.
+      // Align its heading below the sticky navigation, never focus a mobile input.
+      if (rect.top < top || rect.bottom > window.innerHeight - 20) {
+        window.scrollBy({ top: rect.top - top, behavior: reduceMotion ? "instant" : "smooth" });
+      }
+    }, reduceMotion ? 0 : 380);
+    return () => clearTimeout(timer);
   }, [open, reduceMotion]);
 
   return (
-    <div className="w-full max-w-xl">
-      <div
-        ref={boxRef}
+    <section aria-labelledby={uid + "-title"} data-hero-quote
+      className="grid rounded-2xl border border-forest-100 bg-surface shadow-[0_16px_48px_-32px_rgb(15_23_42/0.25)] lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="flex flex-col rounded-t-2xl bg-cloud/55 p-6 sm:p-8 lg:rounded-l-2xl lg:rounded-tr-none lg:p-10">
+        <p className="text-[11px] font-semibold tracking-[0.16em] text-accent-600 uppercase [&:lang(th)]:tracking-normal">
+          {t("consultation.eyebrow")}
+        </p>
+        <h2 id={uid + "-title"} className="mt-3 max-w-sm font-display text-[28px] leading-[1.15] font-bold tracking-tight text-content sm:text-[32px]">
+          {t("consultation.title")}
+        </h2>
+        <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink-muted">{t("consultation.description")}</p>
+
+        <ul aria-label={t("promisesLabel")} className="mt-6 flex flex-wrap gap-x-5 gap-y-3 lg:flex-col">
+          {PROMISES.map((key) => (
+            <li key={key} className="flex items-center gap-2.5 text-[13px] font-medium text-content">
+              <Check className="h-4 w-4 shrink-0 text-accent-600" strokeWidth={2.5} aria-hidden="true" />
+              {t("promises." + key)}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-auto pt-7">
+          <div className="border-t border-forest-100 pt-5">
+            <div className="max-w-xs"><LineChatButton /></div>
+            <Link href="/recommend" className="mt-4 inline-flex min-h-8 flex-wrap items-center gap-x-1.5 text-[13px] leading-relaxed text-ink-muted">
+              {ts("finderPrompt")}
+              <span className="inline-flex items-center gap-1.5 font-semibold text-accent-600 underline-offset-4 hover:underline">
+                {ts("finderLink")}<ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div ref={panelRef} className="relative flex min-w-0 flex-col justify-center border-t border-forest-100 p-6 sm:p-8 lg:border-t-0 lg:border-l lg:p-10"
         onKeyDown={(event) => {
           if (event.key === "Escape" && open) {
             event.stopPropagation();
             close();
           }
-        }}
-        className={`overflow-hidden border bg-surface/85 backdrop-blur-md transition-[border-radius,box-shadow,border-color] duration-300 ease-out motion-reduce:transition-none ${
-          open
-            ? "rounded-2xl border-accent/40 shadow-[0_24px_60px_-28px_rgb(10_26_74/0.55),0_0_0_4px_rgb(var(--accent-rgb)/0.1)]"
-            : "rounded-[28px] border-forest-100 shadow-[0_14px_36px_-20px_rgb(10_26_74/0.5)] hover:border-accent/50 hover:shadow-[0_14px_36px_-20px_rgb(10_26_74/0.5),0_0_0_4px_rgb(var(--accent-rgb)/0.1)]"
-        }`}
-      >
-        {/* top line: the pill (closed) or the form's header (open), in the same place */}
-        <div className="relative h-14">
-          <button
-            ref={pillRef}
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-expanded={open}
-            aria-controls={bodyId}
-            inert={open ? true : undefined}
-            className={`group absolute inset-0 flex w-full cursor-text items-center gap-2 pr-1.5 pl-4 text-left transition-opacity duration-200 focus-visible:outline-none! ${
-              open ? "pointer-events-none opacity-0" : "opacity-100"
-            }`}
-          >
-            <PenLine className="h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
-            <span className="min-w-0 flex-1 truncate text-[15px] text-ink-muted">{t("stripPlaceholder")}</span>
-            <span className="flex h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-4 text-[14px] font-bold whitespace-nowrap group-focus-visible:ring-4 group-focus-visible:ring-accent/30 sm:px-5">
-              {ts("getQuote")}
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
-            </span>
-          </button>
-
-          <div
-            aria-hidden={!open}
-            className={`absolute inset-0 flex items-center justify-between gap-3 pr-2.5 pl-5 transition-opacity duration-200 ${
-              open ? "opacity-100" : "pointer-events-none opacity-0"
-            }`}
-          >
-            {/* the form itself says what it needs, just under this line */}
-            <p className="min-w-0 truncate font-display text-[18px] leading-tight font-extrabold tracking-tight text-content">
-              {t("eyebrow")}
-            </p>
-            <button
-              type="button"
-              onClick={close}
-              tabIndex={open ? 0 : -1}
-              aria-label={t("closePanel")}
-              className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-content"
-            >
-              <X className="h-4 w-4" aria-hidden="true" />
+        }}>
+        <div aria-hidden={open} inert={open ? true : undefined}
+          className={"grid transition-[grid-template-rows,opacity] duration-350 ease-in-out motion-reduce:transition-none " + (open ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100")}>
+          <div className="min-h-0 overflow-hidden">
+            <h3 className="font-display text-2xl leading-tight font-bold tracking-tight text-content">{t("consultation.previewTitle")}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-ink-muted">{t("consultation.previewBody")}</p>
+            <ol className="my-7 space-y-5">
+              {(["project", "contact"] as const).map((name, index) => (
+                <li key={name} className="flex items-start gap-3.5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-forest-100 font-mono text-xs text-accent-600" aria-hidden="true">0{index + 1}</span>
+                  <div>
+                    <p className="text-[15px] font-semibold text-content">{t("consultation.steps." + name)}</p>
+                    <p className="mt-0.5 text-[13px] leading-relaxed text-ink-muted">{t("consultation.previewSteps." + name)}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <button ref={triggerRef} type="button" aria-expanded={open} aria-controls={uid + "-form"}
+              onClick={() => {
+                setTarget((current) => current ?? { interest, productId });
+                setOpen(true);
+              }}
+              className="group flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-accent-gradient px-6 text-[15px] font-semibold focus-visible:outline-none! focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-accent-300">
+              {target ? t("consultation.resume") : ts("getQuote")}
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden="true" />
             </button>
+            <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs leading-relaxed text-ink-muted">
+              <Clock3 className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />{t("consultation.responseTime")}
+            </p>
           </div>
         </div>
 
-        {/* the form, unfolding beneath (grid rows 0fr → 1fr animate to its height) */}
-        <div
-          id={bodyId}
-          className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
-            open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-          }`}
-          inert={open ? undefined : true}
-        >
+        <div id={uid + "-form"} inert={open ? undefined : true} aria-hidden={!open}
+          className={"grid transition-[grid-template-rows,opacity] duration-350 ease-in-out motion-reduce:transition-none " + (open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
           <div className="min-h-0 overflow-hidden">
-            <div className="border-t border-forest-100 px-5 pt-1 pb-5">
-              {mounted && <QuoteForm variant="panel" interest={interest} productId={productId} />}
+            <div className="mb-5 flex min-h-9 items-center justify-between gap-3">
+              <p className="text-[11px] font-semibold tracking-[0.12em] text-ink-muted uppercase [&:lang(th)]:tracking-normal">{t("eyebrow")}</p>
+              <button type="button" onClick={close} aria-label={t("closePanel")}
+                className="-mr-2 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-cloud hover:text-content">
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
             </div>
+            {target && <HomeQuoteForm {...target} active={open} />}
           </div>
         </div>
       </div>
-      <p
-        className={`pl-4 text-[12px] font-medium text-ink-muted transition-opacity duration-200 ${
-          open ? "mt-0 h-0 opacity-0" : "mt-2 opacity-100"
-        }`}
-      >
-        {t("reassure")}
-      </p>
-    </div>
+    </section>
   );
 }

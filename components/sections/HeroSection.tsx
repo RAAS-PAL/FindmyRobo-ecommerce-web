@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Calendar, Check } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useSiteContent } from "@/components/SiteContentProvider";
@@ -11,43 +11,37 @@ import { pick } from "@/data/siteContent";
 import { heroSlides, onShow } from "@/data/homeShowcase";
 import { useProducts } from "@/components/ProductsProvider";
 import QuoteStrip from "@/components/quote/QuoteStrip";
-import LineChatButton from "@/components/quote/LineChatButton";
-
-/** Why buy here rather than import — the About page's approved promises, shortened. */
-const PROMISES = ["warranty", "install", "aftersales"] as const;
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /**
- * Homepage hero ("showroom", 2026-10-12): one robot family at a time on a lit
- * canvas (.hero-canvas) — copy on the left, the robot cut-out large on the
- * right standing on a floor shadow — with the quote strip under the copy and
- * a row of chips under both to switch families. Nothing moves on its own:
- * the robot rises into place once, and changes only when a chip is clicked.
+ * Homepage hero (2026-10-29, after dobot-robots.com): one robot family at a
+ * time as a full-width photo of the robots at work (the owner's generated
+ * scenes, data/homeShowcase.ts `image`), the headline over the photo's calm
+ * top-left, and square tabs along its bottom edge to switch families. Nothing
+ * moves on its own: the photo cross-fades only when a tab is pressed.
+ *
+ * Under the photo, a consultation card with an inline two-step quote form,
+ * the robot finder, the three promises and LINE.
  *
  * The first slide's copy is the CMS hero headline, so Admin → Content →
- * Homepage still sets the site's lead message. A family whose robot is hidden
- * in Admin has no chip (data/homeShowcase.ts, onShow).
+ * Homepage still sets the site's lead message. A family whose robots are
+ * hidden in Admin, or which has no photo yet, has no tab (onShow).
  *
- * Phones: robot first, then the copy, the strip and the chips, one column.
+ * Phones: the photo with its tabs on top, the copy below it on the page.
  */
 export default function HeroSection() {
   const t = useTranslations("showcase");
-  const tq = useTranslations("heroQuote");
   const locale = useLocale();
   const { home } = useSiteContent();
   const { products } = useProducts();
   const slides = useMemo(
-    () => onShow(heroSlides, products).filter((slide) => slide.cutout),
+    () => onShow(heroSlides, products).filter((slide) => slide.image),
     [products]
   );
   const reduceMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
-  // The quote box unfolds in place (QuoteStrip): the hero folds its paragraph
-  // and buttons away to make room, and the robot stays beside the form.
-  const [quoteOpen, setQuoteOpen] = useState(false);
   const slide = slides[index % slides.length];
-  const cutout = slide.cutout!;
 
   const headline = slide.headline ? pick(slide.headline, locale) : pick(home.heroHeadline, locale);
   const accent = slide.accent ? pick(slide.accent, locale) : pick(home.heroAccent, locale);
@@ -62,79 +56,59 @@ export default function HeroSection() {
   };
 
   return (
-    <section
-      aria-label={t("slidesLabel")}
-      // -mt / pt: the canvas runs up under the navbar, whose blue bar hangs
-      // over its top edge (--nav-h = the bar's height). The quote box unfolds
-      // in the flow, so the hero simply grows while it is open.
-      className="hero-canvas relative -mt-[var(--nav-h)] pt-[var(--nav-h)]"
-    >
-      {/* From lg the copy and robot take the screen down to the chips, which
-          sit at the bottom of the first screen (the 14rem is their band). */}
-      <div className={`mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-4 pt-4 sm:px-6 lg:min-h-[calc(100svh-var(--nav-h)-14rem)] lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-8 lg:px-8 lg:pt-6 ${
-          quoteOpen ? "" : "lg:max-h-[40rem]"
-        }`}>
-        {/* ---- the robot, standing on its floor ---- */}
-        <div
-          // with the form open, the robot stays in view beside it
-          className={`relative order-1 lg:order-2 ${quoteOpen ? "lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start" : ""}`}
-        >
-          <div className="hero-floor" aria-hidden="true" />
-          <div className="relative mx-auto aspect-[16/11] w-full max-w-[34rem] sm:max-w-[40rem] lg:max-w-none">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={slide.id}
-                initial={{ opacity: 0, y: 36, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -14, scale: 0.98 }}
-                transition={{ duration: reduceMotion ? 0 : 0.65, ease: EASE }}
-                className="absolute inset-0"
-              >
-                <div className="animate-hero-float h-full w-full">
-                  <Image
-                    src={cutout.src}
-                    alt={tabName}
-                    width={cutout.width}
-                    height={cutout.height}
-                    priority={index === 0}
-                    sizes="(min-width: 1024px) 50vw, 100vw"
-                    className="h-full w-full object-contain object-bottom drop-shadow-[0_24px_32px_rgb(10_26_74/0.28)]"
-                  />
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+    <section aria-label={t("slidesLabel")} className="bg-surface">
+      {/* ---- the photo: runs up under the navbar (-mt / pt = its height) ---- */}
+      <div className="relative -mt-[var(--nav-h)] pt-[var(--nav-h)] lg:h-[min(calc(100svh-4rem),56rem)] lg:min-h-[36rem] lg:bg-forest-950">
+        <div className="relative aspect-[4/3] overflow-hidden bg-forest-950 sm:aspect-[16/9] lg:absolute lg:inset-0 lg:aspect-auto">
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={slide.id}
+              initial={{ opacity: 0, scale: 1.03 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.8, ease: EASE }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={slide.image!}
+                alt={tabName}
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                className="object-cover"
+                style={{ objectPosition: slide.focus ?? "50% 50%" }}
+              />
+            </motion.div>
+          </AnimatePresence>
+          {/* shade for the copy (lg) and the tabs: dark at the top-left and
+              along the bottom edge, clear over the robots */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgb(7_10_16/0.7),transparent_28%)] lg:bg-[linear-gradient(to_top,rgb(7_10_16/0.7),transparent_24%),linear-gradient(100deg,rgb(7_10_16/0.72)_0%,rgb(7_10_16/0.45)_32%,transparent_58%)]"
+          />
         </div>
 
-        {/* ---- copy, then the quote strip ---- */}
-        <div className="relative z-10 order-2 lg:order-1">
+        {/* ---- copy: on the photo from lg, under it on phones ---- */}
+        <div className="relative z-10 mx-auto max-w-7xl px-4 pt-7 sm:px-6 lg:absolute lg:inset-x-0 lg:top-[calc(var(--nav-h)+3.5rem)] lg:px-8 lg:pt-0">
           <AnimatePresence mode="wait" initial={false}>
-            <motion.div key={slide.id} {...fade}>
-              <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-ink-muted uppercase [&:lang(th)]:tracking-[0.06em]">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+            <motion.div key={slide.id} {...fade} className="max-w-xl">
+              <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-ink-muted uppercase lg:text-white/80 [&:lang(th)]:tracking-[0.06em]">
+                <span className="h-1.5 w-1.5 bg-accent lg:bg-accent-300" aria-hidden="true" />
                 {pick(slide.eyebrow, locale)}
               </p>
               {/* one slide shows at a time, so there is always exactly one
                   h1 — the server renders the first (the CMS headline) */}
-              <h1 className="mt-4 font-display text-[36px] leading-[1.04] font-extrabold tracking-tight text-content sm:text-5xl lg:text-[3.1rem] xl:text-[3.5rem]">
+              <h1 className="mt-4 font-display text-[34px] leading-[1.05] font-extrabold tracking-tight text-content sm:text-5xl lg:text-[3.4rem] lg:text-white">
                 {headline}
-                <span className="block text-accent-600 dark:text-accent-gradient">{accent}</span>
+                <span className="block text-accent-600 lg:text-accent-300">{accent}</span>
               </h1>
-              {/* folds away while the quote box is open */}
-              <div
-                className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
-                  quoteOpen ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100"
-                }`}
-                inert={quoteOpen ? true : undefined}
-              >
-              <div className="min-h-0 overflow-hidden">
-              <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:text-base lg:text-[17px]">
+              <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-ink-muted sm:text-base lg:text-[17px] lg:text-white/85">
                 {sub}
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <Link
                   href={slide.href}
-                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-accent-gradient px-7 text-[15px] font-bold"
+                  className="inline-flex min-h-12 items-center gap-2 bg-accent-gradient px-7 text-[15px] font-bold"
                 >
                   {t("learnMore")}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -142,113 +116,102 @@ export default function HeroSection() {
                 {slide.interest === "lawn-mowing" && (
                   <Link
                     href="/products/request-a-demo"
-                    className="inline-flex min-h-12 items-center gap-2 rounded-full border border-content/20 bg-surface/60 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/50"
+                    className="inline-flex min-h-12 items-center gap-2 border border-content/25 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/60 lg:border-white/50 lg:text-white lg:hover:border-white"
                   >
                     <Calendar className="h-4 w-4" aria-hidden="true" />
                     {t("bookDemo")}
                   </Link>
                 )}
               </div>
-              </div>
-              </div>
             </motion.div>
           </AnimatePresence>
-
-          {/* data-hero-quote: while this is on screen the navbar hides its own
-              Get a quote (one way in at a time); it comes back once the
-              strip has scrolled away under the bar */}
-          <div className="mt-7" data-hero-quote>
-            <QuoteStrip interest={slide.interest} productId={slide.productId} onOpenChange={setQuoteOpen} />
-          </div>
-
-          <Link
-            href="/recommend"
-            className={`mt-5 inline-flex items-center gap-1.5 text-[14px] text-ink-muted transition-colors hover:text-content ${
-              quoteOpen ? "hidden" : ""
-            }`}
-          >
-            {t("finderPrompt")}
-            <span className="font-semibold text-accent-600 underline-offset-4 hover:underline">
-              {t("finderLink")}
-            </span>
-            <ArrowRight className="h-3.5 w-3.5 text-accent-600" aria-hidden="true" />
-          </Link>
         </div>
-      </div>
 
-      {/* ---- the families, and why buy here ---- */}
-      <div className="mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-6 lg:pb-10">
-        {/* The families as small robot cards: a thumbnail of the robot, its
-            name and an arrow, raised off the canvas, lifting on hover — so
-            they read as things to press, not labels. The one on show is
-            filled in the accent with a ring. */}
+        {/* ---- tabs along the photo's bottom edge ---- */}
         {slides.length > 1 && (
-          <div
-            role="tablist"
-            aria-label={t("slidesLabel")}
-            className="no-scrollbar -mx-4 flex gap-2.5 overflow-x-auto px-4 py-1 sm:mx-0 sm:flex-wrap sm:px-0"
-          >
-            {slides.map((s, i) => {
-              const active = i === index;
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  aria-label={t("showSlide", { name: pick(s.tab, locale) })}
-                  onClick={() => setIndex(i)}
-                  className={`group flex h-14 shrink-0 cursor-pointer items-center gap-3 rounded-2xl border py-1.5 pr-4 pl-1.5 text-[14px] font-semibold whitespace-nowrap transition-[transform,box-shadow,border-color,background-color] duration-200 active:scale-[0.97] motion-reduce:transition-none ${
-                    active
-                      ? "border-accent bg-accent text-on-accent shadow-[0_10px_24px_-10px_rgb(var(--accent-rgb)/0.8)] ring-4 ring-accent/15"
-                      : "border-forest-100 bg-white text-content shadow-[0_6px_16px_-10px_rgb(10_26_74/0.35)] hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-[0_12px_24px_-12px_rgb(10_26_74/0.45)] motion-reduce:hover:translate-y-0 dark:bg-forest"
-                  }`}
-                >
-                  <span
-                    className={`flex h-11 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl ${
-                      active ? "bg-white/20" : "bg-accent-50"
-                    }`}
-                  >
-                    {s.cutout && (
-                      <Image
-                        src={s.cutout.src}
-                        alt=""
-                        width={s.cutout.width}
-                        height={s.cutout.height}
-                        sizes="56px"
-                        className="h-9 w-12 object-contain transition-transform duration-300 group-hover:scale-110 motion-reduce:group-hover:scale-100"
-                      />
-                    )}
-                  </span>
-                  {pick(s.tab, locale)}
-                  <ArrowRight
-                    className={`h-4 w-4 shrink-0 transition-transform duration-200 ${
-                      active ? "opacity-90" : "text-accent-600 group-hover:translate-x-0.5"
-                    }`}
-                    aria-hidden="true"
-                  />
-                </button>
-              );
-            })}
+          <div className="absolute inset-x-0 bottom-0 z-10 hidden lg:block">
+            <HeroTabs slides={slides} index={index} onPick={setIndex} />
           </div>
         )}
+      </div>
 
-        <div className="mt-7 flex flex-col gap-5 border-t border-forest-100 pt-6 sm:flex-row sm:items-end sm:justify-between">
-          <ul aria-label={tq("promisesLabel")} className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-x-7">
-            {PROMISES.map((key) => (
-              <li key={key} className="flex items-center gap-2.5 text-[13.5px] font-semibold text-content">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-on-accent">
-                  <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
-                </span>
-                {tq(`promises.${key}`)}
-              </li>
-            ))}
-          </ul>
-          <div className="w-full max-w-xs sm:w-64">
-            <LineChatButton />
-          </div>
+      {/* phones and tablets: the tabs under the copy */}
+      {slides.length > 1 && (
+        <div className="lg:hidden">
+          <HeroTabs slides={slides} index={index} onPick={setIndex} onPage />
         </div>
+      )}
+
+      {/* The quote card owns the finder, support promises and LINE alternative. */}
+      <div className="mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-10">
+        <QuoteStrip interest={slide.interest} productId={slide.productId} />
       </div>
     </section>
+  );
+}
+
+/**
+ * The families as square tabs: a number, the family's name, and a line along
+ * the top that fills in on the one on show. White on the photo's shaded
+ * bottom edge from lg; on the page below the copy on phones (`onPage`).
+ */
+function HeroTabs({
+  slides,
+  index,
+  onPick,
+  onPage = false,
+}: {
+  slides: typeof heroSlides;
+  index: number;
+  onPick: (i: number) => void;
+  onPage?: boolean;
+}) {
+  const t = useTranslations("showcase");
+  const locale = useLocale();
+  return (
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div
+        role="tablist"
+        aria-label={t("slidesLabel")}
+        className={`no-scrollbar flex overflow-x-auto ${onPage ? "mt-8 border-b border-forest-100 dark:border-forest-700" : ""}`}
+      >
+        {slides.map((s, i) => {
+          const active = i === index;
+          return (
+            <button
+              key={s.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              aria-label={t("showSlide", { name: pick(s.tab, locale) })}
+              onClick={() => onPick(i)}
+              className={`group relative flex cursor-pointer text-left font-semibold transition-colors ${
+                onPage
+                  ? "min-h-16 min-w-0 flex-1 flex-col items-start justify-center gap-1 py-3 pr-3 text-[13.5px] leading-snug sm:flex-none sm:flex-row sm:items-center sm:gap-3 sm:pr-8"
+                  : "min-h-[4.5rem] min-w-[13rem] shrink-0 items-center gap-3 pr-8 text-[14.5px] whitespace-nowrap"
+              } ${
+                onPage
+                  ? active
+                    ? "text-content"
+                    : "text-ink-muted hover:text-content"
+                  : active
+                    ? "text-white"
+                    : "text-white/65 hover:text-white"
+              }`}
+            >
+              {/* the line: full in the accent on the one on show */}
+              <span
+                aria-hidden="true"
+                className={`absolute inset-x-0 ${onPage ? "bottom-0" : "top-0"} h-[3px] transition-colors ${
+                  active ? (onPage ? "bg-accent" : "bg-white") : onPage ? "bg-transparent" : "bg-white/25 group-hover:bg-white/50"
+                }`}
+              />
+              <span className="font-mono text-[11px] tabular-nums opacity-70">{String(i + 1).padStart(2, "0")}</span>
+              {pick(s.tab, locale)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import RobotIllustration from "@/components/ui/RobotIllustration";
-import { productLabel, type Locale, type Product, type SpecKey } from "@/data/products";
+import { DEFAULT_BRAND, productLabel, type Locale, type Product, type SpecKey } from "@/data/products";
 import { showsCondition } from "@/data/conditions";
 import ConditionLine from "@/components/ui/ConditionLine";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
@@ -31,9 +31,13 @@ const CARD_SPECS: SpecKey[] = [
 const MAX_CARD_SPECS = 3;
 
 /**
- * Large, image-forward product card for the home carousel (Mammotion-style):
- * a full-bleed product photo with the name, tagline, a "Learn More" button and
- * the price laid over it. On hover it plays the product's clip, if one is set.
+ * Product tile for the home lineup (2026-10-27, after dobot-robots.com): a
+ * square-cornered light tile with the brand and category, the name and one
+ * line, then the robot's transparent cut-out, its key figures and the price.
+ * Interactive without colour: on hover (or focus) an accent line draws across
+ * the top, the robot lifts, the arrow nudges forward, and a robot with a clip
+ * plays it in the picture's place. Touch: the first tap plays the clip, the
+ * second opens the product.
  *
  * The plainer top-image + details card (components/ui/ProductCard.tsx) is still
  * used on the shop, search, and related-products grids.
@@ -48,15 +52,13 @@ export default function FeaturedProductCard({
 }) {
   const t = useTranslations("products");
   const td = useTranslations("productDetail");
+  const tc = useTranslations("categories");
   const locale = useLocale() as Locale;
   const specs = CARD_SPECS.filter((key) => product.specs?.[key]).slice(
     0,
     MAX_CARD_SPECS
   );
 
-  // Home card prefers a dedicated lifestyle photo. Without one, the product's
-  // transparent cut-out stands on a dark studio set (stretched full-bleed it
-  // would be cropped against nothing).
   const label = productLabel(product);
   const hoverVideo = product.hoverVideo;
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -72,11 +74,12 @@ export default function FeaturedProductCard({
     el.currentTime = 0;
   };
   // Touch devices have no hover: the first tap plays the clip in place, and a
-  // second tap opens the product — so a tap isn't wasted on the preview.
+  // second tap opens the product — so a tap isn't wasted on the preview. A
+  // robot without a clip opens on the first tap.
   const onTouchStart = () => {
     touchedRef.current = true;
-    wasActiveRef.current = active;
-    if (!active) {
+    wasActiveRef.current = active || !hoverVideo;
+    if (!active && hoverVideo) {
       setActive(true);
       playVideo();
     }
@@ -88,122 +91,112 @@ export default function FeaturedProductCard({
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 36 }}
+      initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.55, delay: index * 0.09, ease: [0.16, 1, 0.3, 1] }}
+      // a small share in view is enough, so the card peeking at the edge shows
+      viewport={{ once: true, amount: 0.05 }}
+      transition={{ duration: 0.5, delay: Math.min(index, 4) * 0.06, ease: [0.16, 1, 0.3, 1] }}
       onMouseEnter={playVideo}
       onMouseLeave={stopVideo}
       onFocus={playVideo}
       onBlur={stopVideo}
       onTouchStart={onTouchStart}
-      className="group relative aspect-[4/5] w-[340px] shrink-0 snap-start overflow-hidden rounded-3xl border border-forest-100 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.4)] transition-shadow duration-300 hover:shadow-[0_28px_60px_-20px_rgba(0,0,0,0.5)] sm:w-[400px]"
+      className="group relative flex w-[300px] shrink-0 snap-start bg-cloud transition-colors duration-300 hover:bg-forest-100/60 sm:w-[360px] dark:hover:bg-forest-800/60"
     >
-      <Link href={`/products/${product.id}`} onClick={onLinkClick} className="block h-full w-full">
-        {/* full-bleed background: home photo (or product render), else the
-            variant illustration */}
-        {product.homeImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={product.homeImage}
-            alt={label}
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          />
-        ) : product.imageUrl ? (
-          <span className="absolute inset-0 bg-[radial-gradient(85%_65%_at_50%_68%,#272c37_0%,#14171d_55%,#0b0d10_100%)]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* the one accent: a line drawn across the top on hover and focus */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[3px] origin-left scale-x-0 bg-accent transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-within:scale-x-100 motion-reduce:transition-none"
+      />
+
+      <Link
+        href={`/products/${product.id}`}
+        onClick={onLinkClick}
+        className="flex w-full flex-col outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      >
+        <span className="flex flex-col items-start px-6 pt-7 sm:px-7">
+          <span className="font-mono text-[10.5px] font-semibold tracking-[0.18em] text-ink-muted uppercase [&:lang(th)]:tracking-[0.04em]">
+            {product.brand ?? DEFAULT_BRAND} · {tc(`${product.category}.nav`)}
+          </span>
+          <span className="mt-2 font-display text-2xl leading-tight font-extrabold tracking-tight text-content sm:text-[1.7rem]">
+            {label}
+          </span>
+          <span className="mt-2 line-clamp-2 min-h-[2.7em] text-[14px] leading-snug text-ink-muted">
+            {product.tagline[locale]}
+          </span>
+          {showsCondition(product.conditions) && (
+            <ConditionLine conditions={product.conditions} className="mt-3" />
+          )}
+        </span>
+
+        {/* the robot: its cut-out on the tile, or its clip while hovered */}
+        <span className="relative mx-6 mt-4 block aspect-[4/3] overflow-hidden sm:mx-7">
+          {product.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={product.imageUrl}
               alt={label}
               loading="lazy"
-              className="absolute bottom-[15%] left-[8%] h-[46%] w-[84%] object-contain object-bottom transition-transform duration-700 ease-out group-hover:scale-105"
+              className="absolute inset-0 h-full w-full object-contain p-1 transition-transform duration-500 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.04] motion-reduce:transform-none"
             />
-          </span>
-        ) : (
-          <span className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-forest via-forest-800 to-forest-950 p-10">
-            <RobotIllustration variant={product.variant} className="h-full w-auto" />
-          </span>
-        )}
-
-        {/* hover clip — cross-fades in over the photo; preload only on hover */}
-        {hoverVideo && (
-          <video
-            ref={videoRef}
-            src={hoverVideo}
-            muted
-            loop
-            playsInline
-            preload="none"
-            aria-hidden="true"
-            className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100 ${
-              active ? "opacity-100" : "opacity-0"
-            }`}
-          />
-        )}
-
-        {/* legibility scrims: dark at the top (name/tagline/button) and the
-            bottom (price) so white text reads over any photo */}
-        <span
-          className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-2/3 bg-gradient-to-b from-black/55 via-black/15 to-transparent"
-          aria-hidden="true"
-        />
-        <span
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-2/5 bg-gradient-to-t from-black/70 to-transparent"
-          aria-hidden="true"
-        />
-
-        {product.preorder && (
-          <span className="absolute right-4 top-4 z-10 rounded-full bg-forest-950 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent-300">
-            {t("preorder")}
-          </span>
-        )}
-
-        {/* overlaid content: name + tagline + CTA at the top, price at the base */}
-        <span className="absolute inset-0 z-[2] flex flex-col justify-between p-6 sm:p-7">
-          <span className="flex flex-col items-start gap-3">
-            <span className="font-display text-2xl font-extrabold leading-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:text-3xl">
-              {label}
+          ) : (
+            <span className="absolute inset-0 flex items-center justify-center p-6">
+              <RobotIllustration variant={product.variant} className="h-full w-auto" />
             </span>
-            {showsCondition(product.conditions) && (
-              <ConditionLine conditions={product.conditions} tone="dark" />
-            )}
-            <span className="max-w-[88%] text-[13.5px] font-medium leading-snug text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)]">
-              {product.tagline[locale]}
+          )}
+          {hoverVideo && (
+            <video
+              ref={videoRef}
+              src={hoverVideo}
+              muted
+              loop
+              playsInline
+              preload="none"
+              aria-hidden="true"
+              className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 ${
+                active ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          )}
+          {product.preorder && (
+            <span className="absolute top-0 left-0 bg-forest-950 px-2.5 py-1.5 font-mono text-[10.5px] font-semibold tracking-wider text-white uppercase">
+              {t("preorder")}
             </span>
-            <span className="mt-1 inline-flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-5 py-2.5 text-[13.5px] font-bold text-forest-950 shadow-[0_10px_26px_-10px_rgba(0,0,0,0.6)] transition-transform duration-300 group-hover:scale-105">
-              {t("learnMore")}
-              <ArrowRight className="h-4 w-4 shrink-0 text-forest-950" aria-hidden="true" />
-            </span>
-          </span>
+          )}
+        </span>
 
-          <span className="flex flex-col items-start gap-3.5">
-            {/* Key specs — the at-a-glance comparison between models. Hidden
-                entirely when a product has none, rather than leaving an empty
-                strip: a card with no band reads as a different card, a card
-                with a blank band reads as broken. */}
-            {specs.length > 0 && (
-              <span className="flex w-full flex-wrap gap-1.5">
-                {specs.map((key) => (
-                  <span
-                    key={key}
-                    className="flex min-w-0 flex-1 basis-[28%] flex-col gap-0.5 rounded-xl border border-white/15 bg-black/35 px-2.5 py-2 backdrop-blur-sm"
-                  >
-                    <span className="truncate font-mono text-[12.5px] font-bold leading-none text-white">
-                      {product.specs[key]}
-                    </span>
-                    <span className="truncate text-[9.5px] font-medium leading-tight text-white/60">
-                      {td(`specLabels.${key}`)}
-                    </span>
-                  </span>
-                ))}
+        {/* Key figures — the at-a-glance comparison between models, split by
+            hairlines. Left out when a product has none, rather than leaving
+            an empty row. */}
+        {specs.length > 0 && (
+          <span className="mx-6 mt-5 grid grid-cols-3 sm:mx-7">
+            {specs.map((key, i) => (
+              <span
+                key={key}
+                className={`flex min-w-0 flex-col gap-1 ${i > 0 ? "border-l border-forest-100 pl-3 dark:border-forest-700" : "pr-3"}`}
+              >
+                <span className="font-mono text-[13.5px] leading-tight font-bold [overflow-wrap:anywhere] text-content tabular-nums">
+                  {product.specs[key]}
+                </span>
+                <span className="line-clamp-2 text-[11px] leading-tight text-ink-muted">
+                  {td(`specLabels.${key}`)}
+                </span>
               </span>
-            )}
+            ))}
+          </span>
+        )}
 
-            <PriceOrQuote
-              amount={product.price}
-              className="font-mono text-xl font-bold tabular-nums text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-2xl"
-              quoteClassName="text-base font-bold text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-lg"
+        <span className="mt-auto flex items-center justify-between gap-3 px-6 pt-6 pb-6 sm:px-7">
+          <PriceOrQuote
+            amount={product.price}
+            className="font-mono text-[15px] font-bold text-content tabular-nums"
+            quoteClassName="text-[14px] font-semibold text-content"
+          />
+          <span className="inline-flex shrink-0 items-center gap-1.5 text-[14px] font-bold text-accent-600">
+            {t("learnMore")}
+            <ArrowRight
+              className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none"
+              aria-hidden="true"
             />
           </span>
         </span>

@@ -36,20 +36,27 @@ explicitly told to.
 - Use ui-ux-pro-max skill for color/font/layout decisions
 - Use frontend-design skill for aesthetic direction
 - Ground design in real reference: Robomate Australia structure
-- Colors (2026-09-30 redesign; dark mode back on 2026-10-12): light and dark
-  themes from one token set (`[data-theme]` in app/globals.css). Light is a
-  soft blue-grey page (never pure white); dark is deep navy (never black).
-  Graphite neutrals (`forest-*` tokens), electric-blue brand colour `accent-*`
-  (#2E6BFF) with a blue-to-cyan gradient on the main calls to action. The
-  navbar is a solid white bar (navy in dark mode) with blue only on the
-  current section and Get a quote — no gradient (owner, 2026-10-12). Earlier palettes (green +
-  yellow, black + gold) are in git history. The logo is still navy + gold.
-- Reference design: DJI (dji.com) — product-led banners; priority robots are
-  lawn mowers and Gausium Phantas, then Pudu and T-Chef.
-- Hero ("showroom", 2026-10-12): one robot family at a time from
-  `data/homeShowcase.ts` (transparent cut-outs on a lit canvas, not lawn
-  photos), switched by chips, no autoplay; the quote form is a one-line strip
-  that opens into the full form; the CMS hero headline is the first slide's copy
+- Colors (2026-10-27, "slate + steel blue"; the owner found the electric
+  blue + cyan "like an animation website" and asked for clean, stable and
+  professional): light and dark themes from one token set (`[data-theme]` in
+  app/globals.css). Light is an off-white slate page #F8FAFC (never pure
+  white) with light-grey tiles (`cloud`); dark is deep slate (never black).
+  Slate neutrals (`forest-*` tokens), one calm steel-blue accent `accent-*`
+  (#1E4E8C). No gradients anywhere (`bg-accent-gradient` /
+  `text-accent-gradient` are flat colours now; names kept). The navbar's
+  layout is the owner's "clean" bar (2026-10-12) — only its colours follow
+  the palette. Earlier palettes (green + yellow, black + gold, graphite +
+  electric blue) are in git history. The logo is still navy + gold.
+- Reference design (homepage redesign, 2026-10-27): dobot-robots.com and
+  robotis.us — neutral tiles, square corners, robot cut-outs on light grey,
+  one restrained accent. Earlier reference: DJI (product-led banners).
+  Priority robots are lawn mowers and Gausium Phantas, then Pudu and T-Chef.
+- Hero (2026-10-29, after Dobot): one robot family at a time as a full-width
+  photo (the owner's AI-generated scenes, `public/hero/`, `image` in
+  `data/homeShowcase.ts`), headline over the photo's calm top-left, square
+  tabs along its bottom edge, no autoplay; families without a photo have no
+  tab. The quote strip, finder link, promises and LINE sit in a band under
+  the photo; the CMS hero headline is the first slide's copy
 
 ## Brand
 - FindMyRobo / findmyrobo.com (decided 2026-08-07). Legal entity:

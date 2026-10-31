@@ -35,12 +35,14 @@ branch `main`.
   ARE compiled in and need a deploy.
 - **Theme (light + dark again, 2026-10-12, owner's request; branch):** one
   token set with a dark override under `[data-theme="dark"]` in
-  `app/globals.css`. Light = soft blue-grey page (`--color-surface`
-  `#eef2f8`, never white); dark = deep navy (`#0f1527`, never black). The
+  `app/globals.css`. Palette "slate + steel blue" (2026-10-27): light =
+  off-white slate page (`--color-surface` `#f8fafc`, never white) with
+  light-grey tiles (`cloud` `#edf1f5`); dark = deep slate (`#0b1018`, never
+  black); one steel-blue accent `#1e4e8c`, no gradients. The
   theme is `data-theme` on `<html>`: `THEME_SCRIPT` (lib/theme.ts), inlined
   at the top of `<body>`, sets it before first paint from localStorage
   (`fmr-theme`) or else the OS; the switch is in the profile menu. `dark:`
-  utilities follow the attribute. Graphite neutrals, electric-blue brand
+  utilities follow the attribute. Slate neutrals, steel-blue brand
   colour. The brand colour is one token,
   `accent-*` (plus `--accent-rgb`, `bg-accent-gradient`,
   `text-accent-gradient`) in `app/globals.css`: change it there to re-colour
@@ -214,7 +216,12 @@ branch `main`.
   (battery %, mode with arrows, signal/Wi-Fi icons), Wi-Fi & 4G (report
   checking), 3 modes. **Youth:** plain panel printed "AVENTURIER YOUTH" (Full,
   Lack, Blocking, battery level), no Wi-Fi, 1 mode. Mode counts and 4G come
-  from the corrected list; the screens agree. Both: 1 battery included,
+  from the corrected list; the screens agree. Aventurier Australia's
+  comparison chart (aventurieraustralia.com.au, com.png) calls the
+  colour-screen model "Artist 1 Pro" and lists other mode counts (Pro 5,
+  Youth 2) and extras; the owner chose photos only from that site, not its
+  text or specs (2026-10-20). Its gallery photos are on S3
+  (`Aventurier/A1-Basic/`), applied by `supabase/a1-basic-gallery-photos.sql`. Both: 1 battery included,
   extra batteries sold separately (the official sheet's "x2" is the global
   box; Thailand ships one). Pages: `supabase/a1-basic-youth.sql` (fixes the
   Youth, builds the Basic with its own S3 photos `Aventurier/A1-Basic/`; both
