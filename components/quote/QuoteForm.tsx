@@ -22,11 +22,11 @@ import {
   PUDU_VENUES,
   QUOTE_INTERESTS,
   QUOTE_NOTE_MAX,
-  asQuote,
   validateQuote,
   type QuoteField,
   type QuoteRequest,
 } from "@/lib/quoteRequest";
+import { submitQuote } from "@/lib/submitQuote";
 
 /** What the form asks for, in order — shown as a track while the card is closed. */
 const STEPS = [
@@ -289,17 +289,9 @@ export default function QuoteForm({
     setBusy(true);
     setSendError(null);
     try {
-      const response = await fetch("/api/quotes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quote: asQuote(form), locale }),
-      });
-      if (response.status === 429) {
-        setSendError(t("rateLimited"));
-        return;
-      }
-      if (!response.ok) {
-        setSendError(t("sendError"));
+      const outcome = await submitQuote(form, locale);
+      if (outcome !== "sent") {
+        setSendError(t(outcome));
         return;
       }
       setSent(true);

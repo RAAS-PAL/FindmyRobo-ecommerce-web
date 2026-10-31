@@ -7,42 +7,49 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
-  /* Palette: GRAPHITE + ELECTRIC BLUE (2026-09-30, replacing black + gold).
+  /* Palette: SLATE + STEEL BLUE (2026-10-27, replacing graphite + electric
+     blue). The owner found the site too colourful ("like an animation
+     website") and asked for clean, stable and professional, after
+     dobot-robots.com and robotis.us: neutral slate greys, one calm accent,
+     no gradients. The steel blue sits with the navy + gold logo and with
+     photos of lawns, lobbies and restaurants alike.
 
      Light theme values here; the dark set is under [data-theme="dark"] below
-     (same token names, so every section changes together). Light is
-     deliberately not pure white: the page and panels sit on a soft blue-grey
-     so the white of the robots and the blue stand out.
+     (same token names, so every section changes together). Light is an
+     off-white slate, never pure white; dark a deep slate, never black.
        --color-surface  page, cards, panels
-       --color-cloud    alternate bands and quiet fills, a step darker
+       --color-cloud    product tiles, alternate bands and quiet fills
        --color-content  primary text
+     AA on the surface: content 17:1, ink-muted 7.2:1, accent-600 8:1; white
+     on the accent fill 8.3:1.
 
-     `forest-*` is the neutral scale (a legacy name — it was green, then black;
-     now a cool graphite). The brand colour is `accent-*`: change these few
-     lines, --accent-rgb and .bg-accent-gradient to re-colour the whole site.
-     Earlier palettes (green + yellow, black + gold) are in git history. */
-  --color-forest-950: #0b0d10;
-  --color-forest-900: #121418;
-  --color-forest: #16181d;
-  --color-forest-800: #2a2d34;
-  --color-forest-700: #3e424b;
-  --color-forest-300: #b5bac4;
-  --color-forest-100: #d3dae6; /* borders: visible on the tinted page */
+     `forest-*` is the neutral scale (a legacy name — it was green, then black,
+     then graphite; now slate). The brand colour is `accent-*`: change these
+     few lines and --accent-rgb to re-colour the whole site. Earlier palettes
+     (green + yellow, black + gold, graphite + electric blue) are in git
+     history. */
+  --color-forest-950: #0a0f17;
+  --color-forest-900: #0f1620;
+  --color-forest: #151d29;
+  --color-forest-800: #263241;
+  --color-forest-700: #3a4757;
+  --color-forest-300: #a3aebd;
+  --color-forest-100: #dce2ea; /* borders and hairlines */
 
-  /* brand accent — electric blue */
-  --color-accent: #2e6bff; /* fills: buttons, bars, dots, focus ring */
-  --color-accent-strong: #1f55e6; /* hover/pressed fill */
-  --color-accent-300: #5c90ff; /* accent TEXT on dark surfaces (and over photos): 6:1 on near-black */
-  --color-accent-600: #1f4fd6; /* accent TEXT on light surfaces: 6:1 on white */
+  /* brand accent — steel blue */
+  --color-accent: #1e4e8c; /* fills: buttons, bars, dots, focus ring */
+  --color-accent-strong: #173e70; /* hover/pressed fill */
+  --color-accent-300: #93b4de; /* accent TEXT on dark surfaces (and over photos): 8.8:1 on near-black */
+  --color-accent-600: #1e4e8c; /* accent TEXT on light surfaces: 8:1 on the page */
   --color-on-accent: #ffffff; /* text/icons sitting on an accent fill */
-  --color-accent-50: #e3eafc; /* faint accent wash: section bands */
+  --color-accent-50: #e7eef6; /* faint accent wash: selected states, quiet bands */
 
-  --color-cloud: #e2e8f1;
-  --color-ink-muted: #56607a;
+  --color-cloud: #edf1f5;
+  --color-ink-muted: #475569;
 
   /* semantic — see note above */
-  --color-surface: #eef2f8;
-  --color-content: #121418;
+  --color-surface: #f8fafc;
+  --color-content: #0f172a;
 
   /* Thai fallbacks: Barlow/Plex Mono carry Latin, Prompt/Noto Sans Thai carry Thai glyphs */
   --font-display: var(--font-barlow), var(--font-prompt), system-ui, sans-serif;
@@ -65,121 +72,94 @@
   /* The sticky navbar's height (Navbar.tsx, h-(--nav-h)). Dark heroes run up
      under it with a negative margin of the same amount. */
   --nav-h: 60px;
-  /* The light accent gradient: the headline accent words
-     (.text-accent-gradient). */
-  --accent-light-gradient: linear-gradient(100deg, #6f9dff 0%, #4fb8ff 55%, #3fd4ff 100%);
   /* The navbar ("clean", owner's pick 2026-10-12, after a navy tab, a vivid
      blue bar and two gradients): one solid bar hanging from the top edge —
-     white in light mode, navy in dark — holding the logo (full colour), the
+     white in light mode, slate in dark — holding the logo (full colour), the
      menus, search, language, account and Get a quote. Colour is kept for
-     meaning: blue only on the current section's dot and the Get a quote
+     meaning: the accent only on the current section's dot and the Get a quote
      button. Open panels and the phone drawer are --nav-panel with
-     --nav-card cards. AA: --nav-ink on the bar 8.8:1 (light) / 10.4:1 (dark);
+     --nav-card cards. AA: --nav-ink on the bar 10:1 (light) / 11:1 (dark);
      --nav-tab-muted and --nav-tab-faint on the panel ≥4.5:1 in both. Dark
-     values are under [data-theme="dark"] below. */
+     values are under [data-theme="dark"] below. Its layout is unchanged by
+     the 2026-10-27 palette; only these colours follow it. */
   --nav-bar: #ffffff;
-  --nav-navy: #0a1a4a;
-  --nav-ink: #3d4a6b;
-  --nav-highlight: #e3eafc;
-  --nav-panel: #f5f8ff;
+  --nav-navy: #0f172a;
+  --nav-ink: #334155;
+  --nav-highlight: #e7eef6;
+  --nav-panel: #f5f7fa;
   --nav-card: #ffffff;
-  --nav-line: rgb(10 26 74 / 0.12);
-  --nav-hover: rgb(10 26 74 / 0.06);
-  --nav-link: #1f4fd6;
-  --nav-tab-muted: #3d5591;
-  --nav-tab-faint: #5b6fa3;
-  --accent-rgb: 46 107 255;
+  --nav-line: rgb(15 23 42 / 0.12);
+  --nav-hover: rgb(15 23 42 / 0.05);
+  --nav-link: #1e4e8c;
+  --nav-tab-muted: #475569;
+  --nav-tab-faint: #5b6678;
+  --accent-rgb: 30 78 140;
 
-  /* Homepage hero canvas (.hero-canvas / .hero-floor): a sky-blue → cyan glow
-     behind the robot, continuing the navbar's gradient, and the floor shadow
-     under it. Stronger in the dark set below. */
-  --hero-glow-1: rgb(79 184 255 / 0.44);
-  --hero-glow-2: rgb(111 157 255 / 0.24);
-  --hero-floor: rgb(10 26 74 / 0.22);
-  /* the warm wash the YouTube band fades into */
-  --warm-wash: #f8f2e3;
+  /* Homepage hero canvas (.hero-canvas / .hero-floor): a quiet steel glow
+     behind the robot and the floor shadow under it. Stronger in the dark set
+     below. */
+  --hero-glow-1: rgb(30 78 140 / 0.16);
+  --hero-glow-2: rgb(148 163 184 / 0.22);
+  --hero-floor: rgb(15 23 42 / 0.2);
+  /* the quiet wash the YouTube band fades into */
+  --warm-wash: #eef1f5;
 }
 
-/* Dark theme: deep navy, not black, so the blue glows and the white robots
-   still sit on colour. The `forest-*` darks stay dark (they are the dark
-   cards, footer and product heroes) but turn navy to match. Text pairs:
-   content 15:1, ink-muted 7.3:1, accent-600 7.1:1 on the surface. */
+/* Dark theme: deep slate, not black, so the white robots still sit on
+   colour. The `forest-*` darks stay dark (they are the dark cards, footer and
+   product heroes). Text pairs on the surface: content 15:1, ink-muted 7.5:1,
+   accent-600 8.8:1. */
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-surface: #0f1527;
-  --color-cloud: #171e36;
-  --color-content: #eef2ff;
-  --color-ink-muted: #a4aecb;
-  --color-forest-950: #080b16;
-  --color-forest-900: #0c1121;
-  --color-forest: #131a2e;
-  --color-forest-800: #243052;
-  --color-forest-700: #3b4a76;
-  --color-forest-300: #6b7aa6;
-  --color-forest-100: #263150;
-  --color-accent-600: #8db0ff;
-  --color-accent-50: #16203f;
-  --hero-glow-1: rgb(79 184 255 / 0.5);
-  --hero-glow-2: rgb(111 157 255 / 0.3);
+  --color-surface: #0b1018;
+  --color-cloud: #141b26;
+  --color-content: #e6ebf2;
+  --color-ink-muted: #9aa6b6;
+  --color-forest-950: #070a10;
+  --color-forest-900: #0a0e15;
+  --color-forest: #121925;
+  --color-forest-800: #223044;
+  --color-forest-700: #36465c;
+  --color-forest-300: #6e7d92;
+  --color-forest-100: #222c3b;
+  --color-accent: #2b5c9c;
+  --color-accent-strong: #234f88;
+  --color-accent-600: #93b4de;
+  --color-accent-50: #121d2c;
+  --hero-glow-1: rgb(59 105 168 / 0.3);
+  --hero-glow-2: rgb(148 163 184 / 0.14);
   --hero-floor: rgb(0 0 0 / 0.6);
-  --warm-wash: #1a1b2a;
-  --nav-bar: #161e38;
+  --warm-wash: #121925;
+  --nav-bar: #111926;
   --nav-navy: #ffffff;
-  --nav-ink: #c3cde8;
-  --nav-highlight: rgb(255 255 255 / 0.1);
-  --nav-panel: #121a33;
-  --nav-card: #1b2546;
+  --nav-ink: #c5ceda;
+  --nav-highlight: rgb(255 255 255 / 0.08);
+  --nav-panel: #0e1520;
+  --nav-card: #172131;
   --nav-line: rgb(255 255 255 / 0.12);
-  --nav-hover: rgb(255 255 255 / 0.07);
-  --nav-link: #8db0ff;
-  --nav-tab-muted: #b4c0e4;
-  --nav-tab-faint: #9aa7cf;
+  --nav-hover: rgb(255 255 255 / 0.06);
+  --nav-link: #93b4de;
+  --nav-tab-muted: #b3bdcb;
+  --nav-tab-faint: #96a2b3;
 }
 
-/* The primary call-to-action fill: electric blue into cyan. Used on the few
-   buttons that start a quote or lead into a product family — everything else
-   uses the flat --color-accent, so the gradient stays special. The wider
-   background lets hover slide the gradient instead of swapping colours.
-   A utility, so it takes variants and sorts with a button's other classes. */
-/* Accent words set over photos and dark surfaces: the flat blue sinks into
-   green lawn, so this runs lighter, blue into cyan. On light surfaces use
-   text-accent-600 instead. */
+/* Accent words set over photos and dark surfaces (product headers, the hero
+   in dark mode). The names are kept from the gradient era (until 2026-10-27,
+   blue into cyan); both are flat colours now, so nothing on the site is a
+   gradient. On light surfaces use text-accent-600 instead. */
 @utility text-accent-gradient {
-  background-image: var(--accent-light-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  /* room for Thai marks below the line, which background-clip would crop */
-  padding-bottom: 0.08em;
-  /* a text-shadow would paint over the clipped gradient and grey it out, so
-     legibility over photos comes from a drop-shadow on the glyphs instead */
-  text-shadow: none;
-  filter: drop-shadow(0 1px 10px rgb(0 0 0 / 0.35));
+  color: var(--color-accent-300);
 }
 
+/* The primary call-to-action fill: the few buttons that start a quote or lead
+   into a product family. Flat accent, a shade darker on hover. A utility, so
+   it takes variants and sorts with a button's other classes. */
 @utility bg-accent-gradient {
   background-color: var(--color-accent);
-  background-image: linear-gradient(
-    115deg,
-    #1f4fff 0%,
-    #2e6bff 34%,
-    #169dff 72%,
-    #1fcbff 100%
-  );
-  background-size: 135% 100%;
-  background-position: 0% 50%;
   color: var(--color-on-accent);
-  box-shadow:
-    0 8px 22px -12px rgb(var(--accent-rgb) / 0.9),
-    inset 0 1px 0 rgb(255 255 255 / 0.18);
-  transition:
-    background-position 0.5s ease,
-    box-shadow 0.3s ease;
+  transition: background-color 0.2s ease;
   &:hover {
-    background-position: 100% 50%;
-    box-shadow:
-      0 12px 28px -12px rgb(var(--accent-rgb) / 1),
-      inset 0 1px 0 rgb(255 255 255 / 0.22);
+    background-color: var(--color-accent-strong);
   }
 }
 
@@ -356,7 +336,7 @@
     from var(--trace-angle),
     transparent 0turn 0.7turn,
     var(--color-accent) 0.93turn,
-    #fff4c2 0.985turn,
+    var(--color-accent-300) 0.985turn,
     transparent 1turn
   );
   -webkit-mask:

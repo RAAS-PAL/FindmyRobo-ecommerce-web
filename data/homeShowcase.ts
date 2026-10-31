@@ -153,10 +153,13 @@ export function onShow<
 }
 
 export const heroSlides: HeroSlide[] = [
-  // Each slide is a transparent cut-out (`cutout`) of the family's robot on
-  // the hero's lit canvas (HeroSection). Lawn mowing leads with the CMS
-  // headline; the others carry their own copy. A slide shows only while its
-  // robot (productId) or a robot in its category is on show in Admin.
+  // Each slide is a full-width photo (`image`, 2026-10-29: the owner's
+  // AI-generated scenes of each family, public/hero/). Only slides with a
+  // photo show in the hero; the cut-outs stay for the slides still waiting for
+  // one. `focus` keeps the robots in frame as the hero's shape changes. Lawn
+  // mowing leads with the CMS headline; the others carry their own copy. A
+  // slide shows only while its robot (productId) or a robot in its category
+  // is on show in Admin.
   {
     id: "lawn",
     tab: { en: "Lawn mowing", th: "หุ่นยนต์ตัดหญ้า" },
@@ -166,7 +169,8 @@ export const heroSlides: HeroSlide[] = [
     sub: null,
     href: "/shop/robot-mowers",
     interest: "lawn-mowing",
-    image: null,
+    image: "/hero/lawn.webp",
+    focus: "50% 70%",
     // the LUBA 3 AWD cut-out (not mirrored: that would print MAMMOTION backwards)
     cutout: { src: "/studio/luba-orange.webp", width: 1846, height: 958 },
     shot: { en: "", th: "" },
@@ -174,18 +178,20 @@ export const heroSlides: HeroSlide[] = [
   {
     id: "phantas",
     tab: { en: "Commercial cleaning", th: "ทำความสะอาดเชิงพาณิชย์" },
-    // sold new and pre-owned: said in the slide itself (business, 2026-10-01)
-    eyebrow: { en: "Gausium · Brand-new or pre-owned", th: "Gausium · เครื่องใหม่ หรือผ่านการใช้งาน" },
-    headline: { en: "Gausium Phantas.", th: "Gausium Phantas" },
+    // the photo shows the Phantas and both A1 scrubbers, so the slide is the
+    // family rather than one robot (Thai: DRAFT for the Thai team)
+    eyebrow: { en: "Gausium · Aventurier", th: "Gausium · Aventurier" },
+    headline: { en: "Commercial cleaning.", th: "ทำความสะอาดเชิงพาณิชย์" },
     accent: { en: "Clean floors, every shift.", th: "พื้นสะอาด ทุกกะการทำงาน" },
     sub: {
-      en: "Autonomous floor cleaning for offices, hotels and shops. Tell us about your site and we’ll quote the right setup.",
-      th: "หุ่นยนต์ทำความสะอาดพื้นอัตโนมัติ สำหรับสำนักงาน โรงแรม และร้านค้า บอกเราเกี่ยวกับพื้นที่ของคุณ แล้วเราจะเสนอราคาที่เหมาะสม",
+      en: "The Gausium Phantas robot and Aventurier A1 scrubbers for offices, hotels and shops. Tell us about your site and we’ll quote the right setup.",
+      th: "หุ่นยนต์ Gausium Phantas และเครื่องขัดพื้น Aventurier A1 สำหรับสำนักงาน โรงแรม และร้านค้า บอกเราเกี่ยวกับพื้นที่ของคุณ แล้วเราจะเสนอราคาที่เหมาะสม",
     },
-    href: "/products/gausium-phantas",
+    href: "/shop/cleaning-robots",
     interest: "commercial-cleaning",
-    productId: "gausium-phantas",
-    image: null,
+    category: "cleaning-robots",
+    image: "/hero/cleaning.webp",
+    focus: "65% 60%",
     // Gausium's transparent product render, with its own soft floor glow
     cutout: { src: "/studio/phantas-studio.webp", width: 1400, height: 1173 },
     shot: { en: "", th: "" },
@@ -204,7 +210,8 @@ export const heroSlides: HeroSlide[] = [
     href: "/shop/delivery-robots",
     interest: "pudu-delivery",
     category: "delivery-robots",
-    image: null,
+    image: "/hero/delivery.webp",
+    focus: "65% 60%",
     // the five delivery robots as a team, BellaBot in front (logo-free cut-outs)
     cutout: { src: "/studio/delivery-lineup.webp", width: 2151, height: 1064 },
     shot: { en: "", th: "" },

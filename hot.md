@@ -35,12 +35,14 @@ branch `main`.
   ARE compiled in and need a deploy.
 - **Theme (light + dark again, 2026-10-12, owner's request; branch):** one
   token set with a dark override under `[data-theme="dark"]` in
-  `app/globals.css`. Light = soft blue-grey page (`--color-surface`
-  `#eef2f8`, never white); dark = deep navy (`#0f1527`, never black). The
+  `app/globals.css`. Palette "slate + steel blue" (2026-10-27): light =
+  off-white slate page (`--color-surface` `#f8fafc`, never white) with
+  light-grey tiles (`cloud` `#edf1f5`); dark = deep slate (`#0b1018`, never
+  black); one steel-blue accent `#1e4e8c`, no gradients. The
   theme is `data-theme` on `<html>`: `THEME_SCRIPT` (lib/theme.ts), inlined
   at the top of `<body>`, sets it before first paint from localStorage
   (`fmr-theme`) or else the OS; the switch is in the profile menu. `dark:`
-  utilities follow the attribute. Graphite neutrals, electric-blue brand
+  utilities follow the attribute. Slate neutrals, steel-blue brand
   colour. The brand colour is one token,
   `accent-*` (plus `--accent-rgb`, `bg-accent-gradient`,
   `text-accent-gradient`) in `app/globals.css`: change it there to re-colour
