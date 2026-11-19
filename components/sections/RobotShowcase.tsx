@@ -1,16 +1,17 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight } from "lucide-react";
-import { Link } from "@/i18n/navigation";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { pick } from "@/data/siteContent";
 import type { RobotFamily } from "@/data/homeShowcase";
 import ShowcasePhoto from "@/components/ui/ShowcasePhoto";
+import Button from "@/components/ui/Button";
+import MetaLine from "@/components/ui/MetaLine";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 /**
- * Product-family banners, DJI-style: the photo is the card, with the name and
- * two actions set at the top over a soft scrim. `size` encodes priority —
+ * Product-family banners: the photo is the card, with the family's name, one
+ * line and two actions set on its top-left (or bottom-left) over a scrim. `size` encodes priority —
  * "wide" spans the page (lawn mowing, Phantas), "half" shares a row (Pudu,
  * T-Chef).
  */
@@ -27,7 +28,7 @@ function FamilyCard({ family, size }: { family: RobotFamily; size: "wide" | "hal
   // sits on the photo, at the top or the bottom (copyAt), over a scrim.
   return (
     <article
-      className={`group relative isolate flex flex-col overflow-hidden rounded-2xl bg-forest-950 text-white sm:block ${
+      className={`relative isolate flex flex-col overflow-hidden rounded-card bg-forest-950 text-white sm:block ${
         wide ? "sm:h-[36rem] lg:h-[min(80svh,46rem)]" : "sm:h-[34rem] lg:h-[38rem]"
       }`}
     >
@@ -45,51 +46,32 @@ function FamilyCard({ family, size }: { family: RobotFamily; size: "wide" | "hal
       <div
         aria-hidden="true"
         className={`pointer-events-none absolute inset-0 -z-10 hidden sm:block ${
-          bottom
-            ? "bg-[linear-gradient(to_top,rgba(10,10,11,0.78)_0%,rgba(10,10,11,0.4)_32%,rgba(10,10,11,0)_58%)]"
-            : "bg-[linear-gradient(to_bottom,rgba(10,10,11,0.72)_0%,rgba(10,10,11,0.35)_32%,rgba(10,10,11,0)_58%)]"
+          bottom ? "photo-scrim-bottom" : "photo-scrim-top"
         }`}
       />
 
       <div
-        className={`mx-auto flex flex-col items-center px-5 pt-7 pb-9 text-center sm:absolute sm:inset-x-0 sm:[text-shadow:0_1px_14px_rgba(0,0,0,0.3)] ${
+        className={`flex flex-col items-start px-6 pt-7 pb-8 text-left sm:absolute sm:inset-x-0 sm:px-10 ${
           bottom ? "sm:bottom-0 sm:pt-0" : "sm:top-0 sm:pb-0"
         } ${
-          wide
-            ? `max-w-2xl ${bottom ? "sm:pb-16" : "sm:pt-16"}`
-            : `max-w-md ${bottom ? "sm:pb-12" : "sm:pt-12"}`
+          wide ? (bottom ? "sm:pb-14" : "sm:pt-14") : bottom ? "sm:pb-10" : "sm:pt-10"
         }`}
       >
-        <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-white/85 uppercase [&:lang(th)]:tracking-[0.06em]">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
-          {pick(family.eyebrow, locale)}
-        </p>
+        <MetaLine onPhoto>{pick(family.eyebrow, locale)}</MetaLine>
         <h2
-          className={`mt-2.5 font-display leading-[1.04] font-extrabold tracking-tight ${
-            wide ? "text-[40px] sm:text-6xl lg:text-7xl" : "text-[34px] sm:text-5xl"
-          }`}
+          className={`mt-2 max-w-2xl font-display text-white ${wide ? "text-display" : "text-title"}`}
         >
           {title}
         </h2>
-        <p className={`mt-3 text-white/85 ${wide ? "text-[15px] sm:text-lg" : "text-[15px]"}`}>
-          {pick(family.tagline, locale)}
-        </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => openQuote({ interest: family.interest, productId: family.productId })}
-            className="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-accent-gradient px-6 text-[14.5px] font-bold"
-          >
+        <p className="mt-3 max-w-lg text-body text-white/85">{pick(family.tagline, locale)}</p>
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <Button onClick={() => openQuote({ interest: family.interest, productId: family.productId })}>
             {t("getQuote")}
-          </button>
+          </Button>
           {family.href && (
-            <Link
-              href={family.href}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-white/40 px-6 text-[14.5px] font-semibold text-white transition-colors hover:border-white"
-            >
+            <Button href={family.href} variant="onPhoto">
               {t("learnMore")}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+            </Button>
           )}
         </div>
       </div>
@@ -110,15 +92,13 @@ export function FamilyBanner({ family }: { family: RobotFamily }) {
 export function MoreFamilies({ families }: { families: RobotFamily[] }) {
   const t = useTranslations("showcase");
   return (
-    <section className="bg-surface px-3 pt-16 pb-3 sm:px-4 sm:pt-24 sm:pb-4">
-      <div className="mx-auto mb-8 max-w-2xl px-2 text-center sm:mb-10">
-        <h2 className="font-display text-3xl font-extrabold tracking-tight text-content sm:text-[2.6rem]">
-          {t("moreHeading")}
-        </h2>
-        <p className="mt-3 text-[15px] text-ink-muted sm:text-base">{t("moreSub")}</p>
+    <section className="bg-surface pt-16 pb-3 sm:pt-24 sm:pb-4">
+      {/* the heading in the page container, the photos nearly full width */}
+      <div className="mx-auto mb-8 max-w-7xl px-4 sm:mb-10 sm:px-6 lg:px-8">
+        <SectionHeader title={t("moreHeading")} lead={t("moreSub")} />
       </div>
       {/* two to a row; one alone spans it rather than leaving half empty */}
-      <div className={`grid gap-3 sm:gap-4 ${families.length > 1 ? "lg:grid-cols-2" : ""}`}>
+      <div className={`grid gap-3 px-3 sm:gap-4 sm:px-4 ${families.length > 1 ? "lg:grid-cols-2" : ""}`}>
         {families.map((family) => (
           <FamilyCard key={family.id} family={family} size={families.length > 1 ? "half" : "wide"} />
         ))}
