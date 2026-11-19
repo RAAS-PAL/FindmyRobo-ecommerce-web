@@ -41,7 +41,7 @@ export default function LineChatButton() {
 
   return (
     <div ref={rootRef} className="relative">
-      <p className="text-[12px] font-medium text-ink-muted">{t("chatPrompt")}</p>
+      <p className="text-caption font-medium text-ink-muted">{t("chatPrompt")}</p>
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
@@ -49,9 +49,9 @@ export default function LineChatButton() {
         aria-controls={popoverId}
         aria-label={t("lineShowQr", { id: lineId })}
         // grey, not LINE green: a quiet second option beside the blue quote card
-        className="mt-1.5 flex h-10 w-full cursor-pointer items-center gap-2.5 rounded-full border border-forest-100 bg-surface py-1 pr-3.5 pl-1 text-[13.5px] font-bold text-content transition-colors hover:bg-cloud focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40"
+        className="mt-1.5 flex h-11 w-full cursor-pointer items-center gap-2.5 rounded-control border border-forest-100 bg-surface py-1 pr-3.5 pl-1.5 text-small font-semibold text-content transition-colors hover:bg-cloud focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40"
       >
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-forest-700 text-white">
+        <span className="flex h-8 w-8 items-center justify-center rounded-control bg-[#06C755] text-white">
           <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
         </span>
         <span>LINE {lineId}</span>
@@ -63,13 +63,13 @@ export default function LineChatButton() {
           id={popoverId}
           role="dialog"
           aria-label={t("lineQrAlt", { id: lineId })}
-          className="absolute inset-x-0 bottom-full z-30 mx-auto mb-3 w-60 rounded-2xl border border-black/8 bg-surface p-4 text-center shadow-[0_24px_48px_-20px_rgba(10,10,11,0.45)] dark:border-white/10"
+          className="absolute inset-x-0 bottom-full z-30 mx-auto mb-3 w-60 rounded-card border border-black/8 bg-surface p-4 text-center shadow-float dark:border-white/10"
         >
           {lineQrImage && (
             // bg-white, not bg-surface: a QR needs a light quiet zone to stay
             // scannable, and in dark mode `surface` is near-black. A plain
             // <img>: the QR can be uploaded to any host in the CMS.
-            <div className="mx-auto h-40 w-40 overflow-hidden rounded-xl bg-white p-2">
+            <div className="mx-auto h-40 w-40 overflow-hidden rounded-control bg-white p-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={lineQrImage}
@@ -78,8 +78,8 @@ export default function LineChatButton() {
               />
             </div>
           )}
-          <p className="mt-3 font-display text-[15px] font-bold text-content">{lineId}</p>
-          {lineQrImage && <p className="text-[12px] text-ink-muted">{t("lineScan")}</p>}
+          <p className="mt-3 font-display text-body font-semibold text-content">{lineId}</p>
+          {lineQrImage && <p className="text-caption text-ink-muted">{t("lineScan")}</p>}
           {lineUrl && (
             <a
               href={lineUrl}
@@ -87,7 +87,7 @@ export default function LineChatButton() {
               rel="noopener noreferrer"
               // dark text: white on LINE green
               // is too faint to read at this size
-              className="mt-3 flex h-10 items-center justify-center gap-1.5 rounded-full bg-[#06C755] text-[13px] font-bold text-forest-950 transition-opacity hover:opacity-90"
+              className="mt-3 flex h-10 items-center justify-center gap-1.5 rounded-control bg-[#06C755] text-small font-semibold text-forest-950 transition-[opacity,scale] duration-150 hover:opacity-90 active:scale-[0.97]"
             >
               {t("lineOpen")}
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
