@@ -440,8 +440,11 @@ export default function Navbar() {
       // Everything lives in one blue bar that hangs from the top edge; the
       // header around it is see-through and lets clicks through its edges.
       // Its height is fixed to the bar's, so an open panel spills over the
-      // page instead of pushing the page down.
-      className="pointer-events-none sticky top-0 z-50 h-[var(--nav-h)]"
+      // page instead of pushing the page down. overflow-x-clip: on narrow
+      // screens the bar's curved corner notches reach 2 px past the screen
+      // edge, which made the whole page scroll sideways; menus hang down,
+      // which clip-x leaves alone (clip, unlike hidden, keeps sticky working).
+      className="pointer-events-none sticky top-0 z-50 h-[var(--nav-h)] overflow-x-clip"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
