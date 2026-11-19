@@ -10,8 +10,8 @@ import { FamilyBanner, MoreFamilies } from "@/components/sections/RobotShowcase"
 import { featuredFamilies, moreFamilies, onShow } from "@/data/homeShowcase";
 import { getAllProducts } from "@/lib/productStore";
 import VideoShowcase from "@/components/sections/VideoShowcase";
-import TrustSection from "@/components/sections/TrustSection";
-import WhyUsSection from "@/components/sections/WhyUsSection";
+import ServicePromise from "@/components/sections/ServicePromise";
+import { pick } from "@/data/siteContent";
 
 // Title and description come from the layout (Admin → Content → SEO); the homepage
 // only needs to claim its own canonical, which the layout deliberately no
@@ -32,7 +32,7 @@ export default async function Home({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [{ contact }, products] = await Promise.all([getSiteContent(), getAllProducts()]);
+  const [{ contact, home, about }, products] = await Promise.all([getSiteContent(), getAllProducts()]);
   // banners for robots still hidden in Admin (no photos yet) are left out
   const [phantas] = onShow([featuredFamilies[1]], products);
   const more = onShow(moreFamilies, products);
@@ -53,8 +53,15 @@ export default async function Home({
       {phantas && <FamilyBanner family={phantas} />}
       {more.length > 0 && <MoreFamilies families={more} />}
       <VideoShowcase />
-      <TrustSection />
-      <WhyUsSection />
+      {/* who we are: one section, its facts and promises shared with About */}
+      <ServicePromise
+        heading={pick(home.trustHeading, locale)}
+        body={pick(home.trustBody, locale)}
+        photo={about.storyImage}
+        photoAlt={pick(home.trustHeading, locale)}
+        facts={about.stats.map((stat) => ({ value: stat.value, label: pick(stat.label, locale) }))}
+        promises={about.values.map((value) => ({ title: pick(value.title, locale), body: pick(value.body, locale) }))}
+      />
     </main>
   );
 }
