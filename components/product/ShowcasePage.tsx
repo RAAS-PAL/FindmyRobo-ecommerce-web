@@ -130,7 +130,7 @@ function HeroColor({ color, alt, label }: { color: ShowcaseColor; alt: string; l
           className="h-[min(42svh,22rem)] w-auto max-w-full object-contain sm:h-[min(52svh,28rem)] lg:h-[min(64svh,34rem)]"
         />
       </div>
-      <figcaption className="mt-3 flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.18em] text-white/80 uppercase [&:lang(th)]:tracking-[0.04em]">
+      <figcaption className="mt-3 flex items-center gap-2 text-caption font-semibold text-white/80">
         <span
           aria-hidden="true"
           className="h-3.5 w-3.5 rounded-full border border-white/50"
@@ -239,7 +239,7 @@ export default function ShowcasePage({
             </motion.nav>
             <motion.p
               variants={heroLine}
-              className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-white/80 uppercase [&:lang(th)]:tracking-[0.06em]"
+              className="flex items-center gap-2.5 text-caption font-semibold text-white/80"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
               {text(showcase.eyebrow)}
@@ -392,7 +392,7 @@ export default function ShowcasePage({
         <section key={`${i}-${feature.image}`} className="bg-surface pt-20 sm:pt-28">
           <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
             {feature.eyebrow && (
-              <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-accent-600 uppercase [&:lang(th)]:tracking-[0.06em]">
+              <p className="text-caption font-semibold text-accent-600">
                 {text(feature.eyebrow)}
               </p>
             )}
@@ -430,7 +430,7 @@ export default function ShowcasePage({
                     {group.rows.map((row, j) => (
                       <div
                         key={`${j}-${row.label.en}`}
-                        className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-4 border-b border-forest-100 py-3 text-[14px]"
+                        className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-4 border-b border-forest-100 py-3 text-small"
                       >
                         <dt className="text-ink-muted">{text(row.label)}</dt>
                         <dd className="font-semibold text-content">{text(row.value)}</dd>

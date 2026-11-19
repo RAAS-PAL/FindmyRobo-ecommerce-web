@@ -50,7 +50,7 @@ export default function LocationBody() {
   return (
     <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
       <div>
-        <div className="h-full overflow-hidden rounded-3xl border border-forest-100 bg-surface shadow-[0_24px_48px_-28px_rgba(10,46,31,0.35)]">
+        <div className="h-full overflow-hidden rounded-card border border-forest-100 bg-surface shadow-[0_24px_48px_-28px_rgba(10,46,31,0.35)]">
           <iframe
             src={salesMapEmbedUrl(locale)}
             title={t("mapTitle")}

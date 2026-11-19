@@ -1,6 +1,7 @@
 import VideoEmbed from "@/components/product/VideoEmbed";
 import ShowcaseCarousel from "@/components/product/ShowcaseCarousel";
 import TechAnatomy from "@/components/sections/TechAnatomy";
+import MetaLine from "@/components/ui/MetaLine";
 import type { Locale, PageBlock } from "@/data/products";
 
 /**
@@ -62,12 +63,8 @@ export default function ProductPageBlocks({
   );
 
   const renderGroup = (group: FeatureBlock[]) => (
-    <section className="mx-auto max-w-6xl">
-      <div>
-        <h2 className="text-center font-display text-title text-content">
-          {featureGroupHeading}
-        </h2>
-      </div>
+    <section>
+      <h2 className="font-display text-title text-content">{featureGroupHeading}</h2>
       <div
         className={`mt-10 grid gap-4 sm:mt-12 sm:gap-6 ${
           GROUP_COLS[group.length] ?? "sm:grid-cols-2 lg:grid-cols-3"
@@ -75,17 +72,12 @@ export default function ProductPageBlocks({
       >
         {group.map((block, j) => (
           <div key={j} className="h-full">
-            <article className="h-full rounded-2xl border border-forest-100 bg-white p-6 shadow-[0_6px_16px_-10px_rgb(10_26_74/0.35)] sm:p-8 dark:bg-forest">
-              <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-accent-600 uppercase [&:lang(th)]:tracking-[0.06em]">
-                {block.eyebrow ? pick(block.eyebrow, locale) : String(j + 1).padStart(2, "0")}
-              </p>
-              <span aria-hidden="true" className="mt-3 block h-0.5 w-8 rounded-full bg-accent-gradient" />
-              <h3 className="mt-5 font-display text-heading text-content">
+            <article className="h-full rounded-card bg-cloud p-6">
+              {block.eyebrow && <MetaLine>{pick(block.eyebrow, locale)}</MetaLine>}
+              <h3 className={`font-display text-heading text-content ${block.eyebrow ? "mt-1" : ""}`}>
                 {pick(block.heading, locale)}
               </h3>
-              <p className="mt-3 whitespace-pre-line text-body leading-relaxed text-ink-muted">
-                {pick(block.body, locale)}
-              </p>
+              <p className="mt-3 whitespace-pre-line text-body text-ink-muted">{pick(block.body, locale)}</p>
             </article>
           </div>
         ))}
@@ -123,7 +115,7 @@ export default function ProductPageBlocks({
           case "feature":
             return (
               <div key={i}>
-                <section className="mx-auto max-w-3xl text-center">
+                <section className="max-w-3xl">
                   {block.image && (
                     <img
                       src={block.image}
@@ -147,7 +139,7 @@ export default function ProductPageBlocks({
               <div key={i}>
                 <section>
                   {block.heading && (
-                    <h2 className="mb-8 text-center font-display text-title text-content">
+                    <h2 className="mb-8 font-display text-title text-content">
                       {pick(block.heading, locale)}
                     </h2>
                   )}
@@ -155,7 +147,7 @@ export default function ProductPageBlocks({
                     {block.cards.map((card, j) => (
                       <figure
                         key={j}
-                        className="overflow-hidden rounded-card border border-forest-100 bg-surface"
+                        className="overflow-hidden rounded-card bg-cloud"
                       >
                         <img
                           src={card.image}
@@ -163,7 +155,7 @@ export default function ProductPageBlocks({
                           loading="lazy"
                           className="aspect-[4/3] w-full object-cover"
                         />
-                        <figcaption className="px-5 py-4 text-center text-small font-medium leading-snug text-content">
+                        <figcaption className="p-4 text-body font-semibold text-content">
                           {pick(card.caption, locale)}
                         </figcaption>
                       </figure>
@@ -228,7 +220,7 @@ export default function ProductPageBlocks({
                     title={block.heading ? pick(block.heading, locale) : productName}
                   />
                   {block.caption && (
-                    <p className="mt-3 text-center text-caption text-ink-muted">
+                    <p className="mt-3 text-caption text-ink-muted">
                       {pick(block.caption, locale)}
                     </p>
                   )}

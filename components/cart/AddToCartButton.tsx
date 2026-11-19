@@ -7,6 +7,7 @@ import CartIcon from "@/components/cart/CartIcon";
 import { useCart } from "@/components/cart/CartProvider";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { siteConfig } from "@/data/siteConfig";
+import { buttonClass } from "@/components/ui/Button";
 
 /**
  * The product's main "I'm interested" button. With the cart on it adds the
@@ -60,7 +61,7 @@ export default function AddToCartButton({
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className="flex min-h-[52px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-7 text-[15px] font-bold text-on-accent transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgb(var(--accent-rgb)/0.7)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-none"
+      className={buttonClass({ size: "lg", className: "flex-1 gap-2" })}
     >
       {added ? (
         <>
@@ -69,7 +70,8 @@ export default function AddToCartButton({
         </>
       ) : (
         <>
-          {icon ?? <CartIcon className="h-4.5 w-4.5" />}
+          {/* quote mode: text only, like every other button */}
+          {siteConfig.cartEnabled && (icon ?? <CartIcon className="h-4.5 w-4.5" />)}
           {label ??
             (!siteConfig.cartEnabled
               ? tq("requestCta")

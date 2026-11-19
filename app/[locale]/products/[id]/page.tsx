@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Calendar, Check, ChevronRight } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import AddToCartButton from "@/components/cart/AddToCartButton";
@@ -14,7 +14,8 @@ import RobotCard from "@/components/ui/RobotCard";
 import ProductGallery from "@/components/product/ProductGallery";
 import ProductPageBlocks from "@/components/product/ProductPageBlocks";
 import ShowcasePage from "@/components/product/ShowcasePage";
-import ExpandOnScroll from "@/components/product/ExpandOnScroll";
+import MetaLine from "@/components/ui/MetaLine";
+import Button from "@/components/ui/Button";
 import SpecTable from "@/components/product/SpecTable";
 import BoxContents from "@/components/product/BoxContents";
 import FaqSection from "@/components/product/FaqSection";
@@ -26,6 +27,7 @@ import {
   SERVICE_CATEGORY,
   type Locale,
   type PageBlock,
+  DEFAULT_BRAND,
 } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
 import { getAllProducts, getProductById, showsOnStorefront } from "@/lib/productStore";
@@ -185,7 +187,6 @@ export default async function ProductPage({
   return (
     <>
     {structuredData}
-    {/* overflow-x-clip contains ExpandOnScroll's full-bleed w-screen panel */}
     <main className="overflow-x-clip bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* breadcrumb */}
@@ -245,10 +246,10 @@ export default async function ProductPage({
 
           {/* info */}
           <div className="flex flex-col">
-            <p className="text-caption font-semibold text-accent-600">
-              {tc(`${product.category}.name`)}
-            </p>
-            <h1 className="mt-3 font-display text-title text-content">
+            <MetaLine>
+              {product.brand ?? DEFAULT_BRAND} · {tc(`${product.category}.nav`)}
+            </MetaLine>
+            <h1 className="mt-2 font-display text-title text-content">
               {product.name}
             </h1>
             <p className="mt-4 text-body leading-relaxed text-ink-muted">
@@ -287,13 +288,9 @@ export default async function ProductPage({
               ) : (
                 <div id="pdp-primary-cta" className="flex flex-col gap-3 sm:flex-row">
                   <AddToCartButton productId={product.id} />
-                  <Link
-                    href="/products/request-a-demo"
-                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-body font-semibold text-content transition-colors duration-300 hover:border-accent hover:text-accent-600 dark:border-white/30 dark:hover:border-accent"
-                  >
-                    <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
+                  <Button href="/products/request-a-demo" size="lg" variant="secondary" className="flex-1">
                     {t("ctaDemo")}
-                  </Link>
+                  </Button>
                 </div>
               )}
             </div>
@@ -311,15 +308,11 @@ export default async function ProductPage({
 
             {/* features */}
             <div className="mt-10 rounded-card bg-cloud p-6 sm:p-8">
-              <h2 className="font-display text-lead font-bold text-content">
-                {t("featuresHeading")}
-              </h2>
+              <h2 className="font-display text-heading text-content">{t("featuresHeading")}</h2>
               <ul className="mt-4 space-y-3">
                 {features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3 text-small leading-relaxed text-ink-muted">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/20">
-                      <Check className="h-3 w-3 text-accent-600" aria-hidden="true" />
-                    </span>
+                  <li key={feature} className="flex items-start gap-3 text-small text-content">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
                     {feature}
                   </li>
                 ))}
@@ -358,14 +351,12 @@ export default async function ProductPage({
             longer shown here, they feed the checkout install-tier match */}
         {page?.specGroups && page.specGroups.length > 0 && (
           <div className="mt-16 sm:mt-20">
-            <ExpandOnScroll>
               <SpecTable
                 groups={page.specGroups}
                 heading={t("specTableHeading")}
                 productName={product.name}
                 locale={locale as Locale}
               />
-            </ExpandOnScroll>
           </div>
         )}
 

@@ -413,7 +413,7 @@ export default function RobotFinder() {
     step === "job" ? !!job : step === "details" ? job === "lawn" || job === "floor" || !!venue : true;
 
   return (
-    <div className="rounded-2xl border border-forest-100 bg-surface p-5 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.35)] sm:p-8">
+    <div className="rounded-card border border-forest-100 bg-surface p-5 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.35)] sm:p-8">
       <div className="flex items-center justify-between gap-3">
         <p className="text-caption font-semibold text-ink-muted">
           {t("stepOf", { step: Math.max(1, stepNumber), total: steps.length })}

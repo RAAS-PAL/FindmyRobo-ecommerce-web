@@ -1,5 +1,7 @@
 "use client";
 
+import MetaLine from "@/components/ui/MetaLine";
+import { chipClass } from "@/components/ui/Chip";
 import { useState } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
@@ -40,21 +42,15 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
     <section id="technology" className="bg-forest-950 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div>
-          <p className="text-caption font-semibold text-accent-300">
-            {t("eyebrow")} — {set.model}
-          </p>
-          <h2 className="mt-3 max-w-2xl font-display text-title text-white">
-            {t("heading")}
-          </h2>
-          <p className="mt-4 max-w-xl text-body leading-relaxed text-white/60">
-            {t("sub")}
-          </p>
+          <MetaLine onPhoto>{set.model}</MetaLine>
+          <h2 className="mt-2 max-w-2xl font-display text-title text-white">{t("heading")}</h2>
+          <p className="mt-3 max-w-xl text-lead text-white/70">{t("sub")}</p>
         </div>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
           {/* viewer */}
           <div>
-            <div className="relative aspect-square overflow-hidden rounded-card border border-white/10 bg-gradient-to-br from-forest-900 to-forest-950">
+            <div className="relative aspect-square overflow-hidden rounded-card border border-white/10 bg-forest-900">
               <div
                 className="absolute inset-0 transition-transform duration-[400ms] ease-in-out motion-reduce:transition-none"
                 style={{
@@ -135,7 +131,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                 })}
               </div>
 
-              <span className="pointer-events-none absolute bottom-4 left-4 rounded-full bg-forest-950/70 px-3 py-1.5 text-caption font-semibold text-white/70 backdrop-blur-sm">
+              <span className="pointer-events-none absolute bottom-4 left-4 rounded-control bg-forest-950/80 px-2 py-1 text-caption font-medium text-white/80">
                 {view.label[locale]}
               </span>
             </div>
@@ -153,13 +149,10 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                         type="button"
                         onClick={() => setActiveId(spot.id)}
                         aria-pressed={isActive}
-                        className={`flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full border px-4 text-caption font-semibold transition-colors ${
-                          isActive
-                            ? "border-accent bg-accent text-on-accent"
-                            : "border-white/20 text-white/70 hover:border-accent hover:text-accent-300"
-                        }`}
+                        className={chipClass({ selected: isActive, onDark: true })}
                       >
-                        <span className="text-caption">{index + 1}</span>
+                        {/* the number matches the marker on the photo */}
+                        <span className="tabular-nums opacity-70">{index + 1}</span>
                         {spot.title[locale]}
                       </button>
                     </li>
@@ -185,7 +178,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                       {active.body[locale]}
                     </p>
                     <div className="mt-6 border-t border-white/10 pt-5">
-                      <p className="text-title text-accent-300">
+                      <p className="font-display text-title text-white tabular-nums">
                         {active.stat}
                       </p>
                       <p className="mt-1 text-caption text-white/50">
@@ -198,7 +191,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
             </div>
 
             <div>
-              <p className="text-caption leading-relaxed text-white/40">
+              <p className="text-caption text-white/50">
                 {set.footnote[locale]}
               </p>
             </div>

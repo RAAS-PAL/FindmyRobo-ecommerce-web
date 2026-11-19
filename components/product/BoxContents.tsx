@@ -18,15 +18,13 @@ export default function BoxContents({
   const pick = (t: { en: string; th: string }) => t[locale] || t.en;
 
   return (
-    <section className="mx-auto max-w-5xl">
-      <h2 className="text-center font-display text-title text-content">
-        {heading}
-      </h2>
+    <section>
+      <h2 className="font-display text-title text-content">{heading}</h2>
       <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
         {items.map((item, i) => (
           <div key={i} className="flex flex-col">
             <div className="flex aspect-square items-center justify-center overflow-hidden rounded-card bg-cloud p-5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* eslint-disable-next-line @next/next/no-img-element -- admin-pasted URL, any host */}
               <img
                 src={item.image}
                 alt={pick(item.name)}
@@ -34,7 +32,7 @@ export default function BoxContents({
                 className="h-full w-full object-contain"
               />
             </div>
-            <p className="mt-4 text-body font-bold leading-snug text-content">
+            <p className="mt-4 text-body font-semibold text-content">
               {pick(item.name)}
             </p>
             <p className="mt-1 text-small text-ink-muted">× {item.qty ?? 1}</p>

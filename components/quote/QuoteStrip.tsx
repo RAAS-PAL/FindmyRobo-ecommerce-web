@@ -118,7 +118,8 @@ export default function QuoteStrip({ interest, productId }: QuoteTarget) {
           className={"grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none " + (open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
           <div className="min-h-0 overflow-hidden">
             <div className="mb-5 flex min-h-9 items-center justify-between gap-3">
-              <p className="text-small font-semibold text-content">{t("eyebrow")}</p>
+              {/* the open form's title (Get a quote) */}
+              <h3 className="text-small font-semibold text-content">{t("eyebrow")}</h3>
               <button type="button" onClick={close} aria-label={t("closePanel")}
                 className="-mr-2 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-control text-ink-muted transition-[background-color,color,scale] duration-150 hover:bg-cloud hover:text-content active:scale-[0.97]">
                 <X className="h-4 w-4" aria-hidden="true" />

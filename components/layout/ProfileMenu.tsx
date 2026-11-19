@@ -152,7 +152,7 @@ export default function ProfileMenu() {
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             className="absolute right-0 top-full z-50 pt-2"
           >
-            <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+            <div className="w-64 overflow-hidden rounded-control border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
               {signedIn ? (
                 <>
                   {email && (

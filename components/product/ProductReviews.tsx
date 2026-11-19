@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
-import { BadgeCheck, LoaderCircle, Pencil, Star, User } from "lucide-react";
+import { BadgeCheck, LoaderCircle, Star, User } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { buttonClass } from "@/components/ui/Button";
 import type { Review, ReviewSummary, ReviewSort } from "@/lib/reviewStore";
 
 /* ---------- star display (supports fractional fill for the average) ---------- */
@@ -42,7 +43,7 @@ function StarInput({ value, onChange, label }: { value: number; onChange: (v: nu
           onFocus={() => setHover(n)}
           onBlur={() => setHover(0)}
           onClick={() => onChange(n)}
-          className="cursor-pointer p-0.5 transition-transform hover:scale-110"
+          className="cursor-pointer p-0.5 transition-[scale] duration-150 active:scale-[0.9]"
         >
           <Star className={`h-7 w-7 ${n <= shown ? "fill-accent text-accent-300" : "fill-forest-100 text-forest-200"}`} aria-hidden="true" />
         </button>
@@ -162,7 +163,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
       return (
         <Link
           href="/login"
-          className="inline-flex min-h-[46px] items-center justify-center rounded-full border-2 border-forest px-6 text-small font-bold text-content transition-colors hover:border-accent hover:text-accent-600"
+          className={buttonClass({ variant: "secondary" })}
         >
           {t("loginToReview")}
         </Link>
@@ -172,17 +173,20 @@ export default function ProductReviews({ productId }: { productId: string }) {
       <button
         type="button"
         onClick={openForm}
-        className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-accent px-6 text-small font-bold text-on-accent transition-transform duration-300 hover:scale-[1.03]"
+        className={buttonClass()}
       >
-        {yourReview ? <Pencil className="h-4 w-4" aria-hidden="true" /> : null}
         {yourReview ? t("editReview") : t("writeReview")}
       </button>
     );
   })();
 
+  // No reviews yet: no block at all. An empty "be the first" box on a
+  // quote-only shop says nothing and asks visitors to sign in.
+  if (loading || (count === 0 && !yourReview)) return null;
+
   return (
-    <section id="reviews" className="mx-auto max-w-5xl">
-      <h2 className="text-center font-display text-title text-content">
+    <section id="reviews">
+      <h2 className="font-display text-title text-content">
         {t("heading")}
       </h2>
 
@@ -298,7 +302,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
                       <button
                         type="submit"
                         disabled={submitting}
-                        className="flex min-h-[48px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-small font-bold text-on-accent transition-transform duration-300 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+                        className={buttonClass({ size: "lg", className: "flex-1 gap-2" })}
                       >
                         {submitting && <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />}
                         {submitting ? t("submitting") : t("submit")}

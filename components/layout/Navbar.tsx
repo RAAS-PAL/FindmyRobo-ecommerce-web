@@ -152,7 +152,7 @@ function GroupsPanel({ groups, onNavigate }: { groups: NavGroup[]; onNavigate: (
   return (
     <div className="grid grid-cols-3 gap-3">
       {groups.map((group) => (
-        <div key={group.heading} className="rounded-xl border border-forest-100 bg-[color:var(--nav-card)] p-2">
+        <div key={group.heading} className="rounded-control border border-forest-100 bg-[color:var(--nav-card)] p-2">
           <p className={`px-2 pt-1.5 pb-2 ${panelLabelClass}`}>{group.heading}</p>
           {group.items.map((item) => {
             const Icon = item.icon;
@@ -678,7 +678,7 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setOpen(true)}
                 aria-label={t("openMenu")}
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-[color:var(--nav-line)] text-[color:var(--nav-navy)] transition-colors hover:bg-cloud xl:hidden"
+                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-control border border-[color:var(--nav-line)] text-[color:var(--nav-navy)] transition-colors hover:bg-cloud xl:hidden"
               >
                 <Menu className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -781,7 +781,7 @@ export default function Navbar() {
               <div className="flex-1 overflow-y-auto px-5 py-6">
                 <CatalogSearch
                   className="mb-6 block"
-                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-sm text-content placeholder:text-[color:var(--nav-tab-faint)] focus:border-accent focus:outline-none focus-visible:outline-none!"
+                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-small text-content placeholder:text-[color:var(--nav-tab-faint)] focus:border-accent focus:outline-none focus-visible:outline-none!"
                   dropdownClassName="inset-x-0 w-full"
                   onNavigate={() => setOpen(false)}
                 />

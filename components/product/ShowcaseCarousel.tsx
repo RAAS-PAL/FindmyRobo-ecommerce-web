@@ -43,7 +43,7 @@ export default function ShowcaseCarousel({
         {cards.map((card, i) => (
           <article
             key={i}
-            className="flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#34363d] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+            className="flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-card border border-white/10 bg-[#34363d] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
