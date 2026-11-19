@@ -49,13 +49,10 @@ export default function AboutView({ published }: { published: AboutContent }) {
       <section className="bg-forest-950 py-16 sm:py-24">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <div>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
-              {t("eyebrow")}
-            </p>
-            <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <h1 className="mt-3 font-display text-title text-white">
               {t("heading")}
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70">
+            <p className="mx-auto mt-5 max-w-2xl text-body leading-relaxed text-white/70">
               {text(about.intro)}
             </p>
           </div>
@@ -69,10 +66,10 @@ export default function AboutView({ published }: { published: AboutContent }) {
             {about.stats.map((stat) => (
               <div key={`${stat.label.en}-${stat.value}`}>
                 <div className="text-center">
-                  <p className="font-mono text-2xl font-extrabold text-content sm:text-3xl">
+                  <p className="text-title text-content">
                     {stat.value}
                   </p>
-                  <p className="mt-1 text-[12.5px] leading-snug text-ink-muted">
+                  <p className="mt-1 text-caption leading-snug text-ink-muted">
                     {text(stat.label)}
                   </p>
                 </div>
@@ -86,22 +83,19 @@ export default function AboutView({ published }: { published: AboutContent }) {
       <section id="story" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-              {t("storyEyebrow")}
-            </p>
-            <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
+            <h2 className="mt-3 font-display text-title text-content">
               {t("storyHeading")}
             </h2>
             <div className="mt-5 space-y-4">
               {story.filter((p) => p.trim()).map((paragraph, index) => (
-                <p key={index} className="text-[15px] leading-relaxed text-ink-muted">
+                <p key={index} className="text-body leading-relaxed text-ink-muted">
                   {paragraph}
                 </p>
               ))}
             </div>
           </div>
           <div>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-forest-950">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-forest-950">
               {/* Plain <img>, as in ProductVisual: this URL is typed or
                   uploaded in the admin panel and can be on any host, which
                   next/image rejects unless it is listed in next.config.ts. */}
@@ -124,7 +118,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-4 py-1.5">
                 <BadgeCheck className="h-4 w-4 text-accent-600" aria-hidden="true" />
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-600">
+                <span className="text-caption font-semibold text-accent-600">
                   {text(about.partnerEyebrow)}
                 </span>
               </span>
@@ -138,15 +132,15 @@ export default function AboutView({ published }: { published: AboutContent }) {
                   className="mx-auto mt-6 h-12 w-auto max-w-[220px] object-contain"
                 />
               )}
-              <h2 className="mt-5 font-display text-2xl font-extrabold text-content sm:text-3xl">
+              <h2 className="mt-5 font-display text-title text-content">
                 {about.partnerName}
               </h2>
               {text(about.partnerStatus) && (
-                <p className="mt-2 text-[15px] font-semibold text-accent-600">
+                <p className="mt-2 text-body font-semibold text-accent-600">
                   {text(about.partnerStatus)}
                 </p>
               )}
-              <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-muted">
+              <p className="mx-auto mt-4 max-w-2xl text-body leading-relaxed text-ink-muted">
                 {text(about.partnerBody)}
               </p>
             </div>
@@ -157,10 +151,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
       {/* values */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         <div>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-            {t("valuesEyebrow")}
-          </p>
-          <h2 className="mt-3 max-w-2xl font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
+          <h2 className="mt-3 max-w-2xl font-display text-title text-content">
             {t("valuesHeading")}
           </h2>
         </div>
@@ -169,14 +160,14 @@ export default function AboutView({ published }: { published: AboutContent }) {
             const Icon = ICONS[value.icon];
             return (
               <div key={`${value.title.en}-${index}`}>
-                <div className="h-full rounded-2xl border border-forest-100 bg-surface p-6">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-forest-950 text-accent-300">
+                <div className="h-full rounded-card border border-forest-100 bg-surface p-6">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-control bg-forest-950 text-accent-300">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
-                  <h3 className="mt-4 font-display text-lg font-bold text-content">
+                  <h3 className="mt-4 font-display text-lead font-bold text-content">
                     {text(value.title)}
                   </h3>
-                  <p className="mt-2 text-[13.5px] leading-relaxed text-ink-muted">
+                  <p className="mt-2 text-small leading-relaxed text-ink-muted">
                     {text(value.body)}
                   </p>
                 </div>
@@ -191,10 +182,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
         <section className="bg-surface py-16 sm:py-24">
           <div className="mx-auto max-w-4xl px-4 sm:px-6">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-                {t("milestonesEyebrow")}
-              </p>
-              <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
+              <h2 className="mt-3 font-display text-title text-content">
                 {t("milestonesHeading")}
               </h2>
             </div>
@@ -203,13 +191,13 @@ export default function AboutView({ published }: { published: AboutContent }) {
                 <div key={`${milestone.when}-${index}`}>
                   <li className="relative border-l-2 border-forest-100 pb-8 pl-8 last:border-transparent last:pb-0">
                     <span className="absolute -left-[9px] top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-accent bg-surface" />
-                    <p className="font-mono text-sm font-bold text-accent-600">
+                    <p className="text-small font-bold text-accent-600">
                       {milestone.when}
                     </p>
-                    <h3 className="mt-1 font-display text-lg font-bold text-content">
+                    <h3 className="mt-1 font-display text-lead font-bold text-content">
                       {text(milestone.title)}
                     </h3>
-                    <p className="mt-1 text-[13.5px] leading-relaxed text-ink-muted">
+                    <p className="mt-1 text-small leading-relaxed text-ink-muted">
                       {text(milestone.body)}
                     </p>
                   </li>
@@ -224,17 +212,14 @@ export default function AboutView({ published }: { published: AboutContent }) {
       {about.team.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <div>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-              {t("teamEyebrow")}
-            </p>
-            <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-content sm:text-4xl">
+            <h2 className="mt-3 font-display text-title text-content">
               {t("teamHeading")}
             </h2>
           </div>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {about.team.map((member, index) => (
               <div key={member.name + index}>
-                <div className="rounded-2xl border border-forest-100 bg-surface p-6 text-center">
+                <div className="rounded-card border border-forest-100 bg-surface p-6 text-center">
                   <span className="mx-auto flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-forest-950">
                     {member.photo ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -247,15 +232,15 @@ export default function AboutView({ published }: { published: AboutContent }) {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="font-display text-2xl font-extrabold text-accent-300">
+                      <span className="font-display text-heading text-accent-300">
                         {member.name.trim().charAt(0).toUpperCase()}
                       </span>
                     )}
                   </span>
-                  <h3 className="mt-4 font-display text-base font-bold text-content">
+                  <h3 className="mt-4 font-display text-body font-bold text-content">
                     {member.name}
                   </h3>
-                  <p className="mt-0.5 text-[13px] text-ink-muted">{text(member.role)}</p>
+                  <p className="mt-0.5 text-small text-ink-muted">{text(member.role)}</p>
                 </div>
               </div>
             ))}
@@ -267,20 +252,17 @@ export default function AboutView({ published }: { published: AboutContent }) {
       <section className="bg-forest-950 py-16 sm:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-2">
           <div>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
-              {t("visitEyebrow")}
-            </p>
-            <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+            <h2 className="mt-3 font-display text-title text-white">
               {t("visitHeading")}
             </h2>
-            <p className="mt-3 text-[15px] leading-relaxed text-white/60">
+            <p className="mt-3 text-body leading-relaxed text-white/60">
               {t("visitBody")}
             </p>
             <a
               href={salesMapUrl}
               target="_blank"
               rel="noreferrer"
-              className="mt-5 inline-flex items-start gap-3 text-[14px] leading-relaxed text-white/80 transition-colors hover:text-accent-300"
+              className="mt-5 inline-flex items-start gap-3 text-small leading-relaxed text-white/80 transition-colors hover:text-accent-300"
             >
               <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent-300" aria-hidden="true" />
               <address className="not-italic">
@@ -295,24 +277,24 @@ export default function AboutView({ published }: { published: AboutContent }) {
           </div>
 
           <div>
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-              <h2 className="font-display text-2xl font-extrabold tracking-tight text-white">
+            <div className="rounded-card border border-white/10 bg-white/5 p-8">
+              <h2 className="font-display text-heading text-white">
                 {t("ctaHeading")}
               </h2>
-              <p className="mt-3 text-[15px] leading-relaxed text-white/60">
+              <p className="mt-3 text-body leading-relaxed text-white/60">
                 {t("ctaBody")}
               </p>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/products/request-a-demo"
-                  className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-accent px-6 text-[14px] font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97]"
+                  className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-accent px-6 text-small font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97]"
                 >
                   {t("ctaDemo")}
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/contact-sales"
-                  className="flex min-h-[50px] flex-1 items-center justify-center rounded-full border border-white/20 px-6 text-[14px] font-bold text-white transition-colors hover:border-accent hover:text-accent-300"
+                  className="flex min-h-[50px] flex-1 items-center justify-center rounded-full border border-white/20 px-6 text-small font-bold text-white transition-colors hover:border-accent hover:text-accent-300"
                 >
                   {t("ctaSales")}
                 </Link>

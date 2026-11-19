@@ -45,7 +45,7 @@ export default function ExpandOnScroll({
 
   if (reduced) {
     return (
-      <div className="mx-auto max-w-6xl rounded-3xl bg-cloud px-4 py-10">
+      <div className="mx-auto max-w-6xl rounded-card bg-cloud px-4 py-10">
         {children}
       </div>
     );

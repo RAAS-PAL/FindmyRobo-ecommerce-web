@@ -128,7 +128,7 @@ export default function CatalogSearch({
         <div
           id={suggestionsId}
           role="listbox"
-          className={`absolute top-full z-[70] mt-2 overflow-hidden rounded-xl border border-forest-100 bg-surface shadow-[0_20px_50px_-18px_rgba(0,0,0,0.35)] ${dropdownClassName}`}
+          className={`absolute top-full z-[70] mt-2 overflow-hidden rounded-control border border-forest-100 bg-surface shadow-[0_20px_50px_-18px_rgba(0,0,0,0.35)] ${dropdownClassName}`}
         >
           {suggestions.length > 0 ? (
             <div className="p-2">
@@ -141,16 +141,16 @@ export default function CatalogSearch({
                   href={`/products/${product.id}`}
                   onClick={navigated}
                   onMouseEnter={() => setActiveIndex(index)}
-                  className={`flex items-center gap-3 rounded-lg p-2.5 transition-colors hover:bg-cloud ${
+                  className={`flex items-center gap-3 rounded-control p-2.5 transition-colors hover:bg-cloud ${
                     activeIndex === index ? "bg-cloud" : ""
                   }`}
                 >
-                  <span className="flex h-14 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-cloud p-1">
+                  <span className="flex h-14 w-16 shrink-0 items-center justify-center overflow-hidden rounded-control bg-cloud p-1">
                     <ProductVisual product={product} className="h-full w-full" />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-bold text-content">{product.name}</span>
-                    <span className="mt-0.5 block truncate text-[11px] text-ink-muted">
+                    <span className="block truncate text-small font-bold text-content">{product.name}</span>
+                    <span className="mt-0.5 block truncate text-caption text-ink-muted">
                       {tc(`${product.category}.name`)}
                     </span>
                   </span>
@@ -159,14 +159,14 @@ export default function CatalogSearch({
               ))}
             </div>
           ) : (
-            <p className="px-5 py-6 text-center text-sm text-ink-muted">
+            <p className="px-5 py-6 text-center text-small text-ink-muted">
               {t("searchNoResults", { query: term })}
             </p>
           )}
           <button
             type="button"
             onClick={goToResults}
-            className="flex min-h-12 w-full cursor-pointer items-center justify-between border-t border-forest-100 bg-cloud/60 px-4 text-xs font-bold text-content transition-colors hover:text-accent-600"
+            className="flex min-h-12 w-full cursor-pointer items-center justify-between border-t border-forest-100 bg-cloud/60 px-4 text-caption font-bold text-content transition-colors hover:text-accent-600"
           >
             {t("searchViewAll", { query: term })}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

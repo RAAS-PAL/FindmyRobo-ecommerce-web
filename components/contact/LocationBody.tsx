@@ -62,20 +62,20 @@ export default function LocationBody() {
       </div>
 
       <div>
-        <div className="flex h-full flex-col rounded-3xl border border-forest-100 bg-surface p-6 sm:p-8">
+        <div className="flex h-full flex-col rounded-card border border-forest-100 bg-surface p-6 sm:p-8">
           <div className="flex items-start gap-4">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/20">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-control bg-accent/20">
               <MapPin className="h-5 w-5 text-accent-600" aria-hidden="true" />
             </span>
             <div className="min-w-0">
-              <p className="text-[13px] font-semibold text-ink-muted">{t("addressLabel")}</p>
-              <p className="mt-1 font-display text-lg font-bold text-content">
+              <p className="text-small font-semibold text-ink-muted">{t("addressLabel")}</p>
+              <p className="mt-1 font-display text-lead font-bold text-content">
                 {name}
-                <span className="block text-[13px] font-semibold text-ink-muted">
+                <span className="block text-small font-semibold text-ink-muted">
                   {locale === "th" ? `บริษัท ${legalNameTh}` : legalName}
                 </span>
               </p>
-              <address className="mt-2 text-[14.5px] leading-relaxed text-content not-italic">
+              <address className="mt-2 text-small leading-relaxed text-content not-italic">
                 {addressLines.map((line) => (
                   <span key={line} className="block">
                     {line}
@@ -90,7 +90,7 @@ export default function LocationBody() {
               href={salesDirectionsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent px-6 text-[15px] font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97]"
+              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent px-6 text-body font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97]"
             >
               <Navigation className="h-4.5 w-4.5" aria-hidden="true" />
               {t("directions")}
@@ -99,7 +99,7 @@ export default function LocationBody() {
               href={salesMapUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-forest-100 px-6 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-accent hover:text-accent-600"
+              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-forest-100 px-6 text-body font-semibold text-content transition-colors duration-300 hover:border-accent hover:text-accent-600"
             >
               <ExternalLink className="h-4.5 w-4.5" aria-hidden="true" />
               {t("openMaps")}
@@ -112,15 +112,15 @@ export default function LocationBody() {
                 <a
                   href={href}
                   {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="-mx-2 flex items-center gap-4 rounded-xl px-2 py-2.5 transition-colors hover:bg-cloud"
+                  className="-mx-2 flex items-center gap-4 rounded-control px-2 py-2.5 transition-colors hover:bg-cloud"
                 >
                   <Icon className="h-4.5 w-4.5 shrink-0 text-accent-600" aria-hidden="true" />
                   <span className="min-w-0">
-                    <span className="block text-[12px] font-semibold text-ink-muted">{label}</span>
-                    <span className="block truncate font-mono text-[15px] font-semibold text-content">
+                    <span className="block text-caption font-semibold text-ink-muted">{label}</span>
+                    <span className="block truncate text-body font-semibold text-content">
                       {value}
                     </span>
-                    {hint && <span className="block text-[12px] text-ink-muted">{hint}</span>}
+                    {hint && <span className="block text-caption text-ink-muted">{hint}</span>}
                   </span>
                 </a>
               </li>
@@ -129,7 +129,7 @@ export default function LocationBody() {
 
           {/* mt-auto: sits at the bottom when the card stretches to the map's height */}
           <div className="mt-auto pt-5">
-            <p className="flex flex-wrap items-baseline gap-x-2 border-t border-forest-100 pt-5 text-sm text-ink-muted">
+            <p className="flex flex-wrap items-baseline gap-x-2 border-t border-forest-100 pt-5 text-small text-ink-muted">
               {t("demoNote")}
               <Link
                 href="/products/request-a-demo"

@@ -24,10 +24,10 @@ export default function FaqSection({
 
   return (
     <section className="mx-auto max-w-4xl">
-      <h2 className="text-center font-display text-3xl font-extrabold tracking-tight text-content sm:text-4xl">
+      <h2 className="text-center font-display text-title text-content">
         {heading}
       </h2>
-      <div className="mt-10 rounded-3xl bg-cloud p-2 sm:p-3">
+      <div className="mt-10 rounded-card bg-cloud p-2 sm:p-3">
         {faqs.map((item, i) => {
           const isOpen = open === i;
           return (
@@ -35,7 +35,7 @@ export default function FaqSection({
               key={i}
               className={
                 isOpen
-                  ? "my-1 rounded-2xl border border-forest-200 bg-surface"
+                  ? "my-1 rounded-card border border-forest-200 bg-surface"
                   : "border-b border-forest-100/70 last:border-b-0"
               }
             >
@@ -44,9 +44,9 @@ export default function FaqSection({
                   type="button"
                   onClick={() => setOpen(isOpen ? null : i)}
                   aria-expanded={isOpen}
-                  className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl px-4 py-5 text-left sm:px-6"
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-card px-4 py-5 text-left sm:px-6"
                 >
-                  <span className="text-[15.5px] font-bold leading-snug text-content sm:text-[17px]">
+                  <span className="text-body font-bold leading-snug text-content">
                     {pick(item.question)}
                   </span>
                   <span
@@ -72,7 +72,7 @@ export default function FaqSection({
                     transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     className="overflow-hidden"
                   >
-                    <p className="whitespace-pre-line px-4 pb-6 text-[15px] leading-relaxed text-ink-muted sm:px-6">
+                    <p className="whitespace-pre-line px-4 pb-6 text-body leading-relaxed text-ink-muted sm:px-6">
                       {pick(item.answer)}
                     </p>
                   </motion.div>

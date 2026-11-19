@@ -156,7 +156,7 @@ export default function FloatingCompareButton() {
             </span>
           </span>
           {count > 0 && (
-            <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-forest-950 px-1 font-mono text-[10px] font-bold text-accent-300">
+            <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-forest-950 px-1 text-caption font-bold text-accent-300">
               {count}
             </span>
           )}

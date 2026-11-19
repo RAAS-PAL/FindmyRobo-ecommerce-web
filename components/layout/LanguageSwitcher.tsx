@@ -49,7 +49,7 @@ export default function LanguageSwitcher({
               locale={l}
               lang={l}
               aria-current={current ? "true" : undefined}
-              className={`flex min-h-10 items-center rounded-full px-4 text-[13.5px] font-semibold transition-colors ${
+              className={`flex min-h-10 items-center rounded-full px-4 text-small font-semibold transition-colors ${
                 current ? "bg-accent text-on-accent" : "text-content hover:bg-cloud"
               }`}
             >
@@ -146,7 +146,7 @@ function LanguageMenu({ className }: { className: string }) {
         aria-label={`${t("language")}: ${NAMES[locale]}`}
         aria-expanded={open}
         aria-controls={listId}
-        className={`flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-lg px-2.5 text-[13.5px] font-semibold transition-colors hover:bg-cloud ${
+        className={`flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-control px-2.5 text-small font-semibold transition-colors hover:bg-cloud ${
           open ? "bg-cloud text-content" : "text-content/85 hover:text-content"
         }`}
       >
@@ -180,7 +180,7 @@ function LanguageMenu({ className }: { className: string }) {
                       lang={l}
                       onClick={close}
                       aria-current={current ? "true" : undefined}
-                      className={`flex min-h-[42px] items-center justify-between gap-3 rounded-lg px-3 text-[14px] transition-colors hover:bg-cloud ${
+                      className={`flex min-h-[42px] items-center justify-between gap-3 rounded-control px-3 text-small transition-colors hover:bg-cloud ${
                         current ? "font-bold text-accent-600" : "font-semibold text-content"
                       }`}
                     >

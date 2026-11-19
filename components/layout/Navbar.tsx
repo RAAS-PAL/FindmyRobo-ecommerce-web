@@ -164,7 +164,7 @@ function GroupsPanel({ groups, onNavigate }: { groups: NavGroup[]; onNavigate: (
                 className="group/item flex items-center gap-2.5 rounded-control px-2 py-1.5 text-small font-semibold text-content transition-colors hover:bg-cloud hover:text-accent-600"
               >
                 {Icon && (
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-accent-50 text-accent-600 transition-colors group-hover/item:bg-accent group-hover/item:text-white">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-control bg-accent-50 text-accent-600 transition-colors group-hover/item:bg-accent group-hover/item:text-white">
                     <Icon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                 )}
@@ -430,7 +430,7 @@ export default function Navbar() {
         layoutId="nav-highlight"
         aria-hidden="true"
         transition={{ type: "spring", stiffness: 500, damping: 38 }}
-        className={`absolute inset-0 rounded-lg ${strong ? "bg-[color:var(--nav-highlight)]" : "bg-[color:var(--nav-highlight)]/60"}`}
+        className={`absolute inset-0 rounded-control ${strong ? "bg-[color:var(--nav-highlight)]" : "bg-[color:var(--nav-highlight)]/60"}`}
       />
     );
 
@@ -449,7 +449,7 @@ export default function Navbar() {
           // `nav-scope` re-points the colour tokens, so everything inside that
           // uses them (language switch, profile menu, search) reads in navy on
           // the light blue, and the dropdowns open pale.
-          className={`nav-scope pointer-events-auto relative rounded-b-2xl text-content transition-shadow duration-300 ${
+          className={`nav-scope pointer-events-auto relative rounded-b-card text-content transition-shadow duration-300 ${
             scrolled
               ? "shadow-[0_18px_40px_-16px_rgb(10_26_74/0.4)] dark:shadow-[0_18px_40px_-14px_rgb(0_0_0/0.7)]"
               : "shadow-[0_14px_32px_-18px_rgb(10_26_74/0.35)] dark:shadow-[0_14px_32px_-16px_rgb(0_0_0/0.6)]"
@@ -501,7 +501,7 @@ export default function Navbar() {
               href="/"
               aria-label="FindMyRobo home"
               // the full-colour logo; its white version on the navy dark bar
-              className="flex shrink-0 items-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+              className="flex shrink-0 items-center rounded-control focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
             >
               <Image
                 src="/main-logo-light.png"
@@ -541,7 +541,7 @@ export default function Navbar() {
                           if (!searchOpen) closeMenu();
                         }}
                         onFocus={() => setPointed(linkIndex)}
-                        className={`relative flex items-center gap-1 rounded-lg px-3 py-1.5 text-[13px] font-semibold whitespace-nowrap [&:lang(th)]:px-2 [&:lang(th)]:text-[12.5px] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
+                        className={`relative flex items-center gap-1 rounded-control px-3 py-1.5 text-small font-semibold whitespace-nowrap [&:lang(th)]:px-2 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
                           lit ? "text-[color:var(--nav-navy)]" : "text-[color:var(--nav-ink)] hover:text-[color:var(--nav-navy)]"
                         }`}
                       >
@@ -572,7 +572,7 @@ export default function Navbar() {
                       }}
                       onFocus={() => setPointed(linkIndex)}
                       onClick={() => (isOpen ? closeMenu() : showMenu(linkIndex))}
-                      className={`relative flex cursor-pointer items-center gap-1 rounded-lg px-3 py-1.5 text-[13px] font-semibold whitespace-nowrap [&:lang(th)]:px-2 [&:lang(th)]:text-[12.5px] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
+                      className={`relative flex cursor-pointer items-center gap-1 rounded-control px-3 py-1.5 text-small font-semibold whitespace-nowrap [&:lang(th)]:px-2 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
                         lit ? "text-[color:var(--nav-navy)]" : "text-[color:var(--nav-ink)] hover:text-[color:var(--nav-navy)]"
                       }`}
                     >
@@ -610,7 +610,7 @@ export default function Navbar() {
                   onMouseEnter={() => setPointed(searchIndex)}
                   onFocus={() => setPointed(searchIndex)}
                   onClick={() => (searchOpen ? closeMenu() : showMenu(searchIndex))}
-                  className={`relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
+                  className={`relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-control transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
                     searchOpen || pointed === searchIndex ? "text-[color:var(--nav-navy)]" : "text-[color:var(--nav-ink)]"
                   }`}
                 >
@@ -643,7 +643,7 @@ export default function Navbar() {
                 >
                   <CartIcon className="h-5 w-5" />
                   {count > 0 && (
-                    <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-0.5 font-mono text-[10px] font-bold text-on-accent">
+                    <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-0.5 text-caption font-bold text-on-accent">
                       {count}
                     </span>
                   )}
@@ -692,7 +692,7 @@ export default function Navbar() {
             initial={false}
             animate={{ height: menuOpen ? panelH : 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            className="overflow-hidden rounded-b-2xl"
+            className="overflow-hidden rounded-b-card"
           >
             <div ref={panelRef} id="nav-panel" inert={!menuOpen} aria-hidden={!menuOpen}>
               {shownMenu !== null && (
@@ -796,7 +796,7 @@ export default function Navbar() {
                         <Link
                           href={link.models[0].href}
                           onClick={() => setOpen(false)}
-                          className={`flex min-h-[48px] w-full items-center rounded-xl px-4 text-[15px] font-bold transition-colors hover:bg-cloud hover:text-accent-600 ${
+                          className={`flex min-h-[48px] w-full items-center rounded-control px-4 text-body font-bold transition-colors hover:bg-cloud hover:text-accent-600 ${
                             link.current ? "text-accent-600" : "text-content"
                           }`}
                         >
@@ -808,7 +808,7 @@ export default function Navbar() {
                         type="button"
                         onClick={() => setExpanded(expanded === i ? null : i)}
                         aria-expanded={expanded === i}
-                        className={`flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-left text-[15px] font-bold transition-colors hover:bg-cloud hover:text-accent-600 ${
+                        className={`flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-control px-4 text-left text-body font-bold transition-colors hover:bg-cloud hover:text-accent-600 ${
                           link.current ? "text-accent-600" : "text-content"
                         }`}
                       >
@@ -845,7 +845,7 @@ export default function Navbar() {
                                       <Link
                                         href={model.href}
                                         onClick={() => setOpen(false)}
-                                        className="flex min-h-[44px] flex-col justify-center rounded-lg px-3 py-2 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
+                                        className="flex min-h-[44px] flex-col justify-center rounded-control px-3 py-2 text-small text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
                                       >
                                         <span>{productLabel(model.product)}</span>
                                         {showsCondition(model.product.conditions) && (
@@ -858,7 +858,7 @@ export default function Navbar() {
                                     <Link
                                       href={categoryHref(link.category)}
                                       onClick={() => setOpen(false)}
-                                      className="flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 text-[14px] font-semibold text-accent-600 transition-colors hover:bg-cloud"
+                                      className="flex min-h-[44px] items-center gap-1.5 rounded-control px-3 text-small font-semibold text-accent-600 transition-colors hover:bg-cloud"
                                     >
                                       {t("viewAll")}
                                       <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -875,7 +875,7 @@ export default function Navbar() {
                                           <Link
                                             href={item.href}
                                             onClick={() => setOpen(false)}
-                                            className="flex min-h-[44px] items-center rounded-lg px-3 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
+                                            className="flex min-h-[44px] items-center rounded-control px-3 text-small text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
                                           >
                                             {item.label}
                                           </Link>

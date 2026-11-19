@@ -40,13 +40,13 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
     <section id="technology" className="bg-forest-950 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
+          <p className="text-caption font-semibold text-accent-300">
             {t("eyebrow")} — {set.model}
           </p>
-          <h2 className="mt-3 max-w-2xl font-display text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
+          <h2 className="mt-3 max-w-2xl font-display text-title text-white">
             {t("heading")}
           </h2>
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/60">
+          <p className="mt-4 max-w-xl text-body leading-relaxed text-white/60">
             {t("sub")}
           </p>
         </div>
@@ -54,7 +54,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
           {/* viewer */}
           <div>
-            <div className="relative aspect-square overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-forest-900 to-forest-950">
+            <div className="relative aspect-square overflow-hidden rounded-card border border-white/10 bg-gradient-to-br from-forest-900 to-forest-950">
               <div
                 className="absolute inset-0 transition-transform duration-[400ms] ease-in-out motion-reduce:transition-none"
                 style={{
@@ -110,7 +110,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                       onClick={() => setActiveId(spot.id)}
                       aria-label={spot.title[locale]}
                       aria-pressed={isActive}
-                      className="absolute z-10 flex items-center justify-center rounded-full font-mono text-[11px] font-bold"
+                      className="absolute z-10 flex items-center justify-center rounded-full text-caption font-bold"
                       style={{
                         left: `${spot.x}%`,
                         top: `${spot.y}%`,
@@ -135,7 +135,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                 })}
               </div>
 
-              <span className="pointer-events-none absolute bottom-4 left-4 rounded-full bg-forest-950/70 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white/70 backdrop-blur-sm">
+              <span className="pointer-events-none absolute bottom-4 left-4 rounded-full bg-forest-950/70 px-3 py-1.5 text-caption font-semibold text-white/70 backdrop-blur-sm">
                 {view.label[locale]}
               </span>
             </div>
@@ -153,13 +153,13 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                         type="button"
                         onClick={() => setActiveId(spot.id)}
                         aria-pressed={isActive}
-                        className={`flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full border px-4 text-[12.5px] font-semibold transition-colors ${
+                        className={`flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full border px-4 text-caption font-semibold transition-colors ${
                           isActive
                             ? "border-accent bg-accent text-on-accent"
                             : "border-white/20 text-white/70 hover:border-accent hover:text-accent-300"
                         }`}
                       >
-                        <span className="font-mono text-[11px]">{index + 1}</span>
+                        <span className="text-caption">{index + 1}</span>
                         {spot.title[locale]}
                       </button>
                     </li>
@@ -169,7 +169,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
             </div>
 
             <div>
-              <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
+              <div className="rounded-card border border-white/10 bg-white/[0.04] p-6 sm:p-8">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={active.id}
@@ -178,17 +178,17 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.22 }}
                   >
-                    <h3 className="font-display text-xl font-extrabold text-white sm:text-2xl">
+                    <h3 className="font-display text-heading text-white">
                       {active.title[locale]}
                     </h3>
-                    <p className="mt-3 text-[14.5px] leading-relaxed text-white/70">
+                    <p className="mt-3 text-small leading-relaxed text-white/70">
                       {active.body[locale]}
                     </p>
                     <div className="mt-6 border-t border-white/10 pt-5">
-                      <p className="font-mono text-3xl font-extrabold text-accent-300 sm:text-4xl">
+                      <p className="text-title text-accent-300">
                         {active.stat}
                       </p>
-                      <p className="mt-1 text-[12.5px] text-white/50">
+                      <p className="mt-1 text-caption text-white/50">
                         {active.statLabel[locale]}
                       </p>
                     </div>
@@ -198,7 +198,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
             </div>
 
             <div>
-              <p className="text-[11.5px] leading-relaxed text-white/40">
+              <p className="text-caption leading-relaxed text-white/40">
                 {set.footnote[locale]}
               </p>
             </div>

@@ -78,7 +78,7 @@ export default function PaymentMethods({ className = "" }: { className?: string 
         <span
           key={label}
           title={label}
-          className="inline-flex h-7 items-center justify-center rounded-md border border-forest-100 bg-white px-2.5 grayscale-[35%]"
+          className="inline-flex h-7 items-center justify-center rounded-control border border-forest-100 bg-white px-2.5 grayscale-[35%]"
         >
           {img ? (
             // eslint-disable-next-line @next/next/no-img-element

@@ -103,7 +103,7 @@ function FeaturePhoto({ src, alt }: { src: string; alt: string }) {
         style={{ clipPath }}
         // reduced motion: CSS drops the scroll-bound clip and zoom (framer's
         // reducedMotion setting doesn't reach values bound to scroll)
-        className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-forest-950 motion-reduce:[clip-path:none]!"
+        className="relative aspect-[16/9] overflow-hidden rounded-card bg-forest-950 motion-reduce:[clip-path:none]!"
       >
         <motion.div
           style={{ scale }}
@@ -225,7 +225,7 @@ export default function ShowcasePage({
             <motion.nav
               variants={heroLine}
               aria-label={t("breadcrumb")}
-              className="mb-6 flex items-center gap-1.5 text-[12.5px] text-white/60"
+              className="mb-6 flex items-center gap-1.5 text-caption text-white/60"
             >
               <Link href="/shop" className="hover:text-white">
                 {t("shop")}
@@ -246,7 +246,7 @@ export default function ShowcasePage({
             </motion.p>
             <motion.h1
               variants={heroLine}
-              className="mt-3 font-display text-5xl leading-[1.02] font-extrabold tracking-tight sm:text-6xl lg:text-7xl"
+              className="mt-3 font-display text-display"
             >
               {brandPart && <>{brandPart} </>}
               <span className="text-accent-gradient whitespace-nowrap">{product.name}</span>
@@ -268,7 +268,7 @@ export default function ShowcasePage({
                     <span
                       key={model.id}
                       aria-current="page"
-                      className="inline-flex min-h-10 items-center rounded-full bg-white px-5 text-[14px] font-bold text-[#0b0d10]"
+                      className="inline-flex min-h-10 items-center rounded-full bg-white px-5 text-small font-bold text-[#0b0d10]"
                     >
                       {model.name}
                     </span>
@@ -276,7 +276,7 @@ export default function ShowcasePage({
                     <Link
                       key={model.id}
                       href={`/products/${model.id}`}
-                      className="inline-flex min-h-10 items-center rounded-full px-5 text-[14px] font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white"
+                      className="inline-flex min-h-10 items-center rounded-full px-5 text-small font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white"
                     >
                       {model.name}
                     </Link>
@@ -286,7 +286,7 @@ export default function ShowcasePage({
             )}
             <motion.p
               variants={heroLine}
-              className="mt-5 max-w-md text-[16px] leading-relaxed text-white/80 sm:text-lg"
+              className="mt-5 max-w-md text-lead leading-relaxed text-white/80"
             >
               {text(product.tagline)}
             </motion.p>
@@ -294,14 +294,14 @@ export default function ShowcasePage({
               <button
                 type="button"
                 onClick={quote}
-                className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-accent-gradient px-7 text-[15px] font-bold"
+                className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-accent-gradient px-7 text-body font-bold"
               >
                 {t("getQuote")}
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </button>
               <Link
                 href="/products/request-a-demo"
-                className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/35 px-6 text-[15px] font-semibold text-white transition-colors hover:border-white"
+                className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/35 px-6 text-body font-semibold text-white transition-colors hover:border-white"
               >
                 <Calendar className="h-4 w-4" aria-hidden="true" />
                 {t("bookDemo")}
@@ -376,8 +376,8 @@ export default function ShowcasePage({
                     i > 0 ? "lg:border-l lg:border-white/10" : "lg:pl-0"
                   } ${i === 1 ? "border-l border-white/10" : ""} ${i === 3 ? "border-l border-white/10" : ""}`}
                 >
-                  <dt className="order-2 mt-1.5 text-[13px] text-white/60">{text(figure.label)}</dt>
-                  <dd className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+                  <dt className="order-2 mt-1.5 text-small text-white/60">{text(figure.label)}</dt>
+                  <dd className="font-display text-title">
                     {figure.value}
                   </dd>
                 </div>
@@ -396,10 +396,10 @@ export default function ShowcasePage({
                 {text(feature.eyebrow)}
               </p>
             )}
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
+            <h2 className="mt-3 font-display text-title text-content">
               {text(feature.heading)}
             </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-ink-muted sm:text-lg">
+            <p className="mt-4 text-lead leading-relaxed text-ink-muted">
               {text(feature.body)}
             </p>
           </div>
@@ -417,13 +417,13 @@ export default function ShowcasePage({
       {specs.length > 0 && (
         <section id="specs" className="bg-surface py-20 sm:py-28">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-center font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
+            <h2 className="text-center font-display text-title text-content">
               {t("specsHeading")}
             </h2>
             <div className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
               {specs.map((group, i) => (
                 <div key={`${i}-${group.title.en}`}>
-                  <h3 className="border-b-2 border-content pb-2 font-display text-lg font-bold text-content">
+                  <h3 className="border-b-2 border-content pb-2 font-display text-lead font-bold text-content">
                     {text(group.title)}
                   </h3>
                   <dl>
@@ -453,14 +453,14 @@ export default function ShowcasePage({
       {/* ---- closing call ---- */}
       <section className="bg-[#0b0d10] py-20 text-center text-white sm:py-24">
         <div className="mx-auto max-w-xl px-4">
-          <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+          <h2 className="font-display text-title">
             {t("ctaHeading", { name: product.name })}
           </h2>
           <p className="mt-4 text-white/75">{t("ctaBody")}</p>
           <button
             type="button"
             onClick={quote}
-            className="mt-8 inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-accent-gradient px-8 text-[15px] font-bold"
+            className="mt-8 inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-accent-gradient px-8 text-body font-bold"
           >
             {t("getQuote")}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

@@ -19,13 +19,13 @@ export default function BoxContents({
 
   return (
     <section className="mx-auto max-w-5xl">
-      <h2 className="text-center font-display text-3xl font-extrabold tracking-tight text-content sm:text-4xl">
+      <h2 className="text-center font-display text-title text-content">
         {heading}
       </h2>
       <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
         {items.map((item, i) => (
           <div key={i} className="flex flex-col">
-            <div className="flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-cloud p-5">
+            <div className="flex aspect-square items-center justify-center overflow-hidden rounded-card bg-cloud p-5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={item.image}
@@ -34,10 +34,10 @@ export default function BoxContents({
                 className="h-full w-full object-contain"
               />
             </div>
-            <p className="mt-4 text-[15px] font-bold leading-snug text-content">
+            <p className="mt-4 text-body font-bold leading-snug text-content">
               {pick(item.name)}
             </p>
-            <p className="mt-1 font-mono text-[13.5px] text-ink-muted">× {item.qty ?? 1}</p>
+            <p className="mt-1 text-small text-ink-muted">× {item.qty ?? 1}</p>
           </div>
         ))}
       </div>

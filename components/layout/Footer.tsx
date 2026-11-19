@@ -275,7 +275,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
             off) has nothing to pay, so no card or PromptPay labels. */}
         {siteConfig.cartEnabled && (
         <div className="mt-14 flex flex-col items-start justify-between gap-6 border-t border-white/10 pt-8 sm:flex-row sm:items-center">
-          <p className="text-xs text-white/40">{t("paymentNote")}</p>
+          <p className="text-caption text-white/40">{t("paymentNote")}</p>
           <ul className="flex flex-wrap gap-2.5">
             {payments.map((p) => (
               <li

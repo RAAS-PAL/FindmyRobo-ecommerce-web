@@ -166,7 +166,7 @@ export default function HomeQuoteForm({
           <ol aria-label={t("consultation.progressLabel")} className="mb-6 grid grid-cols-2 gap-4">
             {(["project", "contact"] as const).map((name, index) => (
               <li key={name} aria-current={step === index ? "step" : undefined}
-                className={"border-t-2 pt-3 text-small font-semibold " + (step >= index ? "border-accent text-content" : "border-forest-100 text-ink-muted")}>
+                className={"border-t-2 pt-3 text-small font-semibold" + (step >= index ? "border-accent text-content" : "border-forest-100 text-ink-muted")}>
                 <span className="mr-2 inline-flex w-4 justify-center tabular-nums" aria-hidden="true">
                   {step > index ? <Check className="h-4 w-4" /> : index + 1}
                 </span>
@@ -211,7 +211,7 @@ export default function HomeQuoteForm({
                                 className="peer sr-only" />
                               <span className="flex min-h-12 items-center gap-2.5 rounded-control border border-forest-100 px-3 py-2.5 text-small font-medium text-content transition-colors hover:border-accent-600/50 peer-checked:border-accent-600 peer-checked:bg-accent-50 peer-checked:text-accent-600 peer-focus-visible:ring-2 peer-focus-visible:ring-accent/40 peer-focus-visible:ring-offset-2">
                                 <span className="flex-1">{t("interests." + value)}</span>
-                                <span className={"flex h-4 w-4 shrink-0 items-center justify-center rounded-full border " + (form.interest === value ? "border-accent bg-accent text-on-accent" : "border-forest-300")} aria-hidden="true">
+                                <span className={"flex h-4 w-4 shrink-0 items-center justify-center rounded-full border" + (form.interest === value ? "border-accent bg-accent text-on-accent" : "border-forest-300")} aria-hidden="true">
                                   {form.interest === value && <Check className="h-2.5 w-2.5" strokeWidth={3} />}
                                 </span>
                               </span>
@@ -228,7 +228,7 @@ export default function HomeQuoteForm({
                       <legend className={fieldLabelClass}>{tcond("ask")}</legend>
                       <div className="flex flex-wrap gap-4">
                         {sold.conditions.map((condition) => (
-                          <label key={condition} className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-content">
+                          <label key={condition} className="flex min-h-11 cursor-pointer items-center gap-2 text-small text-content">
                             <input type="radio" name="condition" value={condition} checked={form.condition === condition}
                               onChange={() => {
                                 setForm((current) => ({ ...current, condition }));
@@ -297,8 +297,8 @@ export default function HomeQuoteForm({
                   <details className="group rounded-control border border-forest-100">
                     <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 text-small font-medium text-ink-muted">
                       {t("consultation.extraDetails")}
-                      <span aria-hidden="true" className="text-lg group-open:hidden">+</span>
-                      <span aria-hidden="true" className="hidden text-lg group-open:inline">−</span>
+                      <span aria-hidden="true" className="text-lead group-open:hidden">+</span>
+                      <span aria-hidden="true" className="hidden text-lead group-open:inline">−</span>
                     </summary>
                     <div className="space-y-4 border-t border-forest-100 p-4">
                       <Field id={id("company")} label={t("companyLabel")} optional={tc("optional")}>

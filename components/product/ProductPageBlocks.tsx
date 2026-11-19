@@ -64,7 +64,7 @@ export default function ProductPageBlocks({
   const renderGroup = (group: FeatureBlock[]) => (
     <section className="mx-auto max-w-6xl">
       <div>
-        <h2 className="text-center font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
+        <h2 className="text-center font-display text-title text-content">
           {featureGroupHeading}
         </h2>
       </div>
@@ -80,10 +80,10 @@ export default function ProductPageBlocks({
                 {block.eyebrow ? pick(block.eyebrow, locale) : String(j + 1).padStart(2, "0")}
               </p>
               <span aria-hidden="true" className="mt-3 block h-0.5 w-8 rounded-full bg-accent-gradient" />
-              <h3 className="mt-5 font-display text-xl font-extrabold tracking-tight text-content sm:text-2xl">
+              <h3 className="mt-5 font-display text-heading text-content">
                 {pick(block.heading, locale)}
               </h3>
-              <p className="mt-3 whitespace-pre-line text-[15px] leading-relaxed text-ink-muted">
+              <p className="mt-3 whitespace-pre-line text-body leading-relaxed text-ink-muted">
                 {pick(block.body, locale)}
               </p>
             </article>
@@ -115,7 +115,7 @@ export default function ProductPageBlocks({
                   src={block.image}
                   alt=""
                   loading="lazy"
-                  className="max-h-[560px] w-full rounded-3xl object-cover"
+                  className="max-h-[560px] w-full rounded-card object-cover"
                 />
               </div>
             );
@@ -129,13 +129,13 @@ export default function ProductPageBlocks({
                       src={block.image}
                       alt=""
                       loading="lazy"
-                      className="mb-8 max-h-[480px] w-full rounded-3xl object-cover"
+                      className="mb-8 max-h-[480px] w-full rounded-card object-cover"
                     />
                   )}
-                  <h2 className="font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
+                  <h2 className="font-display text-title text-content">
                     {pick(block.heading, locale)}
                   </h2>
-                  <p className="mt-4 whitespace-pre-line text-[15px] leading-relaxed text-ink-muted">
+                  <p className="mt-4 whitespace-pre-line text-body leading-relaxed text-ink-muted">
                     {pick(block.body, locale)}
                   </p>
                 </section>
@@ -147,7 +147,7 @@ export default function ProductPageBlocks({
               <div key={i}>
                 <section>
                   {block.heading && (
-                    <h2 className="mb-8 text-center font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
+                    <h2 className="mb-8 text-center font-display text-title text-content">
                       {pick(block.heading, locale)}
                     </h2>
                   )}
@@ -155,7 +155,7 @@ export default function ProductPageBlocks({
                     {block.cards.map((card, j) => (
                       <figure
                         key={j}
-                        className="overflow-hidden rounded-2xl border border-forest-100 bg-surface"
+                        className="overflow-hidden rounded-card border border-forest-100 bg-surface"
                       >
                         <img
                           src={card.image}
@@ -163,7 +163,7 @@ export default function ProductPageBlocks({
                           loading="lazy"
                           className="aspect-[4/3] w-full object-cover"
                         />
-                        <figcaption className="px-5 py-4 text-center text-[13.5px] font-medium leading-snug text-content">
+                        <figcaption className="px-5 py-4 text-center text-small font-medium leading-snug text-content">
                           {pick(card.caption, locale)}
                         </figcaption>
                       </figure>
@@ -203,11 +203,11 @@ export default function ProductPageBlocks({
                     src={block.image}
                     alt=""
                     loading="lazy"
-                    className={`w-full rounded-3xl object-cover ${
+                    className={`w-full rounded-card object-cover ${
                       block.imageSide === "left" ? "" : "lg:order-2"
                     }`}
                   />
-                  <p className="whitespace-pre-line text-[15px] leading-relaxed text-ink-muted">
+                  <p className="whitespace-pre-line text-body leading-relaxed text-ink-muted">
                     {pick(block.body, locale)}
                   </p>
                 </section>
@@ -219,7 +219,7 @@ export default function ProductPageBlocks({
               <div key={i}>
                 <section>
                   {block.heading && (
-                    <h2 className="mb-6 font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
+                    <h2 className="mb-6 font-display text-title text-content">
                       {pick(block.heading, locale)}
                     </h2>
                   )}
@@ -228,7 +228,7 @@ export default function ProductPageBlocks({
                     title={block.heading ? pick(block.heading, locale) : productName}
                   />
                   {block.caption && (
-                    <p className="mt-3 text-center text-[12.5px] text-ink-muted">
+                    <p className="mt-3 text-center text-caption text-ink-muted">
                       {pick(block.caption, locale)}
                     </p>
                   )}

@@ -189,7 +189,7 @@ export default async function ProductPage({
     <main className="overflow-x-clip bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* breadcrumb */}
-        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-[13px] text-ink-muted">
+        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-small text-ink-muted">
           <Link href="/" className="transition-colors hover:text-accent-600">
             {t("home")}
           </Link>
@@ -245,13 +245,13 @@ export default async function ProductPage({
 
           {/* info */}
           <div className="flex flex-col">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-600">
+            <p className="text-caption font-semibold text-accent-600">
               {tc(`${product.category}.name`)}
             </p>
-            <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-4xl">
+            <h1 className="mt-3 font-display text-title text-content">
               {product.name}
             </h1>
-            <p className="mt-4 text-base leading-relaxed text-ink-muted">
+            <p className="mt-4 text-body leading-relaxed text-ink-muted">
               {product.description[locale as Locale] ?? product.description.en}
             </p>
 
@@ -261,18 +261,18 @@ export default async function ProductPage({
               <div className="mt-6">
                 <PriceOrQuote
                   amount={product.price}
-                  className="font-mono text-3xl font-semibold tabular-nums text-content"
-                  quoteClassName="font-display text-2xl font-extrabold text-content"
+                  className="text-title font-semibold tabular-nums text-content"
+                  quoteClassName="font-display text-heading text-content"
                 />
                 {!siteConfig.showPrices && (
-                  <p className="mt-2 max-w-md text-[13px] leading-relaxed text-ink-muted">
+                  <p className="mt-2 max-w-md text-small leading-relaxed text-ink-muted">
                     {tq("note")}
                   </p>
                 )}
               </div>
             )}
             {product.preorder && (
-              <p className="mt-2 text-[13px] font-medium text-accent-600">{t("preorderNote")}</p>
+              <p className="mt-2 text-small font-medium text-accent-600">{t("preorderNote")}</p>
             )}
 
             <div className="mt-8">
@@ -289,7 +289,7 @@ export default async function ProductPage({
                   <AddToCartButton productId={product.id} />
                   <Link
                     href="/products/request-a-demo"
-                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-[15px] font-semibold text-content transition-colors duration-300 hover:border-accent hover:text-accent-600 dark:border-white/30 dark:hover:border-accent"
+                    className="flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-forest px-7 text-body font-semibold text-content transition-colors duration-300 hover:border-accent hover:text-accent-600 dark:border-white/30 dark:hover:border-accent"
                   >
                     <Calendar className="h-4.5 w-4.5" aria-hidden="true" />
                     {t("ctaDemo")}
@@ -302,7 +302,7 @@ export default async function ProductPage({
                 <CompareToggleButton productId={product.id} />
               </div>
             )}
-            <p className="mt-4 text-center text-[12px] text-ink-muted sm:text-left">
+            <p className="mt-4 text-center text-caption text-ink-muted sm:text-left">
               {t("returnsNote")}
             </p>
             {siteConfig.cartEnabled && (
@@ -310,13 +310,13 @@ export default async function ProductPage({
             )}
 
             {/* features */}
-            <div className="mt-10 rounded-2xl bg-cloud p-6 sm:p-8">
-              <h2 className="font-display text-lg font-bold text-content">
+            <div className="mt-10 rounded-card bg-cloud p-6 sm:p-8">
+              <h2 className="font-display text-lead font-bold text-content">
                 {t("featuresHeading")}
               </h2>
               <ul className="mt-4 space-y-3">
                 {features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3 text-sm leading-relaxed text-ink-muted">
+                  <li key={feature} className="flex items-start gap-3 text-small leading-relaxed text-ink-muted">
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/20">
                       <Check className="h-3 w-3 text-accent-600" aria-hidden="true" />
                     </span>

@@ -24,7 +24,7 @@ export default function VideoEmbed({
 
   if (id) {
     return (
-      <div className={`relative aspect-video overflow-hidden rounded-2xl bg-forest-950 ${className}`}>
+      <div className={`relative aspect-video overflow-hidden rounded-card bg-forest-950 ${className}`}>
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${id}`}
           title={title}
@@ -43,7 +43,7 @@ export default function VideoEmbed({
       controls
       playsInline
       preload="metadata"
-      className={`aspect-video w-full rounded-2xl bg-forest-950 object-cover ${className}`}
+      className={`aspect-video w-full rounded-card bg-forest-950 object-cover ${className}`}
     />
   );
 }

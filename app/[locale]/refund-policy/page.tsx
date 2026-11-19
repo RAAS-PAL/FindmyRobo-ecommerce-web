@@ -37,16 +37,13 @@ export default async function RefundPolicyPage({
     <main className="flex-1 bg-cloud">
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
         <div>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-            {t("eyebrow")}
-          </p>
-          <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-4xl">
+          <h1 className="mt-3 font-display text-title text-content">
             {policy.title}
           </h1>
         </div>
 
         <div>
-          <p className="mt-8 text-[15px] leading-relaxed text-ink-muted">
+          <p className="mt-8 text-body leading-relaxed text-ink-muted">
             {policy.intro}
           </p>
         </div>
@@ -55,7 +52,7 @@ export default async function RefundPolicyPage({
           {policy.sections.map((section) => (
             <div key={section.heading}>
               <section>
-                <h2 className="font-display text-lg font-bold text-content sm:text-xl">
+                <h2 className="font-display text-heading text-content">
                   {section.heading}
                 </h2>
 
@@ -71,7 +68,7 @@ export default async function RefundPolicyPage({
                           {block.items.map((item) => (
                             <li
                               key={item}
-                              className="border-l-2 border-forest-100 pl-4 text-[15px] leading-relaxed text-ink-muted"
+                              className="border-l-2 border-forest-100 pl-4 text-body leading-relaxed text-ink-muted"
                             >
                               {item}
                             </li>
@@ -84,7 +81,7 @@ export default async function RefundPolicyPage({
                       return (
                         <h3
                           key={j}
-                          className="pt-2 text-[15.5px] font-bold text-content"
+                          className="pt-2 text-body font-bold text-content"
                         >
                           {block.text}
                         </h3>
@@ -95,7 +92,7 @@ export default async function RefundPolicyPage({
                       return (
                         <p
                           key={j}
-                          className="flex items-center gap-2.5 rounded-xl bg-surface px-4 py-3 text-[15px] font-semibold text-content"
+                          className="flex items-center gap-2.5 rounded-control bg-surface px-4 py-3 text-body font-semibold text-content"
                         >
                           <Phone
                             className="h-4 w-4 shrink-0 text-accent-600"
@@ -109,7 +106,7 @@ export default async function RefundPolicyPage({
                     return (
                       <p
                         key={j}
-                        className="text-[15px] leading-relaxed text-ink-muted"
+                        className="text-body leading-relaxed text-ink-muted"
                       >
                         {block.text}
                       </p>

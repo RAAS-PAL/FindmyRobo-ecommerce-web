@@ -22,7 +22,7 @@ export default function TextLink({
   /** On a photo or dark surface: white text. */
   onPhoto?: boolean;
 }) {
-  const cls = `${CLASS}${onPhoto ? " text-white" : ""}${className ? ` ${className}` : ""}`;
+  const cls = `${CLASS}${onPhoto ? "text-white" : ""}${className ? ` ${className}` : ""}`;
   const body = (
     <>
       {children}

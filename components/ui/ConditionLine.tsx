@@ -28,7 +28,7 @@ export default function ConditionLine({
       {conditions.map((condition) => (
         <li key={condition}>
           <span
-            className={`inline-flex items-center border px-2 py-1 font-mono text-[10px] leading-none font-semibold tracking-[0.12em] uppercase [&:lang(th)]:tracking-[0.02em] ${
+            className={`inline-flex items-center border px-2 py-1 text-caption leading-none font-semibold ${
               tone === "dark"
                 ? "border-white/40 bg-white/10 text-white"
                 : "border-forest-200 bg-surface text-content shadow-[0_1px_2px_rgba(0,0,0,0.06)]"

@@ -103,13 +103,13 @@ export default function ShowcasePhoto({
       />
       {brief && (
         <div
-          className={`absolute inset-x-4 flex items-start gap-2.5 rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-white/80 backdrop-blur-sm sm:inset-x-auto sm:left-5 sm:max-w-md ${
+          className={`absolute inset-x-4 flex items-start gap-2.5 rounded-control border border-white/10 bg-black/40 px-3 py-2.5 text-white/80 backdrop-blur-sm sm:inset-x-auto sm:left-5 sm:max-w-md ${
             captionAt === "top" ? "top-4 sm:top-5" : "bottom-4 sm:bottom-5"
           }`}
         >
           <Camera className="mt-0.5 h-4 w-4 shrink-0 text-accent-300" aria-hidden="true" />
-          <p className="text-[12px] leading-snug">
-            <span className="font-mono text-[10.5px] font-semibold tracking-[0.2em] text-accent-300 uppercase">
+          <p className="text-caption leading-snug">
+            <span className="text-caption font-semibold text-accent-300">
               {t("photoComing")}
             </span>
             <span className="mt-0.5 block">{brief}</span>

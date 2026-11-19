@@ -25,7 +25,7 @@ export default function CompareToggleButton({ productId }: { productId: string }
         disabled={blocked}
         aria-pressed={selected}
         title={blocked ? t("full") : undefined}
-        className={`flex min-h-[40px] cursor-pointer items-center gap-2 text-[13px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-45 ${
+        className={`flex min-h-[40px] cursor-pointer items-center gap-2 text-small font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-45 ${
           selected ? "text-accent-600 hover:text-content" : "text-ink-muted hover:text-accent-600"
         }`}
       >
@@ -39,7 +39,7 @@ export default function CompareToggleButton({ productId }: { productId: string }
       {ready && (
         <Link
           href={`/compare?ids=${ids.join(",")}`}
-          className="text-[13px] font-bold text-accent-600 transition-colors hover:text-content"
+          className="text-small font-bold text-accent-600 transition-colors hover:text-content"
         >
           {t("compareNow", { count })} →
         </Link>

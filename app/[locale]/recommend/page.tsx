@@ -30,13 +30,10 @@ export default async function RecommendPage({
     <main className="bg-cloud">
       <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
         <div>
-          <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-accent-600 uppercase">
-            {t("eyebrow")}
-          </p>
-          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-content sm:text-5xl">
+          <h1 className="mt-3 font-display text-title text-content">
             {t("heading")}
           </h1>
-          <p className="mt-4 max-w-xl text-base text-ink-muted">{t("sub")}</p>
+          <p className="mt-4 max-w-xl text-body text-ink-muted">{t("sub")}</p>
         </div>
         <div className="mt-8 sm:mt-10">
           <RobotFinder />
