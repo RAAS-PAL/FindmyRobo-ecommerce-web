@@ -4,64 +4,54 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { categories, type CategorySlug } from "@/data/categories";
 import { useProducts } from "@/components/ProductsProvider";
+import { SERVICE_CATEGORY } from "@/data/products";
 
 /**
- * Filter pills for the shop pages. A category marked available but with no
- * robot on the storefront is left out, the same way the navbar drops an empty
- * tab. Coming-soon categories stay, labelled and not clickable.
+ * One tab in a category row: the home lineup's filter buttons and the shop's
+ * category links look the same. The current one is bold with a 2 px accent
+ * line on the row's bottom border; it changes at once, it does not slide.
+ */
+export function categoryTabClass(active: boolean) {
+  return `relative flex min-h-11 shrink-0 cursor-pointer items-center px-1 text-small whitespace-nowrap transition-colors duration-150 ${
+    active
+      ? "font-semibold text-content after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-accent"
+      : "font-medium text-ink-muted hover:text-content"
+  }`;
+}
+
+/**
+ * Category links for the shop pages, in the same row style as the homepage
+ * lineup. A category with no robot on show is left out, as the navbar does;
+ * there are no "coming soon" tabs. Services are not a category tab: the shop
+ * lists them under the robots.
  */
 export default function CategoryTabs({ active }: { active?: CategorySlug }) {
   const t = useTranslations("shop");
   const tc = useTranslations("categories");
-  const tn = useTranslations("nav");
   const { products } = useProducts();
   const stocked = new Set(products.map((product) => product.category));
-
-  const base =
-    "flex min-h-[44px] items-center gap-2 rounded-full border px-5 text-[13.5px] font-semibold transition-colors";
+  const shown = categories.filter(
+    (c) => c.available && c.slug !== SERVICE_CATEGORY && stocked.has(c.slug)
+  );
 
   return (
-    <div className="no-scrollbar -mx-4 flex gap-2.5 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
-      <Link
-        href="/shop"
-        className={`${base} ${
-          !active
-            ? "border-forest bg-forest text-white"
-            : "border-forest-100 bg-surface text-content hover:border-accent hover:bg-accent/10"
-        }`}
-      >
+    <nav
+      aria-label={t("categoriesLabel")}
+      className="no-scrollbar flex gap-6 overflow-x-auto border-b border-forest-100 dark:border-forest-700"
+    >
+      <Link href="/shop" aria-current={!active ? "page" : undefined} className={categoryTabClass(!active)}>
         {t("all")}
       </Link>
-      {categories.map((c) => {
-        if (c.available && !stocked.has(c.slug)) return null;
-        if (!c.available) {
-          return (
-            <span
-              key={c.slug}
-              aria-disabled="true"
-              className={`${base} cursor-default border-forest-100 bg-cloud whitespace-nowrap text-ink-muted/60`}
-            >
-              {tc(`${c.slug}.name`)}
-              <span className="rounded-full bg-accent/20 px-2 py-0.5 font-mono text-[9px] font-semibold tracking-wider text-accent-600 uppercase">
-                {tn("soon")}
-              </span>
-            </span>
-          );
-        }
-        return (
-          <Link
-            key={c.slug}
-            href={`/shop/${c.slug}`}
-            className={`${base} whitespace-nowrap ${
-              active === c.slug
-                ? "border-forest bg-forest text-white"
-                : "border-forest-100 bg-surface text-content hover:border-accent hover:bg-accent/10"
-            }`}
-          >
-            {tc(`${c.slug}.name`)}
-          </Link>
-        );
-      })}
-    </div>
+      {shown.map((c) => (
+        <Link
+          key={c.slug}
+          href={`/shop/${c.slug}`}
+          aria-current={active === c.slug ? "page" : undefined}
+          className={categoryTabClass(active === c.slug)}
+        >
+          {tc(`${c.slug}.nav`)}
+        </Link>
+      ))}
+    </nav>
   );
 }
