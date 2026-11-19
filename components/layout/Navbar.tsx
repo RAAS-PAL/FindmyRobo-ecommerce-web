@@ -524,16 +524,16 @@ export default function Navbar() {
               <Image
                 src="/main-logo-light.png"
                 alt="FindMyRobo"
-                width={1200}
-                height={320}
+                width={135}
+                height={36}
                 priority
                 className="h-9 w-auto dark:hidden"
               />
               <Image
                 src="/main-logo-dark.png"
                 alt=""
-                width={1200}
-                height={320}
+                width={135}
+                height={36}
                 priority
                 className="hidden h-9 w-auto dark:block"
               />
@@ -751,15 +751,15 @@ export default function Navbar() {
                 <Image
                   src="/main-logo-light.png"
                   alt="FindMyRobo"
-                  width={1200}
-                  height={320}
+                  width={135}
+                  height={36}
                   className="h-9 w-auto dark:hidden"
                 />
                 <Image
                   src="/main-logo-dark.png"
                   alt=""
-                  width={1200}
-                  height={320}
+                  width={135}
+                  height={36}
                   className="hidden h-9 w-auto dark:block"
                 />
                 <button
