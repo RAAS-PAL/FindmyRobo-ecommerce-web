@@ -31,7 +31,6 @@ export default async function RefundPolicyPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("refundPolicy");
   const policy = returnPolicy[locale as Locale] ?? returnPolicy.th;
 
   return (
