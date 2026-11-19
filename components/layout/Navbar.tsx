@@ -68,13 +68,11 @@ interface NavItem {
   current?: boolean;
 }
 
-/** Small uppercase label over a group of links. */
-const groupHeadingClass =
-  "font-mono text-[10.5px] font-semibold tracking-[0.2em] text-ink-muted uppercase [&:lang(th)]:tracking-[0.04em]";
+/** Small label over a group of links. */
+const groupHeadingClass = "text-caption font-medium text-ink-muted";
 
 /** Label over a group inside the blue panels. */
-const panelLabelClass =
-  "font-mono text-[10px] font-semibold tracking-[0.2em] text-[color:var(--nav-tab-faint)] uppercase [&:lang(th)]:tracking-[0.04em]";
+const panelLabelClass = "text-caption font-medium text-[color:var(--nav-tab-faint)]";
 
 /** The bar's colour, painted on the whole shape: the bar colour across the
  *  bar row only, and the panel colour below it. One background, so the shape
@@ -85,17 +83,7 @@ const barBackground =
 
 /** Card shell shared by everything inside an open panel. */
 const panelCardClass =
-  "group relative flex overflow-hidden rounded-xl border border-forest-100 bg-[color:var(--nav-card)] transition-[border-color,box-shadow] duration-300 hover:border-accent/50 hover:shadow-[0_10px_24px_-14px_rgb(31_79_214/0.45)]";
-
-/** A faint sky-blue light that rises in a panel card on hover. */
-function CardGlow() {
-  return (
-    <span
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgb(79_184_255/0.16),transparent_60%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-    />
-  );
-}
+  "group relative flex overflow-hidden rounded-card border border-forest-100 bg-[color:var(--nav-card)] transition-colors duration-150 hover:border-forest-300";
 
 /** A category's robots as photo cards, then a card for the whole category. */
 function CategoryPanel({
@@ -122,7 +110,6 @@ function CategoryPanel({
       {models.map((model) => (
         <li key={model.key}>
           <Link href={model.href} onClick={onNavigate} className={`${panelCardClass} h-[172px] flex-col p-3`}>
-            <CardGlow />
             <span className="relative flex min-h-0 flex-1 items-center justify-center">
               <ProductVisual
                 product={model.product}
@@ -130,8 +117,8 @@ function CategoryPanel({
               />
             </span>
             <span className="relative mt-2 block text-center">
-              {model.brand && <span className={`block ${panelLabelClass} text-[9.5px]`}>{model.brand}</span>}
-              <span className="mt-0.5 block truncate text-[12.5px] font-semibold text-content">{model.name}</span>
+              {model.brand && <span className={`block ${panelLabelClass}`}>{model.brand}</span>}
+              <span className="mt-0.5 block truncate text-small font-semibold text-content">{model.name}</span>
             </span>
           </Link>
         </li>
@@ -142,21 +129,17 @@ function CategoryPanel({
           onClick={onNavigate}
           className={`${panelCardClass} h-[172px] flex-col justify-between p-4`}
         >
-          <CardGlow />
           <span className="relative">
-            <span className="block font-display text-[15px] leading-tight font-bold text-content">
+            <span className="block font-display text-body font-semibold text-content">
               {tc(`${category}.name`)}
             </span>
-            <span className="mt-1.5 line-clamp-3 block text-[11.5px] leading-relaxed text-[color:var(--nav-tab-muted)]">
+            <span className="mt-1.5 line-clamp-3 block text-caption text-[color:var(--nav-tab-muted)]">
               {tc(`${category}.description`)}
             </span>
           </span>
-          <span className="relative inline-flex items-center gap-1 text-[12px] font-semibold text-accent-600 underline-offset-4 group-hover:underline">
+          <span className="relative inline-flex items-center gap-1 text-small font-semibold text-accent-600 underline-offset-4 group-hover:underline">
             {t("viewAll")}
-            <ArrowRight
-              className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </span>
         </Link>
       </li>
@@ -178,7 +161,7 @@ function GroupsPanel({ groups, onNavigate }: { groups: NavGroup[]; onNavigate: (
                 key={item.label}
                 href={item.href}
                 onClick={onNavigate}
-                className="group/item flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-[12.5px] font-semibold text-content transition-colors hover:bg-cloud hover:text-accent-600"
+                className="group/item flex items-center gap-2.5 rounded-control px-2 py-1.5 text-small font-semibold text-content transition-colors hover:bg-cloud hover:text-accent-600"
               >
                 {Icon && (
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-accent-50 text-accent-600 transition-colors group-hover/item:bg-accent group-hover/item:text-white">
@@ -210,7 +193,7 @@ function SearchPanel({
     <div>
       <CatalogSearch
         className="block"
-        inputClassName="h-11 w-full rounded-xl border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-[14px] text-content placeholder:text-[color:var(--nav-tab-faint)] transition-colors focus:border-accent focus:outline-none focus-visible:outline-none!"
+        inputClassName="h-11 w-full rounded-control border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-body text-content placeholder:text-[color:var(--nav-tab-faint)] transition-colors focus:border-accent focus:outline-none focus-visible:outline-none!"
         dropdownClassName="static! mt-3 w-full shadow-none!"
         onNavigate={onNavigate}
       />
@@ -221,7 +204,7 @@ function SearchPanel({
             key={category.slug}
             href={categoryHref(category.slug)}
             onClick={onNavigate}
-            className="rounded-full border border-forest-100 bg-[color:var(--nav-card)] px-3 py-1 text-[12px] font-semibold text-ink-muted transition-colors hover:border-accent hover:text-accent-600"
+            className="rounded-control border border-forest-100 bg-[color:var(--nav-card)] px-3 py-1 text-caption font-semibold text-ink-muted transition-colors hover:border-accent hover:text-accent-600"
           >
             {category.label}
           </Link>
@@ -298,7 +281,6 @@ export default function Navbar() {
     pathname === "/about" ||
     pathname === "/contact-sales" ||
     pathname === "/location" ||
-    pathname === "/recommend" ||
     pathname.startsWith("/products/request-a-demo");
 
   // A category's robots: the products shown on the storefront (hidden ones,
@@ -338,10 +320,10 @@ export default function Navbar() {
         {
           heading: t("groupCompany"),
           items: [
-            // The full page first; the two below are still homepage anchors.
+            // The full page first, then two of its sections.
             { label: t("aboutUs"), href: "/about", icon: Building2 },
-            { label: t("aboutStory"), href: "/#about", icon: BookOpen },
-            { label: t("aboutPartners"), href: "/#about", icon: Handshake },
+            { label: t("aboutStory"), href: "/about#story", icon: BookOpen },
+            { label: t("aboutPartners"), href: "/about#partner", icon: Handshake },
           ],
         },
         {
@@ -547,6 +529,34 @@ export default function Navbar() {
               {navLinks.map((link, linkIndex) => {
                 const isOpen = desktopMenu === linkIndex;
                 const lit = link.current || isOpen || pointed === linkIndex;
+                // a category with one robot links straight to it: no panel of one
+                const only = link.models?.length === 1 ? link.models[0] : null;
+                if (only) {
+                  return (
+                    <li key={link.label}>
+                      <Link
+                        href={only.href}
+                        onMouseEnter={() => {
+                          setPointed(linkIndex);
+                          if (!searchOpen) closeMenu();
+                        }}
+                        onFocus={() => setPointed(linkIndex)}
+                        className={`relative flex items-center gap-1 rounded-lg px-3 py-1.5 text-[13px] font-semibold whitespace-nowrap [&:lang(th)]:px-2 [&:lang(th)]:text-[12.5px] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
+                          lit ? "text-[color:var(--nav-navy)]" : "text-[color:var(--nav-ink)] hover:text-[color:var(--nav-navy)]"
+                        }`}
+                      >
+                        {highlight(linkIndex, pointed === linkIndex)}
+                        {link.current && (
+                          <span
+                            aria-hidden="true"
+                            className="absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent"
+                          />
+                        )}
+                        <span className="relative">{link.label}</span>
+                      </Link>
+                    </li>
+                  );
+                }
                 return (
                   <li key={link.label}>
                     <button
@@ -655,14 +665,10 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => openQuote()}
-                  className="group flex h-10 min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-accent px-2.5 text-[13px] font-bold whitespace-nowrap text-on-accent shadow-[0_6px_16px_-8px_rgb(var(--accent-rgb)/0.8)] transition-all duration-300 hover:bg-accent-strong hover:shadow-[0_8px_22px_-6px_rgb(var(--accent-rgb)/0.8)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.97] motion-reduce:transition-none sm:px-4"
+                  className="flex h-10 min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-control bg-accent px-2.5 text-small font-semibold whitespace-nowrap text-on-accent transition-[background-color,scale] duration-150 ease-out hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.97] sm:px-4"
                 >
                   <CartIcon className="h-[18px] w-[18px] shrink-0 sm:hidden" />
                   <span className="max-sm:sr-only">{t("getQuote")}</span>
-                  <ArrowRight
-                    className="hidden h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transition-none sm:block"
-                    aria-hidden="true"
-                  />
                 </button>
                 </div>
                 </div>
@@ -782,14 +788,22 @@ export default function Navbar() {
                 <p className={`mb-1 px-4 ${groupHeadingClass}`}>{t("productsHeading")}</p>
                 <ul className="space-y-1">
                   {navLinks.map((link, i) => (
-                    <motion.li
-                      key={link.label}
-                      initial={{ opacity: 0, x: 24 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.08 + i * 0.04, duration: 0.3 }}
-                    >
+                    <li key={link.label}>
                       {/* the categories, then a rule before About */}
                       {!link.category && <div className="mx-4 my-3 h-px bg-forest-100" aria-hidden="true" />}
+                      {link.models?.length === 1 ? (
+                        // one robot: straight to it, nothing to unfold
+                        <Link
+                          href={link.models[0].href}
+                          onClick={() => setOpen(false)}
+                          className={`flex min-h-[48px] w-full items-center rounded-xl px-4 text-[15px] font-bold transition-colors hover:bg-cloud hover:text-accent-600 ${
+                            link.current ? "text-accent-600" : "text-content"
+                          }`}
+                        >
+                          {link.label}
+                        </Link>
+                      ) : (
+                      <>
                       <button
                         type="button"
                         onClick={() => setExpanded(expanded === i ? null : i)}
@@ -875,7 +889,9 @@ export default function Navbar() {
                           </motion.div>
                         )}
                       </AnimatePresence>
-                    </motion.li>
+                      </>
+                      )}
+                    </li>
                   ))}
                 </ul>
 

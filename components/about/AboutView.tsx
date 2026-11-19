@@ -82,8 +82,8 @@ export default function AboutView({ published }: { published: AboutContent }) {
         </section>
       )}
 
-      {/* story */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+      {/* story — the navbar's "Our story" links here */}
+      <section id="story" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
@@ -119,7 +119,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
 
       {/* partner block — switched on and off in Admin → Content → About */}
       {about.partnerEnabled && about.partnerName && (
-        <section className="bg-surface py-14 sm:py-20">
+        <section id="partner" className="scroll-mt-24 bg-surface py-14 sm:py-20">
           <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-4 py-1.5">
