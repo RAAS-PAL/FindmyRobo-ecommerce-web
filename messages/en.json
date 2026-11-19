@@ -900,28 +900,28 @@
   },
   "categories": {
     "robot-mowers": {
-      "name": "Robotic Lawn Mowers",
-      "nav": "Lawn Mowers",
+      "name": "Lawn mowers",
+      "nav": "Lawn mowers",
       "description": "Wire-free AWD mowers for every Thai garden"
     },
     "cleaning-robots": {
-      "name": "Cleaning Robots",
-      "nav": "Cleaner",
+      "name": "Cleaning robots",
+      "nav": "Cleaning robots",
       "description": "Gausium Phantas, autonomous floor cleaning for commercial spaces"
     },
     "smart-equipment": {
-      "name": "Smart Equipment",
-      "nav": "Smart Equipment",
+      "name": "Floor scrubbers",
+      "nav": "Floor scrubbers",
       "description": "Aventurier A1-Basic and A1-Youth"
     },
     "cooking-robots": {
-      "name": "Cooking Robots",
-      "nav": "Cooker",
+      "name": "Cooking robots",
+      "nav": "Cooking robots",
       "description": "The T-Chef TC-E10A cooking robot"
     },
     "delivery-robots": {
-      "name": "Delivery Robots",
-      "nav": "Delivery",
+      "name": "Delivery robots",
+      "nav": "Delivery robots",
       "description": "Pudu delivery robots for business"
     },
     "pool-cleaners": {
@@ -988,11 +988,11 @@
     "interestLabel": "Which robot are you interested in?",
     "interestPlaceholder": "Select a robot",
     "interests": {
-      "lawn-mowing": "Lawn mowing",
-      "commercial-cleaning": "Cleaning robot",
-      "smart-equipment": "Smart equipment",
-      "cooking": "Cooking robot",
-      "pudu-delivery": "Pudu delivery"
+      "lawn-mowing": "Lawn mowers",
+      "commercial-cleaning": "Cleaning robots",
+      "smart-equipment": "Floor scrubbers",
+      "cooking": "Cooking robots",
+      "pudu-delivery": "Delivery robots"
     },
     "areaLabel": "Lawn area",
     "areaPlaceholder": "e.g. 800",
