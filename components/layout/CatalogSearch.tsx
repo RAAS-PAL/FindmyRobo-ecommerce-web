@@ -128,7 +128,7 @@ export default function CatalogSearch({
         <div
           id={suggestionsId}
           role="listbox"
-          className={`absolute top-full z-[70] mt-2 overflow-hidden rounded-control border border-forest-100 bg-surface shadow-[0_20px_50px_-18px_rgba(0,0,0,0.35)] ${dropdownClassName}`}
+          className={`absolute top-full z-[70] mt-2 overflow-hidden rounded-control border border-forest-100 bg-surface shadow-float ${dropdownClassName}`}
         >
           {suggestions.length > 0 ? (
             <div className="p-2">

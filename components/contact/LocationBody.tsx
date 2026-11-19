@@ -3,14 +3,13 @@
 import { useLocale, useTranslations } from "next-intl";
 import {
   Calendar,
-  ExternalLink,
   Mail,
   MapPin,
   MessageCircle,
-  Navigation,
   Phone,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { buttonClass } from "@/components/ui/Button";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import {
   salesDirectionsUrl,
@@ -50,7 +49,7 @@ export default function LocationBody() {
   return (
     <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
       <div>
-        <div className="h-full overflow-hidden rounded-card border border-forest-100 bg-surface shadow-[0_24px_48px_-28px_rgba(10,46,31,0.35)]">
+        <div className="h-full overflow-hidden rounded-card border border-forest-100 bg-surface">
           <iframe
             src={salesMapEmbedUrl(locale)}
             title={t("mapTitle")}
@@ -90,18 +89,16 @@ export default function LocationBody() {
               href={salesDirectionsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent px-6 text-body font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97]"
+              className={buttonClass({ size: "lg" })}
             >
-              <Navigation className="h-4.5 w-4.5" aria-hidden="true" />
               {t("directions")}
             </a>
             <a
               href={salesMapUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-forest-100 px-6 text-body font-semibold text-content transition-colors duration-300 hover:border-accent hover:text-accent-600"
+              className={buttonClass({ size: "lg", variant: "secondary" })}
             >
-              <ExternalLink className="h-4.5 w-4.5" aria-hidden="true" />
               {t("openMaps")}
             </a>
           </div>

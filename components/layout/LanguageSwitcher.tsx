@@ -169,7 +169,7 @@ function LanguageMenu({ className }: { className: string }) {
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             className="absolute right-0 top-full z-50 pt-2"
           >
-            <ul className="w-44 overflow-hidden rounded-control border border-forest-100 bg-surface/95 p-1.5 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+            <ul className="w-44 overflow-hidden rounded-control border border-forest-100 bg-surface p-1.5 shadow-float">
               {routing.locales.map((l) => {
                 const current = l === locale;
                 return (

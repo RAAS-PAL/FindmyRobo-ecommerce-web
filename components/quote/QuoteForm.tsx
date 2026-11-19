@@ -668,13 +668,13 @@ export default function QuoteForm({
                             // from halo edge to halo edge (icon radius 14px
                             // + 4px ring) — drawn under the icons, the line
                             // showed through the one to its left
-                            className={`absolute top-3.5 right-[calc(50%_+_1.125rem)] left-[calc(-50%_+_1.125rem)] h-px transition-colors duration-300 ${
+                            className={`absolute top-3.5 right-[calc(50%_+_1.125rem)] left-[calc(-50%_+_1.125rem)] h-px transition-colors duration-200 ${
                               index === 1 && form.fullName.trim() ? "bg-accent" : "bg-forest-100"
                             }`}
                           />
                         )}
                         <span
-                          className={`relative flex h-7 w-7 items-center justify-center rounded-full border transition-colors duration-300 ${
+                          className={`relative flex h-7 w-7 items-center justify-center rounded-full border transition-colors duration-200 ${
                             done
                               ? "border-accent bg-accent text-on-accent"
                               : current

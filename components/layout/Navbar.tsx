@@ -113,7 +113,7 @@ function CategoryPanel({
             <span className="relative flex min-h-0 flex-1 items-center justify-center">
               <ProductVisual
                 product={model.product}
-                className="h-full max-h-[108px] w-full drop-shadow-[0_10px_12px_rgb(10_26_74/0.18)]"
+                className="h-full max-h-[108px] w-full"
               />
             </span>
             <span className="relative mt-2 block text-center">
@@ -449,10 +449,10 @@ export default function Navbar() {
           // `nav-scope` re-points the colour tokens, so everything inside that
           // uses them (language switch, profile menu, search) reads in navy on
           // the light blue, and the dropdowns open pale.
-          className={`nav-scope pointer-events-auto relative rounded-b-card text-content transition-shadow duration-300 ${
+          className={`nav-scope pointer-events-auto relative rounded-b-card text-content ${
             scrolled
-              ? "shadow-[0_18px_40px_-16px_rgb(10_26_74/0.4)] dark:shadow-[0_18px_40px_-14px_rgb(0_0_0/0.7)]"
-              : "shadow-[0_14px_32px_-18px_rgb(10_26_74/0.35)] dark:shadow-[0_14px_32px_-16px_rgb(0_0_0/0.6)]"
+              ? "shadow-float"
+              : "shadow-float"
           }`}
           style={{ background: barBackground }}
           onMouseEnter={() => {
@@ -587,7 +587,7 @@ export default function Navbar() {
                       <span className="relative">{link.label}</span>
                       {link.groups && (
                         <ChevronDown
-                          className={`relative h-3.5 w-3.5 opacity-80 transition-transform duration-300 ${
+                          className={`relative h-3.5 w-3.5 opacity-80 transition-transform duration-200 ${
                             isOpen ? "rotate-180" : ""
                           }`}
                           aria-hidden="true"
@@ -655,7 +655,7 @@ export default function Navbar() {
                 // Folds away (width and fade) while the hero's quote strip is
                 // on screen; the grid column animates from 0fr to 1fr.
                 <div
-                  className={`grid transition-[grid-template-columns,opacity,margin] duration-300 ease-out motion-reduce:transition-none ${
+                  className={`grid transition-[grid-template-columns,opacity,margin] duration-200 ease-out motion-reduce:transition-none ${
                     hideBarQuote ? "ml-0 grid-cols-[0fr] opacity-0" : "ml-1 grid-cols-[1fr] opacity-100"
                   }`}
                   inert={hideBarQuote ? true : undefined}

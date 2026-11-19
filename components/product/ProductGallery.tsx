@@ -252,7 +252,7 @@ export default function ProductGallery({
 
   // Light mode: soft grey studio backdrop. Dark mode: near-black gradient.
   const panelClass =
-    "relative flex min-h-[460px] flex-col overflow-hidden rounded-card bg-gradient-to-br from-neutral-100 via-neutral-200 to-neutral-300 p-5 dark:from-forest-950 dark:via-forest dark:to-forest-800 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
+    "relative flex min-h-[460px] flex-col overflow-hidden rounded-card bg-cloud p-5 dark:bg-forest-900 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
 
   if (images.length < 2) {
     return (
@@ -268,7 +268,7 @@ export default function ProductGallery({
             >
               <ProductVisual
                 product={product}
-                className="relative mx-auto h-[400px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover/image:scale-[1.02] sm:h-[560px] lg:h-[620px]"
+                className="relative mx-auto h-[400px] max-h-full w-full sm:h-[560px] lg:h-[620px]"
               />
               <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-control bg-black/55 px-3 py-2 text-caption font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
                 <Maximize2 className="h-4 w-4" aria-hidden="true" />
@@ -278,7 +278,7 @@ export default function ProductGallery({
           ) : (
             <ProductVisual
               product={product}
-              className="relative mx-auto h-[400px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] sm:h-[560px] lg:h-[620px]"
+              className="relative mx-auto h-[400px] max-h-full w-full sm:h-[560px] lg:h-[620px]"
             />
           )}
         </div>
@@ -289,7 +289,7 @@ export default function ProductGallery({
 
   // hidden at rest, revealed while the panel is hovered or holds focus
   const onReveal =
-    "opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100";
+    "opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100";
 
   return (
     <div className={`group ${panelClass}`}>
@@ -310,7 +310,7 @@ export default function ProductGallery({
             alt={i === 0 ? product.name : `${product.name} — ${i + 1}`}
             aria-hidden={i !== index}
             loading={i === 0 ? "eager" : "lazy"}
-            className={`absolute inset-0 h-full w-full object-contain drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-opacity duration-300 ${
+            className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-200 ${
               i === index ? "opacity-100" : "opacity-0"
             }`}
           />
@@ -342,7 +342,7 @@ export default function ProductGallery({
       <div className="relative mt-4 h-[68px] shrink-0">
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 flex h-full items-end justify-center gap-2 pb-3 transition-opacity duration-300 group-hover:opacity-0 group-focus-within:opacity-0 [@media(hover:none)]:opacity-0"
+          className="absolute inset-x-0 bottom-0 flex h-full items-end justify-center gap-2 pb-3 transition-opacity duration-200 group-hover:opacity-0 group-focus-within:opacity-0 [@media(hover:none)]:opacity-0"
         >
           {images.map((src, i) => (
             <span

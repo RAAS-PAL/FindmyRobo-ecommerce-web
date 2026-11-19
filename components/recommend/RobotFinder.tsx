@@ -76,7 +76,7 @@ function Choice({
       onClick={onClick}
       className={`flex w-full cursor-pointer items-start gap-3 rounded-control border px-4 py-3.5 text-left transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
         selected
-          ? "border-accent bg-accent/[0.07] shadow-[0_0_0_1px_var(--color-accent)]"
+          ? "border-accent bg-accent/[0.07] ring-1 ring-accent"
           : "border-forest-100 bg-surface hover:border-forest-300"
       }`}
     >
@@ -113,7 +113,7 @@ function ResultCard({ match, rank }: { match: Match; rank: number }) {
 
   return (
     <article className="flex flex-col overflow-hidden rounded-card border border-forest-100 bg-surface sm:flex-row">
-      <div className="relative flex h-48 shrink-0 items-center justify-center bg-gradient-to-b from-cloud to-forest-100/40 p-5 sm:h-auto sm:w-56">
+      <div className="relative flex h-48 shrink-0 items-center justify-center bg-cloud p-5 sm:h-auto sm:w-56">
         <span className="absolute top-3 left-3 text-caption font-semibold text-ink-muted">
           {String(rank).padStart(2, "0")}
         </span>
@@ -413,7 +413,7 @@ export default function RobotFinder() {
     step === "job" ? !!job : step === "details" ? job === "lawn" || job === "floor" || !!venue : true;
 
   return (
-    <div className="rounded-card border border-forest-100 bg-surface p-5 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.35)] sm:p-8">
+    <div className="rounded-card border border-forest-100 bg-surface p-5 sm:p-8">
       <div className="flex items-center justify-between gap-3">
         <p className="text-caption font-semibold text-ink-muted">
           {t("stepOf", { step: Math.max(1, stepNumber), total: steps.length })}

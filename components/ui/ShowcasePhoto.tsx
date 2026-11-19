@@ -45,7 +45,7 @@ export default function ShowcasePhoto({
   if (photo.cutout) {
     return (
       <div
-        className={`absolute inset-0 bg-[radial-gradient(85%_75%_at_50%_78%,#f5f7fa_0%,#e2e6ec_50%,#c7cdd6_100%)] ${className}`}
+        className={`absolute inset-0 bg-[#e4e8ee] ${className}`}
       >
         {/* Below sm the copy sits under the photo, so the machine can use
             the frame; from sm the copy is over the top of the card and the
@@ -94,16 +94,11 @@ export default function ShowcasePhoto({
     <div
       role="img"
       aria-label={alt}
-      className={`absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_100%,#3a3b41_0%,#1b1c20_55%,#0a0a0b_100%)] ${className}`}
+      className={`absolute inset-0 bg-forest-900 ${className}`}
     >
-      {/* floor line, so the empty frame still reads as a place a robot stands */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-[30%] h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
-      />
       {brief && (
         <div
-          className={`absolute inset-x-4 flex items-start gap-2.5 rounded-control border border-white/10 bg-black/40 px-3 py-2.5 text-white/80 backdrop-blur-sm sm:inset-x-auto sm:left-5 sm:max-w-md ${
+          className={`absolute inset-x-4 flex items-start gap-2.5 rounded-control border border-white/10 bg-black/50 px-3 py-2.5 text-white/80 sm:inset-x-auto sm:left-5 sm:max-w-md ${
             captionAt === "top" ? "top-4 sm:top-5" : "bottom-4 sm:bottom-5"
           }`}
         >

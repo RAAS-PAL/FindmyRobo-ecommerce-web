@@ -70,7 +70,7 @@ export default function PaymentMethods({ className = "" }: { className?: string 
     // these read as "accepted later", not "pay with these now". Drop the
     // opacity classes when Omise goes live.
     <div
-      className={`flex flex-wrap items-center gap-2 opacity-55 transition-opacity duration-300 hover:opacity-100 ${className}`}
+      className={`flex flex-wrap items-center gap-2 opacity-55 transition-opacity duration-150 hover:opacity-100 ${className}`}
       role="img"
       aria-label="Accepted payment methods"
     >
