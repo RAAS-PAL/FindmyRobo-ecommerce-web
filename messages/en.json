@@ -1447,5 +1447,11 @@
       "offer": "Optional. If you'd like a call about prices and the right setup, leave your details.",
       "open": "Yes, contact me"
     }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page may have moved.",
+    "shop": "Browse robots",
+    "home": "Back to the home page"
   }
 }
