@@ -12,7 +12,6 @@ import { getAllProducts } from "@/lib/productStore";
 import VideoShowcase from "@/components/sections/VideoShowcase";
 import TrustSection from "@/components/sections/TrustSection";
 import WhyUsSection from "@/components/sections/WhyUsSection";
-import YouTubeCTA from "@/components/sections/YouTubeCTA";
 
 // Title and description come from the layout (Admin → Content → SEO); the homepage
 // only needs to claim its own canonical, which the layout deliberately no
@@ -56,11 +55,6 @@ export default async function Home({
       <VideoShowcase />
       <TrustSection />
       <WhyUsSection />
-      {/* NewsSection is hidden for launch — the items in messages/*.json "news"
-          are placeholder posts about Mammotion, not FindMyRobo's own news. The
-          component and its copy are still in the repo: re-import it and drop
-          <NewsSection /> back here once there are real posts to show. */}
-      <YouTubeCTA />
     </main>
   );
 }
