@@ -218,11 +218,9 @@ export default async function ProductPage({
               the robot stays visible through the whole spec read. Native
               position:sticky rather than intercepting scroll: the page never
               stops responding to the wheel, and it simply doesn't apply on
-              mobile where the two columns stack.
-
-              The sticky wrapper sits OUTSIDE FadeIn on purpose — framer-motion
-              leaves a transform on the element it animates, and a transformed
-              ancestor becomes the containing block, which breaks sticky. */}
+              mobile where the two columns stack. Nothing above it may carry a
+              transform: a transformed ancestor becomes the containing block,
+              which breaks sticky. */}
           <div className="lg:sticky lg:top-24">
             <div>
               <ProductGallery
