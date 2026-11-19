@@ -3,23 +3,23 @@
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Calendar } from "lucide-react";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import { pick } from "@/data/siteContent";
 import { heroSlides, onShow } from "@/data/homeShowcase";
 import { useProducts } from "@/components/ProductsProvider";
 import QuoteStrip from "@/components/quote/QuoteStrip";
-
-const EASE = [0.16, 1, 0.3, 1] as const;
+import Button from "@/components/ui/Button";
+import MetaLine from "@/components/ui/MetaLine";
+import { FADE } from "@/lib/motion";
 
 /**
  * Homepage hero (2026-10-29, after dobot-robots.com): one robot family at a
  * time as a full-width photo of the robots at work (the owner's generated
  * scenes, data/homeShowcase.ts `image`), the headline over the photo's calm
- * top-left, and square tabs along its bottom edge to switch families. Nothing
- * moves on its own: the photo cross-fades only when a tab is pressed.
+ * top-left, and tabs along its bottom edge to switch families. Nothing
+ * moves on its own: photo and copy cross-fade (opacity only) when a tab is
+ * pressed.
  *
  * Under the photo, a consultation card with an inline two-step quote form,
  * the robot finder, the three promises and LINE.
@@ -49,10 +49,10 @@ export default function HeroSection() {
   const tabName = pick(slide.tab, locale);
 
   const fade = {
-    initial: { opacity: 0, y: 14 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -8 },
-    transition: { duration: reduceMotion ? 0 : 0.4, ease: EASE },
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: reduceMotion ? { duration: 0 } : FADE,
   };
 
   return (
@@ -63,10 +63,10 @@ export default function HeroSection() {
           <AnimatePresence initial={false}>
             <motion.div
               key={slide.id}
-              initial={{ opacity: 0, scale: 1.03 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: reduceMotion ? 0 : 0.8, ease: EASE }}
+              transition={reduceMotion ? { duration: 0 } : FADE}
               className="absolute inset-0"
             >
               <Image
@@ -92,35 +92,28 @@ export default function HeroSection() {
         <div className="relative z-10 mx-auto max-w-7xl px-4 pt-7 sm:px-6 lg:absolute lg:inset-x-0 lg:top-[calc(var(--nav-h)+3.5rem)] lg:px-8 lg:pt-0">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div key={slide.id} {...fade} className="max-w-xl">
-              <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-ink-muted uppercase lg:text-white/80 [&:lang(th)]:tracking-[0.06em]">
-                <span className="h-1.5 w-1.5 bg-accent lg:bg-accent-300" aria-hidden="true" />
-                {pick(slide.eyebrow, locale)}
-              </p>
+              <MetaLine className="lg:text-white/80">{pick(slide.eyebrow, locale)}</MetaLine>
               {/* one slide shows at a time, so there is always exactly one
                   h1 — the server renders the first (the CMS headline) */}
-              <h1 className="mt-4 font-display text-[34px] leading-[1.05] font-extrabold tracking-tight text-content sm:text-5xl lg:text-[3.4rem] lg:text-white">
-                {headline}
-                <span className="block text-accent-600 lg:text-accent-300">{accent}</span>
+              {/* one colour: the two lines are one sentence, not a slogan
+                  with a highlighted half */}
+              <h1 className="mt-3 font-display text-display text-content lg:text-white">
+                {headline} <span className="sm:block">{accent}</span>
               </h1>
-              <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-ink-muted sm:text-base lg:text-[17px] lg:text-white/85">
-                {sub}
-              </p>
+              <p className="mt-5 max-w-xl text-lead text-ink-muted lg:text-white/85">{sub}</p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
-                <Link
-                  href={slide.href}
-                  className="inline-flex min-h-12 items-center gap-2 bg-accent-gradient px-7 text-[15px] font-bold"
-                >
+                <Button href={slide.href} size="lg">
                   {t("learnMore")}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
+                </Button>
                 {slide.interest === "lawn-mowing" && (
-                  <Link
+                  <Button
                     href="/products/request-a-demo"
-                    className="inline-flex min-h-12 items-center gap-2 border border-content/25 px-6 text-[15px] font-semibold text-content transition-colors hover:border-content/60 lg:border-white/50 lg:text-white lg:hover:border-white"
+                    size="lg"
+                    variant="secondary"
+                    className="lg:border-white/50 lg:text-white lg:hover:border-white lg:hover:bg-white/10"
                   >
-                    <Calendar className="h-4 w-4" aria-hidden="true" />
                     {t("bookDemo")}
-                  </Link>
+                  </Button>
                 )}
               </div>
             </motion.div>
@@ -151,8 +144,8 @@ export default function HeroSection() {
 }
 
 /**
- * The families as square tabs: a number, the family's name, and a line along
- * the top that fills in on the one on show. White on the photo's shaded
+ * The families as tabs: the family's name and a line along the top (bottom
+ * on phones) on the one on show. No numbers. White on the photo's shaded
  * bottom edge from lg; on the page below the copy on phones (`onPage`).
  */
 function HeroTabs({
@@ -185,10 +178,10 @@ function HeroTabs({
               aria-selected={active}
               aria-label={t("showSlide", { name: pick(s.tab, locale) })}
               onClick={() => onPick(i)}
-              className={`group relative flex cursor-pointer text-left font-semibold transition-colors ${
+              className={`group relative flex cursor-pointer text-left font-medium transition-colors duration-150 ${
                 onPage
-                  ? "min-h-16 min-w-0 flex-1 flex-col items-start justify-center gap-1 py-3 pr-3 text-[13.5px] leading-snug sm:flex-none sm:flex-row sm:items-center sm:gap-3 sm:pr-8"
-                  : "min-h-[4.5rem] min-w-[13rem] shrink-0 items-center gap-3 pr-8 text-[14.5px] whitespace-nowrap"
+                  ? "min-h-14 min-w-0 flex-1 items-center py-3 pr-3 text-small leading-snug sm:flex-none sm:pr-8"
+                  : "min-h-16 min-w-[12rem] shrink-0 items-center pr-8 text-small whitespace-nowrap"
               } ${
                 onPage
                   ? active
@@ -202,11 +195,10 @@ function HeroTabs({
               {/* the line: full in the accent on the one on show */}
               <span
                 aria-hidden="true"
-                className={`absolute inset-x-0 ${onPage ? "bottom-0" : "top-0"} h-[3px] transition-colors ${
+                className={`absolute inset-x-0 ${onPage ? "bottom-0" : "top-0"} h-0.5 transition-colors duration-150 ${
                   active ? (onPage ? "bg-accent" : "bg-white") : onPage ? "bg-transparent" : "bg-white/25 group-hover:bg-white/50"
                 }`}
               />
-              <span className="font-mono text-[11px] tabular-nums opacity-70">{String(i + 1).padStart(2, "0")}</span>
               {pick(s.tab, locale)}
             </button>
           );
