@@ -317,27 +317,14 @@ export default function QuoteForm({
             }`
       }
     >
-      {/* pool of accent light under the card — only on hover and while it's
-          being filled in; at rest the light tracing the edge is enough. The
-          wrapper does the fading, because the pool's own opacity breathes. */}
-      {!panel && (
-        <div
-          aria-hidden="true"
-          className={`pointer-events-none absolute inset-x-1 -bottom-10 h-20 transition-opacity duration-500 ${
-            expanded ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-          }`}
-        >
-          <div className="animate-pool h-full w-full rounded-full bg-accent blur-2xl" />
-        </div>
-      )}
       <div
         className={
           panel
             ? ""
-            : `overflow-hidden rounded-2xl border border-black/8 bg-surface/95 backdrop-blur-md transition-shadow duration-500 lg:border-white/10 lg:bg-[#141821]/75 lg:backdrop-blur-xl ${
+            : `overflow-hidden rounded-2xl border border-black/8 bg-surface/95 backdrop-blur-md lg:border-white/10 lg:bg-[#141821]/75 lg:backdrop-blur-xl ${
                 expanded
-                  ? "max-h-[calc(100svh-6.5rem)] overflow-y-auto shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5),0_0_48px_-10px_rgb(var(--accent-rgb)/0.6)]"
-                  : "shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5)] group-hover:shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5),0_0_48px_-10px_rgb(var(--accent-rgb)/0.6)]"
+                  ? "max-h-[calc(100svh-6.5rem)] overflow-y-auto shadow-float"
+                  : "shadow-float"
               }`
         }
       >
@@ -727,15 +714,6 @@ export default function QuoteForm({
           )}
         </div>
       </div>
-      {/* the light tracing the card's edge (styles in globals.css) */}
-      {!panel && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-2xl drop-shadow-[0_0_6px_rgb(var(--accent-rgb)/0.95)]"
-        >
-          <div className="quote-trace" />
-        </div>
-      )}
     </form>
   );
 }

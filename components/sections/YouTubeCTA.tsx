@@ -16,18 +16,8 @@ export default function YouTubeCTA() {
   return (
     <section
       id="youtube"
-      className="relative overflow-hidden bg-gradient-to-br from-surface via-cloud to-[var(--warm-wash)] py-20 sm:py-28 dark:to-forest-900"
+      className="relative bg-cloud py-20 sm:py-28"
     >
-      {/* ambient glows */}
-      <div
-        className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-accent/[0.14] blur-[90px]"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -right-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-red-500/[0.07] blur-[90px]"
-        aria-hidden="true"
-      />
-
       <div
         className="relative mx-auto flex max-w-3xl flex-col items-center px-4 text-center sm:px-6"
       >

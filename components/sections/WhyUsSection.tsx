@@ -11,12 +11,6 @@ export default function WhyUsSection() {
   ];
   return (
     <section id="support" className="relative overflow-hidden bg-cloud py-20 sm:py-28">
-      {/* ambient glow */}
-      <div
-        className="pointer-events-none absolute left-1/2 top-0 h-72 w-[720px] -translate-x-1/2 rounded-full bg-accent/[0.12] blur-[100px]"
-        aria-hidden="true"
-      />
-
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">

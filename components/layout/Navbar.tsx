@@ -126,7 +126,7 @@ function CategoryPanel({
             <span className="relative flex min-h-0 flex-1 items-center justify-center">
               <ProductVisual
                 product={model.product}
-                className="h-full max-h-[108px] w-full drop-shadow-[0_10px_12px_rgb(10_26_74/0.18)] transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                className="h-full max-h-[108px] w-full drop-shadow-[0_10px_12px_rgb(10_26_74/0.18)]"
               />
             </span>
             <span className="relative mt-2 block text-center">

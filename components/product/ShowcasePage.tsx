@@ -117,12 +117,11 @@ function FeaturePhoto({ src, alt }: { src: string; alt: string }) {
 }
 
 /** One body colour in the hero, named so the two can be told apart.
- *  Only the photo floats. The name stays put: a looping translate on small
- *  tracked type repaints the letters on fractional pixels and they stutter. */
+ */
 function HeroColor({ color, alt, label }: { color: ShowcaseColor; alt: string; label: string }) {
   return (
     <figure className="flex min-w-0 flex-1 flex-col items-center">
-      <div className="animate-hero-float">
+      <div>
         {/* eslint-disable-next-line @next/next/no-img-element -- any Admin URL */}
         <img
           src={color.image}
@@ -341,7 +340,7 @@ export default function ShowcasePage({
                   ))}
                 </div>
               ) : (
-                <div className="animate-hero-float">
+                <div>
                   {heroImage ? (
                     // eslint-disable-next-line @next/next/no-img-element -- any Admin URL
                     <img

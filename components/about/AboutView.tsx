@@ -305,7 +305,7 @@ export default function AboutView({ published }: { published: AboutContent }) {
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/products/request-a-demo"
-                  className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-accent px-6 text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)]"
+                  className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-accent px-6 text-[14px] font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97]"
                 >
                   {t("ctaDemo")}
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

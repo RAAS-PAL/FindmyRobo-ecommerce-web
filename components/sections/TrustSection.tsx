@@ -1,7 +1,6 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import { pick } from "@/data/siteContent";
 
@@ -36,12 +35,14 @@ export default function TrustSection() {
               key={`${stat.label}-${i}`}
               className="rounded-2xl bg-forest p-6 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.4)] sm:p-8"
             >
-              <AnimatedCounter
-                to={stat.value}
-                decimals={stat.decimals}
-                suffix={stat.suffix}
-                className="font-mono text-3xl font-semibold tabular-nums text-accent-300 sm:text-4xl"
-              />
+              {/* the number as it is, in the HTML from the server: no count-up */}
+              <p className="font-mono text-3xl font-semibold tabular-nums text-accent-300 sm:text-4xl">
+                {stat.value.toLocaleString("en-US", {
+                  minimumFractionDigits: stat.decimals,
+                  maximumFractionDigits: stat.decimals,
+                })}
+                {stat.suffix}
+              </p>
               <p className="mt-2 text-sm font-medium text-white/75">{stat.label}</p>
             </div>
           ))}

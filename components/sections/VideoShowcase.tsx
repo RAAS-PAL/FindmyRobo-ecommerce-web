@@ -105,7 +105,7 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
             src={poster}
             alt={video.title}
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (
           <span className="absolute inset-0 bg-gradient-to-br from-forest via-forest-800 to-forest-950" aria-hidden="true" />
@@ -119,7 +119,7 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
 
         {/* center play button */}
         <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/25 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/25 backdrop-blur-sm">
             <Play className="h-7 w-7 translate-x-0.5 fill-white text-white" aria-hidden="true" />
           </span>
         </span>

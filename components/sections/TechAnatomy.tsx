@@ -56,7 +56,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
           <div>
             <div className="relative aspect-square overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-forest-900 to-forest-950">
               <div
-                className="absolute inset-0 transition-transform duration-700 ease-out"
+                className="absolute inset-0 transition-transform duration-[400ms] ease-in-out motion-reduce:transition-none"
                 style={{
                   transform: `scale(${active.zoom}) translate(${50 - active.x}%, ${50 - active.y}%)`,
                 }}

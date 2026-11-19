@@ -28,7 +28,7 @@ export default function ContactSalesBody() {
         <div className="space-y-4">
           <a
             href={`tel:${phone.replace(/\s/g, "")}`}
-            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-colors duration-150 hover:border-accent"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/20">
               <Phone className="h-5 w-5 text-accent-600" aria-hidden="true" />
@@ -48,7 +48,7 @@ export default function ContactSalesBody() {
 
           <a
             href={`mailto:${email}`}
-            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-colors duration-150 hover:border-accent"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/20">
               <Mail className="h-5 w-5 text-accent-600" aria-hidden="true" />
@@ -68,7 +68,7 @@ export default function ContactSalesBody() {
             href={lineUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-colors duration-150 hover:border-accent"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#06C755]/15">
               <MessageCircle className="h-5 w-5 text-[#06C755]" aria-hidden="true" />
@@ -88,7 +88,7 @@ export default function ContactSalesBody() {
             href={salesMapUrl}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_16px_32px_-16px_rgba(10,46,31,0.25)]"
+            className="flex items-center gap-5 rounded-2xl border border-forest-100 bg-surface p-6 transition-colors duration-150 hover:border-accent"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/20">
               <MapPin className="h-5 w-5 text-accent-600" aria-hidden="true" />

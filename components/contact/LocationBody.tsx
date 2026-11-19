@@ -90,7 +90,7 @@ export default function LocationBody() {
               href={salesDirectionsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent px-6 text-[15px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_30px_-6px_rgb(var(--accent-rgb)/0.8)] active:scale-[0.98]"
+              className="flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent px-6 text-[15px] font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97]"
             >
               <Navigation className="h-4.5 w-4.5" aria-hidden="true" />
               {t("directions")}

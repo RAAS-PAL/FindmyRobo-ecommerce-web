@@ -158,7 +158,7 @@ export default function ComparePanel({
                 type="button"
                 onClick={compareNow}
                 disabled={!ready}
-                className="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+                className="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {ready ? t("compareNow") : t("needTwo")}
                 {ready && <ArrowRight className="h-4 w-4" aria-hidden="true" />}

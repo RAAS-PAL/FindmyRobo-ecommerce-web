@@ -253,18 +253,11 @@ export default function ProductGallery({
   // Light mode: soft grey studio backdrop. Dark mode: near-black gradient.
   const panelClass =
     "relative flex min-h-[460px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-100 via-neutral-200 to-neutral-300 p-5 dark:from-forest-950 dark:via-forest dark:to-forest-800 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
-  const glow = (
-    <div
-      className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 blur-[90px] dark:bg-accent/25"
-      aria-hidden="true"
-    />
-  );
 
   if (images.length < 2) {
     return (
       <>
         <div className={`${panelClass} items-center justify-center`}>
-          {glow}
           {images.length === 1 ? (
             <button
               ref={openerRef}
@@ -300,7 +293,6 @@ export default function ProductGallery({
 
   return (
     <div className={`group ${panelClass}`}>
-      {glow}
 
       {/* stage — every photo stays mounted so switching never re-fetches */}
       <button
@@ -318,7 +310,7 @@ export default function ProductGallery({
             alt={i === 0 ? product.name : `${product.name} — ${i + 1}`}
             aria-hidden={i !== index}
             loading={i === 0 ? "eager" : "lazy"}
-            className={`absolute inset-0 h-full w-full object-contain drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-opacity duration-500 ${
+            className={`absolute inset-0 h-full w-full object-contain drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-opacity duration-300 ${
               i === index ? "opacity-100" : "opacity-0"
             }`}
           />
@@ -355,7 +347,7 @@ export default function ProductGallery({
           {images.map((src, i) => (
             <span
               key={src}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-[width,background-color] duration-200 ease-out ${
                 i === index ? "w-5 bg-accent" : "w-1.5 bg-white/35"
               }`}
             />
@@ -372,7 +364,7 @@ export default function ProductGallery({
               onClick={() => setIndex(i)}
               aria-label={`${labels.thumbnail} ${i + 1}`}
               aria-current={i === index}
-              className={`h-14 w-16 shrink-0 cursor-pointer overflow-hidden rounded-lg bg-white/5 p-1 ring-1 transition-all duration-200 ${
+              className={`h-14 w-16 shrink-0 cursor-pointer overflow-hidden rounded-lg bg-white/5 p-1 ring-1 transition-shadow duration-150 ${
                 i === index
                   ? "ring-2 ring-accent"
                   : "opacity-70 ring-white/15 hover:opacity-100 hover:ring-white/40"
