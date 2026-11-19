@@ -305,7 +305,9 @@ export default async function ProductPage({
             <p className="mt-4 text-center text-[12px] text-ink-muted sm:text-left">
               {t("returnsNote")}
             </p>
-            <PaymentMethods className="mt-4 justify-center sm:justify-start" />
+            {siteConfig.cartEnabled && (
+              <PaymentMethods className="mt-4 justify-center sm:justify-start" />
+            )}
 
             {/* features */}
             <div className="mt-10 rounded-2xl bg-cloud p-6 sm:p-8">

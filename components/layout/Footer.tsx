@@ -14,6 +14,7 @@ import { useSiteContent } from "@/components/SiteContentProvider";
 import type { SocialPlatform } from "@/data/siteContent";
 import { SERVICE_CATEGORY, type Product } from "@/data/products";
 
+// shown only once online payment is on (siteConfig.cartEnabled)
 const payments = ["PromptPay", "Visa", "Mastercard", "Bank Transfer"];
 
 /** Keeps the products column from running longer than the other three. */
@@ -137,7 +138,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
                       target="_blank"
                       rel="noopener noreferrer me"
                       aria-label={label}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:border-accent hover:text-accent-300"
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors duration-150 hover:border-accent hover:text-accent-300"
                     >
                       <Icon className="h-4.5 w-4.5" />
                     </a>
@@ -269,7 +270,9 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
           </section>
         </div>
 
-        {/* payment row — visual placeholders only, Omise integration comes in Phase 2 */}
+        {/* payment row: only while the site takes payment. Quote-only (cart
+            off) has nothing to pay, so no card or PromptPay labels. */}
+        {siteConfig.cartEnabled && (
         <div className="mt-14 flex flex-col items-start justify-between gap-6 border-t border-white/10 pt-8 sm:flex-row sm:items-center">
           <p className="text-xs text-white/40">{t("paymentNote")}</p>
           <ul className="flex flex-wrap gap-2.5">
@@ -283,6 +286,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
             ))}
           </ul>
         </div>
+        )}
       </div>
     </footer>
   );
