@@ -288,7 +288,7 @@ export default async function ProductPage({
               ) : (
                 <div id="pdp-primary-cta" className="flex flex-col gap-3 sm:flex-row">
                   <AddToCartButton productId={product.id} />
-                  <Button href="/products/request-a-demo" size="lg" variant="secondary" className="flex-1">
+                  <Button href="/products/request-a-demo" size="lg" variant="secondary" className="sm:flex-1">
                     {t("ctaDemo")}
                   </Button>
                 </div>

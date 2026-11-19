@@ -655,6 +655,7 @@
   },
   "compare": {
     "floating": {
+      "label": "{count, plural, one {Compare # robot} other {Compare # robots}}",
       "open": "Open robot comparison"
     },
     "panel": {

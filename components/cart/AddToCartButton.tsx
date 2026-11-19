@@ -61,7 +61,7 @@ export default function AddToCartButton({
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className={buttonClass({ size: "lg", className: "flex-1 gap-2" })}
+      className={buttonClass({ size: "lg", className: "gap-2 sm:flex-1" })}
     >
       {added ? (
         <>
