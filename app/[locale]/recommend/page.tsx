@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/ui/PageHeader";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import RobotFinder from "@/components/recommend/RobotFinder";
 import { pageAlternates } from "@/lib/seo";
@@ -27,15 +28,10 @@ export default async function RecommendPage({
   const t = await getTranslations("recommend");
 
   return (
-    <main className="bg-cloud">
-      <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <div>
-          <h1 className="mt-3 font-display text-title text-content">
-            {t("heading")}
-          </h1>
-          <p className="mt-4 max-w-xl text-body text-ink-muted">{t("sub")}</p>
-        </div>
-        <div className="mt-8 sm:mt-10">
+    <main className="bg-surface">
+      <PageHeader title={t("heading")} lead={t("sub")} />
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
+        <div className="max-w-4xl">
           <RobotFinder />
         </div>
       </div>

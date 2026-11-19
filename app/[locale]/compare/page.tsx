@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import EmptyState from "@/components/ui/EmptyState";
+import PageHeader from "@/components/ui/PageHeader";
+import Button from "@/components/ui/Button";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeftRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
 import AddToCartButton from "@/components/cart/AddToCartButton";
@@ -66,25 +69,14 @@ export default async function ComparePage({
 
   if (robots.length < 2) {
     return (
-      <main className="min-h-[65vh] bg-cloud">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-          <div>
-            <div className="mx-auto flex max-w-lg flex-col items-center rounded-card border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
-              <ArrowLeftRight className="h-10 w-10 text-accent-600" aria-hidden="true" />
-              <h1 className="mt-4 font-display text-heading text-content">
-                {t("emptyTitle")}
-              </h1>
-              <p className="mt-2 max-w-md text-small leading-relaxed text-ink-muted">
-                {t("emptyBody")}
-              </p>
-              <Link
-                href="/shop"
-                className="mt-6 flex min-h-12 items-center rounded-full bg-accent px-6 text-small font-bold text-on-accent"
-              >
-                {t("browse")}
-              </Link>
-            </div>
-          </div>
+      <main className="min-h-[65vh] bg-surface">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <EmptyState
+            as="h1"
+            title={t("emptyTitle")}
+            body={t("emptyBody")}
+            action={<Button href="/shop">{t("browse")}</Button>}
+          />
         </div>
       </main>
     );
@@ -94,18 +86,13 @@ export default async function ComparePage({
   const specKeys = SPEC_KEYS.filter((key) => robots.some((r) => r.specs[key]));
 
   return (
-    <main className="min-h-[65vh] bg-cloud">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <div>
-          <h1 className="mt-3 font-display text-title text-content">
-            {t("heading")}
-          </h1>
-          <p className="mt-3 max-w-xl text-small text-ink-muted">{t("sub")}</p>
-        </div>
+    <main className="min-h-[65vh] bg-surface">
+      <PageHeader title={t("heading")} lead={t("sub")} />
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
 
         <div>
           {/* wide table scrolls inside its own container, never the page */}
-          <div className="mt-10 overflow-x-auto rounded-card border border-forest-100 bg-surface">
+          <div className="overflow-x-auto rounded-card border border-forest-100 bg-surface">
             <table className="w-full min-w-[640px] text-left text-small">
               <thead>
                 <tr className="align-bottom">

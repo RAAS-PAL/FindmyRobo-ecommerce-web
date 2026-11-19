@@ -679,7 +679,7 @@
       "heading": "Robot Comparison",
       "sub": "Specs, features, and prices side by side — so you can pick the right robot with confidence.",
       "emptyTitle": "Nothing to compare yet",
-      "emptyBody": "Pick at least two robots to see them side by side. Use the floating compare button or the compare link on any robot's page.",
+      "emptyBody": "Pick two or more robots to see them side by side.",
       "browse": "Browse robots",
       "preorder": "Preorder",
       "features": "Key features",
@@ -1102,11 +1102,12 @@
     "modelsLabel": "Models"
   },
   "search": {
+    "fieldLabel": "Search robots",
+    "submit": "Search",
     "eyebrow": "Catalog Search",
     "heading": "Search Our Robots",
     "resultsFor": "Results for “{query}”",
     "resultCount": "{count, plural, one {# product found} other {# products found}}",
-    "emptyTitle": "Start with the search bar above",
     "emptyBody": "Search by robot name, category, feature, coverage area, or model number.",
     "noResultsTitle": "No matching products",
     "noResultsBody": "We couldn’t find anything matching “{query}”. Try a model name, robot type, or a broader term.",

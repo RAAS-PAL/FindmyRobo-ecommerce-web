@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Search, SearchX } from "lucide-react";
-import { Link } from "@/i18n/navigation";
 import RobotCard from "@/components/ui/RobotCard";
+import PageHeader from "@/components/ui/PageHeader";
+import EmptyState from "@/components/ui/EmptyState";
+import Button, { buttonClass } from "@/components/ui/Button";
+import CategoryTabs from "@/components/ui/CategoryTabs";
+import { fieldControlClass } from "@/components/ui/Field";
 import { getAllProducts } from "@/lib/productStore";
 import { searchProducts } from "@/lib/productSearch";
 import type { Locale } from "@/data/products";
@@ -49,42 +52,48 @@ export default async function SearchPage({
     : [];
 
   return (
-    <main className="min-h-[65vh] bg-cloud">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <div>
-          <h1 className="mt-3 font-display text-title text-content">
-            {query ? t("resultsFor", { query }) : t("heading")}
-          </h1>
-          {query && results.length > 0 && (
-            <p className="mt-4 text-body text-ink-muted">
-              {t("resultCount", { count: results.length })}
-            </p>
-          )}
-        </div>
+    <main className="min-h-[65vh] bg-surface">
+      <PageHeader
+        title={query ? t("resultsFor", { query }) : t("heading")}
+        lead={query && results.length > 0 ? t("resultCount", { count: results.length }) : undefined}
+      >
+        {/* The search field lives on the page: a plain GET form to this page,
+            so it works before any script has loaded. */}
+        <form role="search" action="" className="mt-8 flex max-w-xl gap-3">
+          <label htmlFor="search-q" className="sr-only">
+            {t("fieldLabel")}
+          </label>
+          <input
+            id="search-q"
+            name="q"
+            type="search"
+            defaultValue={query}
+            autoFocus={!query}
+            placeholder={t("fieldLabel")}
+            aria-describedby="search-hint"
+            className={fieldControlClass}
+          />
+          <button type="submit" className={buttonClass({ size: "lg" })}>
+            {t("submit")}
+          </button>
+        </form>
+        <p id="search-hint" className="mt-2 text-small text-ink-muted">
+          {t("emptyBody")}
+        </p>
+      </PageHeader>
 
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
         {!query ? (
-          <div>
-            <div className="mt-12 flex flex-col items-center rounded-card border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
-              <Search className="h-10 w-10 text-accent-600" aria-hidden="true" />
-              <h2 className="mt-4 font-display text-heading text-content">{t("emptyTitle")}</h2>
-              <p className="mt-2 max-w-md text-small leading-relaxed text-ink-muted">{t("emptyBody")}</p>
-            </div>
-          </div>
+          // before a search: the categories as shortcuts
+          <CategoryTabs />
         ) : results.length === 0 ? (
-          <div>
-            <div className="mt-12 flex flex-col items-center rounded-card border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
-              <SearchX className="h-10 w-10 text-accent-600" aria-hidden="true" />
-              <h2 className="mt-4 font-display text-heading text-content">{t("noResultsTitle")}</h2>
-              <p className="mt-2 max-w-md text-small leading-relaxed text-ink-muted">
-                {t("noResultsBody", { query })}
-              </p>
-              <Link href="/shop" className="mt-6 flex min-h-12 items-center rounded-control bg-accent px-6 text-small font-bold text-on-accent">
-                {t("browseAll")}
-              </Link>
-            </div>
-          </div>
+          <EmptyState
+            title={t("noResultsTitle")}
+            body={t("noResultsBody", { query })}
+            action={<Button href="/shop">{t("browseAll")}</Button>}
+          />
         ) : (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {results.map((product) => (
               <RobotCard key={product.id} product={product} />
             ))}

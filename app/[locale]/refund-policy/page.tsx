@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/ui/PageHeader";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Phone } from "lucide-react";
 import { returnPolicy } from "@/data/returnPolicy";
@@ -34,21 +35,10 @@ export default async function RefundPolicyPage({
   const policy = returnPolicy[locale as Locale] ?? returnPolicy.th;
 
   return (
-    <main className="flex-1 bg-cloud">
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
-        <div>
-          <h1 className="mt-3 font-display text-title text-content">
-            {policy.title}
-          </h1>
-        </div>
-
-        <div>
-          <p className="mt-8 text-body leading-relaxed text-ink-muted">
-            {policy.intro}
-          </p>
-        </div>
-
-        <div className="mt-12 space-y-10">
+    <main className="flex-1 bg-surface">
+      <PageHeader title={policy.title} lead={policy.intro} />
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
+        <div className="max-w-3xl space-y-10">
           {policy.sections.map((section) => (
             <div key={section.heading}>
               <section>
