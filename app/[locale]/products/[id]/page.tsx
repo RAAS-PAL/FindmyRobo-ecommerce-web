@@ -10,7 +10,7 @@ import CompareToggleButton from "@/components/compare/CompareToggleButton";
 import ServicePurchasePanel from "@/components/cart/ServicePurchasePanel";
 import DemoPurchasePanel from "@/components/cart/DemoPurchasePanel";
 import InstallPurchasePanel from "@/components/cart/InstallPurchasePanel";
-import ProductCard from "@/components/ui/ProductCard";
+import RobotCard from "@/components/ui/RobotCard";
 import ProductGallery from "@/components/product/ProductGallery";
 import ProductPageBlocks from "@/components/product/ProductPageBlocks";
 import ShowcasePage from "@/components/product/ShowcasePage";
@@ -405,13 +405,12 @@ export default async function ProductPage({
         {/* related */}
         <div className="mt-16 sm:mt-20">
           <div>
-            <h2 className="font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
-              {t("relatedHeading")}
-            </h2>
+            <h2 className="font-display text-title text-content">{t("relatedHeading")}</h2>
           </div>
+          {/* a row to swipe on phones, a grid from sm */}
           <div className="no-scrollbar mt-8 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-3">
-            {related.map((p, i) => (
-              <ProductCard key={p.id} product={p} index={i} />
+            {related.map((p) => (
+              <RobotCard key={p.id} product={p} className="w-[300px] shrink-0 snap-start sm:w-auto" />
             ))}
           </div>
         </div>

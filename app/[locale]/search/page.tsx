@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Search, SearchX } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import ProductCard from "@/components/ui/ProductCard";
+import RobotCard from "@/components/ui/RobotCard";
 import { getAllProducts } from "@/lib/productStore";
 import { searchProducts } from "@/lib/productSearch";
 import type { Locale } from "@/data/products";
@@ -87,9 +87,9 @@ export default async function SearchPage({
             </div>
           </div>
         ) : (
-          <div className="mt-10 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {results.map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} />
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {results.map((product) => (
+              <RobotCard key={product.id} product={product} />
             ))}
           </div>
         )}

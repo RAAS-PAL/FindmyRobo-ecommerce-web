@@ -42,9 +42,12 @@ export default function RobotCard({
   layout = "grid",
   displayName,
   displayTagline,
+  className = "",
 }: {
   product: Product;
   layout?: "rail" | "grid";
+  /** Extra classes for the card, e.g. a rail on phones that is a grid cell from sm. */
+  className?: string;
   /** Overrides the catalogue name, for a card that stands in for a group. */
   displayName?: string;
   displayTagline?: string;
@@ -105,7 +108,7 @@ export default function RobotCard({
       onTouchStart={onTouchStart}
       className={`group rounded-card bg-cloud transition-colors duration-150 hover:bg-forest-100/60 dark:hover:bg-forest-800/60 ${
         layout === "rail" ? "w-[300px] shrink-0 snap-start sm:w-[360px]" : ""
-      }`}
+      } ${className}`}
     >
       <Link
         href={`/products/${product.id}`}
@@ -173,7 +176,7 @@ export default function RobotCard({
         {specs.length > 0 && (
           <dl className="mt-4 grid grid-cols-3 gap-4 border-t border-forest-100 pt-4">
             {specs.map((key) => (
-              <div key={key} className="flex min-w-0 flex-col-reverse">
+              <div key={key} className="flex min-w-0 flex-col-reverse justify-end">
                 <dt className="mt-0.5 line-clamp-2 text-caption text-ink-muted">{td(`specLabels.${key}`)}</dt>
                 <dd className="text-body font-semibold [overflow-wrap:anywhere] text-content tabular-nums">
                   {product.specs[key]}
