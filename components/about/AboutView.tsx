@@ -1,26 +1,16 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import {
-  ArrowUpRight,
-  BadgeCheck,
-  Headset,
-  Home,
-  MapPin,
-  Shield,
-  Wrench,
-} from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { MapPin } from "lucide-react";
 import { useLiveSection } from "@/components/SiteContentProvider";
 import { salesMapUrl, siteConfig } from "@/data/siteConfig";
 import { pick, type AboutContent } from "@/data/siteContent";
-
-const ICONS = {
-  shield: Shield,
-  home: Home,
-  wrench: Wrench,
-  headset: Headset,
-} as const;
+import PageHeader from "@/components/ui/PageHeader";
+import SectionHeader from "@/components/ui/SectionHeader";
+import FactsRow from "@/components/ui/FactsRow";
+import PromiseList from "@/components/ui/PromiseList";
+import MetaLine from "@/components/ui/MetaLine";
+import Button from "@/components/ui/Button";
 
 /**
  * The /about page body. Everything company-specific is edited in Admin →
@@ -43,262 +33,162 @@ export default function AboutView({ published }: { published: AboutContent }) {
       : about.storyBody.th;
   const { addressLines } = siteConfig.salesContact;
 
-  return (
-    <main className="flex-1 bg-cloud">
-      {/* hero */}
-      <section className="bg-forest-950 py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <div>
-            <h1 className="mt-3 font-display text-title text-white">
-              {t("heading")}
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-body leading-relaxed text-white/70">
-              {text(about.intro)}
-            </p>
-          </div>
-        </div>
-      </section>
+  const container = "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8";
 
-      {/* stats */}
+  // Light page header, the same facts and promises as the homepage, the story
+  // beside its photo, then milestones, team and how to visit. Left-aligned.
+  return (
+    <main className="flex-1 bg-surface">
+      <PageHeader title={t("heading")} lead={text(about.intro)} />
+
       {about.stats.length > 0 && (
-        <section className="border-b border-forest-100 bg-surface">
-          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-10 sm:px-6 lg:grid-cols-4">
-            {about.stats.map((stat) => (
-              <div key={`${stat.label.en}-${stat.value}`}>
-                <div className="text-center">
-                  <p className="text-title text-content">
-                    {stat.value}
-                  </p>
-                  <p className="mt-1 text-caption leading-snug text-ink-muted">
-                    {text(stat.label)}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className={container}>
+          <FactsRow facts={about.stats.map((stat) => ({ value: stat.value, label: text(stat.label) }))} />
+        </div>
       )}
 
       {/* story — the navbar's "Our story" links here */}
-      <section id="story" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <section id="story" className="scroll-mt-24 py-16 sm:py-24">
+        <div className={`${container} grid items-center gap-10 lg:grid-cols-2 lg:gap-16`}>
           <div>
-            <h2 className="mt-3 font-display text-title text-content">
-              {t("storyHeading")}
-            </h2>
-            <div className="mt-5 space-y-4">
-              {story.filter((p) => p.trim()).map((paragraph, index) => (
-                <p key={index} className="text-body leading-relaxed text-ink-muted">
-                  {paragraph}
-                </p>
-              ))}
+            <h2 className="font-display text-title text-content">{t("storyHeading")}</h2>
+            <div className="mt-5 max-w-xl space-y-4">
+              {story
+                .filter((p) => p.trim())
+                .map((paragraph, index) => (
+                  <p key={index} className="text-body text-ink-muted">
+                    {paragraph}
+                  </p>
+                ))}
             </div>
           </div>
-          <div>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-forest-950">
-              {/* Plain <img>, as in ProductVisual: this URL is typed or
-                  uploaded in the admin panel and can be on any host, which
-                  next/image rejects unless it is listed in next.config.ts. */}
+          {about.storyImage && (
+            <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-forest-100">
+              {/* Plain <img>: typed or uploaded in the admin panel, any host. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={about.storyImage}
-                alt=""
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
+              <img src={about.storyImage} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
             </div>
-          </div>
+          )}
         </div>
       </section>
 
       {/* partner block — switched on and off in Admin → Content → About */}
       {about.partnerEnabled && about.partnerName && (
-        <section id="partner" className="scroll-mt-24 bg-surface py-14 sm:py-20">
-          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-4 py-1.5">
-                <BadgeCheck className="h-4 w-4 text-accent-600" aria-hidden="true" />
-                <span className="text-caption font-semibold text-accent-600">
-                  {text(about.partnerEyebrow)}
-                </span>
-              </span>
+        <section id="partner" className="scroll-mt-24 bg-cloud py-16 sm:py-24">
+          <div className={container}>
+            <div className="max-w-2xl">
+              {text(about.partnerEyebrow) && <MetaLine>{text(about.partnerEyebrow)}</MetaLine>}
               {about.partnerLogo && (
-                // Plain <img>: a logo can come from any host an editor pastes,
-                // and next/image only serves the domains in next.config.ts.
+                // Plain <img>: a logo can come from any host an editor pastes.
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={about.partnerLogo}
-                  alt=""
-                  className="mx-auto mt-6 h-12 w-auto max-w-[220px] object-contain"
-                />
+                <img src={about.partnerLogo} alt="" className="mt-4 h-12 w-auto max-w-[220px] object-contain" />
               )}
-              <h2 className="mt-5 font-display text-title text-content">
-                {about.partnerName}
-              </h2>
+              <h2 className="mt-4 font-display text-title text-content">{about.partnerName}</h2>
               {text(about.partnerStatus) && (
-                <p className="mt-2 text-body font-semibold text-accent-600">
-                  {text(about.partnerStatus)}
-                </p>
+                <p className="mt-2 text-body font-semibold text-content">{text(about.partnerStatus)}</p>
               )}
-              <p className="mx-auto mt-4 max-w-2xl text-body leading-relaxed text-ink-muted">
-                {text(about.partnerBody)}
-              </p>
+              <p className="mt-4 text-body text-ink-muted">{text(about.partnerBody)}</p>
             </div>
           </div>
         </section>
       )}
 
-      {/* values */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-        <div>
-          <h2 className="mt-3 max-w-2xl font-display text-title text-content">
-            {t("valuesHeading")}
-          </h2>
-        </div>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {about.values.map((value, index) => {
-            const Icon = ICONS[value.icon];
-            return (
-              <div key={`${value.title.en}-${index}`}>
-                <div className="h-full rounded-card border border-forest-100 bg-surface p-6">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-control bg-forest-950 text-accent-300">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <h3 className="mt-4 font-display text-lead font-bold text-content">
-                    {text(value.title)}
-                  </h3>
-                  <p className="mt-2 text-small leading-relaxed text-ink-muted">
-                    {text(value.body)}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+      {/* what you get — the same four promises as the homepage */}
+      <section className="py-16 sm:py-24">
+        <div className={container}>
+          <SectionHeader title={t("valuesHeading")} />
+          <PromiseList
+            className="mt-8"
+            items={about.values.map((value) => ({ title: text(value.title), body: text(value.body) }))}
+          />
         </div>
       </section>
 
-      {/* milestones */}
       {about.milestones.length > 0 && (
-        <section className="bg-surface py-16 sm:py-24">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6">
-            <div>
-              <h2 className="mt-3 font-display text-title text-content">
-                {t("milestonesHeading")}
-              </h2>
-            </div>
-            <ol className="mt-10 space-y-0">
+        <section className="bg-cloud py-16 sm:py-24">
+          <div className={container}>
+            <SectionHeader title={t("milestonesHeading")} />
+            <ol className="mt-8 max-w-3xl border-b border-forest-100">
               {about.milestones.map((milestone, index) => (
-                <div key={`${milestone.when}-${index}`}>
-                  <li className="relative border-l-2 border-forest-100 pb-8 pl-8 last:border-transparent last:pb-0">
-                    <span className="absolute -left-[9px] top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-accent bg-surface" />
-                    <p className="text-small font-bold text-accent-600">
-                      {milestone.when}
-                    </p>
-                    <h3 className="mt-1 font-display text-lead font-bold text-content">
-                      {text(milestone.title)}
-                    </h3>
-                    <p className="mt-1 text-small leading-relaxed text-ink-muted">
-                      {text(milestone.body)}
-                    </p>
-                  </li>
-                </div>
+                <li
+                  key={`${milestone.when}-${index}`}
+                  className="grid gap-1 border-t border-forest-100 py-5 sm:grid-cols-[8rem_1fr] sm:gap-6"
+                >
+                  <p className="text-small font-semibold text-content tabular-nums">{milestone.when}</p>
+                  <div>
+                    <h3 className="text-body font-semibold text-content">{text(milestone.title)}</h3>
+                    <p className="mt-1 text-small text-ink-muted">{text(milestone.body)}</p>
+                  </div>
+                </li>
               ))}
             </ol>
           </div>
         </section>
       )}
 
-      {/* team */}
       {about.team.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-          <div>
-            <h2 className="mt-3 font-display text-title text-content">
-              {t("teamHeading")}
-            </h2>
-          </div>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {about.team.map((member, index) => (
-              <div key={member.name + index}>
-                <div className="rounded-card border border-forest-100 bg-surface p-6 text-center">
-                  <span className="mx-auto flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-forest-950">
+        <section className="py-16 sm:py-24">
+          <div className={container}>
+            <SectionHeader title={t("teamHeading")} />
+            <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {about.team.map((member, index) => (
+                <li key={member.name + index} className="flex items-center gap-4">
+                  <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-cloud">
                     {member.photo ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={member.photo}
-                        alt={member.name}
-                        width={80}
-                        height={80}
-                        loading="lazy"
-                        className="h-full w-full object-cover"
-                      />
+                      // eslint-disable-next-line @next/next/no-img-element -- admin photo, any host
+                      <img src={member.photo} alt="" className="h-full w-full object-cover" />
                     ) : (
-                      <span className="font-display text-heading text-accent-300">
+                      <span className="font-display text-heading text-content">
                         {member.name.trim().charAt(0).toUpperCase()}
                       </span>
                     )}
                   </span>
-                  <h3 className="mt-4 font-display text-body font-bold text-content">
-                    {member.name}
-                  </h3>
-                  <p className="mt-0.5 text-small text-ink-muted">{text(member.role)}</p>
-                </div>
-              </div>
-            ))}
+                  <div>
+                    <h3 className="text-body font-semibold text-content">{member.name}</h3>
+                    <p className="mt-0.5 text-small text-ink-muted">{text(member.role)}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       )}
 
-      {/* visit + CTA */}
-      <section className="bg-forest-950 py-16 sm:py-24">
-        <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-2">
+      {/* visit, and the two ways to start */}
+      <section className="border-t border-forest-100 py-16 sm:py-24">
+        <div className={`${container} grid gap-12 lg:grid-cols-2`}>
           <div>
-            <h2 className="mt-3 font-display text-title text-white">
-              {t("visitHeading")}
-            </h2>
-            <p className="mt-3 text-body leading-relaxed text-white/60">
-              {t("visitBody")}
-            </p>
+            <h2 className="font-display text-title text-content">{t("visitHeading")}</h2>
+            <p className="mt-3 max-w-xl text-body text-ink-muted">{t("visitBody")}</p>
             <a
               href={salesMapUrl}
               target="_blank"
               rel="noreferrer"
-              className="mt-5 inline-flex items-start gap-3 text-small leading-relaxed text-white/80 transition-colors hover:text-accent-300"
+              className="group mt-6 inline-flex items-start gap-3 text-small text-content"
             >
-              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent-300" aria-hidden="true" />
+              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-ink-muted" aria-hidden="true" />
               <address className="not-italic">
                 {addressLines.map((line) => (
                   <span key={line} className="block">
                     {line}
                   </span>
                 ))}
-                <span className="mt-1 block font-semibold text-accent-300">{t("viewMap")}</span>
+                <span className="mt-1 block font-semibold text-accent-600 underline-offset-4 group-hover:underline">
+                  {t("viewMap")}
+                </span>
               </address>
             </a>
           </div>
-
           <div>
-            <div className="rounded-card border border-white/10 bg-white/5 p-8">
-              <h2 className="font-display text-heading text-white">
-                {t("ctaHeading")}
-              </h2>
-              <p className="mt-3 text-body leading-relaxed text-white/60">
-                {t("ctaBody")}
-              </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/products/request-a-demo"
-                  className="flex min-h-[50px] flex-1 items-center justify-center gap-2 rounded-full bg-accent px-6 text-small font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97]"
-                >
-                  {t("ctaDemo")}
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-                <Link
-                  href="/contact-sales"
-                  className="flex min-h-[50px] flex-1 items-center justify-center rounded-full border border-white/20 px-6 text-small font-bold text-white transition-colors hover:border-accent hover:text-accent-300"
-                >
-                  {t("ctaSales")}
-                </Link>
-              </div>
+            <h2 className="font-display text-heading text-content">{t("ctaHeading")}</h2>
+            <p className="mt-3 max-w-xl text-body text-ink-muted">{t("ctaBody")}</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Button href="/products/request-a-demo" size="lg">
+                {t("ctaDemo")}
+              </Button>
+              <Button href="/contact-sales" size="lg" variant="secondary">
+                {t("ctaSales")}
+              </Button>
             </div>
           </div>
         </div>
