@@ -9,7 +9,6 @@ import { claimGuestOrders, listOrdersByUser } from "@/lib/orderStore";
 import { getAllProducts } from "@/lib/productStore";
 import { formatBaht } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
-import FadeIn from "@/components/ui/FadeIn";
 import SignOutButton from "@/components/auth/SignOutButton";
 import AddressManager from "@/components/account/AddressManager";
 import ProfileSettings from "@/components/account/ProfileSettings";
@@ -90,7 +89,7 @@ export default async function AccountPage({
   return (
     <main className="flex-1 bg-cloud">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-        <FadeIn>
+        <div>
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div className="flex items-center gap-4">
               <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-forest-950 text-accent-300">
@@ -119,9 +118,9 @@ export default async function AccountPage({
               <SignOutButton />
             </div>
           </div>
-        </FadeIn>
+        </div>
 
-        <FadeIn delay={0.06}>
+        <div>
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
             <div className="flex items-center gap-4 rounded-xl border border-forest-100 bg-surface p-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent-600">
@@ -155,11 +154,11 @@ export default async function AccountPage({
               </div>
             )}
           </div>
-        </FadeIn>
+        </div>
 
         <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <div className="space-y-6">
-            <FadeIn delay={0.1}>
+            <div>
               <section aria-labelledby="profile-heading" className="rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-600">
                   {t("profileEyebrow")}
@@ -180,8 +179,8 @@ export default async function AccountPage({
                   </div>
                 </dl>
               </section>
-            </FadeIn>
-            <FadeIn delay={0.12}>
+            </div>
+            <div>
               <ProfileSettings
                 initial={{
                   fullName: profile.full_name ?? "",
@@ -189,26 +188,26 @@ export default async function AccountPage({
                   marketingOptIn: profile.marketing_opt_in ?? false,
                 }}
               />
-            </FadeIn>
-            <FadeIn delay={0.14}>
+            </div>
+            <div>
               <SecuritySettings currentEmail={profile.email ?? ""} />
-            </FadeIn>
-            <FadeIn delay={0.16}>
+            </div>
+            <div>
               <AddressManager
                 initialAddresses={addressResult.addresses}
                 setupRequired={addressResult.setupRequired}
                 profileEmail={profile.email ?? ""}
                 profileName={profile.full_name ?? ""}
               />
-            </FadeIn>
-            <FadeIn delay={0.18}>
+            </div>
+            <div>
               <DeleteAccount email={profile.email ?? ""} />
-            </FadeIn>
+            </div>
           </div>
 
-          <FadeIn delay={0.12}>
+          <div>
             <AccountHistory orders={orders} purchases={purchases} />
-          </FadeIn>
+          </div>
         </div>
       </div>
     </main>

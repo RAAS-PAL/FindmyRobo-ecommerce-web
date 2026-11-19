@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
@@ -54,11 +53,7 @@ export default function ProductCard({
   };
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 36 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.55, delay: index * 0.09, ease: [0.16, 1, 0.3, 1] }}
+    <article
       onMouseEnter={playVideo}
       onMouseLeave={stopVideo}
       onFocus={playVideo}
@@ -139,6 +134,6 @@ export default function ProductCard({
           </span>
         </span>
       </Link>
-    </motion.article>
+    </article>
   );
 }

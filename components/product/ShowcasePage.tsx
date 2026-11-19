@@ -12,7 +12,6 @@ import {
 import { ArrowUpRight, Calendar, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useQuote } from "@/components/quote/QuoteProvider";
-import FadeIn from "@/components/ui/FadeIn";
 import ConditionLine from "@/components/ui/ConditionLine";
 import ProductVisual from "@/components/ui/ProductVisual";
 import { conditionKind } from "@/data/conditions";
@@ -366,22 +365,14 @@ export default function ShowcasePage({
         {showcase.figures.length > 0 && (
           <div className="relative border-t border-white/10">
             {/* a blue line drawing across as the figures come in */}
-            <motion.span
+            <span
               aria-hidden="true"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: 0.2, ease: EASE }}
               className="absolute -top-px left-0 h-px w-full origin-left bg-gradient-to-r from-transparent via-accent to-transparent"
             />
             <dl className="mx-auto grid max-w-7xl grid-cols-2 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
               {showcase.figures.map((figure, i) => (
-                <motion.div
+                <div
                   key={`${i}-${figure.value}`}
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.6 }}
-                  transition={{ duration: 0.6, delay: 0.1 + i * 0.1, ease: EASE }}
                   className={`py-7 lg:py-9 ${i % 2 === 1 ? "pl-5 lg:pl-8" : "lg:pl-8"} ${
                     i > 0 ? "lg:border-l lg:border-white/10" : "lg:pl-0"
                   } ${i === 1 ? "border-l border-white/10" : ""} ${i === 3 ? "border-l border-white/10" : ""}`}
@@ -390,7 +381,7 @@ export default function ShowcasePage({
                   <dd className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
                     {figure.value}
                   </dd>
-                </motion.div>
+                </div>
               ))}
             </dl>
           </div>
@@ -400,7 +391,7 @@ export default function ShowcasePage({
       {/* ---- one photo per feature ---- */}
       {features.map((feature, i) => (
         <section key={`${i}-${feature.image}`} className="bg-surface pt-20 sm:pt-28">
-          <FadeIn className="mx-auto max-w-2xl px-4 text-center sm:px-6">
+          <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
             {feature.eyebrow && (
               <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-accent-600 uppercase [&:lang(th)]:tracking-[0.06em]">
                 {text(feature.eyebrow)}
@@ -412,7 +403,7 @@ export default function ShowcasePage({
             <p className="mt-4 text-[15px] leading-relaxed text-ink-muted sm:text-lg">
               {text(feature.body)}
             </p>
-          </FadeIn>
+          </div>
           <FeaturePhoto src={feature.image} alt={`${label}: ${text(feature.heading)}`} />
         </section>
       ))}
@@ -432,13 +423,7 @@ export default function ShowcasePage({
             </h2>
             <div className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
               {specs.map((group, i) => (
-                <motion.div
-                  key={`${i}-${group.title.en}`}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.6, delay: (i % 2) * 0.12, ease: EASE }}
-                >
+                <div key={`${i}-${group.title.en}`}>
                   <h3 className="border-b-2 border-content pb-2 font-display text-lg font-bold text-content">
                     {text(group.title)}
                   </h3>
@@ -453,7 +438,7 @@ export default function ShowcasePage({
                       </div>
                     ))}
                   </dl>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -468,7 +453,7 @@ export default function ShowcasePage({
 
       {/* ---- closing call ---- */}
       <section className="bg-[#0b0d10] py-20 text-center text-white sm:py-24">
-        <FadeIn className="mx-auto max-w-xl px-4">
+        <div className="mx-auto max-w-xl px-4">
           <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
             {t("ctaHeading", { name: product.name })}
           </h2>
@@ -481,7 +466,7 @@ export default function ShowcasePage({
             {t("getQuote")}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </button>
-        </FadeIn>
+        </div>
       </section>
     </main>
   );

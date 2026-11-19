@@ -1,7 +1,6 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { motion } from "framer-motion";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import { pick } from "@/data/siteContent";
@@ -17,12 +16,7 @@ export default function TrustSection() {
     <section id="about" className="bg-cloud py-20 sm:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
         {/* copy */}
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-        >
+        <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
@@ -33,17 +27,13 @@ export default function TrustSection() {
             {pick(home.trustBody, locale)}
           </p>
           <div className="mt-8 h-1 w-24 rounded-full bg-accent" aria-hidden="true" />
-        </motion.div>
+        </div>
 
         {/* stats */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
           {stats.map((stat, i) => (
-            <motion.div
+            <div
               key={`${stat.label}-${i}`}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.55, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="rounded-2xl bg-forest p-6 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.4)] sm:p-8"
             >
               <AnimatedCounter
@@ -53,7 +43,7 @@ export default function TrustSection() {
                 className="font-mono text-3xl font-semibold tabular-nums text-accent-300 sm:text-4xl"
               />
               <p className="mt-2 text-sm font-medium text-white/75">{stat.label}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

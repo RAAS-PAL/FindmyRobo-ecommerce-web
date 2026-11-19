@@ -4,7 +4,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Calendar, Check, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import FadeIn from "@/components/ui/FadeIn";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import FloatingAddToCart from "@/components/cart/FloatingAddToCart";
 import CompareToggleButton from "@/components/compare/CompareToggleButton";
@@ -166,14 +165,14 @@ export default async function ProductPage({
             (page?.boxItems?.length ?? 0) > 0 || (page?.faqs?.length ?? 0) > 0 ? (
               <>
                 {page?.boxItems && page.boxItems.length > 0 && (
-                  <FadeIn>
+                  <div>
                     <BoxContents items={page.boxItems} heading={t("boxHeading")} locale={l} />
-                  </FadeIn>
+                  </div>
                 )}
                 {page?.faqs && page.faqs.length > 0 && (
-                  <FadeIn>
+                  <div>
                     <FaqSection faqs={page.faqs} heading={t("faqHeading")} locale={l} />
-                  </FadeIn>
+                  </div>
                 )}
               </>
             ) : undefined
@@ -224,7 +223,7 @@ export default async function ProductPage({
               leaves a transform on the element it animates, and a transformed
               ancestor becomes the containing block, which breaks sticky. */}
           <div className="lg:sticky lg:top-24">
-            <FadeIn>
+            <div>
               <ProductGallery
                 product={product}
                 labels={{
@@ -241,11 +240,11 @@ export default async function ProductPage({
                   zoomOut: t("galleryZoomOut"),
                 }}
               />
-            </FadeIn>
+            </div>
           </div>
 
           {/* info */}
-          <FadeIn delay={0.1} className="flex flex-col">
+          <div className="flex flex-col">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-600">
               {tc(`${product.category}.name`)}
             </p>
@@ -324,7 +323,7 @@ export default async function ProductPage({
                 ))}
               </ul>
             </div>
-          </FadeIn>
+          </div>
         </div>
 
         {/* content sections (admin page builder). The legacy top-of-page video
@@ -371,43 +370,43 @@ export default async function ProductPage({
         {/* what's in the box — admin-editable, rendered after the specs */}
         {page?.boxItems && page.boxItems.length > 0 && (
           <div className="mt-16 sm:mt-20">
-            <FadeIn>
+            <div>
               <BoxContents
                 items={page.boxItems}
                 heading={t("boxHeading")}
                 locale={locale as Locale}
               />
-            </FadeIn>
+            </div>
           </div>
         )}
 
         {/* FAQ accordion — admin-editable */}
         {page?.faqs && page.faqs.length > 0 && (
           <div className="mt-16 sm:mt-20">
-            <FadeIn>
+            <div>
               <FaqSection
                 faqs={page.faqs}
                 heading={t("faqHeading")}
                 locale={locale as Locale}
               />
-            </FadeIn>
+            </div>
           </div>
         )}
 
         {/* customer reviews — public, written by signed-in customers */}
         <div className="mt-16 sm:mt-20">
-          <FadeIn>
+          <div>
             <ProductReviews productId={product.id} />
-          </FadeIn>
+          </div>
         </div>
 
         {/* related */}
         <div className="mt-16 sm:mt-20">
-          <FadeIn>
+          <div>
             <h2 className="font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
               {t("relatedHeading")}
             </h2>
-          </FadeIn>
+          </div>
           <div className="no-scrollbar mt-8 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-3">
             {related.map((p, i) => (
               <ProductCard key={p.id} product={p} index={i} />

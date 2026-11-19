@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeftRight, Check } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import FadeIn from "@/components/ui/FadeIn";
 import ProductVisual from "@/components/ui/ProductVisual";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { getAllProducts } from "@/lib/productStore";
@@ -69,7 +68,7 @@ export default async function ComparePage({
     return (
       <main className="min-h-[65vh] bg-cloud">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-          <FadeIn>
+          <div>
             <div className="mx-auto flex max-w-lg flex-col items-center rounded-2xl border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
               <ArrowLeftRight className="h-10 w-10 text-accent-600" aria-hidden="true" />
               <h1 className="mt-4 font-display text-2xl font-extrabold text-content">
@@ -85,7 +84,7 @@ export default async function ComparePage({
                 {t("browse")}
               </Link>
             </div>
-          </FadeIn>
+          </div>
         </div>
       </main>
     );
@@ -97,7 +96,7 @@ export default async function ComparePage({
   return (
     <main className="min-h-[65vh] bg-cloud">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <FadeIn>
+        <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
@@ -105,9 +104,9 @@ export default async function ComparePage({
             {t("heading")}
           </h1>
           <p className="mt-3 max-w-xl text-sm text-ink-muted">{t("sub")}</p>
-        </FadeIn>
+        </div>
 
-        <FadeIn delay={0.08}>
+        <div>
           {/* wide table scrolls inside its own container, never the page */}
           <div className="mt-10 overflow-x-auto rounded-2xl border border-forest-100 bg-surface">
             <table className="w-full min-w-[640px] text-left text-sm">
@@ -204,7 +203,7 @@ export default async function ComparePage({
               </tbody>
             </table>
           </div>
-        </FadeIn>
+        </div>
       </div>
     </main>
   );

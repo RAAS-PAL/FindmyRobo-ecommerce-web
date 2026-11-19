@@ -3,7 +3,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Calendar, Mail, MapPin, MessageCircle, Phone, QrCode } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import FadeIn from "@/components/ui/FadeIn";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import { salesMapUrl, siteConfig } from "@/data/siteConfig";
 import { pick } from "@/data/siteContent";
@@ -25,7 +24,7 @@ export default function ContactSalesBody() {
   return (
     <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_420px] lg:gap-12">
       {/* contact methods */}
-      <FadeIn delay={0.08}>
+      <div>
         <div className="space-y-4">
           <a
             href={`tel:${phone.replace(/\s/g, "")}`}
@@ -122,10 +121,10 @@ export default function ContactSalesBody() {
             </Link>
           </p>
         </div>
-      </FadeIn>
+      </div>
 
       {/* LINE QR */}
-      <FadeIn delay={0.14}>
+      <div>
         <div className="flex flex-col items-center rounded-3xl bg-forest-950 p-8 text-center sm:p-10">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-300">
             LINE
@@ -155,7 +154,7 @@ export default function ContactSalesBody() {
             {t("lineHint")}
           </p>
         </div>
-      </FadeIn>
+      </div>
     </div>
   );
 }

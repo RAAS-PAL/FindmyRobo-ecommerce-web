@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Play, Tag } from "lucide-react";
-import FadeIn from "@/components/ui/FadeIn";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import type { GalleryVideo } from "@/data/siteContent";
 
@@ -156,17 +155,17 @@ export default function VideoShowcase() {
   return (
     <section className="bg-surface py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeIn>
+        <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
             {t("heading")}
           </h2>
-        </FadeIn>
+        </div>
 
         {videos.length === 0 ? (
-          <FadeIn delay={0.1} className="mt-10">
+          <div className="mt-10">
             <div className="flex aspect-[16/6] items-center justify-center rounded-3xl border border-dashed border-forest-100 bg-cloud/60">
               <span className="flex flex-col items-center gap-3 text-ink-muted">
                 <span className="flex h-14 w-14 items-center justify-center rounded-full bg-forest-950/5">
@@ -175,24 +174,23 @@ export default function VideoShowcase() {
                 <span className="text-sm font-semibold">{t("placeholder")}</span>
               </span>
             </div>
-          </FadeIn>
+          </div>
         ) : videos.length === 1 ? (
           // a lone video reads better as one centred card than a half-empty row
-          <FadeIn delay={0.1} className="mx-auto mt-10 max-w-3xl">
+          <div className="mx-auto mt-10 max-w-3xl">
             <GalleryCard video={videos[0]} />
-          </FadeIn>
+          </div>
         ) : (
           // bento: the first two are the big cards, the rest fill the next rows.
           // The col-span sits on the FadeIn because IT is the grid item.
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-6">
             {videos.map((video, i) => (
-              <FadeIn
+              <div
                 key={`${video.url}-${i}`}
-                delay={i * 0.06}
                 className={i < 2 ? "lg:col-span-3" : "lg:col-span-2"}
               >
                 <GalleryCard video={video} />
-              </FadeIn>
+              </div>
             ))}
           </div>
         )}

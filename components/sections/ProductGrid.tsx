@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import FeaturedProductCard from "@/components/ui/FeaturedProductCard";
 import { useProducts } from "@/components/ProductsProvider";
@@ -46,19 +45,14 @@ export default function ProductGrid() {
     <section id="products" className="bg-surface py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <div>
             <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-accent-600 uppercase [&:lang(th)]:tracking-[0.06em]">
               {t("eyebrow")}
             </p>
             <h2 className="mt-3 max-w-xl font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
               {t("heading")}
             </h2>
-          </motion.div>
+          </div>
 
           <div className="flex gap-2">
             <button

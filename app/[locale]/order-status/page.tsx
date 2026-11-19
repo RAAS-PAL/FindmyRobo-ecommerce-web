@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PackageSearch } from "lucide-react";
-import FadeIn from "@/components/ui/FadeIn";
 import OrderLookupForm from "@/components/orders/OrderLookupForm";
 import { pageAlternates } from "@/lib/seo";
 
@@ -27,7 +26,7 @@ export default async function OrderStatusPage({
   return (
     <main className="flex-1 bg-cloud">
       <div className="mx-auto max-w-xl px-4 py-14 sm:px-6 sm:py-20">
-        <FadeIn>
+        <div>
           <div className="mb-8 flex flex-col items-center text-center">
             <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-forest-950 text-accent-300">
               <PackageSearch className="h-6 w-6" aria-hidden="true" />
@@ -40,10 +39,10 @@ export default async function OrderStatusPage({
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-ink-muted">{t("sub")}</p>
           </div>
-        </FadeIn>
-        <FadeIn delay={0.08}>
+        </div>
+        <div>
           <OrderLookupForm />
-        </FadeIn>
+        </div>
       </div>
     </main>
   );

@@ -11,7 +11,6 @@ import {
   Phone,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import FadeIn from "@/components/ui/FadeIn";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import {
   salesDirectionsUrl,
@@ -50,7 +49,7 @@ export default function LocationBody() {
 
   return (
     <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
-      <FadeIn delay={0.08}>
+      <div>
         <div className="h-full overflow-hidden rounded-3xl border border-forest-100 bg-surface shadow-[0_24px_48px_-28px_rgba(10,46,31,0.35)]">
           <iframe
             src={salesMapEmbedUrl(locale)}
@@ -60,9 +59,9 @@ export default function LocationBody() {
             allowFullScreen
           />
         </div>
-      </FadeIn>
+      </div>
 
-      <FadeIn delay={0.14}>
+      <div>
         <div className="flex h-full flex-col rounded-3xl border border-forest-100 bg-surface p-6 sm:p-8">
           <div className="flex items-start gap-4">
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/20">
@@ -142,7 +141,7 @@ export default function LocationBody() {
             </p>
           </div>
         </div>
-      </FadeIn>
+      </div>
     </div>
   );
 }

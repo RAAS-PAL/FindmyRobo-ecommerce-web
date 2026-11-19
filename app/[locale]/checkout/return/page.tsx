@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import FadeIn from "@/components/ui/FadeIn";
 import PaymentResult from "@/components/checkout/PaymentResult";
 import { getOrderById, updateOrderPayment } from "@/lib/orderStore";
 import { chargeToOrderStatus, getCharge, omiseConfigured } from "@/lib/omise";
@@ -74,9 +73,9 @@ export default async function PaymentReturnPage({
   return (
     <main className="bg-cloud">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <FadeIn>
+        <div>
           <PaymentResult orderId={order.id} initialStatus={status} />
-        </FadeIn>
+        </div>
       </div>
     </main>
   );

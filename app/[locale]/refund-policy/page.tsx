@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Phone } from "lucide-react";
-import FadeIn from "@/components/ui/FadeIn";
 import { returnPolicy } from "@/data/returnPolicy";
 import type { Locale } from "@/data/products";
 import { pageAlternates } from "@/lib/seo";
@@ -37,24 +36,24 @@ export default async function RefundPolicyPage({
   return (
     <main className="flex-1 bg-cloud">
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
-        <FadeIn>
+        <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
           <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-4xl">
             {policy.title}
           </h1>
-        </FadeIn>
+        </div>
 
-        <FadeIn delay={0.1}>
+        <div>
           <p className="mt-8 text-[15px] leading-relaxed text-ink-muted">
             {policy.intro}
           </p>
-        </FadeIn>
+        </div>
 
         <div className="mt-12 space-y-10">
-          {policy.sections.map((section, i) => (
-            <FadeIn key={section.heading} delay={Math.min(i, 6) * 0.03}>
+          {policy.sections.map((section) => (
+            <div key={section.heading}>
               <section>
                 <h2 className="font-display text-lg font-bold text-content sm:text-xl">
                   {section.heading}
@@ -118,7 +117,7 @@ export default async function RefundPolicyPage({
                   })}
                 </div>
               </section>
-            </FadeIn>
+            </div>
           ))}
         </div>
       </div>

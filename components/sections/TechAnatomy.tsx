@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import FadeIn from "@/components/ui/FadeIn";
 import { anatomyByModel } from "@/data/techAnatomy";
 import type { AnatomyModel, Locale } from "@/data/products";
 
@@ -40,7 +39,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
   return (
     <section id="technology" className="bg-forest-950 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeIn>
+        <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
             {t("eyebrow")} — {set.model}
           </p>
@@ -50,11 +49,11 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/60">
             {t("sub")}
           </p>
-        </FadeIn>
+        </div>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
           {/* viewer */}
-          <FadeIn>
+          <div>
             <div className="relative aspect-square overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-forest-900 to-forest-950">
               <div
                 className="absolute inset-0 transition-transform duration-700 ease-out"
@@ -140,11 +139,11 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                 {view.label[locale]}
               </span>
             </div>
-          </FadeIn>
+          </div>
 
           {/* controls + detail */}
           <div className="flex flex-col gap-5">
-            <FadeIn>
+            <div>
               <ul className="flex flex-wrap gap-2">
                 {set.hotspots.map((spot, index) => {
                   const isActive = spot.id === activeId;
@@ -167,9 +166,9 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                   );
                 })}
               </ul>
-            </FadeIn>
+            </div>
 
-            <FadeIn>
+            <div>
               <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -196,13 +195,13 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                   </motion.div>
                 </AnimatePresence>
               </div>
-            </FadeIn>
+            </div>
 
-            <FadeIn>
+            <div>
               <p className="text-[11.5px] leading-relaxed text-white/40">
                 {set.footnote[locale]}
               </p>
-            </FadeIn>
+            </div>
           </div>
         </div>
       </div>

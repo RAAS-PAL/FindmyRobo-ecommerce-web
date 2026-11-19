@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Search, SearchX } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ProductCard from "@/components/ui/ProductCard";
-import FadeIn from "@/components/ui/FadeIn";
 import { getAllProducts } from "@/lib/productStore";
 import { searchProducts } from "@/lib/productSearch";
 import type { Locale } from "@/data/products";
@@ -52,7 +51,7 @@ export default async function SearchPage({
   return (
     <main className="min-h-[65vh] bg-cloud">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <FadeIn>
+        <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
@@ -64,18 +63,18 @@ export default async function SearchPage({
               {t("resultCount", { count: results.length })}
             </p>
           )}
-        </FadeIn>
+        </div>
 
         {!query ? (
-          <FadeIn delay={0.08}>
+          <div>
             <div className="mt-12 flex flex-col items-center rounded-2xl border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
               <Search className="h-10 w-10 text-accent-600" aria-hidden="true" />
               <h2 className="mt-4 font-display text-xl font-bold text-content">{t("emptyTitle")}</h2>
               <p className="mt-2 max-w-md text-sm leading-relaxed text-ink-muted">{t("emptyBody")}</p>
             </div>
-          </FadeIn>
+          </div>
         ) : results.length === 0 ? (
-          <FadeIn delay={0.08}>
+          <div>
             <div className="mt-12 flex flex-col items-center rounded-2xl border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
               <SearchX className="h-10 w-10 text-accent-600" aria-hidden="true" />
               <h2 className="mt-4 font-display text-xl font-bold text-content">{t("noResultsTitle")}</h2>
@@ -86,7 +85,7 @@ export default async function SearchPage({
                 {t("browseAll")}
               </Link>
             </div>
-          </FadeIn>
+          </div>
         ) : (
           <div className="mt-10 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {results.map((product, index) => (

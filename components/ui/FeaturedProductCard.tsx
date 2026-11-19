@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import RobotIllustration from "@/components/ui/RobotIllustration";
@@ -90,12 +89,7 @@ export default function FeaturedProductCard({
   };
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      // a small share in view is enough, so the card peeking at the edge shows
-      viewport={{ once: true, amount: 0.05 }}
-      transition={{ duration: 0.5, delay: Math.min(index, 4) * 0.06, ease: [0.16, 1, 0.3, 1] }}
+    <article
       onMouseEnter={playVideo}
       onMouseLeave={stopVideo}
       onFocus={playVideo}
@@ -201,6 +195,6 @@ export default function FeaturedProductCard({
           </span>
         </span>
       </Link>
-    </motion.article>
+    </article>
   );
 }

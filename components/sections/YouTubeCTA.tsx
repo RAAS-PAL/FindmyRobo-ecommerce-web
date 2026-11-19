@@ -28,11 +28,7 @@ export default function YouTubeCTA() {
         aria-hidden="true"
       />
 
-      <motion.div
-        initial={{ opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      <div
         className="relative mx-auto flex max-w-3xl flex-col items-center px-4 text-center sm:px-6"
       >
         <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-forest-950 shadow-[0_16px_32px_-16px_rgba(0,0,0,0.5)]">
@@ -55,7 +51,7 @@ export default function YouTubeCTA() {
           <YouTubeIcon className="h-5 w-5" />
           {t("button")}
         </motion.a>
-      </motion.div>
+      </div>
     </section>
   );
 }

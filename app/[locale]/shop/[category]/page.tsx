@@ -5,7 +5,6 @@ import { Bot, Calendar } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import CategoryTabs from "@/components/ui/CategoryTabs";
-import FadeIn from "@/components/ui/FadeIn";
 import ProductCard from "@/components/ui/ProductCard";
 import { collapseInstallTiers, isInstallTier } from "@/lib/installTiers";
 import { categories, type CategorySlug } from "@/data/categories";
@@ -53,7 +52,7 @@ export default async function CategoryPage({
   return (
     <main className="bg-cloud">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <FadeIn>
+        <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
             {t("eyebrow")}
           </p>
@@ -61,7 +60,7 @@ export default async function CategoryPage({
             {tc(`${slug}.name`)}
           </h1>
           <p className="mt-4 max-w-xl text-base text-ink-muted">{tc(`${slug}.description`)}</p>
-        </FadeIn>
+        </div>
 
         <div className="mt-10">
           <CategoryTabs active={slug} />
@@ -81,7 +80,7 @@ export default async function CategoryPage({
             ))}
           </div>
         ) : (
-          <FadeIn className="mt-10">
+          <div className="mt-10">
             <div className="flex flex-col items-center rounded-3xl border border-forest-100 bg-surface px-6 py-20 text-center">
               <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-forest text-accent-300">
                 <Bot className="h-8 w-8" aria-hidden="true" />
@@ -108,7 +107,7 @@ export default async function CategoryPage({
                 </Link>
               </div>
             </div>
-          </FadeIn>
+          </div>
         )}
       </div>
     </main>
