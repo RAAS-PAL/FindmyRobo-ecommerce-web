@@ -51,13 +51,15 @@
   --color-surface: #f8fafc;
   --color-content: #0f172a;
 
-  /* Thai fallbacks: Barlow carries Latin, Prompt/Noto Sans Thai carry Thai
-     glyphs. The storefront has no monospace font (2026-11-19 redesign);
+  /* Storefront (2026-11-20): Instrument Sans carries Latin, Anuphan Thai
+     (--font-latin / --font-thai, set by app/[locale]/layout.tsx). The admin
+     layout defines only the older Barlow/Prompt/Noto variables, which the
+     fallbacks pick up. The storefront has no monospace font (2026-11-19 redesign);
      --font-plex-mono is only defined by the admin layout, so codes there keep
      IBM Plex Mono and the storefront's few codes (order numbers) use the
      system's monospace. */
-  --font-display: var(--font-barlow), var(--font-prompt), system-ui, sans-serif;
-  --font-sans: var(--font-barlow), var(--font-noto-thai), system-ui, sans-serif;
+  --font-display: var(--font-latin, var(--font-barlow)), var(--font-thai, var(--font-prompt)), system-ui, sans-serif;
+  --font-sans: var(--font-latin, var(--font-barlow)), var(--font-thai, var(--font-noto-thai)), system-ui, sans-serif;
   --font-mono: var(--font-plex-mono, ui-monospace), var(--font-noto-thai), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Sharper layout language: reduce Tailwind's default corner radii globally.
@@ -76,12 +78,12 @@
   --text-display: clamp(2.25rem, 1.4rem + 3.2vw, 3.5rem); /* 36 to 56 px */
   --text-display--line-height: 1.05;
   --text-display--letter-spacing: -0.02em;
-  --text-display--font-weight: 700;
+  --text-display--font-weight: 600;
 
   --text-title: clamp(1.75rem, 1.35rem + 1.5vw, 2.25rem); /* 28 to 36 px */
   --text-title--line-height: 1.15;
   --text-title--letter-spacing: -0.015em;
-  --text-title--font-weight: 700;
+  --text-title--font-weight: 600;
 
   --text-heading: 1.25rem; /* 20 px */
   --text-heading--line-height: 1.3;
