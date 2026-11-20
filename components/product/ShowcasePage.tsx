@@ -84,12 +84,8 @@ function HeroColor({ color, alt, label }: { color: ShowcaseColor; alt: string; l
           className="h-[min(42svh,22rem)] w-auto max-w-full object-contain sm:h-[min(52svh,28rem)] lg:h-[min(64svh,34rem)]"
         />
       </div>
-      <figcaption className="mt-3 flex items-center gap-2 text-caption font-semibold text-white/80">
-        <span
-          aria-hidden="true"
-          className="h-3.5 w-3.5 rounded-full border border-white/50"
-          style={{ backgroundColor: color.swatch }}
-        />
+      {/* the name only: a coloured dot here read as a choice to click */}
+      <figcaption className="mt-3 text-caption font-semibold text-white/80">
         {label}
       </figcaption>
     </figure>
