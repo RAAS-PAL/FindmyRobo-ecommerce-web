@@ -49,8 +49,9 @@ export default function QuoteStrip({ interest, productId }: QuoteTarget) {
 
   return (
     <section aria-labelledby={uid + "-title"} data-hero-quote
-      className="grid rounded-card border border-forest-100 bg-surface lg:grid-cols-[0.9fr_1.1fr]">
-      <div className="flex flex-col rounded-t-card bg-cloud/55 p-6 sm:p-8 lg:rounded-l-card lg:rounded-tr-none lg:p-10">
+      // on the page itself, not in a box: two columns with a hairline between
+      className="grid border-b border-forest-100 lg:grid-cols-[0.9fr_1.1fr] dark:border-forest-700">
+      <div className="flex flex-col py-8 lg:py-10 lg:pr-12">
         <h2 id={uid + "-title"} className="max-w-sm font-display text-title text-content">
           {t("consultation.title")}
         </h2>
@@ -77,7 +78,7 @@ export default function QuoteStrip({ interest, productId }: QuoteTarget) {
         </div>
       </div>
 
-      <div ref={panelRef} className="relative flex min-w-0 flex-col justify-center border-t border-forest-100 p-6 sm:p-8 lg:border-t-0 lg:border-l lg:p-10"
+      <div ref={panelRef} className="relative flex min-w-0 flex-col justify-center border-t border-forest-100 py-8 lg:border-t-0 lg:border-l lg:py-10 lg:pl-12 dark:border-forest-700"
         onKeyDown={(event) => {
           if (event.key === "Escape" && open) {
             event.stopPropagation();
