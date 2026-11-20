@@ -532,34 +532,6 @@ export default function Navbar() {
               {navLinks.map((link, linkIndex) => {
                 const isOpen = desktopMenu === linkIndex;
                 const lit = link.current || isOpen || pointed === linkIndex;
-                // a category with one robot links straight to it: no panel of one
-                const only = link.models?.length === 1 ? link.models[0] : null;
-                if (only) {
-                  return (
-                    <li key={link.label}>
-                      <Link
-                        href={only.href}
-                        onMouseEnter={() => {
-                          setPointed(linkIndex);
-                          if (!searchOpen) closeMenu();
-                        }}
-                        onFocus={() => setPointed(linkIndex)}
-                        className={`relative flex items-center gap-1 rounded-control px-3 py-1.5 text-small font-semibold whitespace-nowrap [&:lang(th)]:px-2 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
-                          lit ? "text-[color:var(--nav-navy)]" : "text-[color:var(--nav-ink)] hover:text-[color:var(--nav-navy)]"
-                        }`}
-                      >
-                        {highlight(linkIndex, pointed === linkIndex)}
-                        {link.current && (
-                          <span
-                            aria-hidden="true"
-                            className="absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent"
-                          />
-                        )}
-                        <span className="relative">{link.label}</span>
-                      </Link>
-                    </li>
-                  );
-                }
                 return (
                   <li key={link.label}>
                     <button
@@ -794,19 +766,6 @@ export default function Navbar() {
                     <li key={link.label}>
                       {/* the categories, then a rule before About */}
                       {!link.category && <div className="mx-4 my-3 h-px bg-forest-100" aria-hidden="true" />}
-                      {link.models?.length === 1 ? (
-                        // one robot: straight to it, nothing to unfold
-                        <Link
-                          href={link.models[0].href}
-                          onClick={() => setOpen(false)}
-                          className={`flex min-h-[48px] w-full items-center rounded-control px-4 text-body font-bold transition-colors hover:bg-cloud hover:text-accent-600 ${
-                            link.current ? "text-accent-600" : "text-content"
-                          }`}
-                        >
-                          {link.label}
-                        </Link>
-                      ) : (
-                      <>
                       <button
                         type="button"
                         onClick={() => setExpanded(expanded === i ? null : i)}
@@ -892,8 +851,6 @@ export default function Navbar() {
                           </motion.div>
                         )}
                       </AnimatePresence>
-                      </>
-                      )}
                     </li>
                   ))}
                 </ul>
