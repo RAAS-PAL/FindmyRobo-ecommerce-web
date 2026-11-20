@@ -1040,7 +1040,6 @@
     "notePlaceholder": "Anything else we should know — your garden, timing, or questions"
   },
   "showcase": {
-    "brandsLabel": "Brands we sell and service:",
     "slidesLabel": "Featured robots",
     "showSlide": "Show {name}",
     "pause": "Pause the slideshow",

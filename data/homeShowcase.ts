@@ -107,13 +107,6 @@ export interface HeroSlide extends ShowcasePhoto {
   productId?: string;
   /** A family's slide: shown only while that category has a robot on show. */
   category?: CategorySlug;
-  /**
-   * A real photo of the robot at a customer's site, shown in the hero in
-   * place of the cut-out, with a caption that names the robot and the place.
-   * Only real photographs: no generated scenes, and no RaasPal mark legible
-   * on the robot.
-   */
-  sitePhoto?: { src: string; width: number; height: number; caption: Bilingual };
 }
 
 export interface RobotFamily extends ShowcasePhoto {
@@ -180,16 +173,6 @@ export const heroSlides: HeroSlide[] = [
     focus: "50% 70%",
     // the LUBA 3 AWD cut-out (not mirrored: that would print MAMMOTION backwards)
     cutout: { src: "/studio/luba-orange.webp", width: 1846, height: 958 },
-    // a frame of the owner's own footage (public/posters/lubamini21500onebangkok.png), cropped
-    sitePhoto: {
-      src: "/hero/lawn-onebangkok.webp",
-      width: 1569,
-      height: 950,
-      caption: {
-        en: "LUBA mini 2 AWD 1500 mowing at One Bangkok",
-        th: "LUBA mini 2 AWD 1500 ขณะตัดหญ้าที่ One Bangkok",
-      },
-    },
     shot: { en: "", th: "" },
   },
   {
@@ -290,3 +273,49 @@ export const featuredFamilies: RobotFamily[] = [
   },
 ];
 
+export const moreFamilies: RobotFamily[] = [
+  {
+    id: "pudu",
+    eyebrow: { en: "Pudu · Yunji · Pre-owned", th: "Pudu · Yunji · ผ่านการใช้งาน" },
+    title: { en: "Delivery robots", th: "หุ่นยนต์ขนส่ง" },
+    tagline: {
+      en: "BellaBot, KettyBot and more — for restaurants, hotels and offices.",
+      th: "BellaBot, KettyBot และรุ่นอื่น ๆ สำหรับร้านอาหาร โรงแรม และสำนักงาน",
+    },
+    href: "/shop/delivery-robots",
+    interest: "pudu-delivery",
+    category: "delivery-robots",
+    // The five delivery robots as a team, BellaBot in front, at their real
+    // heights: one group cut-out (made from the logo-free product cut-outs) on
+    // the light studio backdrop the card draws, as the T-Chef tile. No clean
+    // lifestyle photo yet: the ones on file carry brochure text or a
+    // customer's branding.
+    image: null,
+    cutout: { src: "/studio/delivery-lineup.webp", width: 2151, height: 1064 },
+    shot: {
+      en: "Bella or Ketty carrying dishes in a restaurant · 4:3 · robot centred, full height in frame",
+      th: "Bella หรือ Ketty กำลังเสิร์ฟอาหารในร้าน · 4:3 · หุ่นยนต์อยู่กลางภาพ เห็นเต็มตัว",
+    },
+  },
+  {
+    id: "tchef",
+    eyebrow: { en: "T-Chef · Brand-new or pre-owned", th: "T-Chef · เครื่องใหม่ หรือผ่านการใช้งาน" },
+    title: { en: "Cooking robot", th: "หุ่นยนต์ทำอาหาร" },
+    // descriptive only until the spec sheet says who it is for
+    tagline: {
+      en: "The T-Chef TC-E10A.",
+      th: "T-Chef TC-E10A",
+    },
+    href: "/products/t-chef-tc-e10a",
+    interest: "cooking",
+    productId: "t-chef-tc-e10a",
+    // The machine (cut out of the business's high-res render) on a light
+    // studio backdrop drawn by the card. No lifestyle photo yet.
+    image: null,
+    cutout: { src: "/studio/t-chef-studio.webp", width: 1400, height: 1079 },
+    shot: {
+      en: "TC-E10A in a working kitchen, pan in motion · 4:3 · machine centred, full height in frame",
+      th: "TC-E10A ในครัวที่กำลังทำงาน · 4:3 · เครื่องอยู่กลางภาพ เห็นเต็มตัว",
+    },
+  },
+];

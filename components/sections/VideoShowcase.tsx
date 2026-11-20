@@ -154,7 +154,7 @@ export default function VideoShowcase() {
   if (videos.length === 0) return null;
 
   return (
-    <section className="bg-surface py-20 sm:py-32">
+    <section className="bg-surface py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title={t("heading")}
