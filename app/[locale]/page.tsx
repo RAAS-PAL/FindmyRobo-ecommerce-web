@@ -6,8 +6,8 @@ import { getSiteContent } from "@/lib/siteContentStore";
 import JsonLd from "@/components/seo/JsonLd";
 import HeroSection from "@/components/sections/HeroSection";
 import ProductGrid from "@/components/sections/ProductGrid";
-import { FamilyBanner, MoreFamilies } from "@/components/sections/RobotShowcase";
-import { featuredFamilies, moreFamilies, onShow } from "@/data/homeShowcase";
+import { FamilyBanner } from "@/components/sections/RobotShowcase";
+import { featuredFamilies, onShow } from "@/data/homeShowcase";
 import { getAllProducts } from "@/lib/productStore";
 import VideoShowcase from "@/components/sections/VideoShowcase";
 import ServicePromise from "@/components/sections/ServicePromise";
@@ -35,7 +35,6 @@ export default async function Home({
   const [{ contact, home, about }, products] = await Promise.all([getSiteContent(), getAllProducts()]);
   // banners for robots still hidden in Admin (no photos yet) are left out
   const [phantas] = onShow([featuredFamilies[1]], products);
-  const more = onShow(moreFamilies, products);
 
   return (
     <main>
@@ -43,15 +42,13 @@ export default async function Home({
           product pages' offers point back to. Homepage only; one declaration
           per site is the convention. */}
       <JsonLd data={organizationJsonLd(contact)} />
+      {/* Fewer, larger sections (2026-11-20): the hero, the robot range, one
+          banner, the videos, then who we are. The delivery and cooking
+          robots are in the hero tabs, the range and the menu; the quote form
+          opens from Get a quote. */}
       <HeroSection />
-      {/* Priority order (2026-09-30): the mower lineup straight after the
-          hero (its cards carry the mowers, so they have no banner of their
-          own), then the full-width Phantas banner, then Pudu and T-Chef
-          sharing a row. The mower technology scroll story (FeatureShowcase)
-          left the homepage — it suits the mower category page. */}
       <ProductGrid />
       {phantas && <FamilyBanner family={phantas} />}
-      {more.length > 0 && <MoreFamilies families={more} />}
       <VideoShowcase />
       {/* who we are: one section, its facts and promises shared with About */}
       <ServicePromise

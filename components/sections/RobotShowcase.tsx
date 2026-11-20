@@ -7,7 +7,6 @@ import type { RobotFamily } from "@/data/homeShowcase";
 import ShowcasePhoto from "@/components/ui/ShowcasePhoto";
 import Button from "@/components/ui/Button";
 import MetaLine from "@/components/ui/MetaLine";
-import SectionHeader from "@/components/ui/SectionHeader";
 
 /**
  * Product-family banners: the photo is the card, with the family's name, one
@@ -84,25 +83,6 @@ export function FamilyBanner({ family }: { family: RobotFamily }) {
   return (
     <section className="bg-surface px-3 pt-3 sm:px-4 sm:pt-4">
       <FamilyCard family={family} size="wide" />
-    </section>
-  );
-}
-
-/** The second-tier families, two to a row from lg. */
-export function MoreFamilies({ families }: { families: RobotFamily[] }) {
-  const t = useTranslations("showcase");
-  return (
-    <section className="bg-surface pt-16 pb-3 sm:pt-24 sm:pb-4">
-      {/* the heading in the page container, the photos nearly full width */}
-      <div className="mx-auto mb-8 max-w-7xl px-4 sm:mb-10 sm:px-6 lg:px-8">
-        <SectionHeader title={t("moreHeading")} lead={t("moreSub")} />
-      </div>
-      {/* two to a row; one alone spans it rather than leaving half empty */}
-      <div className={`grid gap-3 px-3 sm:gap-4 sm:px-4 ${families.length > 1 ? "lg:grid-cols-2" : ""}`}>
-        {families.map((family) => (
-          <FamilyCard key={family.id} family={family} size={families.length > 1 ? "half" : "wide"} />
-        ))}
-      </div>
     </section>
   );
 }

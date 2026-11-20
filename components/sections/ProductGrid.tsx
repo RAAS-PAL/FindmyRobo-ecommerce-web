@@ -40,7 +40,7 @@ export default function ProductGrid() {
     "flex h-11 w-11 cursor-pointer items-center justify-center rounded-control border border-forest-100 text-content transition-[border-color,scale] duration-150 hover:border-content active:scale-[0.97] dark:border-forest-700";
 
   return (
-    <section id="products" className="bg-surface py-16 sm:py-24">
+    <section id="products" className="bg-surface py-20 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title={t("heading")}
