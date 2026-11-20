@@ -324,19 +324,19 @@
       "th": "สาธิตการใช้งานหุ่นยนต์ที่คุณสนใจ ถึงบ้านคุณ"
     },
     "description": {
-      "en": "A specialist brings the robot to your property and runs a live demonstration on your own lawn or pool, answering questions and showing setup. The fee is credited toward your purchase.",
-      "th": "ผู้เชี่ยวชาญนำหุ่นยนต์ไปสาธิตการใช้งานจริงที่สนามหญ้าหรือสระของคุณ พร้อมตอบทุกคำถามและสาธิตการติดตั้ง ค่าบริการนี้นำไปเป็นส่วนลดเมื่อซื้อสินค้าได้"
+      "en": "A specialist brings the robot to your property and runs a live demonstration where it will work, answering questions and showing setup. The fee is credited toward your purchase.",
+      "th": "ผู้เชี่ยวชาญนำหุ่นยนต์ไปสาธิตการใช้งานจริงในพื้นที่ที่จะใช้งาน พร้อมตอบทุกคำถามและสาธิตการติดตั้ง ค่าบริการนี้นำไปเป็นส่วนลดเมื่อซื้อสินค้าได้"
     },
     "features": {
       "en": [
         "Live, on-site demonstration",
-        "See it work on your own lawn or pool",
+        "See it work in your own space",
         "Ask a specialist anything",
         "Fee credited toward your purchase"
       ],
       "th": [
         "สาธิตการใช้งานจริงถึงบ้าน",
-        "ดูการทำงานบนสนามหรือสระของคุณเอง",
+        "ดูการทำงานในพื้นที่ของคุณเอง",
         "ปรึกษาผู้เชี่ยวชาญได้ทุกเรื่อง",
         "ค่าบริการใช้เป็นส่วนลดตอนซื้อได้"
       ]
