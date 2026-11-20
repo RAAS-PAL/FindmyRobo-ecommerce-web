@@ -1411,6 +1411,7 @@
       "areaCovers": "Rated for up to {capacity, number} m², your lawn is {area, number} m²",
       "areaTooSmall": "Rated for up to {capacity, number} m², smaller than your {area, number} m²",
       "areaUnknown": "Rated area to be confirmed by our team",
+      "areaNotGiven": "Rated for up to {capacity, number} m², add your lawn size to check it fits",
       "slopeHandles": "Handles slopes up to {limit}%, yours is up to about {need}%",
       "slopeTooSteep": "Handles slopes up to {limit}%, yours is up to about {need}%",
       "slopeUnknown": "Slope rating to be confirmed by our team",

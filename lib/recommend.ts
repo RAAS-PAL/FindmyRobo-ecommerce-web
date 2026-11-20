@@ -94,6 +94,9 @@ function scoreLawn(p: Product, a: Answers, m: Match) {
       m.score -= Math.min(30, (capacity / a.areaM2 - 1) * 10);
       m.reasons.push({ tone: "good", key: "areaCovers", values: { capacity, area: a.areaM2 } });
     }
+  } else if (capacity !== undefined) {
+    // no size given: show what each covers so the shopper can judge
+    m.reasons.push({ tone: "check", key: "areaNotGiven", values: { capacity } });
   }
   if (a.slope && a.slope !== "unsure") {
     const need = SLOPE_PCT[a.slope];
@@ -164,6 +167,10 @@ export function recommend(products: Product[], a: Answers, limit = 3): Match[] {
       (x, y) =>
         Number(y.fits) - Number(x.fits) ||
         y.score - x.score ||
+        // a lawn of unknown size: smallest first, not the biggest flagship
+        (a.job === "lawn" && !a.areaM2
+          ? (maxArea(x.product) ?? Infinity) - (maxArea(y.product) ?? Infinity)
+          : 0) ||
         (x.product.displayOrder ?? 1000) - (y.product.displayOrder ?? 1000)
     )
     .slice(0, limit);
