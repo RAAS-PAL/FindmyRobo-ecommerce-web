@@ -230,7 +230,7 @@ export default function ProductGallery({
               type="button"
               onClick={resetZoom}
               aria-label={`${Math.round(zoom * 100)}%`}
-              className="min-w-[3.25rem] cursor-pointer rounded-full px-2 py-1.5 text-center font-mono text-xs text-white transition-colors hover:bg-white/20"
+              className="min-w-[3.25rem] cursor-pointer rounded-full px-2 py-1.5 text-center text-caption text-white transition-colors hover:bg-white/20"
             >
               {Math.round(zoom * 100)}%
             </button>
@@ -244,7 +244,7 @@ export default function ProductGallery({
             </button>
           </div>
 
-          <p aria-live="polite" className="absolute bottom-7 left-5 font-mono text-xs text-white/70">
+          <p aria-live="polite" className="absolute bottom-7 left-5 text-caption text-white/70">
             {labels.imageCount.replace("#current#", String(index + 1)).replace("#total#", String(images.length))}
           </p>
         </dialog>
@@ -252,19 +252,12 @@ export default function ProductGallery({
 
   // Light mode: soft grey studio backdrop. Dark mode: near-black gradient.
   const panelClass =
-    "relative flex min-h-[460px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-100 via-neutral-200 to-neutral-300 p-5 dark:from-forest-950 dark:via-forest dark:to-forest-800 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
-  const glow = (
-    <div
-      className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 blur-[90px] dark:bg-accent/25"
-      aria-hidden="true"
-    />
-  );
+    "relative flex min-h-[460px] flex-col overflow-hidden rounded-card bg-cloud p-5 dark:bg-forest-900 sm:min-h-[600px] sm:p-7 lg:min-h-[660px]";
 
   if (images.length < 2) {
     return (
       <>
         <div className={`${panelClass} items-center justify-center`}>
-          {glow}
           {images.length === 1 ? (
             <button
               ref={openerRef}
@@ -275,9 +268,9 @@ export default function ProductGallery({
             >
               <ProductVisual
                 product={product}
-                className="relative mx-auto h-[400px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover/image:scale-[1.02] sm:h-[560px] lg:h-[620px]"
+                className="relative mx-auto h-[400px] max-h-full w-full sm:h-[560px] lg:h-[620px]"
               />
-              <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-black/55 px-3 py-2 text-xs font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
+              <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-control bg-black/55 px-3 py-2 text-caption font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
                 <Maximize2 className="h-4 w-4" aria-hidden="true" />
                 {labels.openFullscreen}
               </span>
@@ -285,7 +278,7 @@ export default function ProductGallery({
           ) : (
             <ProductVisual
               product={product}
-              className="relative mx-auto h-[400px] max-h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] sm:h-[560px] lg:h-[620px]"
+              className="relative mx-auto h-[400px] max-h-full w-full sm:h-[560px] lg:h-[620px]"
             />
           )}
         </div>
@@ -296,11 +289,10 @@ export default function ProductGallery({
 
   // hidden at rest, revealed while the panel is hovered or holds focus
   const onReveal =
-    "opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100";
+    "opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100";
 
   return (
     <div className={`group ${panelClass}`}>
-      {glow}
 
       {/* stage — every photo stays mounted so switching never re-fetches */}
       <button
@@ -318,12 +310,12 @@ export default function ProductGallery({
             alt={i === 0 ? product.name : `${product.name} — ${i + 1}`}
             aria-hidden={i !== index}
             loading={i === 0 ? "eager" : "lazy"}
-            className={`absolute inset-0 h-full w-full object-contain drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)] transition-opacity duration-500 ${
+            className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-200 ${
               i === index ? "opacity-100" : "opacity-0"
             }`}
           />
         ))}
-        <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-black/55 px-3 py-2 text-xs font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
+        <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-control bg-black/55 px-3 py-2 text-caption font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
           <Maximize2 className="h-4 w-4" aria-hidden="true" />
           {labels.openFullscreen}
         </span>
@@ -350,12 +342,12 @@ export default function ProductGallery({
       <div className="relative mt-4 h-[68px] shrink-0">
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 flex h-full items-end justify-center gap-2 pb-3 transition-opacity duration-300 group-hover:opacity-0 group-focus-within:opacity-0 [@media(hover:none)]:opacity-0"
+          className="absolute inset-x-0 bottom-0 flex h-full items-end justify-center gap-2 pb-3 transition-opacity duration-200 group-hover:opacity-0 group-focus-within:opacity-0 [@media(hover:none)]:opacity-0"
         >
           {images.map((src, i) => (
             <span
               key={src}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-[width,background-color] duration-200 ease-out ${
                 i === index ? "w-5 bg-accent" : "w-1.5 bg-white/35"
               }`}
             />
@@ -372,7 +364,7 @@ export default function ProductGallery({
               onClick={() => setIndex(i)}
               aria-label={`${labels.thumbnail} ${i + 1}`}
               aria-current={i === index}
-              className={`h-14 w-16 shrink-0 cursor-pointer overflow-hidden rounded-lg bg-white/5 p-1 ring-1 transition-all duration-200 ${
+              className={`h-14 w-16 shrink-0 cursor-pointer overflow-hidden rounded-control bg-white/5 p-1 ring-1 transition-shadow duration-150 ${
                 i === index
                   ? "ring-2 ring-accent"
                   : "opacity-70 ring-white/15 hover:opacity-100 hover:ring-white/40"

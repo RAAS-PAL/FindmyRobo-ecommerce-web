@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/ui/PageHeader";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { PackageSearch } from "lucide-react";
-import FadeIn from "@/components/ui/FadeIn";
 import OrderLookupForm from "@/components/orders/OrderLookupForm";
 import { pageAlternates } from "@/lib/seo";
 
@@ -25,25 +24,12 @@ export default async function OrderStatusPage({
   const t = await getTranslations("orderStatus");
 
   return (
-    <main className="flex-1 bg-cloud">
-      <div className="mx-auto max-w-xl px-4 py-14 sm:px-6 sm:py-20">
-        <FadeIn>
-          <div className="mb-8 flex flex-col items-center text-center">
-            <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-forest-950 text-accent-300">
-              <PackageSearch className="h-6 w-6" aria-hidden="true" />
-            </span>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-              {t("eyebrow")}
-            </p>
-            <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
-              {t("heading")}
-            </h1>
-            <p className="mt-2 text-sm leading-relaxed text-ink-muted">{t("sub")}</p>
-          </div>
-        </FadeIn>
-        <FadeIn delay={0.08}>
+    <main className="flex-1 bg-surface">
+      <PageHeader title={t("heading")} lead={t("sub")} />
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
+        <div className="max-w-xl">
           <OrderLookupForm />
-        </FadeIn>
+        </div>
       </div>
     </main>
   );

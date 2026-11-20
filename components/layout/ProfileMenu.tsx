@@ -98,7 +98,7 @@ export default function ProfileMenu() {
   };
 
   const itemClass =
-    "flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[13px] font-semibold text-content/85 transition-colors hover:bg-cloud hover:text-accent-600";
+    "flex w-full cursor-pointer items-center gap-3 rounded-control px-3 py-2.5 text-left text-small font-semibold text-content/85 transition-colors hover:bg-cloud hover:text-accent-600";
 
   return (
     <div
@@ -152,11 +152,11 @@ export default function ProfileMenu() {
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             className="absolute right-0 top-full z-50 pt-2"
           >
-            <div className="w-64 overflow-hidden rounded-xl border border-forest-100 bg-surface/95 p-2 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+            <div className="w-64 overflow-hidden rounded-control border border-forest-100 bg-surface p-2 shadow-float">
               {signedIn ? (
                 <>
                   {email && (
-                    <p className="px-3 pt-1.5 pb-2 text-[12px] leading-snug text-ink-muted">
+                    <p className="px-3 pt-1.5 pb-2 text-caption leading-snug text-ink-muted">
                       {t("signedInAs")}
                       <span className="block truncate font-semibold text-content">{email}</span>
                     </p>
@@ -175,14 +175,14 @@ export default function ProfileMenu() {
                   <Link
                     href="/login"
                     onClick={close}
-                    className="flex min-h-[44px] items-center justify-center rounded-full bg-accent px-5 text-[13.5px] font-bold text-on-accent transition-colors hover:bg-accent-strong"
+                    className="flex min-h-[44px] items-center justify-center rounded-full bg-accent px-5 text-small font-bold text-on-accent transition-colors hover:bg-accent-strong"
                   >
                     {t("signIn")}
                   </Link>
                   <Link
                     href="/signup"
                     onClick={close}
-                    className="flex min-h-[44px] items-center justify-center rounded-full border border-forest-100 px-5 text-[13.5px] font-semibold text-content transition-colors hover:border-accent hover:text-accent-600"
+                    className="flex min-h-[44px] items-center justify-center rounded-full border border-forest-100 px-5 text-small font-semibold text-content transition-colors hover:border-accent hover:text-accent-600"
                   >
                     {t("createAccount")}
                   </Link>

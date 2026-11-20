@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/ui/PageHeader";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import FadeIn from "@/components/ui/FadeIn";
 import LocationBody from "@/components/contact/LocationBody";
 import { pageAlternates } from "@/lib/seo";
 
@@ -28,18 +28,9 @@ export default async function LocationPage({
   const t = await getTranslations("location");
 
   return (
-    <main className="bg-cloud">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-            {t("eyebrow")}
-          </p>
-          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-content sm:text-5xl">
-            {t("heading")}
-          </h1>
-          <p className="mt-4 max-w-xl text-base text-ink-muted">{t("sub")}</p>
-        </FadeIn>
-
+    <main className="bg-surface">
+      <PageHeader title={t("heading")} lead={t("sub")} />
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
         <LocationBody />
       </div>
     </main>

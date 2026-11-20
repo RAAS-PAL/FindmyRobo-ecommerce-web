@@ -1,126 +1,95 @@
 "use client";
 
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight } from "lucide-react";
-import { Link } from "@/i18n/navigation";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { pick } from "@/data/siteContent";
 import type { RobotFamily } from "@/data/homeShowcase";
-import ShowcasePhoto from "@/components/ui/ShowcasePhoto";
+import Button from "@/components/ui/Button";
+import MetaLine from "@/components/ui/MetaLine";
 
 /**
- * Product-family banners, DJI-style: the photo is the card, with the name and
- * two actions set at the top over a soft scrim. `size` encodes priority —
- * "wide" spans the page (lawn mowing, Phantas), "half" shares a row (Pudu,
- * T-Chef).
+ * One robot family as an edge-to-edge photo: no rounded box and no margin
+ * around it. The copy sits on the photo's top-left, over a scrim.
  */
-function FamilyCard({ family, size }: { family: RobotFamily; size: "wide" | "half" }) {
+export function FamilyBanner({ family }: { family: RobotFamily }) {
   const t = useTranslations("showcase");
   const locale = useLocale();
   const { openQuote } = useQuote();
-  const wide = size === "wide";
-  const bottom = family.copyAt === "bottom";
-  const title = pick(family.title, locale);
-
-  // Phones stack the photo over the copy: the photos are landscape, and at
-  // phone width an overlaid title would land on the robot. From sm the copy
-  // sits on the photo, at the top or the bottom (copyAt), over a scrim.
+  if (!family.image) return null;
   return (
-    <article
-      className={`group relative isolate flex flex-col overflow-hidden rounded-2xl bg-forest-950 text-white sm:block ${
-        wide ? "sm:h-[36rem] lg:h-[min(80svh,46rem)]" : "sm:h-[34rem] lg:h-[38rem]"
-      }`}
-    >
-      <div className="relative -z-10 aspect-[4/3] overflow-hidden sm:absolute sm:inset-0 sm:aspect-auto">
-        <div className="absolute inset-0 transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03] motion-reduce:transition-none">
-          <ShowcasePhoto
-            photo={family}
-            alt={title}
-            sizes={wide ? "100vw" : "(min-width: 1024px) 50vw, 100vw"}
-            captionAt={bottom ? "top" : "bottom"}
-          />
-        </div>
-      </div>
-      {/* scrim behind the copy only, fading out before the robot */}
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 -z-10 hidden sm:block ${
-          bottom
-            ? "bg-[linear-gradient(to_top,rgba(10,10,11,0.78)_0%,rgba(10,10,11,0.4)_32%,rgba(10,10,11,0)_58%)]"
-            : "bg-[linear-gradient(to_bottom,rgba(10,10,11,0.72)_0%,rgba(10,10,11,0.35)_32%,rgba(10,10,11,0)_58%)]"
-        }`}
+    <section className="relative isolate h-[80svh] max-h-[48rem] min-h-[30rem] overflow-hidden bg-forest-950 text-white">
+      <Image
+        src={family.image}
+        alt={pick(family.title, locale)}
+        fill
+        sizes="100vw"
+        className="-z-10 object-cover"
+        style={{ objectPosition: family.focus ?? "50% 50%" }}
       />
-
-      <div
-        className={`mx-auto flex flex-col items-center px-5 pt-7 pb-9 text-center sm:absolute sm:inset-x-0 sm:[text-shadow:0_1px_14px_rgba(0,0,0,0.3)] ${
-          bottom ? "sm:bottom-0 sm:pt-0" : "sm:top-0 sm:pb-0"
-        } ${
-          wide
-            ? `max-w-2xl ${bottom ? "sm:pb-16" : "sm:pt-16"}`
-            : `max-w-md ${bottom ? "sm:pb-12" : "sm:pt-12"}`
-        }`}
-      >
-        <p className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-white/85 uppercase [&:lang(th)]:tracking-[0.06em]">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
-          {pick(family.eyebrow, locale)}
-        </p>
-        <h2
-          className={`mt-2.5 font-display leading-[1.04] font-extrabold tracking-tight ${
-            wide ? "text-[40px] sm:text-6xl lg:text-7xl" : "text-[34px] sm:text-5xl"
-          }`}
-        >
-          {title}
-        </h2>
-        <p className={`mt-3 text-white/85 ${wide ? "text-[15px] sm:text-lg" : "text-[15px]"}`}>
-          {pick(family.tagline, locale)}
-        </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => openQuote({ interest: family.interest, productId: family.productId })}
-            className="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-accent-gradient px-6 text-[14.5px] font-bold"
-          >
+      <div aria-hidden="true" className="photo-scrim-top absolute inset-0 -z-10" />
+      <div className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 sm:pt-20 lg:px-8">
+        <MetaLine onPhoto>{pick(family.eyebrow, locale)}</MetaLine>
+        <h2 className="mt-2 font-display text-display">{pick(family.title, locale)}</h2>
+        <p className="mt-3 max-w-lg text-lead text-white/85">{pick(family.tagline, locale)}</p>
+        <div className="mt-7 flex flex-wrap gap-3">
+          <Button size="lg" onClick={() => openQuote({ interest: family.interest, productId: family.productId })}>
             {t("getQuote")}
-          </button>
+          </Button>
           {family.href && (
-            <Link
-              href={family.href}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-white/40 px-6 text-[14.5px] font-semibold text-white transition-colors hover:border-white"
-            >
+            <Button href={family.href} size="lg" variant="onPhoto">
               {t("learnMore")}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+            </Button>
           )}
         </div>
       </div>
-    </article>
-  );
-}
-
-/** One full-width family banner (the priority robots). */
-export function FamilyBanner({ family }: { family: RobotFamily }) {
-  return (
-    <section className="bg-surface px-3 pt-3 sm:px-4 sm:pt-4">
-      <FamilyCard family={family} size="wide" />
     </section>
   );
 }
 
-/** The second-tier families, two to a row from lg. */
-export function MoreFamilies({ families }: { families: RobotFamily[] }) {
+/**
+ * The other families as rows, not boxes. The robots stand on the
+ * page, large, on the row's floor line; the copy sits beside them and the
+ * sides alternate.
+ */
+export function FamilyRows({ families }: { families: RobotFamily[] }) {
   const t = useTranslations("showcase");
+  const locale = useLocale();
+  const { openQuote } = useQuote();
   return (
-    <section className="bg-surface px-3 pt-16 pb-3 sm:px-4 sm:pt-24 sm:pb-4">
-      <div className="mx-auto mb-8 max-w-2xl px-2 text-center sm:mb-10">
-        <h2 className="font-display text-3xl font-extrabold tracking-tight text-content sm:text-[2.6rem]">
-          {t("moreHeading")}
-        </h2>
-        <p className="mt-3 text-[15px] text-ink-muted sm:text-base">{t("moreSub")}</p>
-      </div>
-      {/* two to a row; one alone spans it rather than leaving half empty */}
-      <div className={`grid gap-3 sm:gap-4 ${families.length > 1 ? "lg:grid-cols-2" : ""}`}>
-        {families.map((family) => (
-          <FamilyCard key={family.id} family={family} size={families.length > 1 ? "half" : "wide"} />
+    <section className="bg-surface">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {families.map((family, i) => (
+          <div
+            key={family.id}
+            className="grid items-end gap-8 border-b border-forest-100 pt-16 lg:grid-cols-2 lg:gap-12 lg:pt-24 dark:border-forest-700"
+          >
+            <div className={`pb-10 lg:pb-24 ${i % 2 === 1 ? "lg:order-2 lg:pl-8" : ""}`}>
+              <MetaLine>{pick(family.eyebrow, locale)}</MetaLine>
+              <h2 className="mt-2 font-display text-display text-content">{pick(family.title, locale)}</h2>
+              <p className="mt-4 max-w-md text-lead text-ink-muted">{pick(family.tagline, locale)}</p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Button size="lg" onClick={() => openQuote({ interest: family.interest, productId: family.productId })}>
+                  {t("getQuote")}
+                </Button>
+                {family.href && (
+                  <Button href={family.href} size="lg" variant="secondary">
+                    {t("learnMore")}
+                  </Button>
+                )}
+              </div>
+            </div>
+            {family.cutout && (
+              <Image
+                src={family.cutout.src}
+                alt={pick(family.title, locale)}
+                width={family.cutout.width}
+                height={family.cutout.height}
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className={`h-auto w-full ${family.cutout.width / family.cutout.height < 1.5 ? "mx-auto max-w-md" : ""}`}
+              />
+            )}
+          </div>
         ))}
       </div>
     </section>

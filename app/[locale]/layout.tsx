@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import { Barlow, IBM_Plex_Mono, Noto_Sans_Thai, Prompt } from "next/font/google";
+import { Anuphan, Instrument_Sans } from "next/font/google";
 import "../globals.css";
 import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/siteUrl";
@@ -23,29 +23,17 @@ import { getSiteContent } from "@/lib/siteContentStore";
 import { pick } from "@/data/siteContent";
 import ThemeScript from "@/components/ThemeScript";
 
-// Barlow is not a variable font — list the weights the UI uses (body through
-// the extrabold headings). Powers both --font-sans and --font-display.
-const barlow = Barlow({
-  variable: "--font-barlow",
+// Two variable families (2026-11-20, replacing Barlow, Prompt and Noto Sans
+// Thai): Instrument Sans for Latin text, Anuphan for Thai glyphs. The font
+// tokens in globals.css put Instrument Sans first, so Thai falls through to
+// Anuphan; the admin layout still loads its own older fonts.
+const latin = Instrument_Sans({
+  variable: "--font-latin",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
 });
 
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-/* Thai script fallbacks — Barlow has no Thai glyphs */
-const prompt = Prompt({
-  variable: "--font-prompt",
-  subsets: ["thai", "latin"],
-  weight: ["500", "600", "700", "800"],
-});
-
-const notoSansThai = Noto_Sans_Thai({
-  variable: "--font-noto-thai",
+const thai = Anuphan({
+  variable: "--font-thai",
   subsets: ["thai"],
 });
 
@@ -118,7 +106,7 @@ export default async function LocaleLayout({
       lang={locale}
       // the theme script sets data-theme before React hydrates
       suppressHydrationWarning
-      className={`${barlow.variable} ${plexMono.variable} ${prompt.variable} ${notoSansThai.variable} h-full scroll-smooth antialiased`}
+      className={`${latin.variable} ${thai.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col">
         {/* light or dark before the first paint; survives a language switch

@@ -66,14 +66,14 @@ export default function ComparePanel({
             role="dialog"
             aria-modal="true"
             aria-label={t("title")}
-            className="fixed inset-x-4 top-1/2 z-[70] mx-auto max-w-md -translate-y-1/2 overflow-hidden rounded-3xl border border-forest-100 bg-surface shadow-2xl"
+            className="fixed inset-x-4 top-1/2 z-[70] mx-auto max-w-md -translate-y-1/2 overflow-hidden rounded-card border border-forest-100 bg-surface shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-forest-100 px-5 py-4">
               <div>
-                <h2 className="font-display text-lg font-extrabold text-content">
+                <h2 className="font-display text-lead font-bold text-content">
                   {t("title")}
                 </h2>
-                <p className="mt-0.5 text-[12px] text-ink-muted">{t("sub")}</p>
+                <p className="mt-0.5 text-caption text-ink-muted">{t("sub")}</p>
               </div>
               <button
                 type="button"
@@ -96,7 +96,7 @@ export default function ComparePanel({
                     onClick={() => toggle(robot.id)}
                     disabled={blocked}
                     aria-pressed={selected}
-                    className={`flex w-full cursor-pointer items-center gap-3 rounded-xl p-2.5 text-left transition-colors ${
+                    className={`flex w-full cursor-pointer items-center gap-3 rounded-control p-2.5 text-left transition-colors ${
                       selected
                         ? "bg-accent/15"
                         : blocked
@@ -104,17 +104,17 @@ export default function ComparePanel({
                           : "hover:bg-cloud"
                     }`}
                   >
-                    <span className="flex h-12 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-cloud p-1">
+                    <span className="flex h-12 w-14 shrink-0 items-center justify-center overflow-hidden rounded-control bg-cloud p-1">
                       <ProductVisual product={robot} className="h-full w-full" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-bold text-content">
+                      <span className="block truncate text-small font-bold text-content">
                         {robot.name}
                       </span>
                       <PriceOrQuote
                         amount={robot.price}
-                        className="block font-mono text-[12px] tabular-nums text-ink-muted"
-                        quoteClassName="block text-[11.5px] font-semibold text-accent-600"
+                        className="block text-caption tabular-nums text-ink-muted"
+                        quoteClassName="block text-caption font-semibold text-accent-600"
                       />
                     </span>
                     <span
@@ -137,7 +137,7 @@ export default function ComparePanel({
             </div>
 
             <div className="space-y-3 border-t border-forest-100 bg-cloud/50 px-5 py-4">
-              <div className="flex items-center justify-between text-[12px] text-ink-muted">
+              <div className="flex items-center justify-between text-caption text-ink-muted">
                 <span>
                   {count === 0
                     ? t("empty")
@@ -158,7 +158,7 @@ export default function ComparePanel({
                 type="button"
                 onClick={compareNow}
                 disabled={!ready}
-                className="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+                className="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-small font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {ready ? t("compareNow") : t("needTwo")}
                 {ready && <ArrowRight className="h-4 w-4" aria-hidden="true" />}

@@ -655,6 +655,7 @@
   },
   "compare": {
     "floating": {
+      "label": "{count, plural, one {Compare # robot} other {Compare # robots}}",
       "open": "Open robot comparison"
     },
     "panel": {
@@ -679,7 +680,7 @@
       "heading": "Robot Comparison",
       "sub": "Specs, features, and prices side by side — so you can pick the right robot with confidence.",
       "emptyTitle": "Nothing to compare yet",
-      "emptyBody": "Pick at least two robots to see them side by side. Use the floating compare button or the compare link on any robot's page.",
+      "emptyBody": "Pick two or more robots to see them side by side.",
       "browse": "Browse robots",
       "preorder": "Preorder",
       "features": "Key features",
@@ -899,28 +900,28 @@
   },
   "categories": {
     "robot-mowers": {
-      "name": "Robotic Lawn Mowers",
-      "nav": "Lawn Mowers",
+      "name": "Lawn mowers",
+      "nav": "Lawn mowers",
       "description": "Wire-free AWD mowers for every Thai garden"
     },
     "cleaning-robots": {
-      "name": "Cleaning Robots",
-      "nav": "Cleaner",
+      "name": "Cleaning robots",
+      "nav": "Cleaning robots",
       "description": "Gausium Phantas, autonomous floor cleaning for commercial spaces"
     },
     "smart-equipment": {
-      "name": "Smart Equipment",
-      "nav": "Smart Equipment",
+      "name": "Floor scrubbers",
+      "nav": "Floor scrubbers",
       "description": "Aventurier A1-Basic and A1-Youth"
     },
     "cooking-robots": {
-      "name": "Cooking Robots",
-      "nav": "Cooker",
+      "name": "Cooking robots",
+      "nav": "Cooking robots",
       "description": "The T-Chef TC-E10A cooking robot"
     },
     "delivery-robots": {
-      "name": "Delivery Robots",
-      "nav": "Delivery",
+      "name": "Delivery robots",
+      "nav": "Delivery robots",
       "description": "Pudu delivery robots for business"
     },
     "pool-cleaners": {
@@ -987,11 +988,11 @@
     "interestLabel": "Which robot are you interested in?",
     "interestPlaceholder": "Select a robot",
     "interests": {
-      "lawn-mowing": "Lawn mowing",
-      "commercial-cleaning": "Cleaning robot",
-      "smart-equipment": "Smart equipment",
-      "cooking": "Cooking robot",
-      "pudu-delivery": "Pudu delivery"
+      "lawn-mowing": "Lawn mowers",
+      "commercial-cleaning": "Cleaning robots",
+      "smart-equipment": "Floor scrubbers",
+      "cooking": "Cooking robots",
+      "pudu-delivery": "Delivery robots"
     },
     "areaLabel": "Lawn area",
     "areaPlaceholder": "e.g. 800",
@@ -1065,6 +1066,7 @@
     "filterLabel": "Show a category"
   },
   "videoShowcase": {
+    "channel": "More on YouTube",
     "eyebrow": "From Real World Use and Demo",
     "heading": "Watch Them Work Their Magic",
     "sub": "A closer look at how our mowers handle real Thai lawns — precision, power, and hands-free convenience.",
@@ -1083,6 +1085,9 @@
     "heading": "Engineered to Outperform"
   },
   "shop": {
+    "servicesHeading": "Services",
+    "serviceDetails": "See details",
+    "categoriesLabel": "Robot categories",
     "eyebrow": "Shop",
     "heading": "All Robots",
     "sub": "Every robot we sell, backed by Thai local support",
@@ -1098,11 +1103,12 @@
     "modelsLabel": "Models"
   },
   "search": {
+    "fieldLabel": "Search robots",
+    "submit": "Search",
     "eyebrow": "Catalog Search",
     "heading": "Search Our Robots",
     "resultsFor": "Results for “{query}”",
     "resultCount": "{count, plural, one {# product found} other {# products found}}",
-    "emptyTitle": "Start with the search bar above",
     "emptyBody": "Search by robot name, category, feature, coverage area, or model number.",
     "noResultsTitle": "No matching products",
     "noResultsBody": "We couldn’t find anything matching “{query}”. Try a model name, robot type, or a broader term.",
@@ -1442,5 +1448,11 @@
       "offer": "Optional. If you'd like a call about prices and the right setup, leave your details.",
       "open": "Yes, contact me"
     }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page may have moved.",
+    "shop": "Browse robots",
+    "home": "Back to the home page"
   }
 }

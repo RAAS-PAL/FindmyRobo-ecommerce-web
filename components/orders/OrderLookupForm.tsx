@@ -8,7 +8,7 @@ import { siteConfig } from "@/data/siteConfig";
 import type { OrderLine, OrderStatus } from "@/lib/checkout";
 
 const inputClass =
-  "min-h-12 w-full rounded-xl border border-forest-100 bg-surface px-4 text-sm text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
+  "min-h-12 w-full rounded-control border border-forest-100 bg-surface px-4 text-small text-content placeholder:text-ink-muted/50 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
 
 interface LookupResult {
   id: string;
@@ -82,7 +82,7 @@ export default function OrderLookupForm() {
         <div>
           <label
             htmlFor="lookup-order-id"
-            className="mb-1.5 block text-[13px] font-semibold text-content"
+            className="mb-1.5 block text-small font-semibold text-content"
           >
             {t("orderId")}
           </label>
@@ -96,14 +96,14 @@ export default function OrderLookupForm() {
               setOrderId(e.target.value);
               setError(null);
             }}
-            className={`${inputClass} font-mono uppercase`}
+            className={`${inputClass} `}
           />
-          <p className="mt-1 text-[11.5px] text-ink-muted">{t("orderIdHint")}</p>
+          <p className="mt-1 text-caption text-ink-muted">{t("orderIdHint")}</p>
         </div>
         <div>
           <label
             htmlFor="lookup-email"
-            className="mb-1.5 block text-[13px] font-semibold text-content"
+            className="mb-1.5 block text-small font-semibold text-content"
           >
             {t("email")}
           </label>
@@ -121,14 +121,14 @@ export default function OrderLookupForm() {
           />
         </div>
         {error && (
-          <p role="alert" className="text-[12.5px] font-medium text-red-600">
+          <p role="alert" className="text-caption font-medium text-red-600">
             {error}
           </p>
         )}
         <button
           type="submit"
           disabled={busy || !orderId.trim() || !email.trim()}
-          className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-bold text-on-accent transition-all duration-300 hover:shadow-[0_0_28px_-4px_rgb(var(--accent-rgb)/0.65)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-h-[50px] w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent text-small font-bold text-on-accent transition-[background-color,transform] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {busy ? (
             <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -142,12 +142,12 @@ export default function OrderLookupForm() {
       {order && (
         <div
           aria-live="polite"
-          className="rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6"
+          className="rounded-card border border-forest-100 bg-surface p-5 sm:p-6"
         >
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <p className="font-mono text-base font-bold text-content">{order.id}</p>
-              <p className="mt-0.5 text-[12.5px] text-ink-muted">
+              <p className="text-body font-bold text-content">{order.id}</p>
+              <p className="mt-0.5 text-caption text-ink-muted">
                 {new Date(order.createdAt).toLocaleDateString(
                   locale === "th" ? "th-TH" : "en-GB",
                   { year: "numeric", month: "long", day: "numeric" }
@@ -157,23 +157,23 @@ export default function OrderLookupForm() {
               </p>
             </div>
             <span
-              className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider ${statusTone[order.status]}`}
+              className={`rounded-full px-3 py-1 text-caption font-semibold ${statusTone[order.status]}`}
             >
               {statusLabel(order.status)}
             </span>
           </div>
 
           {order.status === "pending_payment" && (
-            <p className="mt-4 rounded-xl border border-accent bg-accent/10 p-3.5 text-[12.5px] leading-relaxed text-content">
+            <p className="mt-4 rounded-control border border-accent bg-accent/10 p-3.5 text-caption leading-relaxed text-content">
               {t("pendingNote")}
             </p>
           )}
 
           {order.fulfillment?.trackingNumber && (
-            <p className="mt-4 flex items-center gap-2 text-[13px] text-content">
+            <p className="mt-4 flex items-center gap-2 text-small text-content">
               <Truck className="h-4 w-4 text-accent-600" aria-hidden="true" />
               <span className="font-semibold">{t("tracking")}</span>
-              <span className="font-mono">{order.fulfillment.trackingNumber}</span>
+              <span className="">{order.fulfillment.trackingNumber}</span>
               {order.fulfillment.carrier && (
                 <span className="text-ink-muted">({order.fulfillment.carrier})</span>
               )}
@@ -184,12 +184,12 @@ export default function OrderLookupForm() {
             {order.items.map((line) => (
               <li
                 key={`${line.id}:${line.forId ?? ""}`}
-                className="flex justify-between gap-4 py-3 text-sm"
+                className="flex justify-between gap-4 py-3 text-small"
               >
                 <span className="text-content">
                   {line.name}
                   {line.forName && (
-                    <span className="mt-0.5 block text-[11.5px] text-ink-muted">
+                    <span className="mt-0.5 block text-caption text-ink-muted">
                       ↳ {line.forName}
                     </span>
                   )}
@@ -205,9 +205,9 @@ export default function OrderLookupForm() {
           </ul>
 
           {siteConfig.showPrices && (
-            <div className="flex justify-between gap-4 border-t border-forest-100 pt-3 text-sm font-bold text-content">
+            <div className="flex justify-between gap-4 border-t border-forest-100 pt-3 text-small font-bold text-content">
               <span>{t("total")}</span>
-              <span className="font-mono">{formatBaht(order.total)}</span>
+              <span className="">{formatBaht(order.total)}</span>
             </div>
           )}
         </div>

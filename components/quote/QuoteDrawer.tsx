@@ -53,16 +53,13 @@ export default function QuoteDrawer() {
             aria-modal="true"
             aria-label={t("eyebrow")}
           >
-            <div className="h-0.5 shrink-0 bg-accent" aria-hidden="true" />
             <div className="flex items-center justify-between border-b border-forest-100 px-5 py-4">
-              <span className="font-display text-xl font-extrabold tracking-tight text-content">
-                {t("eyebrow")}
-              </span>
+              <h2 className="font-display text-heading text-content">{t("eyebrow")}</h2>
               <button
                 type="button"
                 onClick={closeQuote}
                 aria-label={t("closePanel")}
-                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-content"
+                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-control text-ink-muted transition-[background-color,color,scale] duration-150 hover:bg-cloud hover:text-content active:scale-[0.97]"
               >
                 <X className="h-6 w-6" aria-hidden="true" />
               </button>

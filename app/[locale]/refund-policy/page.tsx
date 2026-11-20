@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/ui/PageHeader";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Phone } from "lucide-react";
-import FadeIn from "@/components/ui/FadeIn";
 import { returnPolicy } from "@/data/returnPolicy";
 import type { Locale } from "@/data/products";
 import { pageAlternates } from "@/lib/seo";
@@ -31,32 +31,17 @@ export default async function RefundPolicyPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("refundPolicy");
   const policy = returnPolicy[locale as Locale] ?? returnPolicy.th;
 
   return (
-    <main className="flex-1 bg-cloud">
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
-        <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-            {t("eyebrow")}
-          </p>
-          <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-content sm:text-4xl">
-            {policy.title}
-          </h1>
-        </FadeIn>
-
-        <FadeIn delay={0.1}>
-          <p className="mt-8 text-[15px] leading-relaxed text-ink-muted">
-            {policy.intro}
-          </p>
-        </FadeIn>
-
-        <div className="mt-12 space-y-10">
-          {policy.sections.map((section, i) => (
-            <FadeIn key={section.heading} delay={Math.min(i, 6) * 0.03}>
+    <main className="flex-1 bg-surface">
+      <PageHeader title={policy.title} lead={policy.intro} />
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
+        <div className="max-w-3xl space-y-10">
+          {policy.sections.map((section) => (
+            <div key={section.heading}>
               <section>
-                <h2 className="font-display text-lg font-bold text-content sm:text-xl">
+                <h2 className="font-display text-heading text-content">
                   {section.heading}
                 </h2>
 
@@ -72,7 +57,7 @@ export default async function RefundPolicyPage({
                           {block.items.map((item) => (
                             <li
                               key={item}
-                              className="border-l-2 border-forest-100 pl-4 text-[15px] leading-relaxed text-ink-muted"
+                              className="border-l-2 border-forest-100 pl-4 text-body leading-relaxed text-ink-muted"
                             >
                               {item}
                             </li>
@@ -85,7 +70,7 @@ export default async function RefundPolicyPage({
                       return (
                         <h3
                           key={j}
-                          className="pt-2 text-[15.5px] font-bold text-content"
+                          className="pt-2 text-body font-bold text-content"
                         >
                           {block.text}
                         </h3>
@@ -96,7 +81,7 @@ export default async function RefundPolicyPage({
                       return (
                         <p
                           key={j}
-                          className="flex items-center gap-2.5 rounded-xl bg-surface px-4 py-3 text-[15px] font-semibold text-content"
+                          className="flex items-center gap-2.5 rounded-control bg-surface px-4 py-3 text-body font-semibold text-content"
                         >
                           <Phone
                             className="h-4 w-4 shrink-0 text-accent-600"
@@ -110,7 +95,7 @@ export default async function RefundPolicyPage({
                     return (
                       <p
                         key={j}
-                        className="text-[15px] leading-relaxed text-ink-muted"
+                        className="text-body leading-relaxed text-ink-muted"
                       >
                         {block.text}
                       </p>
@@ -118,7 +103,7 @@ export default async function RefundPolicyPage({
                   })}
                 </div>
               </section>
-            </FadeIn>
+            </div>
           ))}
         </div>
       </div>

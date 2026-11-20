@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Play, Tag } from "lucide-react";
-import FadeIn from "@/components/ui/FadeIn";
+import { Play } from "lucide-react";
 import { useSiteContent } from "@/components/SiteContentProvider";
 import type { GalleryVideo } from "@/data/siteContent";
+import SectionHeader from "@/components/ui/SectionHeader";
+import TextLink from "@/components/ui/TextLink";
 
 /**
  * Home "See It in Action" video gallery. Each card is a lite embed: it shows a
@@ -24,8 +25,9 @@ function youTubeId(url: string): string | null {
   return m ? m[1] : null;
 }
 
-function GalleryCard({ video }: { video: GalleryVideo }) {
-  const [playing, setPlaying] = useState(false);
+export function GalleryCard({ video, autoPlay = false }: { video: GalleryVideo; autoPlay?: boolean }) {
+  // autoPlay: chosen from the list beside the player, so it starts at once
+  const [playing, setPlaying] = useState(autoPlay);
   const id = youTubeId(video.url);
   const poster = video.poster || (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : "");
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -60,7 +62,7 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
 
   if (playing) {
     return (
-      <article className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-forest-950">
+      <article className="relative aspect-[16/10] w-full overflow-hidden rounded-card bg-forest-950">
         {id ? (
           <iframe
             ref={iframeRef}
@@ -93,7 +95,7 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
   }
 
   return (
-    <article className="group relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-forest-950">
+    <article className="group relative aspect-[16/10] w-full overflow-hidden rounded-card bg-forest-950">
       <button
         type="button"
         onClick={() => setPlaying(true)}
@@ -101,47 +103,41 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
         className="absolute inset-0 h-full w-full cursor-pointer text-left"
       >
         {poster ? (
-          // eslint-disable-next-line @next/next/no-img-element
+          // eslint-disable-next-line @next/next/no-img-element -- YouTube or CMS poster, any host
           <img
             src={poster}
             alt={video.title}
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (
-          <span className="absolute inset-0 bg-gradient-to-br from-forest via-forest-800 to-forest-950" aria-hidden="true" />
+          <span className="absolute inset-0 bg-forest-900" aria-hidden="true" />
         )}
 
-        {/* scrim for text + play legibility */}
-        <span
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/15"
-          aria-hidden="true"
-        />
+        {/* scrim under the caption */}
+        <span className="photo-scrim-bottom pointer-events-none absolute inset-0" aria-hidden="true" />
 
         {/* center play button */}
         <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/25 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
-            <Play className="h-7 w-7 translate-x-0.5 fill-white text-white" aria-hidden="true" />
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-forest-950 transition-[scale] duration-150 group-active:scale-[0.97]">
+            <Play className="h-5 w-5 translate-x-0.5 fill-current" aria-hidden="true" />
           </span>
         </span>
 
         {/* title + author (left), product tag (right) */}
         <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5">
           <span className="min-w-0">
-            <span className="block truncate text-lg font-bold text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
+            <span className="block truncate text-body font-semibold text-white">
               {video.title}
             </span>
             {video.author && (
-              <span className="mt-0.5 block truncate text-[12px] text-white/75">
+              <span className="mt-0.5 block truncate text-caption text-white/75">
                 {video.author}
               </span>
             )}
           </span>
           {video.tag && (
-            <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-black/45 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur-sm">
-              <Tag className="h-3 w-3 text-accent-300" aria-hidden="true" />
-              {video.tag}
-            </span>
+            <span className="shrink-0 text-caption text-white/80">{video.tag}</span>
           )}
         </span>
       </button>
@@ -149,53 +145,66 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
   );
 }
 
+/**
+ * The videos as one large player with the list of clips beside it (below it
+ * on phones), not a grid of same-sized tiles. Choosing a clip from the list
+ * puts it in the player and starts it.
+ */
 export default function VideoShowcase() {
   const t = useTranslations("videoShowcase");
-  const videos = useSiteContent().home.videoGallery;
+  const { home, contact } = useSiteContent();
+  const videos = home.videoGallery;
+  // [clip on show, whether it was picked from the list]
+  const [[current, picked], setCurrent] = useState<[number, boolean]>([0, false]);
+  // no videos in the CMS: no section, rather than an empty placeholder
+  if (videos.length === 0) return null;
+  // the YouTube channel is this section's link, not a section of its own
+  const channelUrl = contact.socials.youtube;
 
   return (
     <section className="bg-surface py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-            {t("eyebrow")}
-          </p>
-          <h2 className="mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
-            {t("heading")}
-          </h2>
-        </FadeIn>
-
-        {videos.length === 0 ? (
-          <FadeIn delay={0.1} className="mt-10">
-            <div className="flex aspect-[16/6] items-center justify-center rounded-3xl border border-dashed border-forest-100 bg-cloud/60">
-              <span className="flex flex-col items-center gap-3 text-ink-muted">
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-forest-950/5">
-                  <Play className="h-6 w-6" aria-hidden="true" />
-                </span>
-                <span className="text-sm font-semibold">{t("placeholder")}</span>
-              </span>
-            </div>
-          </FadeIn>
-        ) : videos.length === 1 ? (
-          // a lone video reads better as one centred card than a half-empty row
-          <FadeIn delay={0.1} className="mx-auto mt-10 max-w-3xl">
-            <GalleryCard video={videos[0]} />
-          </FadeIn>
-        ) : (
-          // bento: the first two are the big cards, the rest fill the next rows.
-          // The col-span sits on the FadeIn because IT is the grid item.
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-6">
-            {videos.map((video, i) => (
-              <FadeIn
-                key={`${video.url}-${i}`}
-                delay={i * 0.06}
-                className={i < 2 ? "lg:col-span-3" : "lg:col-span-2"}
-              >
-                <GalleryCard video={video} />
-              </FadeIn>
-            ))}
-          </div>
-        )}
+        <SectionHeader
+          title={t("heading")}
+          action={channelUrl ? <TextLink href={channelUrl}>{t("channel")}</TextLink> : undefined}
+        />
+        <div className="mt-10 grid gap-8 lg:grid-cols-[1.9fr_1fr] lg:gap-12">
+          <GalleryCard key={current} video={videos[current]} autoPlay={picked} />
+          {videos.length > 1 && (
+            <ul className="border-t border-forest-100 dark:border-forest-700">
+              {videos.map((video, i) => (
+                <li key={`${video.url}-${i}`} className="border-b border-forest-100 dark:border-forest-700">
+                  <button
+                    type="button"
+                    onClick={() => setCurrent([i, true])}
+                    aria-current={i === current}
+                    className="group flex w-full cursor-pointer items-center gap-4 py-3 text-left"
+                  >
+                    {video.poster && (
+                      // eslint-disable-next-line @next/next/no-img-element -- CMS poster, any host
+                      <img
+                        src={video.poster}
+                        alt=""
+                        loading="lazy"
+                        className="h-14 w-24 shrink-0 rounded-control object-cover"
+                      />
+                    )}
+                    <span className="min-w-0">
+                      <span
+                        className={`block truncate text-body font-semibold underline-offset-4 group-hover:underline ${
+                          i === current ? "text-accent-600" : "text-content"
+                        }`}
+                      >
+                        {video.title}
+                      </span>
+                      {video.tag && <span className="block truncate text-small text-ink-muted">{video.tag}</span>}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </section>
   );

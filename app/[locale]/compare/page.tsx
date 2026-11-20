@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import EmptyState from "@/components/ui/EmptyState";
+import PageHeader from "@/components/ui/PageHeader";
+import Button from "@/components/ui/Button";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeftRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import FadeIn from "@/components/ui/FadeIn";
 import ProductVisual from "@/components/ui/ProductVisual";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { getAllProducts } from "@/lib/productStore";
@@ -67,25 +69,14 @@ export default async function ComparePage({
 
   if (robots.length < 2) {
     return (
-      <main className="min-h-[65vh] bg-cloud">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-          <FadeIn>
-            <div className="mx-auto flex max-w-lg flex-col items-center rounded-2xl border border-dashed border-forest-100 bg-surface px-6 py-16 text-center">
-              <ArrowLeftRight className="h-10 w-10 text-accent-600" aria-hidden="true" />
-              <h1 className="mt-4 font-display text-2xl font-extrabold text-content">
-                {t("emptyTitle")}
-              </h1>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-ink-muted">
-                {t("emptyBody")}
-              </p>
-              <Link
-                href="/shop"
-                className="mt-6 flex min-h-12 items-center rounded-full bg-accent px-6 text-sm font-bold text-on-accent"
-              >
-                {t("browse")}
-              </Link>
-            </div>
-          </FadeIn>
+      <main className="min-h-[65vh] bg-surface">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <EmptyState
+            as="h1"
+            title={t("emptyTitle")}
+            body={t("emptyBody")}
+            action={<Button href="/shop">{t("browse")}</Button>}
+          />
         </div>
       </main>
     );
@@ -95,46 +86,38 @@ export default async function ComparePage({
   const specKeys = SPEC_KEYS.filter((key) => robots.some((r) => r.specs[key]));
 
   return (
-    <main className="min-h-[65vh] bg-cloud">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-600">
-            {t("eyebrow")}
-          </p>
-          <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-content sm:text-5xl">
-            {t("heading")}
-          </h1>
-          <p className="mt-3 max-w-xl text-sm text-ink-muted">{t("sub")}</p>
-        </FadeIn>
+    <main className="min-h-[65vh] bg-surface">
+      <PageHeader title={t("heading")} lead={t("sub")} />
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
 
-        <FadeIn delay={0.08}>
+        <div>
           {/* wide table scrolls inside its own container, never the page */}
-          <div className="mt-10 overflow-x-auto rounded-2xl border border-forest-100 bg-surface">
-            <table className="w-full min-w-[640px] text-left text-sm">
+          <div className="overflow-x-auto rounded-card border border-forest-100 bg-surface">
+            <table className="w-full min-w-[640px] text-left text-small">
               <thead>
                 <tr className="align-bottom">
                   <th className="w-40 min-w-36 px-5 py-6" aria-hidden="true" />
                   {robots.map((robot) => (
                     <th key={robot.id} scope="col" className="px-5 py-6 font-normal">
-                      <div className="flex h-32 items-center justify-center rounded-xl bg-cloud/60 p-2">
+                      <div className="flex h-32 items-center justify-center rounded-control bg-cloud/60 p-2">
                         <ProductVisual product={robot} className="h-full w-auto max-w-full" />
                       </div>
-                      <p className="mt-4 font-display text-lg font-extrabold leading-snug text-content">
+                      <p className="mt-4 font-display text-lead font-bold leading-snug text-content">
                         <Link href={`/products/${robot.id}`} className="hover:text-accent-600">
                           {robot.name}
                         </Link>
                       </p>
                       <PriceOrQuote
                         amount={robot.price}
-                        className="mt-1 block font-mono text-xl font-semibold tabular-nums text-content"
-                        quoteClassName="mt-1 block text-sm font-bold text-accent-600"
+                        className="mt-1 block text-heading font-semibold tabular-nums text-content"
+                        quoteClassName="mt-1 block text-small font-bold text-accent-600"
                       />
                       {robot.preorder && (
-                        <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-600">
+                        <p className="mt-1 text-caption font-semibold text-accent-600">
                           {t("preorder")}
                         </p>
                       )}
-                      <p className="mt-2 text-[12.5px] font-normal leading-relaxed text-ink-muted">
+                      <p className="mt-2 text-caption font-normal leading-relaxed text-ink-muted">
                         {robot.tagline[loc] || robot.tagline.en}
                       </p>
                     </th>
@@ -146,12 +129,12 @@ export default async function ComparePage({
                   <tr key={key} className={i % 2 === 0 ? "bg-cloud/40" : ""}>
                     <th
                       scope="row"
-                      className="px-5 py-3.5 text-[12.5px] font-semibold text-content"
+                      className="px-5 py-3.5 text-caption font-semibold text-content"
                     >
                       {t(`specs.${key}`)}
                     </th>
                     {robots.map((robot) => (
-                      <td key={robot.id} className="px-5 py-3.5 text-[13.5px] text-ink-muted">
+                      <td key={robot.id} className="px-5 py-3.5 text-small text-ink-muted">
                         {robot.specs[key] ?? "—"}
                       </td>
                     ))}
@@ -161,7 +144,7 @@ export default async function ComparePage({
                 <tr className={specKeys.length % 2 === 0 ? "bg-cloud/40" : ""}>
                   <th
                     scope="row"
-                    className="px-5 py-3.5 align-top text-[12.5px] font-semibold text-content"
+                    className="px-5 py-3.5 align-top text-caption font-semibold text-content"
                   >
                     {t("features")}
                   </th>
@@ -171,7 +154,7 @@ export default async function ComparePage({
                         {(robot.features[loc] ?? robot.features.en).map((feature) => (
                           <li
                             key={feature}
-                            className="flex items-start gap-2 text-[12.5px] leading-relaxed text-ink-muted"
+                            className="flex items-start gap-2 text-caption leading-relaxed text-ink-muted"
                           >
                             <Check
                               className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-600"
@@ -193,7 +176,7 @@ export default async function ComparePage({
                         <AddToCartButton productId={robot.id} />
                         <Link
                           href={`/products/${robot.id}`}
-                          className="flex min-h-[44px] items-center justify-center rounded-full border-2 border-forest px-5 text-[13px] font-semibold text-content transition-colors hover:border-accent hover:text-accent-600"
+                          className="flex min-h-[44px] items-center justify-center rounded-full border-2 border-forest px-5 text-small font-semibold text-content transition-colors hover:border-accent hover:text-accent-600"
                         >
                           {t("viewProduct")}
                         </Link>
@@ -204,7 +187,7 @@ export default async function ComparePage({
               </tbody>
             </table>
           </div>
-        </FadeIn>
+        </div>
       </div>
     </main>
   );

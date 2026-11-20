@@ -48,7 +48,7 @@ const JOB_ICONS: Record<Job, LucideIcon> = {
 type Step = "job" | "details" | "results";
 
 const inputClass = (hasError = false) =>
-  `h-11 w-full rounded-lg border bg-surface px-3 text-[15px] text-content transition-colors placeholder:text-forest-300 focus-visible:outline-none! focus-visible:ring-2 ${
+  `h-11 w-full rounded-control border bg-surface px-3 text-body text-content transition-colors placeholder:text-forest-300 focus-visible:outline-none! focus-visible:ring-2 ${
     hasError
       ? "border-red-400 focus-visible:ring-red-200"
       : "border-forest-100 focus-visible:border-accent-600 focus-visible:ring-accent/25"
@@ -74,15 +74,15 @@ function Choice({
       role="radio"
       aria-checked={selected}
       onClick={onClick}
-      className={`flex w-full cursor-pointer items-start gap-3 rounded-xl border px-4 py-3.5 text-left transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
+      className={`flex w-full cursor-pointer items-start gap-3 rounded-control border px-4 py-3.5 text-left transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
         selected
-          ? "border-accent bg-accent/[0.07] shadow-[0_0_0_1px_var(--color-accent)]"
+          ? "border-accent bg-accent/[0.07] ring-1 ring-accent"
           : "border-forest-100 bg-surface hover:border-forest-300"
       }`}
     >
       {Icon && (
         <span
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-control ${
             selected ? "bg-accent text-white" : "bg-cloud text-content"
           }`}
         >
@@ -90,8 +90,8 @@ function Choice({
         </span>
       )}
       <span className="min-w-0">
-        <span className="block text-[15px] font-semibold text-content">{title}</span>
-        {hint && <span className="mt-0.5 block text-[13px] leading-snug text-ink-muted">{hint}</span>}
+        <span className="block text-body font-semibold text-content">{title}</span>
+        {hint && <span className="mt-0.5 block text-small leading-snug text-ink-muted">{hint}</span>}
       </span>
     </button>
   );
@@ -112,24 +112,24 @@ function ResultCard({ match, rank }: { match: Match; rank: number }) {
   const reasonText = (r: Reason) => t(`reasons.${r.key}`, r.values ?? {});
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-2xl border border-forest-100 bg-surface sm:flex-row">
-      <div className="relative flex h-48 shrink-0 items-center justify-center bg-gradient-to-b from-cloud to-forest-100/40 p-5 sm:h-auto sm:w-56">
-        <span className="absolute top-3 left-3 font-mono text-[11px] font-semibold tracking-[0.18em] text-ink-muted">
+    <article className="flex flex-col overflow-hidden rounded-card border border-forest-100 bg-surface sm:flex-row">
+      <div className="relative flex h-48 shrink-0 items-center justify-center bg-cloud p-5 sm:h-auto sm:w-56">
+        <span className="absolute top-3 left-3 text-caption font-semibold text-ink-muted">
           {String(rank).padStart(2, "0")}
         </span>
         <ProductVisual product={product} className="h-full max-h-40 w-full" />
       </div>
       <div className="flex min-w-0 flex-1 flex-col p-5">
-        <span className="font-mono text-[10px] font-semibold tracking-[0.18em] text-accent-600 uppercase">
+        <span className="text-caption font-semibold text-accent-600">
           {product.brand ?? DEFAULT_BRAND}
         </span>
-        <h3 className="mt-1 font-display text-xl leading-snug font-bold text-content">{product.name}</h3>
+        <h3 className="mt-1 font-display text-heading text-content">{product.name}</h3>
         <ConditionLine conditions={product.conditions} className="mt-2" />
         <ul className="mt-3.5 space-y-1.5">
           {match.reasons.map((r) => {
             const Icon = REASON_ICON[r.tone];
             return (
-              <li key={r.key} className="flex items-start gap-2 text-[13.5px] leading-snug text-content">
+              <li key={r.key} className="flex items-start gap-2 text-small leading-snug text-content">
                 <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${REASON_TONE[r.tone]}`} aria-hidden="true" />
                 <span>{reasonText(r)}</span>
               </li>
@@ -140,14 +140,14 @@ function ResultCard({ match, rank }: { match: Match; rank: number }) {
           <button
             type="button"
             onClick={() => openQuote({ productId: product.id })}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-[14px] font-bold"
+            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-small font-bold"
           >
             {tn("getQuote")}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </button>
           <Link
             href={`/products/${product.id}`}
-            className="inline-flex min-h-11 items-center rounded-full border border-forest-100 px-5 text-[14px] font-semibold text-content transition-colors hover:border-accent"
+            className="inline-flex min-h-11 items-center rounded-full border border-forest-100 px-5 text-small font-semibold text-content transition-colors hover:border-accent"
           >
             {t("viewRobot")}
           </Link>
@@ -202,25 +202,25 @@ function ContactForm({ answers, requestId }: { answers: Answers; requestId: stri
 
   if (state === "sent") {
     return (
-      <div role="status" className="rounded-2xl border border-accent/40 bg-accent/[0.07] p-6">
-        <p className="font-display text-lg font-bold text-content">{t("sentTitle")}</p>
-        <p className="mt-1 text-[14px] text-ink-muted">{t("sentBody")}</p>
+      <div role="status" className="rounded-card border border-accent/40 bg-accent/[0.07] p-6">
+        <p className="font-display text-lead font-bold text-content">{t("sentTitle")}</p>
+        <p className="mt-1 text-small text-ink-muted">{t("sentBody")}</p>
       </div>
     );
   }
 
   if (!open) {
     return (
-      <div className="flex flex-col gap-4 rounded-2xl border border-forest-100 bg-surface p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+      <div className="flex flex-col gap-4 rounded-card border border-forest-100 bg-surface p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div>
-          <h2 className="font-display text-xl font-bold text-content">{t("title")}</h2>
-          <p className="mt-1 text-[14px] text-ink-muted">{t("offer")}</p>
+          <h2 className="font-display text-heading text-content">{t("title")}</h2>
+          <p className="mt-1 text-small text-ink-muted">{t("offer")}</p>
         </div>
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-expanded={false}
-          className="inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 self-start rounded-full border border-forest-100 px-5 text-[14px] font-semibold text-content transition-colors hover:border-accent sm:self-auto"
+          className="inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 self-start rounded-full border border-forest-100 px-5 text-small font-semibold text-content transition-colors hover:border-accent sm:self-auto"
         >
           {t("open")}
         </button>
@@ -233,7 +233,7 @@ function ContactForm({ answers, requestId }: { answers: Answers; requestId: stri
     const error = errors[name];
     return (
       <div className="flex flex-col gap-1.5">
-        <label htmlFor={id} className="text-[12.5px] font-medium text-ink-muted">
+        <label htmlFor={id} className="text-caption font-medium text-ink-muted">
           {t(`fields.${name}`)}
           {optional ? (
             <span className="ml-1.5 font-normal">({t("optional")})</span>
@@ -251,7 +251,7 @@ function ContactForm({ answers, requestId }: { answers: Answers; requestId: stri
           className={inputClass(!!error)}
         />
         {error && (
-          <p role="alert" className="text-[12px] font-medium text-red-600">
+          <p role="alert" className="text-caption font-medium text-red-600">
             {t(`errors.${error}`)}
           </p>
         )}
@@ -260,16 +260,16 @@ function ContactForm({ answers, requestId }: { answers: Answers; requestId: stri
   };
 
   return (
-    <form onSubmit={submit} noValidate className="rounded-2xl border border-forest-100 bg-surface p-5 sm:p-6">
-      <h2 className="font-display text-xl font-bold text-content">{t("title")}</h2>
-      <p className="mt-1 text-[14px] text-ink-muted">{t("sub")}</p>
+    <form onSubmit={submit} noValidate className="rounded-card border border-forest-100 bg-surface p-5 sm:p-6">
+      <h2 className="font-display text-heading text-content">{t("title")}</h2>
+      <p className="mt-1 text-small text-ink-muted">{t("sub")}</p>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         {field("name")}
         {field("phone", "tel")}
         {field("email", "email", true)}
         {field("note", "text", true)}
       </div>
-      <label className="mt-5 flex items-start gap-2.5 text-[13px] leading-snug text-content">
+      <label className="mt-5 flex items-start gap-2.5 text-small leading-snug text-content">
         <input
           type="checkbox"
           checked={consent}
@@ -280,19 +280,19 @@ function ContactForm({ answers, requestId }: { answers: Answers; requestId: stri
         <span>{t("consent")}</span>
       </label>
       {errors.consent && (
-        <p role="alert" className="mt-1.5 text-[12px] font-medium text-red-600">
+        <p role="alert" className="mt-1.5 text-caption font-medium text-red-600">
           {t("errors.consent")}
         </p>
       )}
       {state === "error" && (
-        <p role="alert" className="mt-3 text-[13px] font-medium text-red-600">
+        <p role="alert" className="mt-3 text-small font-medium text-red-600">
           {t("errors.send")}
         </p>
       )}
       <button
         type="submit"
         disabled={state === "sending"}
-        className="mt-5 inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-[14px] font-bold disabled:opacity-60"
+        className="mt-5 inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-small font-bold disabled:opacity-60"
       >
         {state === "sending" ? t("sending") : t("submit")}
       </button>
@@ -376,10 +376,10 @@ export default function RobotFinder() {
       <div className="space-y-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="font-display text-2xl font-extrabold tracking-tight text-content sm:text-3xl">
+            <h2 className="font-display text-title text-content">
               {matches.length === 0 ? t("results.noneTitle") : anyFit ? t("results.title") : t("results.closeTitle")}
             </h2>
-            <p className="mt-1 max-w-2xl text-[14px] text-ink-muted">
+            <p className="mt-1 max-w-2xl text-small text-ink-muted">
               {matches.length === 0
                 ? t("results.noneSub")
                 : anyFit
@@ -390,7 +390,7 @@ export default function RobotFinder() {
           <button
             type="button"
             onClick={restart}
-            className="inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 bg-surface px-4 text-[13.5px] font-semibold text-content transition-colors hover:border-accent"
+            className="inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 bg-surface px-4 text-small font-semibold text-content transition-colors hover:border-accent"
           >
             <RotateCcw className="h-4 w-4" aria-hidden="true" />
             {t("startAgain")}
@@ -403,7 +403,7 @@ export default function RobotFinder() {
             ))}
           </div>
         )}
-        <p className="text-[12px] text-ink-muted">{t("results.footnote")}</p>
+        <p className="text-caption text-ink-muted">{t("results.footnote")}</p>
         <ContactForm answers={answers} requestId={requestId} />
       </div>
     );
@@ -413,9 +413,9 @@ export default function RobotFinder() {
     step === "job" ? !!job : step === "details" ? job === "lawn" || job === "floor" || !!venue : true;
 
   return (
-    <div className="rounded-2xl border border-forest-100 bg-surface p-5 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.35)] sm:p-8">
+    <div className="rounded-card border border-forest-100 bg-surface p-5 sm:p-8">
       <div className="flex items-center justify-between gap-3">
-        <p className="font-mono text-[11px] font-semibold tracking-[0.2em] text-ink-muted uppercase">
+        <p className="text-caption font-semibold text-ink-muted">
           {t("stepOf", { step: Math.max(1, stepNumber), total: steps.length })}
         </p>
         <div className="flex gap-1.5" aria-hidden="true">
@@ -430,7 +430,7 @@ export default function RobotFinder() {
 
       {step === "job" && (
         <fieldset className="mt-5">
-          <legend className="font-display text-2xl font-bold text-content">{t("job.question")}</legend>
+          <legend className="font-display text-heading text-content">{t("job.question")}</legend>
           <div role="radiogroup" className="mt-4 grid gap-3 sm:grid-cols-2">
             {JOBS.map((j) => (
               <Choice
@@ -453,10 +453,10 @@ export default function RobotFinder() {
       {step === "details" && (job === "lawn" || job === "floor") && (
         <div className="mt-5 space-y-6">
           <div>
-            <label htmlFor={`${uid}-area`} className="font-display text-2xl font-bold text-content">
+            <label htmlFor={`${uid}-area`} className="font-display text-heading text-content">
               {t(`${job}.areaQuestion`)}
             </label>
-            <p className="mt-1 text-[13.5px] text-ink-muted">{t(`${job}.areaHint`)}</p>
+            <p className="mt-1 text-small text-ink-muted">{t(`${job}.areaHint`)}</p>
             <div className="mt-3 flex max-w-xs items-center gap-2">
               <input
                 id={`${uid}-area`}
@@ -466,12 +466,12 @@ export default function RobotFinder() {
                 placeholder={job === "lawn" ? "1,500" : "800"}
                 className={inputClass()}
               />
-              <span className="text-[14px] font-semibold text-content">{t("sqm")}</span>
+              <span className="text-small font-semibold text-content">{t("sqm")}</span>
             </div>
           </div>
           {job === "lawn" ? (
             <fieldset>
-              <legend className="font-display text-lg font-bold text-content">{t("lawn.slopeQuestion")}</legend>
+              <legend className="font-display text-lead font-bold text-content">{t("lawn.slopeQuestion")}</legend>
               <div role="radiogroup" className="mt-3 grid gap-2.5 sm:grid-cols-2">
                 {SLOPE_BANDS.map((s) => (
                   <Choice
@@ -486,7 +486,7 @@ export default function RobotFinder() {
             </fieldset>
           ) : (
             <fieldset>
-              <legend className="font-display text-lg font-bold text-content">{t("floor.operationQuestion")}</legend>
+              <legend className="font-display text-lead font-bold text-content">{t("floor.operationQuestion")}</legend>
               <div role="radiogroup" className="mt-3 grid gap-2.5 sm:grid-cols-3">
                 {OPERATION_PREFS.map((o) => (
                   <Choice
@@ -505,7 +505,7 @@ export default function RobotFinder() {
 
       {step === "details" && job === "delivery" && (
         <fieldset className="mt-5">
-          <legend className="font-display text-2xl font-bold text-content">{t("delivery.venueQuestion")}</legend>
+          <legend className="font-display text-heading text-content">{t("delivery.venueQuestion")}</legend>
           <div role="radiogroup" className="mt-4 grid gap-2.5 sm:grid-cols-3">
             {VENUES.map((v) => (
               <Choice key={v} selected={venue === v} onClick={() => setVenue(v)} title={t(`delivery.venue.${v}`)} />
@@ -520,7 +520,7 @@ export default function RobotFinder() {
           <button
             type="button"
             onClick={back}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[14px] font-semibold text-ink-muted transition-colors hover:text-content"
+            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full px-3 text-small font-semibold text-ink-muted transition-colors hover:text-content"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {t("back")}
@@ -533,7 +533,7 @@ export default function RobotFinder() {
             type="button"
             disabled={!canContinue}
             onClick={() => showResults()}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-[14px] font-bold disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-small font-bold disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t("seeResults")}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

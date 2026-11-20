@@ -4,9 +4,8 @@ import { useTranslations } from "next-intl";
 import type { StockCondition } from "@/data/conditions";
 
 /**
- * How a robot is sold: one square label per way it is sold
- * ("Brand-new", "Pre-owned", or both). Square corners, so it reads as a
- * status on the card rather than a sentence under the name.
+ * How a robot is sold: one label per way it is sold ("Brand-new",
+ * "Pre-owned", or both), in the Badge style.
  */
 export default function ConditionLine({
   conditions,
@@ -28,10 +27,8 @@ export default function ConditionLine({
       {conditions.map((condition) => (
         <li key={condition}>
           <span
-            className={`inline-flex items-center border px-2 py-1 font-mono text-[10px] leading-none font-semibold tracking-[0.12em] uppercase [&:lang(th)]:tracking-[0.02em] ${
-              tone === "dark"
-                ? "border-white/40 bg-white/10 text-white"
-                : "border-forest-200 bg-surface text-content shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
+            className={`inline-flex h-6 items-center rounded-control px-2 text-caption font-semibold ${
+              tone === "dark" ? "bg-white/15 text-white" : "bg-forest-100 text-content"
             }`}
           >
             {condition === "new" ? t("new") : t("preOwned")}

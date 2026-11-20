@@ -47,3 +47,11 @@ export function rebaseMedia<T>(value: T): T {
   };
   return walk(value) as T;
 }
+
+/**
+ * True when next/image may resize this picture: a file of the site itself or
+ * one on the media host (next.config.ts allows only that host). Any other
+ * address an admin pasted in is shown as it is, with a plain <img>.
+ */
+export const canOptimise = (src: string) =>
+  src.startsWith("/") || src.startsWith(`${mediaBaseUrl}/`);

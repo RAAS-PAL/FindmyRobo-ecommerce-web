@@ -36,7 +36,7 @@ const STEPS = [
 ] as const;
 
 const inputClass = (hasError: boolean) =>
-  `h-10 w-full rounded-lg border bg-surface px-3 text-[14px] text-content transition-colors placeholder:text-forest-300 focus-visible:outline-none! focus-visible:ring-2 ${
+  `h-10 w-full rounded-control border bg-surface px-3 text-small text-content transition-colors placeholder:text-forest-300 focus-visible:outline-none! focus-visible:ring-2 ${
     hasError
       ? "border-red-400 focus-visible:ring-red-200"
       : "border-forest-100 focus-visible:border-accent-600 focus-visible:ring-accent/25"
@@ -57,7 +57,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-[12px] font-medium tracking-wide text-ink-muted">
+      <label htmlFor={id} className="text-caption font-medium text-ink-muted">
         {label}
         {!optional && (
           <span className="ml-0.5 text-accent-600" aria-hidden="true">
@@ -70,7 +70,7 @@ function Field({
       </label>
       {children}
       {error && (
-        <p role="alert" className="text-[12px] font-medium text-red-600">
+        <p role="alert" className="text-caption font-medium text-red-600">
           {error}
         </p>
       )}
@@ -317,27 +317,14 @@ export default function QuoteForm({
             }`
       }
     >
-      {/* pool of accent light under the card — only on hover and while it's
-          being filled in; at rest the light tracing the edge is enough. The
-          wrapper does the fading, because the pool's own opacity breathes. */}
-      {!panel && (
-        <div
-          aria-hidden="true"
-          className={`pointer-events-none absolute inset-x-1 -bottom-10 h-20 transition-opacity duration-500 ${
-            expanded ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-          }`}
-        >
-          <div className="animate-pool h-full w-full rounded-full bg-accent blur-2xl" />
-        </div>
-      )}
       <div
         className={
           panel
             ? ""
-            : `overflow-hidden rounded-2xl border border-black/8 bg-surface/95 backdrop-blur-md transition-shadow duration-500 lg:border-white/10 lg:bg-[#141821]/75 lg:backdrop-blur-xl ${
+            : `overflow-hidden rounded-card border border-black/8 bg-surface/95 backdrop-blur-md lg:border-white/10 lg:bg-[#141821]/75 lg:backdrop-blur-xl ${
                 expanded
-                  ? "max-h-[calc(100svh-6.5rem)] overflow-y-auto shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5),0_0_48px_-10px_rgb(var(--accent-rgb)/0.6)]"
-                  : "shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5)] group-hover:shadow-[0_18px_40px_-22px_rgba(10,10,11,0.5),0_0_48px_-10px_rgb(var(--accent-rgb)/0.6)]"
+                  ? "max-h-[calc(100svh-6.5rem)] overflow-y-auto shadow-float"
+                  : "shadow-float"
               }`
         }
       >
@@ -346,13 +333,9 @@ export default function QuoteForm({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 pt-0.5">
               {/* the panel's own header already says "Get a quote" */}
-              {!panel && (
-                <p className="font-display text-[18px] font-extrabold leading-tight tracking-tight text-content">
-                  {t("eyebrow")}
-                </p>
-              )}
+              {!panel && <p className="font-display text-heading text-content">{t("eyebrow")}</p>}
               {open && !sent && (
-                <p className={`text-[12.5px] leading-snug text-ink-muted ${panel ? "" : "mt-1"}`}>
+                <p className={`text-caption leading-snug text-ink-muted ${panel ? "" : "mt-1"}`}>
                   {t("sub")}
                 </p>
               )}
@@ -370,8 +353,8 @@ export default function QuoteForm({
           </div>
 
           {sent ? (
-            <p className="mt-4 text-[14px] leading-relaxed text-content" role="status">
-              <span className="block font-display text-lg font-bold">{t("successTitle")}</span>
+            <p className="mt-4 text-small leading-relaxed text-content" role="status">
+              <span className="block font-display text-lead font-bold">{t("successTitle")}</span>
               <span className="mt-1.5 block text-ink-muted">
                 {t("successBody", { name: form.fullName.trim(), phone: form.phone.trim() })}
               </span>
@@ -379,20 +362,20 @@ export default function QuoteForm({
           ) : (
             <>
               {selection && (
-                <div className="mt-4 flex items-center gap-3 rounded-xl border border-accent/40 bg-accent/10 px-3.5 py-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-on-accent">
+                <div className="mt-4 flex items-center gap-3 rounded-control border border-accent/40 bg-accent/10 px-3.5 py-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-accent text-on-accent">
                     <Bot className="h-4.5 w-4.5" aria-hidden="true" />
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[11.5px] font-medium text-ink-muted">{t("selectionLabel")}</p>
-                    <p className="font-display text-[15px] leading-snug font-bold text-content">
+                    <p className="text-caption font-medium text-ink-muted">{t("selectionLabel")}</p>
+                    <p className="font-display text-body leading-snug font-bold text-content">
                       {selection}
                     </p>
                     {sold && sold.conditions.length === 1 && showsCondition(sold.conditions) && (
                       <ConditionLine conditions={sold.conditions} className="mt-0.5" />
                     )}
                     {forProduct && (
-                      <p className="text-[12px] font-medium text-accent-600">
+                      <p className="text-caption font-medium text-accent-600">
                         {tcart("forRobot", { name: forProduct.name })}
                       </p>
                     )}
@@ -402,7 +385,7 @@ export default function QuoteForm({
 
               {sold && sold.conditions.length > 1 && (
                 <div className="mt-3.5 flex flex-col gap-1.5">
-                  <p id={fieldId("condition")} className="text-[12px] font-medium tracking-wide text-ink-muted">
+                  <p id={fieldId("condition")} className="text-caption font-medium text-ink-muted">
                     {tcond("ask")}
                     <span className="ml-0.5 text-accent-600" aria-hidden="true">
                       *
@@ -422,7 +405,7 @@ export default function QuoteForm({
                           role="radio"
                           aria-checked={selected}
                           onClick={() => chooseCondition(condition)}
-                          className={`inline-flex cursor-pointer items-center border px-2 py-1 font-mono text-[10px] leading-none font-semibold tracking-[0.12em] uppercase transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 [&:lang(th)]:tracking-[0.02em] ${
+                          className={`inline-flex cursor-pointer items-center border px-2 py-1 text-caption leading-none font-semibold transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
                             selected
                               ? "border-forest-950 bg-forest-950 text-white"
                               : errors.condition
@@ -436,7 +419,7 @@ export default function QuoteForm({
                     })}
                   </div>
                   {err("condition") && (
-                    <p role="alert" className="text-[12px] font-medium text-red-600">
+                    <p role="alert" className="text-caption font-medium text-red-600">
                       {err("condition")}
                     </p>
                   )}
@@ -508,7 +491,7 @@ export default function QuoteForm({
                     {!selection && (
                       <div className="col-span-2">
                         <div className="flex flex-col gap-1.5">
-                          <p id={fieldId("interest")} className="text-[12px] font-medium tracking-wide text-ink-muted">
+                          <p id={fieldId("interest")} className="text-caption font-medium text-ink-muted">
                             {t("interestLabel")}
                             <span className="ml-0.5 text-accent-600" aria-hidden="true">
                               *
@@ -517,7 +500,7 @@ export default function QuoteForm({
                           <div
                             role="radiogroup"
                             aria-labelledby={fieldId("interest")}
-                            className={`grid grid-cols-2 gap-1 rounded-lg border bg-cloud p-1 ${
+                            className={`grid grid-cols-2 gap-1 rounded-control border bg-cloud p-1 ${
                               errors.interest ? "border-red-400" : "border-forest-100"
                             }`}
                           >
@@ -531,7 +514,7 @@ export default function QuoteForm({
                                   aria-checked={selected}
                                   onClick={() => chooseInterest(interest)}
                                   // an odd one out at the end takes the whole row
-                                  className={`flex min-h-9 cursor-pointer items-center justify-center rounded-md px-2 py-1.5 text-center text-[13px] leading-tight font-semibold transition-colors last:odd:col-span-2 focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                                  className={`flex min-h-9 cursor-pointer items-center justify-center rounded-control px-2 py-1.5 text-center text-small leading-tight font-semibold transition-colors last:odd:col-span-2 focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
                                     selected
                                       ? "bg-forest-950 text-white shadow-sm"
                                       : "text-ink-muted hover:text-content"
@@ -543,7 +526,7 @@ export default function QuoteForm({
                             })}
                           </div>
                           {err("interest") && (
-                            <p role="alert" className="text-[12px] font-medium text-red-600">
+                            <p role="alert" className="text-caption font-medium text-red-600">
                               {err("interest")}
                             </p>
                           )}
@@ -563,7 +546,7 @@ export default function QuoteForm({
                               onChange={setField("areaM2")}
                               className={`${inputClass(!!errors.areaM2)} pr-12`}
                             />
-                            <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[13px] font-medium text-ink-muted">
+                            <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-small font-medium text-ink-muted">
                               m²
                             </span>
                           </div>
@@ -635,14 +618,14 @@ export default function QuoteForm({
                           placeholder={t("notePlaceholder")}
                           value={form.note}
                           onChange={setField("note")}
-                          className="min-h-[4.5rem] w-full resize-y rounded-lg border border-forest-100 bg-surface px-3 py-2 text-[14px] leading-relaxed text-content transition-colors placeholder:text-forest-300 focus-visible:border-accent-600 focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/25"
+                          className="min-h-[4.5rem] w-full resize-y rounded-control border border-forest-100 bg-surface px-3 py-2 text-small leading-relaxed text-content transition-colors placeholder:text-forest-300 focus-visible:border-accent-600 focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/25"
                         />
                       </Field>
                     </div>
                   </div>
 
                   {sendError && (
-                    <p role="alert" className="mt-3 text-[13px] font-medium text-red-600">
+                    <p role="alert" className="mt-3 text-small font-medium text-red-600">
                       {sendError}
                     </p>
                   )}
@@ -650,7 +633,7 @@ export default function QuoteForm({
                   <button
                     type="submit"
                     disabled={busy}
-                    className="mt-4 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent-gradient text-[14px] font-bold focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/50 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="mt-4 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent-gradient text-small font-bold focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/50 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {busy ? (
                       <>
@@ -685,13 +668,13 @@ export default function QuoteForm({
                             // from halo edge to halo edge (icon radius 14px
                             // + 4px ring) — drawn under the icons, the line
                             // showed through the one to its left
-                            className={`absolute top-3.5 right-[calc(50%_+_1.125rem)] left-[calc(-50%_+_1.125rem)] h-px transition-colors duration-300 ${
+                            className={`absolute top-3.5 right-[calc(50%_+_1.125rem)] left-[calc(-50%_+_1.125rem)] h-px transition-colors duration-200 ${
                               index === 1 && form.fullName.trim() ? "bg-accent" : "bg-forest-100"
                             }`}
                           />
                         )}
                         <span
-                          className={`relative flex h-7 w-7 items-center justify-center rounded-full border transition-colors duration-300 ${
+                          className={`relative flex h-7 w-7 items-center justify-center rounded-full border transition-colors duration-200 ${
                             done
                               ? "border-accent bg-accent text-on-accent"
                               : current
@@ -706,7 +689,7 @@ export default function QuoteForm({
                           )}
                         </span>
                         <span
-                          className={`px-0.5 text-[11.5px] leading-tight font-semibold ${
+                          className={`px-0.5 text-caption leading-tight font-semibold ${
                             index === 0 ? "text-content" : "text-ink-muted"
                           }`}
                         >
@@ -720,22 +703,13 @@ export default function QuoteForm({
 
               {/* what asking costs them — under the steps while closed, under
                   the submit button once open */}
-              <p className="mt-3 text-center text-[11.5px] leading-snug font-medium text-ink-muted">
+              <p className="mt-3 text-center text-caption leading-snug font-medium text-ink-muted">
                 {t("reassure")}
               </p>
             </>
           )}
         </div>
       </div>
-      {/* the light tracing the card's edge (styles in globals.css) */}
-      {!panel && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-2xl drop-shadow-[0_0_6px_rgb(var(--accent-rgb)/0.95)]"
-        >
-          <div className="quote-trace" />
-        </div>
-      )}
     </form>
   );
 }

@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import CartIcon from "@/components/cart/CartIcon";
-import FadeIn from "@/components/ui/FadeIn";
 import ProductVisual from "@/components/ui/ProductVisual";
 import CardPaymentForm from "@/components/checkout/CardPaymentForm";
 import PromptPayForm from "@/components/checkout/PromptPayForm";
@@ -269,7 +268,7 @@ export default function CheckoutClient() {
      tell the customer the team will arrange payment as before) */
   if (placed) {
     return (
-      <FadeIn className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-2xl">
         <div className="rounded-3xl border border-forest-100 bg-surface p-8 text-center sm:p-12">
           {omisePublicKey ? (
             <>
@@ -396,14 +395,14 @@ export default function CheckoutClient() {
             <ArrowUpRight className="h-4.5 w-4.5" aria-hidden="true" />
           </Link>
         </div>
-      </FadeIn>
+      </div>
     );
   }
 
   /* empty cart */
   if (items.length === 0) {
     return (
-      <FadeIn className="mx-auto flex max-w-md flex-col items-center gap-6 py-16 text-center">
+      <div className="mx-auto flex max-w-md flex-col items-center gap-6 py-16 text-center">
         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-forest/5">
           <CartIcon className="h-7 w-7 text-content/30" />
         </span>
@@ -415,7 +414,7 @@ export default function CheckoutClient() {
           {t("emptyCta")}
           <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
         </Link>
-      </FadeIn>
+      </div>
     );
   }
 
@@ -436,7 +435,7 @@ export default function CheckoutClient() {
         )}
 
         {installGroups.length > 0 && (
-          <FadeIn>
+          <div>
             <section aria-labelledby="addons-heading">
               <h2
                 id="addons-heading"
@@ -543,10 +542,10 @@ export default function CheckoutClient() {
                 })}
               </div>
             </section>
-          </FadeIn>
+          </div>
         )}
 
-        <FadeIn>
+        <div>
           <section aria-labelledby="contact-heading">
             <h2
               id="contact-heading"
@@ -592,9 +591,9 @@ export default function CheckoutClient() {
               </Field>
             </div>
           </section>
-        </FadeIn>
+        </div>
 
-        <FadeIn delay={0.08}>
+        <div>
           <section aria-labelledby="shipping-heading">
             <h2
               id="shipping-heading"
@@ -659,11 +658,11 @@ export default function CheckoutClient() {
               </div>
             </div>
           </section>
-        </FadeIn>
+        </div>
       </div>
 
       {/* right: summary */}
-      <FadeIn delay={0.12}>
+      <div>
         <aside className="lg:sticky lg:top-24">
           <div className="rounded-3xl border border-forest-100 bg-surface p-6 sm:p-8">
             <h2 className="font-display text-lg font-bold text-content">
@@ -746,7 +745,7 @@ export default function CheckoutClient() {
             </p>
           </div>
         </aside>
-      </FadeIn>
+      </div>
     </form>
   );
 }

@@ -1,10 +1,11 @@
 "use client";
 
+import MetaLine from "@/components/ui/MetaLine";
+import { chipClass } from "@/components/ui/Chip";
 import { useState } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import FadeIn from "@/components/ui/FadeIn";
 import { anatomyByModel } from "@/data/techAnatomy";
 import type { AnatomyModel, Locale } from "@/data/products";
 
@@ -40,24 +41,18 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
   return (
     <section id="technology" className="bg-forest-950 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeIn>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-300">
-            {t("eyebrow")} — {set.model}
-          </p>
-          <h2 className="mt-3 max-w-2xl font-display text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
-            {t("heading")}
-          </h2>
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/60">
-            {t("sub")}
-          </p>
-        </FadeIn>
+        <div>
+          <MetaLine onPhoto>{set.model}</MetaLine>
+          <h2 className="mt-2 max-w-2xl font-display text-title text-white">{t("heading")}</h2>
+          <p className="mt-3 max-w-xl text-lead text-white/70">{t("sub")}</p>
+        </div>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
           {/* viewer */}
-          <FadeIn>
-            <div className="relative aspect-square overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-forest-900 to-forest-950">
+          <div>
+            <div className="relative aspect-square overflow-hidden rounded-card border border-white/10 bg-forest-900">
               <div
-                className="absolute inset-0 transition-transform duration-700 ease-out"
+                className="absolute inset-0 transition-transform duration-[400ms] ease-in-out motion-reduce:transition-none"
                 style={{
                   transform: `scale(${active.zoom}) translate(${50 - active.x}%, ${50 - active.y}%)`,
                 }}
@@ -111,7 +106,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                       onClick={() => setActiveId(spot.id)}
                       aria-label={spot.title[locale]}
                       aria-pressed={isActive}
-                      className="absolute z-10 flex items-center justify-center rounded-full font-mono text-[11px] font-bold"
+                      className="absolute z-10 flex items-center justify-center rounded-full text-caption font-bold"
                       style={{
                         left: `${spot.x}%`,
                         top: `${spot.y}%`,
@@ -136,15 +131,15 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                 })}
               </div>
 
-              <span className="pointer-events-none absolute bottom-4 left-4 rounded-full bg-forest-950/70 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white/70 backdrop-blur-sm">
+              <span className="pointer-events-none absolute bottom-4 left-4 rounded-control bg-forest-950/80 px-2 py-1 text-caption font-medium text-white/80">
                 {view.label[locale]}
               </span>
             </div>
-          </FadeIn>
+          </div>
 
           {/* controls + detail */}
           <div className="flex flex-col gap-5">
-            <FadeIn>
+            <div>
               <ul className="flex flex-wrap gap-2">
                 {set.hotspots.map((spot, index) => {
                   const isActive = spot.id === activeId;
@@ -154,23 +149,20 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                         type="button"
                         onClick={() => setActiveId(spot.id)}
                         aria-pressed={isActive}
-                        className={`flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full border px-4 text-[12.5px] font-semibold transition-colors ${
-                          isActive
-                            ? "border-accent bg-accent text-on-accent"
-                            : "border-white/20 text-white/70 hover:border-accent hover:text-accent-300"
-                        }`}
+                        className={chipClass({ selected: isActive, onDark: true })}
                       >
-                        <span className="font-mono text-[11px]">{index + 1}</span>
+                        {/* the number matches the marker on the photo */}
+                        <span className="tabular-nums opacity-70">{index + 1}</span>
                         {spot.title[locale]}
                       </button>
                     </li>
                   );
                 })}
               </ul>
-            </FadeIn>
+            </div>
 
-            <FadeIn>
-              <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
+            <div>
+              <div className="rounded-card border border-white/10 bg-white/[0.04] p-6 sm:p-8">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={active.id}
@@ -179,30 +171,30 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.22 }}
                   >
-                    <h3 className="font-display text-xl font-extrabold text-white sm:text-2xl">
+                    <h3 className="font-display text-heading text-white">
                       {active.title[locale]}
                     </h3>
-                    <p className="mt-3 text-[14.5px] leading-relaxed text-white/70">
+                    <p className="mt-3 text-small leading-relaxed text-white/70">
                       {active.body[locale]}
                     </p>
                     <div className="mt-6 border-t border-white/10 pt-5">
-                      <p className="font-mono text-3xl font-extrabold text-accent-300 sm:text-4xl">
+                      <p className="font-display text-title text-white tabular-nums">
                         {active.stat}
                       </p>
-                      <p className="mt-1 text-[12.5px] text-white/50">
+                      <p className="mt-1 text-caption text-white/50">
                         {active.statLabel[locale]}
                       </p>
                     </div>
                   </motion.div>
                 </AnimatePresence>
               </div>
-            </FadeIn>
+            </div>
 
-            <FadeIn>
-              <p className="text-[11.5px] leading-relaxed text-white/40">
+            <div>
+              <p className="text-caption text-white/50">
                 {set.footnote[locale]}
               </p>
-            </FadeIn>
+            </div>
           </div>
         </div>
       </div>

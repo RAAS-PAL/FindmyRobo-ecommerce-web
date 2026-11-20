@@ -34,7 +34,7 @@ export default function ShowcaseCarousel({
           on a dark band (see ProductPageBlocks), so `text-content` would be
           dark-on-dark in light mode. */}
       {heading && (
-        <h2 className="mb-8 text-center font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+        <h2 className="mb-8 text-center font-display text-title text-white">
           {heading}
         </h2>
       )}
@@ -43,7 +43,7 @@ export default function ShowcaseCarousel({
         {cards.map((card, i) => (
           <article
             key={i}
-            className="flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#34363d] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+            className="flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-card border border-white/10 bg-[#34363d] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -53,8 +53,8 @@ export default function ShowcaseCarousel({
               className="aspect-[4/5] w-full bg-[#34363d] object-contain p-3 sm:p-4"
             />
             <div className="p-5 sm:p-6">
-              <h3 className="font-display text-lg font-bold text-white">{pick(card.title)}</h3>
-              <p className="mt-2.5 whitespace-pre-line text-[13.5px] leading-relaxed text-white/70">
+              <h3 className="font-display text-lead font-bold text-white">{pick(card.title)}</h3>
+              <p className="mt-2.5 whitespace-pre-line text-small leading-relaxed text-white/70">
                 {pick(card.body)}
               </p>
             </div>

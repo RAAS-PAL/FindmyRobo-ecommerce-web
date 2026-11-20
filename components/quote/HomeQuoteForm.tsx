@@ -3,10 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, useReducedMotion } from "framer-motion";
-import {
-  ArrowLeft, ArrowRight, Check, CheckCheck, ChefHat, ClipboardCheck,
-  Leaf, LoaderCircle, ShieldCheck, Sparkles, Truck, Wrench,
-} from "lucide-react";
+import { ArrowLeft, Check, LoaderCircle } from "lucide-react";
 import { useProducts } from "@/components/ProductsProvider";
 import { productLabel, SERVICE_CATEGORY } from "@/data/products";
 import {
@@ -14,19 +11,12 @@ import {
   QUOTE_NOTE_MAX, validateQuote, type QuoteField, type QuoteRequest,
 } from "@/lib/quoteRequest";
 import { submitQuote } from "@/lib/submitQuote";
+import { buttonClass } from "@/components/ui/Button";
+import { fieldAreaClass, fieldControlClass, fieldErrorClass, fieldLabelClass } from "@/components/ui/Field";
+import { FADE } from "@/lib/motion";
 
-const INTEREST_ICONS = {
-  "lawn-mowing": Leaf,
-  "commercial-cleaning": Sparkles,
-  "smart-equipment": Wrench,
-  cooking: ChefHat,
-  "pudu-delivery": Truck,
-};
 const CONTACT_FIELDS: QuoteField[] = ["fullName", "email", "phone"];
-const fieldClass =
-  "h-12 w-full rounded-lg border bg-surface px-3.5 text-base text-content placeholder:text-ink-muted/65 transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/25 sm:text-[15px]";
-const buttonClass =
-  "inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-lg bg-accent-gradient px-6 text-[15px] font-semibold focus-visible:outline-none! focus-visible:ring-4 focus-visible:ring-accent/25 disabled:cursor-wait disabled:opacity-60";
+const submitClass = buttonClass({ size: "lg", className: "flex-1 gap-2 disabled:cursor-wait" });
 
 function Field({
   id, label, error, optional, children,
@@ -39,12 +29,12 @@ function Field({
 }) {
   return (
     <div className="min-w-0">
-      <label htmlFor={id} className="mb-2 block text-[13px] font-semibold text-content">
+      <label htmlFor={id} className={fieldLabelClass}>
         {label}
         {optional && <span className="ml-1 font-normal text-ink-muted">({optional})</span>}
       </label>
       {children}
-      {error && <p id={id + "-error"} className="mt-1.5 text-[13px] text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p id={id + "-error"} className={fieldErrorClass}>{error}</p>}
     </div>
   );
 }
@@ -96,7 +86,7 @@ export default function HomeQuoteForm({
     value: form[field],
     "aria-invalid": !!errors[field],
     "aria-describedby": errors[field] ? id(field) + "-error" : undefined,
-    className: fieldClass + (errors[field] ? " border-red-400" : " border-forest-100 focus-visible:border-accent-600"),
+    className: fieldControlClass,
     onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       const value = event.target.value;
       setForm((current) => ({ ...current, [field]: value }));
@@ -163,37 +153,34 @@ export default function HomeQuoteForm({
     <form ref={rootRef} onSubmit={onSubmit} noValidate aria-label={t("eyebrow")} aria-busy={busy}>
       {sent ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-8">
-          <span className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-accent-50 text-accent-600">
-            <CheckCheck className="h-6 w-6" aria-hidden="true" />
-          </span>
-          <h3 ref={headingRef} tabIndex={-1} className="font-display text-2xl font-bold text-content focus:outline-none">
+          <h3 ref={headingRef} tabIndex={-1} className="font-display text-heading text-content focus:outline-none">
             {t("successTitle")}
           </h3>
-          <p role="status" className="mt-3 max-w-md text-[15px] leading-relaxed text-ink-muted">
+          <p role="status" className="mt-3 max-w-md text-body text-ink-muted">
             {t("successBody", { name: form.fullName.trim(), phone: form.phone.trim() })}
           </p>
-          <p className="mt-6 border-t border-forest-100 pt-5 text-sm text-ink-muted">{t("consultation.successNext")}</p>
+          <p className="mt-6 border-t border-forest-100 pt-5 text-small text-ink-muted">{t("consultation.successNext")}</p>
         </motion.div>
       ) : (
         <>
           <ol aria-label={t("consultation.progressLabel")} className="mb-6 grid grid-cols-2 gap-4">
             {(["project", "contact"] as const).map((name, index) => (
               <li key={name} aria-current={step === index ? "step" : undefined}
-                className={"border-t-2 pt-3 text-[13px] font-semibold " + (step >= index ? "border-accent text-accent-600" : "border-forest-100 text-ink-muted")}>
-                <span className="mr-2 inline-flex w-5 justify-center font-mono text-xs" aria-hidden="true">
-                  {step > index ? <Check className="h-4 w-4" /> : "0" + (index + 1)}
+                className={"border-t-2 pt-3 text-small font-semibold" + (step >= index ? "border-accent text-content" : "border-forest-100 text-ink-muted")}>
+                <span className="mr-2 inline-flex w-4 justify-center tabular-nums" aria-hidden="true">
+                  {step > index ? <Check className="h-4 w-4" /> : index + 1}
                 </span>
                 {t("consultation.steps." + name)}
               </li>
             ))}
           </ol>
 
-          <motion.div key={step} initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 8 }}
-            animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.24 }}>
-            <h3 ref={headingRef} tabIndex={-1} className="font-display text-[23px] leading-tight font-bold tracking-tight text-content focus:outline-none">
+          <motion.div key={step} initial={{ opacity: reduceMotion ? 1 : 0 }}
+            animate={{ opacity: 1 }} transition={reduceMotion ? { duration: 0 } : FADE}>
+            <h3 ref={headingRef} tabIndex={-1} className="font-display text-heading text-content focus:outline-none">
               {t(step === 0 ? "consultation.projectTitle" : "consultation.contactTitle")}
             </h3>
-            <p className="mt-2 text-[13px] leading-relaxed text-ink-muted">
+            <p className="mt-2 text-small text-ink-muted">
               {t(step === 0 ? "consultation.projectHint" : "consultation.contactHint")}
             </p>
 
@@ -202,11 +189,10 @@ export default function HomeQuoteForm({
               {step === 0 ? (
                 <>
                   {product ? (
-                    <div className="flex items-center gap-3 rounded-lg border border-forest-100 bg-cloud/60 p-4">
-                      <ClipboardCheck className="h-5 w-5 shrink-0 text-accent-600" aria-hidden="true" />
+                    <div className="rounded-control border border-forest-100 bg-cloud/60 p-4">
                       <div>
-                        <p className="text-xs text-ink-muted">{t("selectionLabel")}</p>
-                        <p className="mt-1 text-[15px] font-semibold text-content">{productLabel(product)}</p>
+                        <p className="text-caption text-ink-muted">{t("selectionLabel")}</p>
+                        <p className="mt-1 text-body font-semibold text-content">{productLabel(product)}</p>
                       </div>
                     </div>
                   ) : (
@@ -214,7 +200,6 @@ export default function HomeQuoteForm({
                       <legend className="sr-only">{t("interestLabel")}</legend>
                       <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-2">
                         {QUOTE_INTERESTS.map((value) => {
-                          const Icon = INTEREST_ICONS[value];
                           return (
                             <label key={value} className="relative cursor-pointer">
                               <input type="radio" name="interest" value={value} checked={form.interest === value}
@@ -224,10 +209,9 @@ export default function HomeQuoteForm({
                                 }}
                                 aria-describedby={errors.interest ? id("interest") + "-error" : undefined}
                                 className="peer sr-only" />
-                              <span className="flex min-h-14 items-center gap-2.5 rounded-lg border border-forest-100 px-3 py-2.5 text-[13px] font-medium text-content transition-colors hover:border-accent-600/50 peer-checked:border-accent-600 peer-checked:bg-accent-50 peer-checked:text-accent-600 peer-focus-visible:ring-2 peer-focus-visible:ring-accent/40 peer-focus-visible:ring-offset-2">
-                                <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                              <span className="flex min-h-12 items-center gap-2.5 rounded-control border border-forest-100 px-3 py-2.5 text-small font-medium text-content transition-colors hover:border-accent-600/50 peer-checked:border-accent-600 peer-checked:bg-accent-50 peer-checked:text-accent-600 peer-focus-visible:ring-2 peer-focus-visible:ring-accent/40 peer-focus-visible:ring-offset-2">
                                 <span className="flex-1">{t("interests." + value)}</span>
-                                <span className={"flex h-4 w-4 shrink-0 items-center justify-center rounded-full border " + (form.interest === value ? "border-accent bg-accent text-on-accent" : "border-forest-300")} aria-hidden="true">
+                                <span className={"flex h-4 w-4 shrink-0 items-center justify-center rounded-full border" + (form.interest === value ? "border-accent bg-accent text-on-accent" : "border-forest-300")} aria-hidden="true">
                                   {form.interest === value && <Check className="h-2.5 w-2.5" strokeWidth={3} />}
                                 </span>
                               </span>
@@ -235,16 +219,16 @@ export default function HomeQuoteForm({
                           );
                         })}
                       </div>
-                      {errors.interest && <p id={id("interest") + "-error"} role="alert" className="mt-2 text-[13px] text-red-600 dark:text-red-400">{errorText("interest")}</p>}
+                      {errors.interest && <p id={id("interest") + "-error"} role="alert" className={fieldErrorClass}>{errorText("interest")}</p>}
                     </fieldset>
                   )}
 
                   {needsCondition && (
                     <fieldset>
-                      <legend className="mb-2 text-[13px] font-semibold text-content">{tcond("ask")}</legend>
+                      <legend className={fieldLabelClass}>{tcond("ask")}</legend>
                       <div className="flex flex-wrap gap-4">
                         {sold.conditions.map((condition) => (
-                          <label key={condition} className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-content">
+                          <label key={condition} className="flex min-h-11 cursor-pointer items-center gap-2 text-small text-content">
                             <input type="radio" name="condition" value={condition} checked={form.condition === condition}
                               onChange={() => {
                                 setForm((current) => ({ ...current, condition }));
@@ -256,7 +240,7 @@ export default function HomeQuoteForm({
                           </label>
                         ))}
                       </div>
-                      {errors.condition && <p id={id("condition") + "-error"} role="alert" className="text-[13px] text-red-600 dark:text-red-400">{errorText("condition")}</p>}
+                      {errors.condition && <p id={id("condition") + "-error"} role="alert" className={fieldErrorClass}>{errorText("condition")}</p>}
                     </fieldset>
                   )}
 
@@ -265,7 +249,7 @@ export default function HomeQuoteForm({
                       <div className="relative">
                         <input {...inputProps("areaM2")} inputMode="decimal" placeholder={t("areaPlaceholder")} required
                           className={inputProps("areaM2").className + " pr-14"} />
-                        <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-ink-muted">m²</span>
+                        <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-small text-ink-muted">m²</span>
                       </div>
                     </Field>
                   )}
@@ -290,7 +274,7 @@ export default function HomeQuoteForm({
                 </>
               ) : (
                 <>
-                  <div className="flex items-center gap-2 border-b border-forest-100 pb-4 text-sm text-ink-muted">
+                  <div className="flex items-center gap-2 border-b border-forest-100 pb-4 text-small text-ink-muted">
                     <Check className="h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
                     <span className="min-w-0 flex-1">{product ? productLabel(product) : t("interests." + form.interest)}</span>
                     <button type="button" onClick={goBack} className="min-h-10 cursor-pointer px-2 font-semibold text-accent-600 underline-offset-4 hover:underline">
@@ -310,11 +294,11 @@ export default function HomeQuoteForm({
                       </Field>
                     </div>
                   </div>
-                  <details className="group rounded-lg border border-forest-100">
-                    <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 text-[13px] font-medium text-ink-muted">
+                  <details className="group rounded-control border border-forest-100">
+                    <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 text-small font-medium text-ink-muted">
                       {t("consultation.extraDetails")}
-                      <span aria-hidden="true" className="text-lg group-open:hidden">+</span>
-                      <span aria-hidden="true" className="hidden text-lg group-open:inline">−</span>
+                      <span aria-hidden="true" className="text-lead group-open:hidden">+</span>
+                      <span aria-hidden="true" className="hidden text-lead group-open:inline">−</span>
                     </summary>
                     <div className="space-y-4 border-t border-forest-100 p-4">
                       <Field id={id("company")} label={t("companyLabel")} optional={tc("optional")}>
@@ -322,7 +306,7 @@ export default function HomeQuoteForm({
                       </Field>
                       <Field id={id("note")} label={t("noteLabel")} optional={tc("optional")}>
                         <textarea {...inputProps("note")} rows={3} maxLength={QUOTE_NOTE_MAX} placeholder={t("notePlaceholder")}
-                          className={fieldClass + " min-h-24 resize-y border-forest-100 py-3 focus-visible:border-accent-600"} />
+                          className={fieldAreaClass + " resize-y"} />
                       </Field>
                     </div>
                   </details>
@@ -330,22 +314,20 @@ export default function HomeQuoteForm({
               )}
             </fieldset>
 
-            {sendError && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/30 dark:text-red-300">{t(sendError)}</p>}
+            {sendError && <p role="alert" className="mt-4 rounded-control bg-red-50 p-3 text-small text-red-700 dark:bg-red-950/30 dark:text-red-300">{t(sendError)}</p>}
             <div className="mt-6 flex items-center gap-3">
               {step === 1 && (
                 <button type="button" onClick={goBack} disabled={busy}
-                  className="inline-flex min-h-12 cursor-pointer items-center gap-1.5 rounded-lg px-2 text-sm font-semibold text-ink-muted hover:text-content disabled:opacity-50">
+                  className="inline-flex min-h-12 cursor-pointer items-center gap-1.5 rounded-control px-2 text-small font-semibold text-ink-muted transition-colors duration-150 hover:text-content disabled:opacity-50">
                   <ArrowLeft className="h-4 w-4" aria-hidden="true" />{t("consultation.back")}
                 </button>
               )}
-              <button type="submit" disabled={busy} className={buttonClass + " flex-1"}>
+              <button type="submit" disabled={busy} className={submitClass}>
                 {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}
                 {busy ? t("sending") : step === 0 ? t("consultation.continue") : tq("submitCta")}
-                {!busy && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
               </button>
             </div>
-            <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs leading-relaxed text-ink-muted">
-              <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <p className="mt-3 text-center text-caption text-ink-muted">
               {t(step === 0 ? "consultation.noCommitment" : "consultation.privacy")}
             </p>
           </motion.div>

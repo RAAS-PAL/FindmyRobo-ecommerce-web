@@ -1,19 +1,13 @@
 "use client";
 
-import { useRef } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  type Variants,
-} from "framer-motion";
-import { ArrowUpRight, Calendar, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useQuote } from "@/components/quote/QuoteProvider";
-import FadeIn from "@/components/ui/FadeIn";
-import ConditionLine from "@/components/ui/ConditionLine";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
+import MetaLine from "@/components/ui/MetaLine";
 import ProductVisual from "@/components/ui/ProductVisual";
 import { conditionKind } from "@/data/conditions";
 import { categoryHref } from "@/data/categories";
@@ -26,18 +20,6 @@ import {
   type ShowcaseColor,
   type ShowcaseContent,
 } from "@/data/products";
-
-const EASE = [0.16, 1, 0.3, 1] as const;
-
-/** Hero copy: each line slides in after the one above it. */
-const heroCopy: Variants = {
-  hidden: {},
-  shown: { transition: { staggerChildren: 0.09, delayChildren: 0.25 } },
-};
-const heroLine: Variants = {
-  hidden: { opacity: 0, y: 22 },
-  shown: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
-};
 
 type PhotoFeature = Extract<PageBlock, { type: "feature" }> & { image: string };
 
@@ -77,53 +59,23 @@ function FillImage({ src, alt, sizes }: { src: string; alt: string; sizes: strin
   return <img src={src} alt={alt} className="absolute inset-0 h-full w-full object-cover" />;
 }
 
-/**
- * A feature photo that opens out as it scrolls into view, DJI-style: it
- * starts as a smaller rounded window and widens to the full column while the
- * image inside settles from a slight zoom. Tied to scroll position, so it
- * plays forwards and backwards; static with reduced motion (CSS below).
- */
+/** A feature photo across the page column. */
 function FeaturePhoto({ src, alt }: { src: string; alt: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "center center"],
-  });
-  const inset = useTransform(scrollYProgress, [0, 1], [12, 0]);
-  const clipPath = useTransform(
-    inset,
-    (v) => `inset(${v}% ${v}% ${v}% ${v}% round 1rem)`,
-  );
-  const scale = useTransform(scrollYProgress, [0, 1], [1.18, 1]);
   return (
-    <div
-      ref={ref}
-      className="mx-auto mt-10 max-w-7xl px-3 sm:mt-14 sm:px-6 lg:px-8"
-    >
-      <motion.div
-        style={{ clipPath }}
-        // reduced motion: CSS drops the scroll-bound clip and zoom (framer's
-        // reducedMotion setting doesn't reach values bound to scroll)
-        className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-forest-950 motion-reduce:[clip-path:none]!"
-      >
-        <motion.div
-          style={{ scale }}
-          className="absolute inset-0 motion-reduce:[transform:none]!"
-        >
-          <FillImage src={src} alt={alt} sizes="(min-width: 1280px) 1216px, 100vw" />
-        </motion.div>
-      </motion.div>
+    <div className="mx-auto mt-10 max-w-7xl px-4 sm:mt-14 sm:px-6 lg:px-8">
+      <div className="relative aspect-[16/9] overflow-hidden rounded-card bg-forest-950">
+        <FillImage src={src} alt={alt} sizes="(min-width: 1280px) 1216px, 100vw" />
+      </div>
     </div>
   );
 }
 
 /** One body colour in the hero, named so the two can be told apart.
- *  Only the photo floats. The name stays put: a looping translate on small
- *  tracked type repaints the letters on fractional pixels and they stutter. */
+ */
 function HeroColor({ color, alt, label }: { color: ShowcaseColor; alt: string; label: string }) {
   return (
     <figure className="flex min-w-0 flex-1 flex-col items-center">
-      <div className="animate-hero-float">
+      <div>
         {/* eslint-disable-next-line @next/next/no-img-element -- any Admin URL */}
         <img
           src={color.image}
@@ -132,7 +84,7 @@ function HeroColor({ color, alt, label }: { color: ShowcaseColor; alt: string; l
           className="h-[min(42svh,22rem)] w-auto max-w-full object-contain sm:h-[min(52svh,28rem)] lg:h-[min(64svh,34rem)]"
         />
       </div>
-      <figcaption className="mt-3 flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.18em] text-white/80 uppercase [&:lang(th)]:tracking-[0.04em]">
+      <figcaption className="mt-3 flex items-center gap-2 text-caption font-semibold text-white/80">
         <span
           aria-hidden="true"
           className="h-3.5 w-3.5 rounded-full border border-white/50"
@@ -212,22 +164,16 @@ export default function ShowcasePage({
   return (
     <main>
       {/* ---- hero: the product on the dark studio set ---- */}
-      <section className="relative -mt-[var(--nav-h)] overflow-hidden bg-[#0b0d10] pt-[var(--nav-h)] text-white">
+      <section className="relative -mt-[var(--nav-h)] overflow-hidden bg-forest-950 pt-[var(--nav-h)] text-white">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(70%_80%_at_68%_45%,#1d2230_0%,#12151c_50%,#0b0d10_100%)]"
+          className="absolute inset-0 bg-forest-950"
         />
         <div className="relative mx-auto grid max-w-7xl items-center gap-6 px-4 pt-8 pb-14 sm:px-6 lg:min-h-[calc(100svh-var(--nav-h))] lg:max-h-[56rem] lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:px-8 lg:py-12">
-          <motion.div
-            className="order-2 lg:order-1"
-            variants={heroCopy}
-            initial="hidden"
-            animate="shown"
-          >
-            <motion.nav
-              variants={heroLine}
+          <div className="order-2 lg:order-1">
+            <nav
               aria-label={t("breadcrumb")}
-              className="mb-6 flex items-center gap-1.5 text-[12.5px] text-white/60"
+              className="mb-6 flex items-center gap-1.5 text-caption text-white/60"
             >
               <Link href="/shop" className="hover:text-white">
                 {t("shop")}
@@ -238,39 +184,34 @@ export default function ShowcasePage({
               </Link>
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
               <span className="text-white/85">{product.name}</span>
-            </motion.nav>
-            <motion.p
-              variants={heroLine}
-              className="flex items-center gap-2.5 font-mono text-[11.5px] font-semibold tracking-[0.28em] text-white/80 uppercase [&:lang(th)]:tracking-[0.06em]"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
-              {text(showcase.eyebrow)}
-            </motion.p>
-            <motion.h1
-              variants={heroLine}
-              className="mt-3 font-display text-5xl leading-[1.02] font-extrabold tracking-tight sm:text-6xl lg:text-7xl"
-            >
+            </nav>
+            <MetaLine onPhoto>{text(showcase.eyebrow)}</MetaLine>
+            {/* the brand and the model in one colour */}
+            <h1 className="mt-2 font-display text-display">
               {brandPart && <>{brandPart} </>}
-              <span className="text-accent-gradient whitespace-nowrap">{product.name}</span>
-            </motion.h1>
+              <span className="whitespace-nowrap">{product.name}</span>
+            </h1>
             {product.conditions.length > 0 && (
-              <motion.div variants={heroLine} className="mt-4">
-                <ConditionLine conditions={product.conditions} tone="dark" />
-              </motion.div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {product.conditions.map((c) => (
+                  <Badge key={c} tone="onPhoto">
+                    {tcond(c === "new" ? "new" : "preOwned")}
+                  </Badge>
+                ))}
+              </div>
             )}
             {/* other versions of the robot: one page each, switched here */}
             {models && (
-              <motion.nav
-                variants={heroLine}
+              <nav
                 aria-label={t("models")}
-                className="mt-5 inline-flex flex-wrap gap-1 rounded-full border border-white/15 bg-white/[0.06] p-1"
+                className="mt-5 inline-flex flex-wrap gap-1 rounded-control border border-white/15 p-1"
               >
                 {models.map((model) =>
                   model.id === product.id ? (
                     <span
                       key={model.id}
                       aria-current="page"
-                      className="inline-flex min-h-10 items-center rounded-full bg-white px-5 text-[14px] font-bold text-[#0b0d10]"
+                      className="inline-flex min-h-10 items-center rounded-control bg-white px-4 text-small font-semibold text-forest-950"
                     >
                       {model.name}
                     </span>
@@ -278,58 +219,32 @@ export default function ShowcasePage({
                     <Link
                       key={model.id}
                       href={`/products/${model.id}`}
-                      className="inline-flex min-h-10 items-center rounded-full px-5 text-[14px] font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white"
+                      className="inline-flex min-h-10 items-center rounded-control px-4 text-small font-medium text-white/75 transition-colors duration-150 hover:bg-white/10 hover:text-white"
                     >
                       {model.name}
                     </Link>
                   )
                 )}
-              </motion.nav>
+              </nav>
             )}
-            <motion.p
-              variants={heroLine}
-              className="mt-5 max-w-md text-[16px] leading-relaxed text-white/80 sm:text-lg"
-            >
+            <p className="mt-5 max-w-md text-lead text-white/80">
               {text(product.tagline)}
-            </motion.p>
-            <motion.div variants={heroLine} className="mt-8 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={quote}
-                className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-accent-gradient px-7 text-[15px] font-bold"
-              >
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Button size="lg" onClick={quote}>
                 {t("getQuote")}
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <Link
-                href="/products/request-a-demo"
-                className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/35 px-6 text-[15px] font-semibold text-white transition-colors hover:border-white"
-              >
-                <Calendar className="h-4 w-4" aria-hidden="true" />
+              </Button>
+              <Button href="/products/request-a-demo" size="lg" variant="onPhoto">
                 {t("bookDemo")}
-              </Link>
-            </motion.div>
-          </motion.div>
+              </Button>
+            </div>
+          </div>
           <div
             className={`relative order-1 mx-auto w-full lg:order-2 lg:max-w-none ${
               colors ? "max-w-xl" : "max-w-md"
             }`}
           >
-            {/* light blooming behind the robot as it arrives */}
-            <motion.div
-              aria-hidden="true"
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.6, ease: EASE }}
-              className="absolute inset-[8%] rounded-full bg-[radial-gradient(closest-side,rgb(var(--accent-rgb)/0.28),rgb(var(--accent-rgb)/0.08)_55%,transparent)] blur-2xl"
-            />
-            {/* arrives rising into place; the photo then floats on its own */}
-            <motion.div
-              initial={{ opacity: 0, y: 60, scale: 0.92 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 1.1, ease: EASE }}
-              className="relative"
-            >
+            <div className="relative">
               {colors ? (
                 <div className="flex items-end justify-center gap-1 sm:gap-4">
                   {colors.map((color) => (
@@ -342,7 +257,7 @@ export default function ShowcasePage({
                   ))}
                 </div>
               ) : (
-                <div className="animate-hero-float">
+                <div>
                   {heroImage ? (
                     // eslint-disable-next-line @next/next/no-img-element -- any Admin URL
                     <img
@@ -358,39 +273,26 @@ export default function ShowcasePage({
                   )}
                 </div>
               )}
-            </motion.div>
+            </div>
           </div>
         </div>
 
         {/* ---- key figures ---- */}
         {showcase.figures.length > 0 && (
           <div className="relative border-t border-white/10">
-            {/* a blue line drawing across as the figures come in */}
-            <motion.span
-              aria-hidden="true"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: 0.2, ease: EASE }}
-              className="absolute -top-px left-0 h-px w-full origin-left bg-gradient-to-r from-transparent via-accent to-transparent"
-            />
             <dl className="mx-auto grid max-w-7xl grid-cols-2 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
               {showcase.figures.map((figure, i) => (
-                <motion.div
+                <div
                   key={`${i}-${figure.value}`}
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.6 }}
-                  transition={{ duration: 0.6, delay: 0.1 + i * 0.1, ease: EASE }}
                   className={`py-7 lg:py-9 ${i % 2 === 1 ? "pl-5 lg:pl-8" : "lg:pl-8"} ${
                     i > 0 ? "lg:border-l lg:border-white/10" : "lg:pl-0"
                   } ${i === 1 ? "border-l border-white/10" : ""} ${i === 3 ? "border-l border-white/10" : ""}`}
                 >
-                  <dt className="order-2 mt-1.5 text-[13px] text-white/60">{text(figure.label)}</dt>
-                  <dd className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+                  <dt className="order-2 mt-1.5 text-small text-white/60">{text(figure.label)}</dt>
+                  <dd className="font-display text-title">
                     {figure.value}
                   </dd>
-                </motion.div>
+                </div>
               ))}
             </dl>
           </div>
@@ -400,19 +302,17 @@ export default function ShowcasePage({
       {/* ---- one photo per feature ---- */}
       {features.map((feature, i) => (
         <section key={`${i}-${feature.image}`} className="bg-surface pt-20 sm:pt-28">
-          <FadeIn className="mx-auto max-w-2xl px-4 text-center sm:px-6">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             {feature.eyebrow && (
-              <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-accent-600 uppercase [&:lang(th)]:tracking-[0.06em]">
-                {text(feature.eyebrow)}
-              </p>
+              <MetaLine>{text(feature.eyebrow)}</MetaLine>
             )}
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
+            <h2 className="mt-2 max-w-2xl font-display text-title text-content">
               {text(feature.heading)}
             </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-ink-muted sm:text-lg">
+            <p className="mt-4 max-w-2xl text-lead text-ink-muted">
               {text(feature.body)}
             </p>
-          </FadeIn>
+          </div>
           <FeaturePhoto src={feature.image} alt={`${label}: ${text(feature.heading)}`} />
         </section>
       ))}
@@ -426,34 +326,28 @@ export default function ShowcasePage({
       {/* ---- specifications ---- */}
       {specs.length > 0 && (
         <section id="specs" className="bg-surface py-20 sm:py-28">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-center font-display text-3xl font-extrabold tracking-tight text-content sm:text-5xl">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <h2 className="font-display text-title text-content">
               {t("specsHeading")}
             </h2>
             <div className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
               {specs.map((group, i) => (
-                <motion.div
-                  key={`${i}-${group.title.en}`}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.6, delay: (i % 2) * 0.12, ease: EASE }}
-                >
-                  <h3 className="border-b-2 border-content pb-2 font-display text-lg font-bold text-content">
+                <div key={`${i}-${group.title.en}`}>
+                  <h3 className="border-b border-forest-300 pb-2 font-display text-heading text-content">
                     {text(group.title)}
                   </h3>
                   <dl>
                     {group.rows.map((row, j) => (
                       <div
                         key={`${j}-${row.label.en}`}
-                        className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-4 border-b border-forest-100 py-3 text-[14px]"
+                        className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-4 border-b border-forest-100 py-3 text-small"
                       >
                         <dt className="text-ink-muted">{text(row.label)}</dt>
                         <dd className="font-semibold text-content">{text(row.value)}</dd>
                       </div>
                     ))}
                   </dl>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -467,21 +361,16 @@ export default function ShowcasePage({
       )}
 
       {/* ---- closing call ---- */}
-      <section className="bg-[#0b0d10] py-20 text-center text-white sm:py-24">
-        <FadeIn className="mx-auto max-w-xl px-4">
-          <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-            {t("ctaHeading", { name: product.name })}
-          </h2>
-          <p className="mt-4 text-white/75">{t("ctaBody")}</p>
-          <button
-            type="button"
-            onClick={quote}
-            className="mt-8 inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-accent-gradient px-8 text-[15px] font-bold"
-          >
+      <section className="bg-forest-950 py-16 text-white sm:py-24">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-6 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-xl">
+            <h2 className="font-display text-title">{t("ctaHeading", { name: product.name })}</h2>
+            <p className="mt-3 text-lead text-white/75">{t("ctaBody")}</p>
+          </div>
+          <Button size="lg" onClick={quote}>
             {t("getQuote")}
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </FadeIn>
+          </Button>
+        </div>
       </section>
     </main>
   );

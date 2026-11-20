@@ -5,14 +5,13 @@ import { organizationJsonLd } from "@/lib/structuredData";
 import { getSiteContent } from "@/lib/siteContentStore";
 import JsonLd from "@/components/seo/JsonLd";
 import HeroSection from "@/components/sections/HeroSection";
-import ProductGrid from "@/components/sections/ProductGrid";
-import { FamilyBanner, MoreFamilies } from "@/components/sections/RobotShowcase";
+import RobotLineup from "@/components/sections/RobotLineup";
+import { FamilyBanner, FamilyRows } from "@/components/sections/RobotShowcase";
 import { featuredFamilies, moreFamilies, onShow } from "@/data/homeShowcase";
 import { getAllProducts } from "@/lib/productStore";
 import VideoShowcase from "@/components/sections/VideoShowcase";
-import TrustSection from "@/components/sections/TrustSection";
-import WhyUsSection from "@/components/sections/WhyUsSection";
-import YouTubeCTA from "@/components/sections/YouTubeCTA";
+import ServicePromise from "@/components/sections/ServicePromise";
+import { pick } from "@/data/siteContent";
 
 // Title and description come from the layout (Admin → Content → SEO); the homepage
 // only needs to claim its own canonical, which the layout deliberately no
@@ -33,7 +32,7 @@ export default async function Home({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [{ contact }, products] = await Promise.all([getSiteContent(), getAllProducts()]);
+  const [{ contact, home, about }, products] = await Promise.all([getSiteContent(), getAllProducts()]);
   // banners for robots still hidden in Admin (no photos yet) are left out
   const [phantas] = onShow([featuredFamilies[1]], products);
   const more = onShow(moreFamilies, products);
@@ -50,17 +49,19 @@ export default async function Home({
           own), then the full-width Phantas banner, then Pudu and T-Chef
           sharing a row. The mower technology scroll story (FeatureShowcase)
           left the homepage — it suits the mower category page. */}
-      <ProductGrid />
+      <RobotLineup />
       {phantas && <FamilyBanner family={phantas} />}
-      {more.length > 0 && <MoreFamilies families={more} />}
+      {more.length > 0 && <FamilyRows families={more} />}
       <VideoShowcase />
-      <TrustSection />
-      <WhyUsSection />
-      {/* NewsSection is hidden for launch — the items in messages/*.json "news"
-          are placeholder posts about Mammotion, not FindMyRobo's own news. The
-          component and its copy are still in the repo: re-import it and drop
-          <NewsSection /> back here once there are real posts to show. */}
-      <YouTubeCTA />
+      {/* who we are: one section, its facts and promises shared with About */}
+      <ServicePromise
+        heading={pick(home.trustHeading, locale)}
+        body={pick(home.trustBody, locale)}
+        photo={about.storyImage}
+        photoAlt={pick(home.trustHeading, locale)}
+        facts={about.stats.map((stat) => ({ value: stat.value, label: pick(stat.label, locale) }))}
+        promises={about.values.map((value) => ({ title: pick(value.title, locale), body: pick(value.body, locale) }))}
+      />
     </main>
   );
 }

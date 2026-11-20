@@ -68,13 +68,11 @@ interface NavItem {
   current?: boolean;
 }
 
-/** Small uppercase label over a group of links. */
-const groupHeadingClass =
-  "font-mono text-[10.5px] font-semibold tracking-[0.2em] text-ink-muted uppercase [&:lang(th)]:tracking-[0.04em]";
+/** Small label over a group of links. */
+const groupHeadingClass = "text-caption font-medium text-ink-muted";
 
 /** Label over a group inside the blue panels. */
-const panelLabelClass =
-  "font-mono text-[10px] font-semibold tracking-[0.2em] text-[color:var(--nav-tab-faint)] uppercase [&:lang(th)]:tracking-[0.04em]";
+const panelLabelClass = "text-caption font-medium text-[color:var(--nav-tab-faint)]";
 
 /** The bar's colour, painted on the whole shape: the bar colour across the
  *  bar row only, and the panel colour below it. One background, so the shape
@@ -85,17 +83,7 @@ const barBackground =
 
 /** Card shell shared by everything inside an open panel. */
 const panelCardClass =
-  "group relative flex overflow-hidden rounded-xl border border-forest-100 bg-[color:var(--nav-card)] transition-[border-color,box-shadow] duration-300 hover:border-accent/50 hover:shadow-[0_10px_24px_-14px_rgb(31_79_214/0.45)]";
-
-/** A faint sky-blue light that rises in a panel card on hover. */
-function CardGlow() {
-  return (
-    <span
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgb(79_184_255/0.16),transparent_60%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-    />
-  );
-}
+  "group relative flex overflow-hidden rounded-card border border-forest-100 bg-[color:var(--nav-card)] transition-colors duration-150 hover:border-forest-300";
 
 /** A category's robots as photo cards, then a card for the whole category. */
 function CategoryPanel({
@@ -122,16 +110,15 @@ function CategoryPanel({
       {models.map((model) => (
         <li key={model.key}>
           <Link href={model.href} onClick={onNavigate} className={`${panelCardClass} h-[172px] flex-col p-3`}>
-            <CardGlow />
             <span className="relative flex min-h-0 flex-1 items-center justify-center">
               <ProductVisual
                 product={model.product}
-                className="h-full max-h-[108px] w-full drop-shadow-[0_10px_12px_rgb(10_26_74/0.18)] transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                className="h-full max-h-[108px] w-full"
               />
             </span>
             <span className="relative mt-2 block text-center">
-              {model.brand && <span className={`block ${panelLabelClass} text-[9.5px]`}>{model.brand}</span>}
-              <span className="mt-0.5 block truncate text-[12.5px] font-semibold text-content">{model.name}</span>
+              {model.brand && <span className={`block ${panelLabelClass}`}>{model.brand}</span>}
+              <span className="mt-0.5 block truncate text-small font-semibold text-content">{model.name}</span>
             </span>
           </Link>
         </li>
@@ -142,21 +129,17 @@ function CategoryPanel({
           onClick={onNavigate}
           className={`${panelCardClass} h-[172px] flex-col justify-between p-4`}
         >
-          <CardGlow />
           <span className="relative">
-            <span className="block font-display text-[15px] leading-tight font-bold text-content">
+            <span className="block font-display text-body font-semibold text-content">
               {tc(`${category}.name`)}
             </span>
-            <span className="mt-1.5 line-clamp-3 block text-[11.5px] leading-relaxed text-[color:var(--nav-tab-muted)]">
+            <span className="mt-1.5 line-clamp-3 block text-caption text-[color:var(--nav-tab-muted)]">
               {tc(`${category}.description`)}
             </span>
           </span>
-          <span className="relative inline-flex items-center gap-1 text-[12px] font-semibold text-accent-600 underline-offset-4 group-hover:underline">
+          <span className="relative inline-flex items-center gap-1 text-small font-semibold text-accent-600 underline-offset-4 group-hover:underline">
             {t("viewAll")}
-            <ArrowRight
-              className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </span>
         </Link>
       </li>
@@ -169,7 +152,7 @@ function GroupsPanel({ groups, onNavigate }: { groups: NavGroup[]; onNavigate: (
   return (
     <div className="grid grid-cols-3 gap-3">
       {groups.map((group) => (
-        <div key={group.heading} className="rounded-xl border border-forest-100 bg-[color:var(--nav-card)] p-2">
+        <div key={group.heading} className="rounded-control border border-forest-100 bg-[color:var(--nav-card)] p-2">
           <p className={`px-2 pt-1.5 pb-2 ${panelLabelClass}`}>{group.heading}</p>
           {group.items.map((item) => {
             const Icon = item.icon;
@@ -178,10 +161,10 @@ function GroupsPanel({ groups, onNavigate }: { groups: NavGroup[]; onNavigate: (
                 key={item.label}
                 href={item.href}
                 onClick={onNavigate}
-                className="group/item flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-[12.5px] font-semibold text-content transition-colors hover:bg-cloud hover:text-accent-600"
+                className="group/item flex items-center gap-2.5 rounded-control px-2 py-1.5 text-small font-semibold text-content transition-colors hover:bg-cloud hover:text-accent-600"
               >
                 {Icon && (
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-accent-50 text-accent-600 transition-colors group-hover/item:bg-accent group-hover/item:text-white">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-control bg-accent-50 text-accent-600 transition-colors group-hover/item:bg-accent group-hover/item:text-white">
                     <Icon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                 )}
@@ -210,7 +193,7 @@ function SearchPanel({
     <div>
       <CatalogSearch
         className="block"
-        inputClassName="h-11 w-full rounded-xl border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-[14px] text-content placeholder:text-[color:var(--nav-tab-faint)] transition-colors focus:border-accent focus:outline-none focus-visible:outline-none!"
+        inputClassName="h-11 w-full rounded-control border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-body text-content placeholder:text-[color:var(--nav-tab-faint)] transition-colors focus:border-accent focus:outline-none focus-visible:outline-none!"
         dropdownClassName="static! mt-3 w-full shadow-none!"
         onNavigate={onNavigate}
       />
@@ -221,7 +204,7 @@ function SearchPanel({
             key={category.slug}
             href={categoryHref(category.slug)}
             onClick={onNavigate}
-            className="rounded-full border border-forest-100 bg-[color:var(--nav-card)] px-3 py-1 text-[12px] font-semibold text-ink-muted transition-colors hover:border-accent hover:text-accent-600"
+            className="rounded-control border border-forest-100 bg-[color:var(--nav-card)] px-3 py-1 text-caption font-semibold text-ink-muted transition-colors hover:border-accent hover:text-accent-600"
           >
             {category.label}
           </Link>
@@ -298,7 +281,6 @@ export default function Navbar() {
     pathname === "/about" ||
     pathname === "/contact-sales" ||
     pathname === "/location" ||
-    pathname === "/recommend" ||
     pathname.startsWith("/products/request-a-demo");
 
   // A category's robots: the products shown on the storefront (hidden ones,
@@ -338,10 +320,10 @@ export default function Navbar() {
         {
           heading: t("groupCompany"),
           items: [
-            // The full page first; the two below are still homepage anchors.
+            // The full page first, then two of its sections.
             { label: t("aboutUs"), href: "/about", icon: Building2 },
-            { label: t("aboutStory"), href: "/#about", icon: BookOpen },
-            { label: t("aboutPartners"), href: "/#about", icon: Handshake },
+            { label: t("aboutStory"), href: "/about#story", icon: BookOpen },
+            { label: t("aboutPartners"), href: "/about#partner", icon: Handshake },
           ],
         },
         {
@@ -448,7 +430,7 @@ export default function Navbar() {
         layoutId="nav-highlight"
         aria-hidden="true"
         transition={{ type: "spring", stiffness: 500, damping: 38 }}
-        className={`absolute inset-0 rounded-lg ${strong ? "bg-[color:var(--nav-highlight)]" : "bg-[color:var(--nav-highlight)]/60"}`}
+        className={`absolute inset-0 rounded-control ${strong ? "bg-[color:var(--nav-highlight)]" : "bg-[color:var(--nav-highlight)]/60"}`}
       />
     );
 
@@ -458,8 +440,11 @@ export default function Navbar() {
       // Everything lives in one blue bar that hangs from the top edge; the
       // header around it is see-through and lets clicks through its edges.
       // Its height is fixed to the bar's, so an open panel spills over the
-      // page instead of pushing the page down.
-      className="pointer-events-none sticky top-0 z-50 h-[var(--nav-h)]"
+      // page instead of pushing the page down. overflow-x-clip: on narrow
+      // screens the bar's curved corner notches reach 2 px past the screen
+      // edge, which made the whole page scroll sideways; menus hang down,
+      // which clip-x leaves alone (clip, unlike hidden, keeps sticky working).
+      className="pointer-events-none sticky top-0 z-50 h-[var(--nav-h)] overflow-x-clip"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
@@ -467,10 +452,10 @@ export default function Navbar() {
           // `nav-scope` re-points the colour tokens, so everything inside that
           // uses them (language switch, profile menu, search) reads in navy on
           // the light blue, and the dropdowns open pale.
-          className={`nav-scope pointer-events-auto relative rounded-b-2xl text-content transition-shadow duration-300 ${
+          className={`nav-scope pointer-events-auto relative rounded-b-card text-content ${
             scrolled
-              ? "shadow-[0_18px_40px_-16px_rgb(10_26_74/0.4)] dark:shadow-[0_18px_40px_-14px_rgb(0_0_0/0.7)]"
-              : "shadow-[0_14px_32px_-18px_rgb(10_26_74/0.35)] dark:shadow-[0_14px_32px_-16px_rgb(0_0_0/0.6)]"
+              ? "shadow-float"
+              : "shadow-float"
           }`}
           style={{ background: barBackground }}
           onMouseEnter={() => {
@@ -519,21 +504,21 @@ export default function Navbar() {
               href="/"
               aria-label="FindMyRobo home"
               // the full-colour logo; its white version on the navy dark bar
-              className="flex shrink-0 items-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+              className="flex shrink-0 items-center rounded-control focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
             >
               <Image
                 src="/main-logo-light.png"
                 alt="FindMyRobo"
-                width={1200}
-                height={320}
+                width={135}
+                height={36}
                 priority
                 className="h-9 w-auto dark:hidden"
               />
               <Image
                 src="/main-logo-dark.png"
                 alt=""
-                width={1200}
-                height={320}
+                width={135}
+                height={36}
                 priority
                 className="hidden h-9 w-auto dark:block"
               />
@@ -562,7 +547,7 @@ export default function Navbar() {
                       }}
                       onFocus={() => setPointed(linkIndex)}
                       onClick={() => (isOpen ? closeMenu() : showMenu(linkIndex))}
-                      className={`relative flex cursor-pointer items-center gap-1 rounded-lg px-3 py-1.5 text-[13px] font-semibold whitespace-nowrap [&:lang(th)]:px-2 [&:lang(th)]:text-[12.5px] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
+                      className={`relative flex cursor-pointer items-center gap-1 rounded-control px-3 py-1.5 text-small font-semibold whitespace-nowrap [&:lang(th)]:px-2 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
                         lit ? "text-[color:var(--nav-navy)]" : "text-[color:var(--nav-ink)] hover:text-[color:var(--nav-navy)]"
                       }`}
                     >
@@ -577,7 +562,7 @@ export default function Navbar() {
                       <span className="relative">{link.label}</span>
                       {link.groups && (
                         <ChevronDown
-                          className={`relative h-3.5 w-3.5 opacity-80 transition-transform duration-300 ${
+                          className={`relative h-3.5 w-3.5 opacity-80 transition-transform duration-200 ${
                             isOpen ? "rotate-180" : ""
                           }`}
                           aria-hidden="true"
@@ -600,7 +585,7 @@ export default function Navbar() {
                   onMouseEnter={() => setPointed(searchIndex)}
                   onFocus={() => setPointed(searchIndex)}
                   onClick={() => (searchOpen ? closeMenu() : showMenu(searchIndex))}
-                  className={`relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
+                  className={`relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-control transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-accent ${
                     searchOpen || pointed === searchIndex ? "text-[color:var(--nav-navy)]" : "text-[color:var(--nav-ink)]"
                   }`}
                 >
@@ -633,7 +618,7 @@ export default function Navbar() {
                 >
                   <CartIcon className="h-5 w-5" />
                   {count > 0 && (
-                    <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-0.5 font-mono text-[10px] font-bold text-on-accent">
+                    <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-0.5 text-caption font-bold text-on-accent">
                       {count}
                     </span>
                   )}
@@ -645,7 +630,7 @@ export default function Navbar() {
                 // Folds away (width and fade) while the hero's quote strip is
                 // on screen; the grid column animates from 0fr to 1fr.
                 <div
-                  className={`grid transition-[grid-template-columns,opacity,margin] duration-300 ease-out motion-reduce:transition-none ${
+                  className={`grid transition-[grid-template-columns,opacity,margin] duration-200 ease-out motion-reduce:transition-none ${
                     hideBarQuote ? "ml-0 grid-cols-[0fr] opacity-0" : "ml-1 grid-cols-[1fr] opacity-100"
                   }`}
                   inert={hideBarQuote ? true : undefined}
@@ -655,14 +640,10 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => openQuote()}
-                  className="group flex h-10 min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-accent px-2.5 text-[13px] font-bold whitespace-nowrap text-on-accent shadow-[0_6px_16px_-8px_rgb(var(--accent-rgb)/0.8)] transition-all duration-300 hover:bg-accent-strong hover:shadow-[0_8px_22px_-6px_rgb(var(--accent-rgb)/0.8)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.97] motion-reduce:transition-none sm:px-4"
+                  className="flex h-10 min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-control bg-accent px-2.5 text-small font-semibold whitespace-nowrap text-on-accent transition-[background-color,scale] duration-150 ease-out hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.97] sm:px-4"
                 >
                   <CartIcon className="h-[18px] w-[18px] shrink-0 sm:hidden" />
                   <span className="max-sm:sr-only">{t("getQuote")}</span>
-                  <ArrowRight
-                    className="hidden h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transition-none sm:block"
-                    aria-hidden="true"
-                  />
                 </button>
                 </div>
                 </div>
@@ -672,7 +653,7 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setOpen(true)}
                 aria-label={t("openMenu")}
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-[color:var(--nav-line)] text-[color:var(--nav-navy)] transition-colors hover:bg-cloud xl:hidden"
+                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-control border border-[color:var(--nav-line)] text-[color:var(--nav-navy)] transition-colors hover:bg-cloud xl:hidden"
               >
                 <Menu className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -686,7 +667,7 @@ export default function Navbar() {
             initial={false}
             animate={{ height: menuOpen ? panelH : 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            className="overflow-hidden rounded-b-2xl"
+            className="overflow-hidden rounded-b-card"
           >
             <div ref={panelRef} id="nav-panel" inert={!menuOpen} aria-hidden={!menuOpen}>
               {shownMenu !== null && (
@@ -751,15 +732,15 @@ export default function Navbar() {
                 <Image
                   src="/main-logo-light.png"
                   alt="FindMyRobo"
-                  width={1200}
-                  height={320}
+                  width={135}
+                  height={36}
                   className="h-9 w-auto dark:hidden"
                 />
                 <Image
                   src="/main-logo-dark.png"
                   alt=""
-                  width={1200}
-                  height={320}
+                  width={135}
+                  height={36}
                   className="hidden h-9 w-auto dark:block"
                 />
                 <button
@@ -775,26 +756,21 @@ export default function Navbar() {
               <div className="flex-1 overflow-y-auto px-5 py-6">
                 <CatalogSearch
                   className="mb-6 block"
-                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-sm text-content placeholder:text-[color:var(--nav-tab-faint)] focus:border-accent focus:outline-none focus-visible:outline-none!"
+                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-small text-content placeholder:text-[color:var(--nav-tab-faint)] focus:border-accent focus:outline-none focus-visible:outline-none!"
                   dropdownClassName="inset-x-0 w-full"
                   onNavigate={() => setOpen(false)}
                 />
                 <p className={`mb-1 px-4 ${groupHeadingClass}`}>{t("productsHeading")}</p>
                 <ul className="space-y-1">
                   {navLinks.map((link, i) => (
-                    <motion.li
-                      key={link.label}
-                      initial={{ opacity: 0, x: 24 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.08 + i * 0.04, duration: 0.3 }}
-                    >
+                    <li key={link.label}>
                       {/* the categories, then a rule before About */}
                       {!link.category && <div className="mx-4 my-3 h-px bg-forest-100" aria-hidden="true" />}
                       <button
                         type="button"
                         onClick={() => setExpanded(expanded === i ? null : i)}
                         aria-expanded={expanded === i}
-                        className={`flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-xl px-4 text-left text-[15px] font-bold transition-colors hover:bg-cloud hover:text-accent-600 ${
+                        className={`flex min-h-[48px] w-full cursor-pointer items-center justify-between rounded-control px-4 text-left text-body font-bold transition-colors hover:bg-cloud hover:text-accent-600 ${
                           link.current ? "text-accent-600" : "text-content"
                         }`}
                       >
@@ -831,7 +807,7 @@ export default function Navbar() {
                                       <Link
                                         href={model.href}
                                         onClick={() => setOpen(false)}
-                                        className="flex min-h-[44px] flex-col justify-center rounded-lg px-3 py-2 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
+                                        className="flex min-h-[44px] flex-col justify-center rounded-control px-3 py-2 text-small text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
                                       >
                                         <span>{productLabel(model.product)}</span>
                                         {showsCondition(model.product.conditions) && (
@@ -844,7 +820,7 @@ export default function Navbar() {
                                     <Link
                                       href={categoryHref(link.category)}
                                       onClick={() => setOpen(false)}
-                                      className="flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 text-[14px] font-semibold text-accent-600 transition-colors hover:bg-cloud"
+                                      className="flex min-h-[44px] items-center gap-1.5 rounded-control px-3 text-small font-semibold text-accent-600 transition-colors hover:bg-cloud"
                                     >
                                       {t("viewAll")}
                                       <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -861,7 +837,7 @@ export default function Navbar() {
                                           <Link
                                             href={item.href}
                                             onClick={() => setOpen(false)}
-                                            className="flex min-h-[44px] items-center rounded-lg px-3 text-[14px] text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
+                                            className="flex min-h-[44px] items-center rounded-control px-3 text-small text-ink-muted transition-colors hover:bg-cloud hover:text-accent-600"
                                           >
                                             {item.label}
                                           </Link>
@@ -875,7 +851,7 @@ export default function Navbar() {
                           </motion.div>
                         )}
                       </AnimatePresence>
-                    </motion.li>
+                    </li>
                   ))}
                 </ul>
 
