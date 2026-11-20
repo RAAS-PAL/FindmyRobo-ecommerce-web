@@ -25,8 +25,9 @@ function youTubeId(url: string): string | null {
   return m ? m[1] : null;
 }
 
-function GalleryCard({ video }: { video: GalleryVideo }) {
-  const [playing, setPlaying] = useState(false);
+export function GalleryCard({ video, autoPlay = false }: { video: GalleryVideo; autoPlay?: boolean }) {
+  // autoPlay: chosen from the list beside the player, so it starts at once
+  const [playing, setPlaying] = useState(autoPlay);
   const id = youTubeId(video.url);
   const poster = video.poster || (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : "");
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -144,38 +145,66 @@ function GalleryCard({ video }: { video: GalleryVideo }) {
   );
 }
 
+/**
+ * The videos as one large player with the list of clips beside it (below it
+ * on phones), not a grid of same-sized tiles. Choosing a clip from the list
+ * puts it in the player and starts it.
+ */
 export default function VideoShowcase() {
   const t = useTranslations("videoShowcase");
   const { home, contact } = useSiteContent();
   const videos = home.videoGallery;
-  // the YouTube channel is this section's link, not a section of its own
-  const channelUrl = contact.socials.youtube;
+  // [clip on show, whether it was picked from the list]
+  const [[current, picked], setCurrent] = useState<[number, boolean]>([0, false]);
   // no videos in the CMS: no section, rather than an empty placeholder
   if (videos.length === 0) return null;
+  // the YouTube channel is this section's link, not a section of its own
+  const channelUrl = contact.socials.youtube;
 
   return (
-    <section className="bg-surface py-16 sm:py-24">
+    <section className="bg-surface py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title={t("heading")}
           action={channelUrl ? <TextLink href={channelUrl}>{t("channel")}</TextLink> : undefined}
         />
-
-        {videos.length === 1 ? (
-          // a lone video reads better as one wide card than a half-empty row
-          <div className="mt-10 max-w-3xl">
-            <GalleryCard video={videos[0]} />
-          </div>
-        ) : (
-          // the first two are the big cards, the rest fill the next rows
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-6">
-            {videos.map((video, i) => (
-              <div key={`${video.url}-${i}`} className={i < 2 ? "lg:col-span-3" : "lg:col-span-2"}>
-                <GalleryCard video={video} />
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="mt-10 grid gap-8 lg:grid-cols-[1.9fr_1fr] lg:gap-12">
+          <GalleryCard key={current} video={videos[current]} autoPlay={picked} />
+          {videos.length > 1 && (
+            <ul className="border-t border-forest-100 dark:border-forest-700">
+              {videos.map((video, i) => (
+                <li key={`${video.url}-${i}`} className="border-b border-forest-100 dark:border-forest-700">
+                  <button
+                    type="button"
+                    onClick={() => setCurrent([i, true])}
+                    aria-current={i === current}
+                    className="group flex w-full cursor-pointer items-center gap-4 py-3 text-left"
+                  >
+                    {video.poster && (
+                      // eslint-disable-next-line @next/next/no-img-element -- CMS poster, any host
+                      <img
+                        src={video.poster}
+                        alt=""
+                        loading="lazy"
+                        className="h-14 w-24 shrink-0 rounded-control object-cover"
+                      />
+                    )}
+                    <span className="min-w-0">
+                      <span
+                        className={`block truncate text-body font-semibold underline-offset-4 group-hover:underline ${
+                          i === current ? "text-accent-600" : "text-content"
+                        }`}
+                      >
+                        {video.title}
+                      </span>
+                      {video.tag && <span className="block truncate text-small text-ink-muted">{video.tag}</span>}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </section>
   );
