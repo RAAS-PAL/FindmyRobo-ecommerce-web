@@ -5,7 +5,7 @@ import { organizationJsonLd } from "@/lib/structuredData";
 import { getSiteContent } from "@/lib/siteContentStore";
 import JsonLd from "@/components/seo/JsonLd";
 import HeroSection from "@/components/sections/HeroSection";
-import ProductGrid from "@/components/sections/ProductGrid";
+import RobotLineup from "@/components/sections/RobotLineup";
 import { FamilyBanner, MoreFamilies } from "@/components/sections/RobotShowcase";
 import { featuredFamilies, moreFamilies, onShow } from "@/data/homeShowcase";
 import { getAllProducts } from "@/lib/productStore";
@@ -49,7 +49,7 @@ export default async function Home({
           own), then the full-width Phantas banner, then Pudu and T-Chef
           sharing a row. The mower technology scroll story (FeatureShowcase)
           left the homepage — it suits the mower category page. */}
-      <ProductGrid />
+      <RobotLineup />
       {phantas && <FamilyBanner family={phantas} />}
       {more.length > 0 && <MoreFamilies families={more} />}
       <VideoShowcase />
