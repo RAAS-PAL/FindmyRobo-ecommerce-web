@@ -7,10 +7,8 @@
     "aboutPartners": "Partners",
     "contact": "Contact",
     "contactSales": "Contact Sales",
-    "contactTouch": "Get in Touch",
     "contactDemo": "Book a Demo",
     "contactLocations": "Location",
-    "support": "Support",
     "blog": "Blog",
     "searchPlaceholder": "What are you looking for?",
     "searchNoResults": "No products found for “{query}”",
@@ -716,7 +714,7 @@
     "metaTitle": "Contact Sales — FindMyRobo",
     "eyebrow": "Sales Team",
     "heading": "Talk to Our Sales Team",
-    "sub": "Questions about which robot fits your garden, pool, or business? Our specialists reply fast — call, email, or chat with us on LINE.",
+    "sub": "Questions about which robot fits your garden or business? Our specialists reply fast — call, email, or chat with us on LINE.",
     "phoneLabel": "Call us",
     "emailLabel": "Email us",
     "emailHint": "We reply within one business day",
@@ -1016,6 +1014,11 @@
     },
     "successTitle": "Request received",
     "successBody": "Thanks, {name}. We’ll call {phone} within one business day with your quotation.",
+    "demoTitle": "Book a demo",
+    "demoSub": "A few details, and we’ll call to set a time.",
+    "demoSubmit": "Request a demo",
+    "demoSuccessBody": "Thanks, {name}. We’ll call {phone} within one business day to set a time for the demo.",
+    "demoReassure": "No obligation · Reply within 1 business day",
     "sending": "Sending",
     "sendError": "We couldn’t send that. Check your connection and try again.",
     "rateLimited": "Too many attempts. Please wait a few minutes and try again.",
@@ -1045,7 +1048,6 @@
     "pause": "Pause the slideshow",
     "play": "Play the slideshow",
     "explore": "Explore",
-    "learnMore": "Learn more",
     "getQuote": "Get a quote",
     "bookDemo": "Book a demo",
     "photoComing": "Photo coming",
@@ -1253,7 +1255,6 @@
     "about": [
       "About Us",
       "Contact",
-      "Support",
       "Find My Robot"
     ],
     "paymentNote": "Secure checkout — payment options at launch:"
@@ -1316,7 +1317,6 @@
     "back": "Back",
     "seeResults": "See my robots",
     "startAgain": "Start again",
-    "viewRobot": "View robot",
     "sqm": "m²",
     "job": {
       "question": "What do you need a robot for?",
@@ -1412,6 +1412,7 @@
       "areaCovers": "Rated for up to {capacity, number} m², your lawn is {area, number} m²",
       "areaTooSmall": "Rated for up to {capacity, number} m², smaller than your {area, number} m²",
       "areaUnknown": "Rated area to be confirmed by our team",
+      "areaNotGiven": "Rated for up to {capacity, number} m², add your lawn size to check it fits",
       "slopeHandles": "Handles slopes up to {limit}%, yours is up to about {need}%",
       "slopeTooSteep": "Handles slopes up to {limit}%, yours is up to about {need}%",
       "slopeUnknown": "Slope rating to be confirmed by our team",
@@ -1454,5 +1455,10 @@
     "body": "The page may have moved.",
     "shop": "Browse robots",
     "home": "Back to the home page"
+  },
+  "viewLabel": {
+    "robot": "View {name}",
+    "list": "See all {name}",
+    "robots": "View robots"
   }
 }

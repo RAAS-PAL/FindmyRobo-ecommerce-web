@@ -5,7 +5,6 @@ import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowLeft,
   ArrowRight,
-  ArrowUpRight,
   Check,
   ChefHat,
   CircleHelp,
@@ -37,6 +36,7 @@ import {
   type SlopeBand,
   type Venue,
 } from "@/lib/recommend";
+import { useViewLabel } from "@/lib/useViewLabel";
 
 const JOB_ICONS: Record<Job, LucideIcon> = {
   lawn: Trees,
@@ -107,6 +107,7 @@ const REASON_TONE = {
 function ResultCard({ match, rank }: { match: Match; rank: number }) {
   const t = useTranslations("recommend");
   const tn = useTranslations("nav");
+  const viewLabel = useViewLabel();
   const { openQuote } = useQuote();
   const { product } = match;
   const reasonText = (r: Reason) => t(`reasons.${r.key}`, r.values ?? {});
@@ -143,13 +144,12 @@ function ResultCard({ match, rank }: { match: Match; rank: number }) {
             className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-small font-bold"
           >
             {tn("getQuote")}
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </button>
           <Link
             href={`/products/${product.id}`}
             className="inline-flex min-h-11 items-center rounded-full border border-forest-100 px-5 text-small font-semibold text-content transition-colors hover:border-accent"
           >
-            {t("viewRobot")}
+            {viewLabel(`/products/${product.id}`)}
           </Link>
         </div>
       </div>

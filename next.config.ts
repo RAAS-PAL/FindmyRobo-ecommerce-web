@@ -8,6 +8,14 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 const media = new URL(mediaBaseUrl);
 
 const nextConfig: NextConfig = {
+  // Build from scratch every time. Next 16.3 keeps Turbopack's build cache
+  // between builds by default, and Vercel restores it: the 2026-11-20 deploy
+  // shipped the new pages with the previous globals.css (old fonts and text
+  // sizes) although a clean build was correct.
+  experimental: {
+    turbopackFileSystemCacheForBuild: false,
+  },
+
   // next/image may optimise files from the S3 media host (lib/media.ts), e.g.
   // the homepage tiles' cut-outs. It follows NEXT_PUBLIC_MEDIA_BASE_URL.
   images: {

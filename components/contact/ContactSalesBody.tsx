@@ -113,7 +113,7 @@ export default function ContactSalesBody() {
           <p className="flex flex-wrap items-baseline gap-x-2 pt-2 text-small text-ink-muted">
             {t("demoNote")}
             <Link
-              href="/#contact"
+              href="/products/request-a-demo"
               className="inline-flex items-center gap-1.5 font-semibold text-accent-600 transition-colors hover:text-content"
             >
               <Calendar className="h-4 w-4" aria-hidden="true" />

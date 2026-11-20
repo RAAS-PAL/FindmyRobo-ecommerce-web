@@ -33,8 +33,10 @@ export default async function ShopList({
       )}
       {services.length > 0 && (
         <section className={robots.length > 0 ? "mt-16 sm:mt-24" : ""}>
-          <SectionHeader title={t("servicesHeading")} as="h2" />
-          <div className="mt-6 border-b border-forest-100">
+          {/* its own heading only under robots: on the Services page the page
+              title already says "Services" */}
+          {robots.length > 0 && <SectionHeader title={t("servicesHeading")} as="h2" />}
+          <div className={`border-b border-forest-100 ${robots.length > 0 ? "mt-6" : ""}`}>
             {services.map((service) => {
               const install = isInstallTier(service);
               return (

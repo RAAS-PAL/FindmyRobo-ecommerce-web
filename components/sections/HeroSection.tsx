@@ -12,6 +12,7 @@ import QuoteStrip from "@/components/quote/QuoteStrip";
 import Button from "@/components/ui/Button";
 import MetaLine from "@/components/ui/MetaLine";
 import { FADE } from "@/lib/motion";
+import { useViewLabel } from "@/lib/useViewLabel";
 
 /**
  * Homepage hero (2026-10-29, after dobot-robots.com): one robot family at a
@@ -40,6 +41,7 @@ export default function HeroSection() {
     [products]
   );
   const reduceMotion = useReducedMotion();
+  const viewLabel = useViewLabel();
   const [index, setIndex] = useState(0);
   const slide = slides[index % slides.length];
 
@@ -103,7 +105,7 @@ export default function HeroSection() {
               <p className="mt-5 max-w-xl text-lead text-ink-muted lg:text-white/85">{sub}</p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <Button href={slide.href} size="lg">
-                  {t("learnMore")}
+                  {viewLabel(slide.href)}
                 </Button>
                 {slide.interest === "lawn-mowing" && (
                   <Button

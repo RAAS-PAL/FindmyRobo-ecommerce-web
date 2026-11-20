@@ -293,6 +293,10 @@ export const ROBOT_VARIANTS: RobotVariant[] = [
 /** Category whose products are services (installation, demos) rather than robots. */
 export const SERVICE_CATEGORY = "services" as const;
 
+/** A demo booking (Request a Demo and its area bands), not a robot or installation. */
+export const isDemoService = (p?: Pick<Product, "category" | "variant">): boolean =>
+  !!p && p.category === SERVICE_CATEGORY && p.variant === "demo";
+
 /**
  * Brand assumed when a product row predates add-product-brand.sql or the admin
  * left the field blank. Mirrors the column default in that migration — keep
