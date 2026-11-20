@@ -6,7 +6,7 @@ import { getSiteContent } from "@/lib/siteContentStore";
 import JsonLd from "@/components/seo/JsonLd";
 import HeroSection from "@/components/sections/HeroSection";
 import RobotLineup from "@/components/sections/RobotLineup";
-import { FamilyBanner, MoreFamilies } from "@/components/sections/RobotShowcase";
+import { FamilyBanner, FamilyRows } from "@/components/sections/RobotShowcase";
 import { featuredFamilies, moreFamilies, onShow } from "@/data/homeShowcase";
 import { getAllProducts } from "@/lib/productStore";
 import VideoShowcase from "@/components/sections/VideoShowcase";
@@ -51,7 +51,7 @@ export default async function Home({
           left the homepage — it suits the mower category page. */}
       <RobotLineup />
       {phantas && <FamilyBanner family={phantas} />}
-      {more.length > 0 && <MoreFamilies families={more} />}
+      {more.length > 0 && <FamilyRows families={more} />}
       <VideoShowcase />
       {/* who we are: one section, its facts and promises shared with About */}
       <ServicePromise
