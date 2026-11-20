@@ -107,6 +107,13 @@ export interface HeroSlide extends ShowcasePhoto {
   productId?: string;
   /** A family's slide: shown only while that category has a robot on show. */
   category?: CategorySlug;
+  /**
+   * A real photo of the robot at a customer's site, shown in the hero in
+   * place of the cut-out, with a caption that names the robot and the place.
+   * Only real photographs: no generated scenes, and no RaasPal mark legible
+   * on the robot.
+   */
+  sitePhoto?: { src: string; width: number; height: number; caption: Bilingual };
 }
 
 export interface RobotFamily extends ShowcasePhoto {
@@ -173,6 +180,16 @@ export const heroSlides: HeroSlide[] = [
     focus: "50% 70%",
     // the LUBA 3 AWD cut-out (not mirrored: that would print MAMMOTION backwards)
     cutout: { src: "/studio/luba-orange.webp", width: 1846, height: 958 },
+    // a frame of the owner's own footage (public/posters/lubamini21500onebangkok.png), cropped
+    sitePhoto: {
+      src: "/hero/lawn-onebangkok.webp",
+      width: 1569,
+      height: 950,
+      caption: {
+        en: "LUBA mini 2 AWD 1500 mowing at One Bangkok",
+        th: "LUBA mini 2 AWD 1500 ขณะตัดหญ้าที่ One Bangkok",
+      },
+    },
     shot: { en: "", th: "" },
   },
   {

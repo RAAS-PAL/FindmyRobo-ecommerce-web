@@ -9,6 +9,7 @@ import { useProducts } from "@/components/ProductsProvider";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { pick } from "@/data/siteContent";
 import { heroSlides, onShow } from "@/data/homeShowcase";
+import { DEFAULT_BRAND, SERVICE_CATEGORY } from "@/data/products";
 import Button from "@/components/ui/Button";
 import MetaLine from "@/components/ui/MetaLine";
 import TextLink from "@/components/ui/TextLink";
@@ -17,9 +18,11 @@ import { FADE } from "@/lib/motion";
 
 /**
  * Homepage hero (2026-11-20): a calm, light band. The copy on the left (a
- * brand line, the headline, one line, Get a quote and Learn more), the
- * family's robot cut-out large on the right, and the families as tabs along
- * the bottom. No full-width scene photo. Nothing moves on its own: copy and
+ * brand line, the headline, one line, Get a quote and Learn more); on the
+ * right a real photo of the robot at a customer's site with the place named
+ * under it (or the family's cut-out where there is no such photo yet); the
+ * families as tabs along the bottom, then the brands on sale. No generated
+ * scene photo. Nothing moves on its own: copy and
  * robot cross-fade (opacity only) when a tab is pressed.
  *
  * The first slide's copy is the CMS hero headline (Admin → Content →
@@ -35,6 +38,14 @@ export default function HeroSection() {
   const { openQuote } = useQuote();
   const slides = useMemo(
     () => onShow(heroSlides, products).filter((slide) => slide.cutout),
+    [products]
+  );
+  const brands = useMemo(
+    () => [
+      ...new Set(
+        products.filter((p) => p.category !== SERVICE_CATEGORY).map((p) => p.brand ?? DEFAULT_BRAND)
+      ),
+    ],
     [products]
   );
   const reduceMotion = useReducedMotion();
@@ -84,19 +95,38 @@ export default function HeroSection() {
             </motion.div>
           </AnimatePresence>
 
-          {/* the family's robot, large, on the plain band */}
-          <div className="relative aspect-[4/3] w-full">
-            <AnimatePresence initial={false}>
-              <motion.div key={slide.id} {...fade} className="absolute inset-0">
-                <Image
-                  src={slide.cutout!.src}
-                  alt={pick(slide.tab, locale)}
-                  fill
-                  priority={index === 0}
-                  sizes="(min-width: 1024px) 50vw, 100vw"
-                  className="object-contain"
-                />
-              </motion.div>
+          {/* A real photo of the robot at a customer's site, with the place
+              named under it; a family without one shows its cut-out. */}
+          <div className="relative w-full">
+            <AnimatePresence mode="wait" initial={false}>
+              {slide.sitePhoto ? (
+                <motion.figure key={slide.id} {...fade}>
+                  <div className="relative aspect-[5/3] overflow-hidden rounded-card bg-forest-100">
+                    <Image
+                      src={slide.sitePhoto.src}
+                      alt={pick(slide.sitePhoto.caption, locale)}
+                      fill
+                      priority={index === 0}
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <figcaption className="mt-3 text-small text-ink-muted">
+                    {pick(slide.sitePhoto.caption, locale)}
+                  </figcaption>
+                </motion.figure>
+              ) : (
+                <motion.div key={slide.id} {...fade} className="relative aspect-[5/3]">
+                  <Image
+                    src={slide.cutout!.src}
+                    alt={pick(slide.tab, locale)}
+                    fill
+                    priority={index === 0}
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    className="object-contain"
+                  />
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         </div>
@@ -122,6 +152,13 @@ export default function HeroSection() {
               </button>
             ))}
           </div>
+        )}
+
+        {/* the brands on sale, from the robots on show: names, not adjectives */}
+        {brands.length > 1 && (
+          <p className="py-5 text-small text-ink-muted">
+            {t("brandsLabel")} <span className="font-medium text-content">{brands.join(" · ")}</span>
+          </p>
         )}
       </div>
     </section>
