@@ -705,7 +705,8 @@ export default function QuoteForm({
               {/* what asking costs them — under the steps while closed, under
                   the submit button once open */}
               <p className="mt-3 text-center text-caption leading-snug font-medium text-ink-muted">
-                {t("reassure")}
+                {/* a demo has a fee (credited toward the purchase), so not "free" */}
+                {demo ? t("demoReassure") : t("reassure")}
               </p>
             </>
           )}

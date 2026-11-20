@@ -1018,6 +1018,7 @@
     "demoSub": "A few details, and we’ll call to set a time.",
     "demoSubmit": "Request a demo",
     "demoSuccessBody": "Thanks, {name}. We’ll call {phone} within one business day to set a time for the demo.",
+    "demoReassure": "No obligation · Reply within 1 business day",
     "sending": "Sending",
     "sendError": "We couldn’t send that. Check your connection and try again.",
     "rateLimited": "Too many attempts. Please wait a few minutes and try again.",
