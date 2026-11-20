@@ -1412,7 +1412,7 @@
       "areaCovers": "รองรับพื้นที่ได้ถึง {capacity, number} ตร.ม. สนามของคุณ {area, number} ตร.ม.",
       "areaTooSmall": "รองรับพื้นที่ได้ถึง {capacity, number} ตร.ม. น้อยกว่าสนามของคุณ {area, number} ตร.ม.",
       "areaUnknown": "พื้นที่ที่รองรับ ทีมงานจะยืนยันให้",
-      "areaNotGiven": "รองรับพื้นที่ได้ถึง {capacity, number} ตร.ม. ใส่ขนาดสนามเพื่อเช็กว่าพอดีไหม",
+      "areaNotGiven": "รองรับพื้นที่ได้ถึง {capacity, number} ตร.ม. ใส่ขนาดสนามเพื่อดูว่าพอดีไหม",
       "slopeHandles": "ไต่ทางลาดได้ถึง {limit}% ของคุณประมาณ {need}%",
       "slopeTooSteep": "ไต่ทางลาดได้ถึง {limit}% ของคุณประมาณ {need}%",
       "slopeUnknown": "ความชันที่รองรับ ทีมงานจะยืนยันให้",
