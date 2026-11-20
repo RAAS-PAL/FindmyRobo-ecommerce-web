@@ -12,6 +12,7 @@ import MetaLine from "@/components/ui/MetaLine";
 import { categoryTabClass } from "@/components/ui/CategoryTabs";
 import { DEFAULT_BRAND, SERVICE_CATEGORY, productLabel, type Locale, type Product, type SpecKey } from "@/data/products";
 import { canOptimise } from "@/lib/media";
+import { useViewLabel } from "@/lib/useViewLabel";
 
 const SPECS: SpecKey[] = ["area", "slope", "runtime", "cuttingWidth", "filtration", "connectivity"];
 const specsOf = (p: Product) => SPECS.filter((k) => p.specs?.[k]).slice(0, 3);
@@ -43,6 +44,7 @@ export default function RobotLineup() {
   const tc = useTranslations("categories");
   const td = useTranslations("productDetail");
   const ts = useTranslations("showcase");
+  const viewLabel = useViewLabel();
   const locale = useLocale() as Locale;
   const { products } = useProducts();
   const { openQuote } = useQuote();
@@ -111,7 +113,7 @@ export default function RobotLineup() {
             )}
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href={`/products/${lead.id}`} size="lg">
-                {t("viewProduct")}
+                {viewLabel(`/products/${lead.id}`)}
               </Button>
               <Button size="lg" variant="secondary" onClick={() => openQuote({ productId: lead.id })}>
                 {ts("getQuote")}

@@ -7,6 +7,7 @@ import { pick } from "@/data/siteContent";
 import type { RobotFamily } from "@/data/homeShowcase";
 import Button from "@/components/ui/Button";
 import MetaLine from "@/components/ui/MetaLine";
+import { useViewLabel } from "@/lib/useViewLabel";
 
 /**
  * One robot family as an edge-to-edge photo: no rounded box and no margin
@@ -14,6 +15,7 @@ import MetaLine from "@/components/ui/MetaLine";
  */
 export function FamilyBanner({ family }: { family: RobotFamily }) {
   const t = useTranslations("showcase");
+  const viewLabel = useViewLabel();
   const locale = useLocale();
   const { openQuote } = useQuote();
   if (!family.image) return null;
@@ -38,7 +40,7 @@ export function FamilyBanner({ family }: { family: RobotFamily }) {
           </Button>
           {family.href && (
             <Button href={family.href} size="lg" variant="onPhoto">
-              {t("learnMore")}
+              {viewLabel(family.href)}
             </Button>
           )}
         </div>
@@ -54,6 +56,7 @@ export function FamilyBanner({ family }: { family: RobotFamily }) {
  */
 export function FamilyRows({ families }: { families: RobotFamily[] }) {
   const t = useTranslations("showcase");
+  const viewLabel = useViewLabel();
   const locale = useLocale();
   const { openQuote } = useQuote();
   return (
@@ -74,7 +77,7 @@ export function FamilyRows({ families }: { families: RobotFamily[] }) {
                 </Button>
                 {family.href && (
                   <Button href={family.href} size="lg" variant="secondary">
-                    {t("learnMore")}
+                    {viewLabel(family.href)}
                   </Button>
                 )}
               </div>

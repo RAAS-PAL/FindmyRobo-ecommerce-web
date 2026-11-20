@@ -1047,7 +1047,6 @@
     "pause": "Pause the slideshow",
     "play": "Play the slideshow",
     "explore": "Explore",
-    "learnMore": "Learn more",
     "getQuote": "Get a quote",
     "bookDemo": "Book a demo",
     "photoComing": "Photo coming",
@@ -1317,7 +1316,6 @@
     "back": "Back",
     "seeResults": "See my robots",
     "startAgain": "Start again",
-    "viewRobot": "View robot",
     "sqm": "m²",
     "job": {
       "question": "What do you need a robot for?",
@@ -1455,5 +1453,10 @@
     "body": "The page may have moved.",
     "shop": "Browse robots",
     "home": "Back to the home page"
+  },
+  "viewLabel": {
+    "robot": "View {name}",
+    "list": "See all {name}",
+    "robots": "View robots"
   }
 }
