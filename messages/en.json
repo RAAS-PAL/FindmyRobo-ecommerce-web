@@ -7,10 +7,8 @@
     "aboutPartners": "Partners",
     "contact": "Contact",
     "contactSales": "Contact Sales",
-    "contactTouch": "Get in Touch",
     "contactDemo": "Book a Demo",
     "contactLocations": "Location",
-    "support": "Support",
     "blog": "Blog",
     "searchPlaceholder": "What are you looking for?",
     "searchNoResults": "No products found for “{query}”",
@@ -1253,7 +1251,6 @@
     "about": [
       "About Us",
       "Contact",
-      "Support",
       "Find My Robot"
     ],
     "paymentNote": "Secure checkout — payment options at launch:"

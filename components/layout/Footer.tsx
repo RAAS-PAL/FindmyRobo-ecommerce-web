@@ -62,7 +62,7 @@ const SUPPORT_HREFS: (string | null)[] = [
  * translated array. Keep this in step with the `about` array in
  * messages/{en,th}.json; adding a label without a href here falls back to "#".
  */
-const ABOUT_HREFS = ["/about", "/#contact", "/#support", "/recommend"];
+const ABOUT_HREFS = ["/about", "/contact-sales", "/recommend"];
 
 /**
  * Icon + accessible name per platform. What actually renders is the
@@ -218,8 +218,7 @@ export default function Footer({ products = [] }: { products?: Product[] }) {
             </ul>
           </nav>
 
-          {/* contact — this block is the #contact anchor the nav links to, and
-              the visible business address Omise's merchant review and PDPA's
+          {/* contact — the visible business address Omise's merchant review and PDPA's
               data-controller notice both expect to find. */}
           <section
             aria-labelledby="footer-contact-heading"
