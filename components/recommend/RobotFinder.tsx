@@ -5,7 +5,6 @@ import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowLeft,
   ArrowRight,
-  ArrowUpRight,
   Check,
   ChefHat,
   CircleHelp,
@@ -143,7 +142,6 @@ function ResultCard({ match, rank }: { match: Match; rank: number }) {
             className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-small font-bold"
           >
             {tn("getQuote")}
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </button>
           <Link
             href={`/products/${product.id}`}

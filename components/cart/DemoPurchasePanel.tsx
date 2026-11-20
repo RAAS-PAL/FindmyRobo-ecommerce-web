@@ -6,7 +6,7 @@ import { Bot, Calendar, Ruler } from "lucide-react";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { Link } from "@/i18n/navigation";
 import { useProducts } from "@/components/ProductsProvider";
-import { formatBaht, hasPrice, SERVICE_CATEGORY } from "@/data/products";
+import { formatBaht, hasPrice, isDemoService, SERVICE_CATEGORY } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
 
 /** "5,000 m²" → 5000; NaN when the spec is missing/unparsable. */
@@ -34,10 +34,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
       products
         .filter(hasPrice)
         .filter(
-          (p) =>
-            p.category === SERVICE_CATEGORY &&
-            p.variant === "demo" &&
-            !Number.isNaN(parseArea(p.specs.area))
+          (p) => isDemoService(p) && !Number.isNaN(parseArea(p.specs.area))
         )
         .sort((a, b) => parseArea(a.specs.area) - parseArea(b.specs.area)),
     [products]

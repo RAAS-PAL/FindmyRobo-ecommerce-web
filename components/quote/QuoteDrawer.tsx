@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import QuoteForm from "@/components/quote/QuoteForm";
 import { useQuote } from "@/components/quote/QuoteProvider";
+import { useProducts } from "@/components/ProductsProvider";
+import { isDemoService } from "@/data/products";
 
 /**
  * The quote form as a side panel — where every "interested" button lands while
@@ -17,6 +19,10 @@ export default function QuoteDrawer() {
   const { target, closeQuote } = useQuote();
   const panelRef = useRef<HTMLElement>(null);
   const open = target !== null;
+  const { getProduct } = useProducts();
+  // Request a Demo's Book Now opens this too: then it is a booking, not a quote.
+  const title =
+    target?.productId && isDemoService(getProduct(target.productId)) ? t("demoTitle") : t("eyebrow");
 
   useEffect(() => {
     if (!open) return;
@@ -51,10 +57,10 @@ export default function QuoteDrawer() {
             className="fixed inset-y-0 right-0 z-50 flex w-[92%] max-w-md flex-col bg-surface shadow-2xl focus:outline-none"
             role="dialog"
             aria-modal="true"
-            aria-label={t("eyebrow")}
+            aria-label={title}
           >
             <div className="flex items-center justify-between border-b border-forest-100 px-5 py-4">
-              <h2 className="font-display text-heading text-content">{t("eyebrow")}</h2>
+              <h2 className="font-display text-heading text-content">{title}</h2>
               <button
                 type="button"
                 onClick={closeQuote}

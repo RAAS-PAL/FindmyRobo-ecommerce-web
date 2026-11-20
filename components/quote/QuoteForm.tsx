@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
-  ArrowUpRight,
   Bot,
   Check,
   ChevronDown,
@@ -14,7 +13,7 @@ import {
 } from "lucide-react";
 import { useProducts } from "@/components/ProductsProvider";
 import { showsCondition, type StockCondition } from "@/data/conditions";
-import { productLabel, SERVICE_CATEGORY } from "@/data/products";
+import { isDemoService, productLabel, SERVICE_CATEGORY } from "@/data/products";
 import ConditionLine from "@/components/ui/ConditionLine";
 import {
   CATEGORY_INTEREST,
@@ -128,6 +127,9 @@ export default function QuoteForm({
   // What the button asked about — shown at the top, and the answer to "which robot".
   const selection = product ? productLabel(product) : undefined;
   const panel = variant === "panel";
+  // Opened from Request a Demo: a booking, so it says so instead of "quote".
+  const demo = isDemoService(product);
+  const title = demo ? t("demoTitle") : t("eyebrow");
 
   const [expanded, setExpandedState] = useState(false);
   const setExpanded = useCallback(
@@ -308,7 +310,7 @@ export default function QuoteForm({
       onSubmit={onSubmit}
       onFocus={() => setExpanded(true)}
       aria-expanded={panel ? undefined : expanded}
-      aria-label={t("eyebrow")}
+      aria-label={title}
       className={
         panel
           ? "text-left"
@@ -333,10 +335,10 @@ export default function QuoteForm({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 pt-0.5">
               {/* the panel's own header already says "Get a quote" */}
-              {!panel && <p className="font-display text-heading text-content">{t("eyebrow")}</p>}
+              {!panel && <p className="font-display text-heading text-content">{title}</p>}
               {open && !sent && (
                 <p className={`text-caption leading-snug text-ink-muted ${panel ? "" : "mt-1"}`}>
-                  {t("sub")}
+                  {demo ? t("demoSub") : t("sub")}
                 </p>
               )}
             </div>
@@ -356,7 +358,7 @@ export default function QuoteForm({
             <p className="mt-4 text-small leading-relaxed text-content" role="status">
               <span className="block font-display text-lead font-bold">{t("successTitle")}</span>
               <span className="mt-1.5 block text-ink-muted">
-                {t("successBody", { name: form.fullName.trim(), phone: form.phone.trim() })}
+                {t(demo ? "demoSuccessBody" : "successBody", { name: form.fullName.trim(), phone: form.phone.trim() })}
               </span>
             </p>
           ) : (
@@ -642,8 +644,7 @@ export default function QuoteForm({
                       </>
                     ) : (
                       <>
-                        {tq("submitCta")}
-                        <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                        {demo ? t("demoSubmit") : tq("submitCta")}
                       </>
                     )}
                   </button>
