@@ -9,6 +9,10 @@ import { useQuote } from "@/components/quote/QuoteProvider";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
 import { siteConfig } from "@/data/siteConfig";
 
+/** Fired on window with `detail: true/false` as the bar shows and hides, so the
+ *  navbar can fade its own Get a quote: one way in at a time (Navbar.tsx). */
+export const FLOATING_QUOTE_EVENT = "fmr:floating-quote";
+
 /**
  * Sticky Add-to-Cart bar for the product page. It stays hidden while the primary
  * button is on screen and slides up from the bottom once that button has scrolled
@@ -54,6 +58,18 @@ export default function FloatingAddToCart({
     observer.observe(anchor);
     return () => observer.disconnect();
   }, [anchorId]);
+
+  // Quote mode only: with the cart on, the navbar shows the cart instead.
+  useEffect(() => {
+    if (siteConfig.cartEnabled) return;
+    window.dispatchEvent(new CustomEvent(FLOATING_QUOTE_EVENT, { detail: visible }));
+  }, [visible]);
+  useEffect(
+    () => () => {
+      window.dispatchEvent(new CustomEvent(FLOATING_QUOTE_EVENT, { detail: false }));
+    },
+    []
+  );
 
   useEffect(
     () => () => {

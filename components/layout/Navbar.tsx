@@ -14,6 +14,8 @@ import {
   Headset,
   MapPin,
   Menu,
+  MessageCircle,
+  Phone,
   Search,
   X,
   type LucideIcon,
@@ -33,6 +35,9 @@ import { useProducts } from "@/components/ProductsProvider";
 import ProductVisual from "@/components/ui/ProductVisual";
 import ConditionLine from "@/components/ui/ConditionLine";
 import CatalogSearch from "@/components/layout/CatalogSearch";
+import { useSiteContent } from "@/components/SiteContentProvider";
+import { buttonClass } from "@/components/ui/Button";
+import { FLOATING_QUOTE_EVENT } from "@/components/cart/FloatingAddToCart";
 
 interface NavChild {
   label: string;
@@ -218,6 +223,7 @@ export default function Navbar() {
   const { products } = useProducts();
   const { count, openDrawer } = useCart();
   const { openQuote } = useQuote();
+  const { phone, lineUrl } = useSiteContent().contact;
   const [open, setOpen] = useState(false);
 
   // The desktop menus: which one is open, and which one the panel shows. The
@@ -366,7 +372,15 @@ export default function Navbar() {
     observer.observe(strip);
     return () => observer.disconnect();
   }, [pathname]);
-  const hideBarQuote = pathname === "/" && heroQuoteInView;
+  // Same rule on a product page: while its floating bar (FloatingAddToCart)
+  // offers Get a quote at the bottom of the screen, the bar's own one fades.
+  const [floatingQuote, setFloatingQuote] = useState(false);
+  useEffect(() => {
+    const onChange = (event: Event) => setFloatingQuote((event as CustomEvent<boolean>).detail);
+    window.addEventListener(FLOATING_QUOTE_EVENT, onChange);
+    return () => window.removeEventListener(FLOATING_QUOTE_EVENT, onChange);
+  }, []);
+  const hideBarQuote = (pathname === "/" && heroQuoteInView) || floatingQuote;
 
   // A new page starts with the menus closed (reset while rendering, React's
   // pattern for state that follows a changing value).
@@ -503,7 +517,8 @@ export default function Navbar() {
                 width={135}
                 height={36}
                 priority
-                className="h-9 w-auto dark:hidden"
+                // 32px on phones: the room goes to the Get a quote label
+                className="h-8 w-auto sm:h-9 dark:hidden"
               />
               <Image
                 src="/main-logo-dark.png"
@@ -511,7 +526,7 @@ export default function Navbar() {
                 width={135}
                 height={36}
                 priority
-                className="hidden h-9 w-auto dark:block"
+                className="hidden h-8 w-auto sm:h-9 dark:block"
               />
             </Link>
 
@@ -622,7 +637,7 @@ export default function Navbar() {
                 // keeps its width: collapsing it slid all six menus ~55px
                 // sideways each time it came and went.
                 <div
-                  className={`ml-1 transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+                  className={`transition-opacity sm:ml-1 duration-200 ease-out motion-reduce:transition-none ${
                     hideBarQuote ? "opacity-0" : "opacity-100"
                   }`}
                   inert={hideBarQuote ? true : undefined}
@@ -634,8 +649,10 @@ export default function Navbar() {
                   onClick={() => openQuote()}
                   className="flex h-10 min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-control bg-accent px-2.5 text-small font-semibold whitespace-nowrap text-on-accent transition-[background-color,scale] duration-150 ease-out hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.97] sm:px-4"
                 >
-                  <CartIcon className="h-[18px] w-[18px] shrink-0 sm:hidden" />
-                  <span className="max-sm:sr-only">{t("getQuote")}</span>
+                  {/* Words wherever they fit (from 390px: most phones,
+                      Thai too); only the narrowest phones get the icon */}
+                  <CartIcon className="h-[18px] w-[18px] shrink-0 min-[390px]:hidden" />
+                  <span className="max-[389px]:sr-only">{t("getQuote")}</span>
                 </button>
                 </div>
                 </div>
@@ -748,7 +765,7 @@ export default function Navbar() {
               <div className="flex-1 overflow-y-auto px-5 py-6">
                 <CatalogSearch
                   className="mb-6 block"
-                  inputClassName="h-12 w-full rounded-full border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-small text-content placeholder:text-[color:var(--nav-tab-faint)] focus:border-accent focus:outline-none focus-visible:outline-none!"
+                  inputClassName="h-12 w-full rounded-control border border-forest-100 bg-[color:var(--nav-card)] pl-10 pr-4 text-small text-content placeholder:text-[color:var(--nav-tab-faint)] focus:border-accent focus:outline-none focus-visible:outline-none!"
                   dropdownClassName="inset-x-0 w-full"
                   onNavigate={() => setOpen(false)}
                 />
@@ -851,6 +868,50 @@ export default function Navbar() {
                   <LanguageSwitcher variant="inline" />
                 </div>
               </div>
+
+              {/* Pinned under the scrolling menu, so it's in reach however
+                  far the visitor has opened things: the site's one action,
+                  and the two quickest ways to talk to someone. */}
+              {(!siteConfig.cartEnabled || lineUrl || phone) && (
+                <div className="border-t border-forest-100 bg-[color:var(--nav-bar)] px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+                  {!siteConfig.cartEnabled && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpen(false);
+                        openQuote();
+                      }}
+                      className={buttonClass({ size: "lg", fullWidth: true })}
+                    >
+                      {t("getQuote")}
+                    </button>
+                  )}
+                  {(lineUrl || phone) && (
+                    <div className={`grid grid-cols-2 gap-2 ${siteConfig.cartEnabled ? "" : "mt-2"}`}>
+                      {lineUrl && (
+                        <a
+                          href={lineUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={buttonClass({ variant: "secondary", className: "gap-2 px-3" })}
+                        >
+                          <MessageCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+                          LINE
+                        </a>
+                      )}
+                      {phone && (
+                        <a
+                          href={`tel:${phone.replace(/[^\d+]/g, "")}`}
+                          className={buttonClass({ variant: "secondary", className: "gap-2 px-3" })}
+                        >
+                          <Phone className="h-4 w-4 shrink-0" aria-hidden="true" />
+                          {phone}
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </motion.aside>
           </>
         )}
