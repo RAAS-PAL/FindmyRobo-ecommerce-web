@@ -15,10 +15,24 @@ Newest first. Current state and open items live in `hot.md`.
   "Send request" sends, "Book a demo"; Thai ส่งคำขอ / จองเดโม are drafts);
   the home page no longer repeats About's stats row and promise list — its
   last section is who we are plus Get a quote / Book a demo.
+- Second round, same day (owner: "do these first"): the phone navbar says
+  Get a quote from 390px and the phone menu ends with Get a quote, LINE and
+  phone; on a product page the navbar's Get a quote fades while the
+  floating bar shows (`FLOATING_QUOTE_EVENT`); shop and search are two per
+  row on phones (`RobotCard dense`), badges under the picture, card figures
+  without their bracket; home display size only for the h1 and the Phantas
+  banner, Get a quote first in every product block, the robot row runs to
+  the screen edge with arrows that disable; one `Breadcrumb` (Home ›
+  Products › category › robot) on both robot pages; the quote strip
+  scrolls in the same frame it opens, the parts diagram zooms 300ms
+  ease-out, the LINE QR opens from its icon; `reduced-transparency:`
+  variant and a prefers-contrast token block in globals.css.
 - Left for the owner: LUBA 3 AWD 5000 runtime (215 vs 180 min on one
   page), the headless staff photo, vendor banners with baked-in English,
-  the stats band and the second promises list on home, one wording for the
-  quote action.
+  the About page's unverified stats.
+- Dev trap: Turbopack once missed the last of several quick writes to
+  globals.css (the served CSS lacked the new block even after `touch`);
+  restarting `next dev` fixed it. Check the served CSS, not just the file.
 - Notes are stale on fonts: the site has used Instrument Sans + Anuphan
   (no IBM Plex Mono) since the 2026-11-19/20 redesign, not Barlow/Prompt.
 
