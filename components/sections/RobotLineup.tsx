@@ -60,7 +60,8 @@ export default function RobotLineup() {
   const scrollBy = (dir: 1 | -1) => {
     const rail = railRef.current;
     const item = rail?.firstElementChild as HTMLElement | null;
-    rail?.scrollBy({ left: dir * (item?.offsetWidth ?? 280), behavior: "smooth" });
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    rail?.scrollBy({ left: dir * (item?.offsetWidth ?? 280), behavior: still ? "auto" : "smooth" });
   };
   const pick = (next: string | null) => {
     setCategory(next);

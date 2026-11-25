@@ -2,8 +2,10 @@ import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
+// -my-3 py-3: a 44px-tall tap target around a 21px line, without moving the
+// layout around it.
 const CLASS =
-  "inline-flex items-center gap-1 text-small font-semibold text-accent-600 underline-offset-4 hover:underline";
+  "-my-3 inline-flex items-center gap-1 py-3 text-small font-semibold underline-offset-4 hover:underline";
 
 /**
  * A link that reads as an action ("View all robots", "Find yours"). The
@@ -22,7 +24,7 @@ export default function TextLink({
   /** On a photo or dark surface: white text. */
   onPhoto?: boolean;
 }) {
-  const cls = `${CLASS}${onPhoto ? "text-white" : ""}${className ? ` ${className}` : ""}`;
+  const cls = `${CLASS} ${onPhoto ? "text-white" : "text-accent-600"}${className ? ` ${className}` : ""}`;
   const body = (
     <>
       {children}

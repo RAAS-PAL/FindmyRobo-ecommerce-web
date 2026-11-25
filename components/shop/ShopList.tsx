@@ -27,7 +27,7 @@ export default async function ShopList({
       {robots.length > 0 && (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {robots.map((product) => (
-            <RobotCard key={product.id} product={product} />
+            <RobotCard key={product.id} product={product} headingAs="h2" />
           ))}
         </div>
       )}

@@ -43,9 +43,13 @@ export default function RobotCard({
   displayName,
   displayTagline,
   className = "",
+  headingAs: Heading = "h3",
 }: {
   product: Product;
   layout?: "rail" | "grid";
+  /** h3 under a section heading; h2 where the cards sit straight under the
+   *  page's h1 (the shop grid), so the outline doesn't skip a level. */
+  headingAs?: "h2" | "h3";
   /** Extra classes for the card, e.g. a rail on phones that is a grid cell from sm. */
   className?: string;
   /** Overrides the catalogue name, for a card that stands in for a group. */
@@ -63,29 +67,23 @@ export default function RobotCard({
   const hoverVideo = product.hoverVideo;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [active, setActive] = useState(false);
-  const touchedRef = useRef(false);
-  const wasActiveRef = useRef(false);
-  const playVideo = () => videoRef.current?.play().catch(() => undefined);
+  // The clip is a hover preview: only where a real pointer can hover, and not
+  // for people who asked for less motion. A tap always opens the robot (it
+  // used to play the clip first, so the priority mowers took two taps).
+  const playVideo = () => {
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const el = videoRef.current;
+    if (!el) return;
+    setActive(true);
+    el.play().catch(() => setActive(false));
+  };
   const stopVideo = () => {
     setActive(false);
     const el = videoRef.current;
     if (!el) return;
     el.pause();
     el.currentTime = 0;
-  };
-  // Touch has no hover: the first tap plays the clip, a second opens the robot.
-  // A robot without a clip opens on the first tap.
-  const onTouchStart = () => {
-    touchedRef.current = true;
-    wasActiveRef.current = active || !hoverVideo;
-    if (!active && hoverVideo) {
-      setActive(true);
-      playVideo();
-    }
-  };
-  const onLinkClick = (e: React.MouseEvent) => {
-    if (touchedRef.current && !wasActiveRef.current) e.preventDefault();
-    touchedRef.current = false;
   };
 
   const badges = [
@@ -105,20 +103,18 @@ export default function RobotCard({
       onMouseLeave={stopVideo}
       onFocus={playVideo}
       onBlur={stopVideo}
-      onTouchStart={onTouchStart}
-      className={`group rounded-card bg-cloud transition-colors duration-150 hover:bg-forest-100/60 dark:hover:bg-forest-800/60 ${
+      className={`group rounded-card bg-cloud transition-colors duration-150 hover:bg-forest-100/60 active:bg-forest-100 active:duration-0 dark:hover:bg-forest-800/60 dark:active:bg-forest-800 ${
         layout === "rail" ? "w-[300px] shrink-0 snap-start sm:w-[360px]" : ""
       } ${className}`}
     >
       <Link
         href={`/products/${product.id}`}
-        onClick={onLinkClick}
         className="flex h-full flex-col rounded-card p-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         <MetaLine>
           {product.brand ?? DEFAULT_BRAND} · {tc(`${product.category}.nav`)}
         </MetaLine>
-        <h3 className="mt-1 font-display text-heading text-content">{label}</h3>
+        <Heading className="mt-1 font-display text-heading text-content">{label}</Heading>
         <p className="mt-2 line-clamp-2 min-h-[3em] text-small text-ink-muted">
           {displayTagline ?? product.tagline[locale]}
         </p>
@@ -166,7 +162,9 @@ export default function RobotCard({
               playsInline
               preload="none"
               aria-hidden="true"
-              className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 ${
+              // shown only while it actually plays: on a phone, or with reduced
+              // motion, a hover state would otherwise uncover an empty frame
+              className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
                 active ? "opacity-100" : "opacity-0"
               }`}
             />

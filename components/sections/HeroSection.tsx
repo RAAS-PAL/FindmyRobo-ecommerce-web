@@ -50,10 +50,13 @@ export default function HeroSection() {
   const sub = slide.sub ? pick(slide.sub, locale) : pick(home.heroSub, locale);
   const tabName = pick(slide.tab, locale);
 
+  // The copy waits for the old slide's words to leave (mode="wait"), so they
+  // leave quickly: with a full-length exit the new headline arrived ~300ms
+  // after the tap, behind the photo, which changes at once.
   const fade = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
-    exit: { opacity: 0 },
+    exit: { opacity: 0, transition: reduceMotion ? { duration: 0 } : { ...FADE, duration: 0.12 } },
     transition: reduceMotion ? { duration: 0 } : FADE,
   };
 
