@@ -2,6 +2,30 @@
 
 Newest first. Current state and open items live in `hot.md`.
 
+## 2026-11-25 — Prices no longer reach the browser in quotation mode
+- The owner found `"price":185000` in view-source of a product page. Quote
+  mode only hid prices in the UI: every product handed to a client component
+  (ProductsProvider gets the whole catalogue) was serialised into the HTML,
+  so every page carried every visible price.
+- Storefront reads in `lib/productStore.ts` (`getAllProducts`,
+  `getProductById`, `getProductsByCategory`) now go through `forStorefront`:
+  while `showPrices` is false the price becomes null and `priceWithheld`
+  marks that one exists. `isPriced()` (data/products.ts) replaces `hasPrice`
+  where the question is "is this offered", so the installation tiers, demo
+  tiers and the floating bar behave exactly as before. Checkout repricing
+  uses `getAllProductsWithPrices`, the admin edit form
+  `getProductByIdForAdmin` (it would otherwise save null over the price).
+- The `[locale]` layout no longer sends the `admin` message namespace to the
+  browser (a third of the file); its product-form placeholder was LUBA 3 AWD
+  3000's real price, now `100000`.
+- Second path: the `products` table's "public catalog read" policy let the
+  publishable key (in every page) read every price and hidden robot from
+  Supabase's REST API. `supabase/close-public-products-read.sql` drops it;
+  the site reads products only with the secret key. Must be run by hand.
+- Checked against the live catalogue: no price field in the HTML of any
+  storefront page (live had all nine on every page); tier pickers, the
+  folded installation card and the floating bar match live; no client errors.
+
 ## 2026-10-15 — A1-Basic page, and the A1 screens the right way round
 - The owner's Basic screen photo showed Wi-Fi and mode arrows, which the
   model list said belonged to the Youth; the owner checked the real machines

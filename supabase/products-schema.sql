@@ -79,15 +79,14 @@ begin
 end;
 $$;
 
--- 4. Row-level security: the catalog is PUBLIC to read (anon shoppers included),
---    but writes only happen through the SECRET key from the admin API, which
---    bypasses RLS — so there is deliberately no insert/update/delete policy.
+-- 4. Row-level security with NO policy: the site reads and writes products
+--    only with the SECRET key (lib/productStore.ts), which bypasses RLS. The
+--    publishable key ships in every page, so a public read policy would let
+--    anyone fetch every price and every hidden product from the REST API —
+--    the old "public catalog read" policy did (close-public-products-read.sql).
 alter table public.products enable row level security;
 
 drop policy if exists "public catalog read" on public.products;
-create policy "public catalog read"
-  on public.products for select
-  using (true);
 
 -- 5. Seed the current catalog (6 robots + 4 service packages). "on conflict
 --    (id) do nothing" makes this re-runnable without duplicating rows.

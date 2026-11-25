@@ -11,10 +11,13 @@ export const siteConfig = {
   /**
    * Customer-facing price visibility.
    *
-   * false = quotation mode: no price is rendered anywhere a customer can see.
-   * Prices are still read from the catalogue, still priced server-side at
-   * checkout, and still shown to sales in the alert email and the admin panel —
-   * they are the starting point for the quotation, not a published offer.
+   * false = quotation mode: no price is rendered anywhere a customer can see,
+   * and none reaches the browser at all — storefront reads in
+   * lib/productStore.ts replace it with null (forStorefront), since anything
+   * passed to a client component shows up in the page source. Prices are
+   * still priced server-side at checkout, and still shown to sales in the
+   * alert email and the admin panel — they are the starting point for the
+   * quotation, not a published offer.
    *
    * Set back to true when card payment goes live and the site sells directly.
    */
@@ -26,7 +29,9 @@ export const siteConfig = {
    * false = every "add" button opens the quote form instead, with the product
    * already selected, and the navbar's cart icon opens that form too. /checkout
    * redirects home. The cart code is all still here — set this back to true
-   * (and showPrices, and the Omise keys) when the site sells online.
+   * (and showPrices, and the Omise keys) when the site sells online. Not true
+   * on its own: with showPrices false the browser has no prices, and the cart
+   * drops every line it can't price.
    */
   cartEnabled: false,
 

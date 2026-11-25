@@ -6,7 +6,7 @@ import { Bot, Calendar, Ruler } from "lucide-react";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { Link } from "@/i18n/navigation";
 import { useProducts } from "@/components/ProductsProvider";
-import { formatBaht, hasPrice, isDemoService, SERVICE_CATEGORY } from "@/data/products";
+import { formatBaht, isDemoService, isPriced, SERVICE_CATEGORY } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
 
 /** "5,000 m²" → 5000; NaN when the spec is missing/unparsable. */
@@ -32,7 +32,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
   const tiers = useMemo(
     () =>
       products
-        .filter(hasPrice)
+        .filter(isPriced)
         .filter(
           (p) => isDemoService(p) && !Number.isNaN(parseArea(p.specs.area))
         )
@@ -107,7 +107,7 @@ export default function DemoPurchasePanel({ currentId }: { currentId: string }) 
                       {tier.specs.area}
                     </span>
                   </span>
-                  {siteConfig.showPrices && (
+                  {siteConfig.showPrices && tier.price !== null && (
                     <span className="font-mono text-[13.5px] font-semibold tabular-nums text-content">
                       {formatBaht(tier.price)}
                     </span>

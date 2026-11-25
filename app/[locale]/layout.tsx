@@ -112,7 +112,14 @@ export default async function LocaleLayout({
         {/* light or dark before the first paint; survives a language switch
             (components/ThemeScript.tsx) */}
         <ThemeScript />
-        <NextIntlClientProvider messages={messages}>
+        {/* Everything but the admin panel's strings: it has its own provider
+            (app/admin/layout.tsx), and whatever goes in here is written into
+            every page's source — a third of the file, for nothing. */}
+        <NextIntlClientProvider
+          messages={Object.fromEntries(
+            Object.entries(messages).filter(([namespace]) => namespace !== "admin")
+          )}
+        >
           <MotionProvider>
             <ProductsProvider products={products}>
               <SiteContentProvider

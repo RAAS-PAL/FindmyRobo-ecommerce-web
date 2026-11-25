@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { getProductById } from "@/lib/productStore";
+import { getProductByIdForAdmin } from "@/lib/productStore";
 import ProductForm from "@/components/admin/ProductForm";
 import { getAdminLocale } from "@/lib/adminLocale";
 
@@ -16,7 +16,7 @@ export default async function EditProductPage({
   const { id } = await params;
   const locale = await getAdminLocale();
   const [product, t] = await Promise.all([
-    getProductById(id),
+    getProductByIdForAdmin(id),
     getTranslations({ locale, namespace: "admin.productPages" }),
   ]);
   if (!product) notFound();
