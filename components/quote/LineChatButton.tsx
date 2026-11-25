@@ -63,7 +63,9 @@ export default function LineChatButton() {
           id={popoverId}
           role="dialog"
           aria-label={t("lineQrAlt", { id: lineId })}
-          className="absolute inset-x-0 bottom-full z-30 mx-auto mb-3 w-60 rounded-card border border-black/8 bg-surface p-4 text-center shadow-float dark:border-white/10"
+          // Opens out of the QR icon that asked for it (the button's right
+          // end), not centred over the whole button.
+          className="absolute right-0 bottom-full z-30 mb-3 w-60 origin-bottom-right rounded-card border border-black/8 bg-surface p-4 text-center shadow-float transition-[opacity,scale] duration-150 ease-out starting:scale-95 starting:opacity-0 motion-reduce:transition-none dark:border-white/10"
         >
           {lineQrImage && (
             // bg-white, not bg-surface: a QR needs a light quiet zone to stay

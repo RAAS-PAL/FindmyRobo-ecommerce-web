@@ -20,6 +20,7 @@ export default function QuoteStrip({ interest, productId }: QuoteTarget) {
   const reduceMotion = useReducedMotion();
   const uid = useId();
   const panelRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   // Capture the slide on first open. Switching the hero later must not change
@@ -33,18 +34,24 @@ export default function QuoteStrip({ interest, productId }: QuoteTarget) {
 
   useEffect(() => {
     if (!open) return;
-    const timer = setTimeout(() => {
+    // The page moves in the same frame the form starts to open, not 380ms
+    // later once it has finished: the form's full height is readable now
+    // (its content is laid out even while its row is still collapsed).
+    const frame = requestAnimationFrame(() => {
       const panel = panelRef.current;
       if (!panel) return;
       const rect = panel.getBoundingClientRect();
+      const style = getComputedStyle(panel);
+      const formHeight = (formRef.current?.firstElementChild as HTMLElement | null)?.scrollHeight ?? rect.height;
+      const bottom = rect.top + parseFloat(style.paddingTop) + formHeight + parseFloat(style.paddingBottom);
       const top = Math.max(0, document.querySelector("header")?.getBoundingClientRect().bottom ?? 0) + 20;
-      // Only move the page if the form starts out of view or extends below it.
+      // Only move the page if the form starts out of view or will end below it.
       // Align its heading below the sticky navigation, never focus a mobile input.
-      if (rect.top < top || rect.bottom > window.innerHeight - 20) {
+      if (rect.top < top || bottom > window.innerHeight - 20) {
         window.scrollBy({ top: rect.top - top, behavior: reduceMotion ? "instant" : "smooth" });
       }
-    }, reduceMotion ? 0 : 380);
-    return () => clearTimeout(timer);
+    });
+    return () => cancelAnimationFrame(frame);
   }, [open, reduceMotion]);
 
   return (
@@ -86,7 +93,7 @@ export default function QuoteStrip({ interest, productId }: QuoteTarget) {
           }
         }}>
         <div aria-hidden={open} inert={open ? true : undefined}
-          className={"grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none " + (open ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100")}>
+          className={"grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none " + (open ? "grid-rows-[0fr] opacity-0" : "grid-rows-[1fr] opacity-100")}>
           <div className="min-h-0 overflow-hidden">
             <h3 className="font-display text-heading text-content">{t("consultation.previewTitle")}</h3>
             <p className="mt-2 text-small text-ink-muted">{t("consultation.previewBody")}</p>
@@ -115,8 +122,8 @@ export default function QuoteStrip({ interest, productId }: QuoteTarget) {
           </div>
         </div>
 
-        <div id={uid + "-form"} inert={open ? undefined : true} aria-hidden={!open}
-          className={"grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none " + (open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
+        <div id={uid + "-form"} ref={formRef} inert={open ? undefined : true} aria-hidden={!open}
+          className={"grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none " + (open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
           <div className="min-h-0 overflow-hidden">
             <div className="mb-5 flex min-h-9 items-center justify-between gap-3">
               {/* the open form's title (Get a quote) */}
