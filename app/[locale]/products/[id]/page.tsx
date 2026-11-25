@@ -29,6 +29,7 @@ import {
   type Locale,
   type PageBlock,
   DEFAULT_BRAND,
+  isPriced,
 } from "@/data/products";
 import { siteConfig } from "@/data/siteConfig";
 import { getAllProducts, getProductById, showsOnStorefront } from "@/lib/productStore";
@@ -398,7 +399,7 @@ export default async function ProductPage({
         </div>
       </div>
     </main>
-    {!isService && product.price !== null && (
+    {!isService && isPriced(product) && (
       <FloatingAddToCart
         productId={product.id}
         name={product.name}

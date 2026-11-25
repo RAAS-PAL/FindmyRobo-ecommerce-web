@@ -24,6 +24,11 @@ branch `main`.
   opens ONE quote form (`components/quote/*`) with the product preselected.
   The cart, checkout, Omise payments and Sokochan fulfilment code all still
   exist, switched off — flip the two flags back when selling online.
+  Prices never reach the browser in this mode (2026-11-25): storefront reads
+  null them (`forStorefront` in lib/productStore.ts, `priceWithheld` +
+  `isPriced()`); server code that needs the number uses
+  `getAllProductsWithPrices` / `getProductByIdForAdmin`. The `products` table
+  has RLS with no public policy — never add one back.
 - **Quote requests email the sales team only** (`app/api/quotes/route.ts` →
   `SALES_ALERT_EMAIL` via Resend, reply-to = customer). Nothing goes to the
   customer until sales confirm prices (business decision, 2026-09-28). Requests

@@ -3,6 +3,7 @@ import type { CategorySlug } from "@/data/categories";
 import type { AnatomyModel, Product, ProductPage, RobotFit } from "@/data/products";
 import { isStockCondition } from "@/data/conditions";
 import { rebaseMedia } from "@/lib/media";
+import { siteConfig } from "@/data/siteConfig";
 
 /**
  * Supabase-backed product store — the single read/write path for product
@@ -108,6 +109,21 @@ function rowToProduct(saved: ProductRow): Product {
   };
 }
 
+/**
+ * The storefront copy of a product. In quotation mode (showPrices false) the
+ * price is replaced by null and `priceWithheld` marks that one exists.
+ *
+ * Hiding a price in the UI is not enough: every product a server component
+ * hands to a client component (ProductsProvider gets the whole catalogue) is
+ * serialised into the page's HTML, where view-source shows it. So the number
+ * never leaves the server. Reads that need it — checkout repricing, the admin
+ * panel — use the WithPrices / ForAdmin functions below.
+ */
+function forStorefront(product: Product): Product {
+  if (siteConfig.showPrices || product.price === null) return product;
+  return { ...product, price: null, priceWithheld: true };
+}
+
 const isMissingSortOrder = (error: { code?: string; message?: string } | null) =>
   error?.code === "42703" || error?.message?.includes("sort_order") === true;
 
@@ -190,6 +206,15 @@ async function fetchAllProducts(): Promise<Product[]> {
  * the `visible` column doesn't exist yet (absent → treated as visible).
  */
 export async function getAllProducts(): Promise<Product[]> {
+  return (await getAllProductsWithPrices()).map(forStorefront);
+}
+
+/**
+ * The storefront catalogue with real prices, whatever showPrices says.
+ * Server-only: for checkout repricing. Never pass its result to a client
+ * component or render it into a page.
+ */
+export async function getAllProductsWithPrices(): Promise<Product[]> {
   const all = await fetchAllProducts();
   return SHOW_HIDDEN ? all : all.filter((p) => p.visible !== false);
 }
@@ -212,7 +237,15 @@ export async function getAllProductsForAdmin(): Promise<Product[]> {
   return fetchAllProducts();
 }
 
+/** One product for the storefront (price withheld in quotation mode). */
 export async function getProductById(id: string): Promise<Product | undefined> {
+  const product = await getProductByIdForAdmin(id);
+  return product && forStorefront(product);
+}
+
+/** One product with its real price, hidden or not — for the admin edit form,
+ *  which would otherwise save the withheld null over the price. */
+export async function getProductByIdForAdmin(id: string): Promise<Product | undefined> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from(TABLE)
@@ -244,7 +277,7 @@ export async function getProductsByCategory(
   if (error) throw new Error(`Failed to load ${category} products: ${error.message}`);
   // storefront read — hidden products are excluded (except on a preview with
   // SHOW_HIDDEN_PRODUCTS, like getAllProducts)
-  const products = (data ?? []).map(rowToProduct);
+  const products = (data ?? []).map(rowToProduct).map(forStorefront);
   return SHOW_HIDDEN ? products : products.filter((p) => p.visible !== false);
 }
 

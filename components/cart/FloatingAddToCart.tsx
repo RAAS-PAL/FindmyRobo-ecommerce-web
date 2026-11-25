@@ -33,7 +33,8 @@ export default function FloatingAddToCart({
 }: {
   productId: string;
   name: string;
-  price: number;
+  /** null in quotation mode: the price is withheld from the browser. */
+  price: number | null;
   anchorId: string;
 }) {
   const t = useTranslations("cart");

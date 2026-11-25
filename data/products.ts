@@ -206,8 +206,17 @@ export interface Product {
   displayOrder?: number;
   name: string;
   /** Whole baht; null while the price is not known yet ("Price on request",
-   *  and the product can't go in the cart). */
+   *  and the product can't go in the cart). Also null on the storefront in
+   *  quotation mode, when `priceWithheld` says a price exists. */
   price: number | null;
+  /**
+   * Set on storefront reads while siteConfig.showPrices is false: the product
+   * HAS a price, but it was replaced by null before leaving the server, because
+   * everything handed to a client component is readable in the page source.
+   * Lets "is this priced?" logic (installation tiers, demo tiers, the floating
+   * bar) behave as before without the number. Use isPriced(), not this field.
+   */
+  priceWithheld?: true;
   category: CategorySlug;
   variant: RobotVariant;
   /**
@@ -309,6 +318,14 @@ export type PricedProduct = Product & { price: number };
 
 export const hasPrice = (product: Product): product is PricedProduct =>
   product.price !== null;
+
+/**
+ * Whether a price is set, even when it was withheld from this copy of the
+ * product (quotation mode). Use it to decide what is offered; use hasPrice
+ * before reading the number.
+ */
+export const isPriced = (product: Product) =>
+  product.price !== null || product.priceWithheld === true;
 
 export const formatBaht = (price: number) => `฿${price.toLocaleString("en-US")}`;
 
