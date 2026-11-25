@@ -46,6 +46,9 @@
 
   --color-cloud: #edf1f5;
   --color-ink-muted: #475569;
+  /* placeholder text in fields: 4.55:1 on the surface, still lighter than a
+     typed value (forest-300 was 2.2:1 — the phone example was unreadable) */
+  --color-ink-placeholder: #64748b;
 
   /* semantic — see note above */
   --color-surface: #f8fafc;
@@ -188,6 +191,7 @@
   --color-cloud: #141b26;
   --color-content: #e6ebf2;
   --color-ink-muted: #9aa6b6;
+  --color-ink-placeholder: #6e7d92; /* 4.55:1 on the dark surface */
   --color-forest-950: #070a10;
   --color-forest-900: #0a0e15;
   --color-forest: #121925;

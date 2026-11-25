@@ -198,7 +198,8 @@ export default function HomeQuoteForm({
                   ) : (
                     <fieldset aria-describedby={errors.interest ? id("interest") + "-error" : undefined}>
                       <legend className="sr-only">{t("interestLabel")}</legend>
-                      <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-2">
+                      {/* one column on phones: two narrow tiles split Thai words */}
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                         {QUOTE_INTERESTS.map((value) => {
                           return (
                             <label key={value} className="relative cursor-pointer">
@@ -211,7 +212,7 @@ export default function HomeQuoteForm({
                                 className="peer sr-only" />
                               <span className="flex min-h-12 items-center gap-2.5 rounded-control border border-forest-100 px-3 py-2.5 text-small font-medium text-content transition-colors hover:border-accent-600/50 peer-checked:border-accent-600 peer-checked:bg-accent-50 peer-checked:text-accent-600 peer-focus-visible:ring-2 peer-focus-visible:ring-accent/40 peer-focus-visible:ring-offset-2">
                                 <span className="flex-1">{t("interests." + value)}</span>
-                                <span className={"flex h-4 w-4 shrink-0 items-center justify-center rounded-full border" + (form.interest === value ? "border-accent bg-accent text-on-accent" : "border-forest-300")} aria-hidden="true">
+                                <span className={"flex h-4 w-4 shrink-0 items-center justify-center rounded-full border " + (form.interest === value ? "border-accent bg-accent text-on-accent" : "border-forest-300")} aria-hidden="true">
                                   {form.interest === value && <Check className="h-2.5 w-2.5" strokeWidth={3} />}
                                 </span>
                               </span>

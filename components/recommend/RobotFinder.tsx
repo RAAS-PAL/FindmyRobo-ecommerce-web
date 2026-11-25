@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { buttonClass } from "@/components/ui/Button";
 import { useProducts } from "@/components/ProductsProvider";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import ConditionLine from "@/components/ui/ConditionLine";
@@ -48,7 +49,7 @@ const JOB_ICONS: Record<Job, LucideIcon> = {
 type Step = "job" | "details" | "results";
 
 const inputClass = (hasError = false) =>
-  `h-11 w-full rounded-control border bg-surface px-3 text-body text-content transition-colors placeholder:text-forest-300 focus-visible:outline-none! focus-visible:ring-2 ${
+  `h-12 w-full rounded-control border bg-surface px-3.5 text-body text-content transition-colors placeholder:text-ink-placeholder focus-visible:outline-none! focus-visible:ring-2 ${
     hasError
       ? "border-red-400 focus-visible:ring-red-200"
       : "border-forest-100 focus-visible:border-accent-600 focus-visible:ring-accent/25"
@@ -141,13 +142,13 @@ function ResultCard({ match, rank }: { match: Match; rank: number }) {
           <button
             type="button"
             onClick={() => openQuote({ productId: product.id })}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-small font-bold"
+            className={buttonClass({ className: "gap-1.5" })}
           >
             {tn("getQuote")}
           </button>
           <Link
             href={`/products/${product.id}`}
-            className="inline-flex min-h-11 items-center rounded-full border border-forest-100 px-5 text-small font-semibold text-content transition-colors hover:border-accent"
+            className={buttonClass({ variant: "secondary" })}
           >
             {viewLabel(`/products/${product.id}`)}
           </Link>
@@ -220,7 +221,7 @@ function ContactForm({ answers, requestId }: { answers: Answers; requestId: stri
           type="button"
           onClick={() => setOpen(true)}
           aria-expanded={false}
-          className="inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 self-start rounded-full border border-forest-100 px-5 text-small font-semibold text-content transition-colors hover:border-accent sm:self-auto"
+          className={buttonClass({ variant: "secondary", className: "shrink-0 gap-1.5 self-start sm:self-auto" })}
         >
           {t("open")}
         </button>
@@ -292,7 +293,7 @@ function ContactForm({ answers, requestId }: { answers: Answers; requestId: stri
       <button
         type="submit"
         disabled={state === "sending"}
-        className="mt-5 inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-small font-bold disabled:opacity-60"
+        className={buttonClass({ className: "mt-5 gap-1.5" })}
       >
         {state === "sending" ? t("sending") : t("submit")}
       </button>
@@ -390,7 +391,7 @@ export default function RobotFinder() {
           <button
             type="button"
             onClick={restart}
-            className="inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-forest-100 bg-surface px-4 text-small font-semibold text-content transition-colors hover:border-accent"
+            className={buttonClass({ variant: "secondary", className: "gap-1.5 bg-surface" })}
           >
             <RotateCcw className="h-4 w-4" aria-hidden="true" />
             {t("startAgain")}
@@ -520,7 +521,7 @@ export default function RobotFinder() {
           <button
             type="button"
             onClick={back}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full px-3 text-small font-semibold text-ink-muted transition-colors hover:text-content"
+            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-control px-3 text-small font-semibold text-ink-muted transition-[background-color,color,scale] duration-150 hover:bg-cloud hover:text-content active:scale-[0.97]"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {t("back")}
@@ -533,7 +534,7 @@ export default function RobotFinder() {
             type="button"
             disabled={!canContinue}
             onClick={() => showResults()}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-accent-gradient px-6 text-small font-bold disabled:cursor-not-allowed disabled:opacity-50"
+            className={buttonClass({ className: "gap-1.5" })}
           >
             {t("seeResults")}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

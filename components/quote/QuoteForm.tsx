@@ -26,6 +26,8 @@ import {
   type QuoteRequest,
 } from "@/lib/quoteRequest";
 import { submitQuote } from "@/lib/submitQuote";
+import { buttonClass } from "@/components/ui/Button";
+import { fieldAreaClass, fieldControlClass, fieldErrorClass } from "@/components/ui/Field";
 
 /** What the form asks for, in order — shown as a track while the card is closed. */
 const STEPS = [
@@ -34,12 +36,37 @@ const STEPS = [
   { key: "robot", Icon: Bot },
 ] as const;
 
+/** The storefront's one field look (components/ui/Field.tsx): 48px tall and
+ *  16px text, so iOS doesn't zoom the page when a field takes focus. */
 const inputClass = (hasError: boolean) =>
-  `h-10 w-full rounded-control border bg-surface px-3 text-small text-content transition-colors placeholder:text-forest-300 focus-visible:outline-none! focus-visible:ring-2 ${
-    hasError
-      ? "border-red-400 focus-visible:ring-red-200"
-      : "border-forest-100 focus-visible:border-accent-600 focus-visible:ring-accent/25"
+  hasError ? `${fieldControlClass} border-red-600` : fieldControlClass;
+
+/** A choice tile for a single-answer question (which robot, new or pre-owned):
+ *  bordered, with a radio mark, the same as the homepage quote form. */
+const choiceClass = (selected: boolean, hasError: boolean) =>
+  `flex min-h-12 w-full cursor-pointer items-center gap-2.5 rounded-control border px-3 py-2.5 text-left text-small font-medium transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 ${
+    selected
+      ? "border-accent-600 bg-accent-50 text-accent-600"
+      : hasError
+        ? "border-red-600 text-content hover:border-accent-600/50"
+        : "border-forest-100 text-content hover:border-accent-600/50"
   }`;
+
+function ChoiceMark({ selected }: { selected: boolean }) {
+  return (
+    <span
+      className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
+        selected ? "border-accent bg-accent text-on-accent" : "border-forest-300"
+      }`}
+      aria-hidden="true"
+    >
+      {selected && <Check className="h-2.5 w-2.5" strokeWidth={3} />}
+    </span>
+  );
+}
+
+const labelClass = "text-small font-medium text-content";
+const errorClass = fieldErrorClass.replace("mt-1.5 ", "");
 
 function Field({
   id,
@@ -56,7 +83,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-caption font-medium text-ink-muted">
+      <label htmlFor={id} className={labelClass}>
         {label}
         {!optional && (
           <span className="ml-0.5 text-accent-600" aria-hidden="true">
@@ -69,7 +96,7 @@ function Field({
       </label>
       {children}
       {error && (
-        <p role="alert" className="text-caption font-medium text-red-600">
+        <p role="alert" className={errorClass}>
           {error}
         </p>
       )}
@@ -346,10 +373,10 @@ export default function QuoteForm({
               <button
                 type="button"
                 onClick={() => setExpanded(false)}
-                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-cloud hover:text-content focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40"
+                className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-control text-ink-muted transition-colors hover:bg-cloud hover:text-content active:bg-forest-100 focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40"
                 aria-label={t("close")}
               >
-                <X className="h-3.5 w-3.5" aria-hidden="true" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </button>
             )}
           </div>
@@ -386,8 +413,8 @@ export default function QuoteForm({
               )}
 
               {sold && sold.conditions.length > 1 && (
-                <div className="mt-3.5 flex flex-col gap-1.5">
-                  <p id={fieldId("condition")} className="text-caption font-medium text-ink-muted">
+                <div className="mt-4 flex flex-col gap-1.5">
+                  <p id={fieldId("condition")} className={labelClass}>
                     {tcond("ask")}
                     <span className="ml-0.5 text-accent-600" aria-hidden="true">
                       *
@@ -396,7 +423,7 @@ export default function QuoteForm({
                   <div
                     role="radiogroup"
                     aria-labelledby={fieldId("condition")}
-                    className="flex flex-wrap gap-1.5"
+                    className="grid grid-cols-2 gap-2"
                   >
                     {sold.conditions.map((condition) => {
                       const selected = form.condition === condition;
@@ -407,28 +434,25 @@ export default function QuoteForm({
                           role="radio"
                           aria-checked={selected}
                           onClick={() => chooseCondition(condition)}
-                          className={`inline-flex cursor-pointer items-center border px-2 py-1 text-caption leading-none font-semibold transition-colors focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
-                            selected
-                              ? "border-forest-950 bg-forest-950 text-white"
-                              : errors.condition
-                                ? "border-red-400 bg-surface text-content"
-                                : "border-forest-200 bg-surface text-content hover:border-forest-950"
-                          }`}
+                          className={choiceClass(selected, !!errors.condition)}
                         >
-                          {condition === "new" ? tcond("new") : tcond("preOwned")}
+                          <span className="flex-1">
+                            {condition === "new" ? tcond("new") : tcond("preOwned")}
+                          </span>
+                          <ChoiceMark selected={selected} />
                         </button>
                       );
                     })}
                   </div>
                   {err("condition") && (
-                    <p role="alert" className="text-caption font-medium text-red-600">
+                    <p role="alert" className={errorClass}>
                       {err("condition")}
                     </p>
                   )}
                 </div>
               )}
 
-              <div className="mt-3.5">
+              <div className="mt-4">
                 <Field id={fieldId("fullName")} label={tc("fullName")} error={err("fullName")}>
                   <input
                     id={fieldId("fullName")}
@@ -447,8 +471,10 @@ export default function QuoteForm({
                 }`}
               >
                 <div className="overflow-hidden" inert={open ? undefined : true}>
-                  <div className="mt-3 grid grid-cols-2 gap-3">
-                    <div className="col-span-2">
+                  {/* one column: on a phone, phone and email side by side were
+                      ~150px each, too narrow to read back what was typed */}
+                  <div className="mt-4 grid gap-4">
+                    <div>
                       <Field
                         id={fieldId("company")}
                         label={t("companyLabel")}
@@ -491,9 +517,9 @@ export default function QuoteForm({
                     </Field>
                     {/* a product from the button already answers "which robot" */}
                     {!selection && (
-                      <div className="col-span-2">
+                      <div>
                         <div className="flex flex-col gap-1.5">
-                          <p id={fieldId("interest")} className="text-caption font-medium text-ink-muted">
+                          <p id={fieldId("interest")} className={labelClass}>
                             {t("interestLabel")}
                             <span className="ml-0.5 text-accent-600" aria-hidden="true">
                               *
@@ -502,9 +528,9 @@ export default function QuoteForm({
                           <div
                             role="radiogroup"
                             aria-labelledby={fieldId("interest")}
-                            className={`grid grid-cols-2 gap-1 rounded-control border bg-cloud p-1 ${
-                              errors.interest ? "border-red-400" : "border-forest-100"
-                            }`}
+                            // one column on phones: two ~155px tiles split
+                            // Thai words ("ทำความ / สะอาด")
+                            className="grid grid-cols-1 gap-2 sm:grid-cols-2"
                           >
                             {QUOTE_INTERESTS.map((interest) => {
                               const selected = form.interest === interest;
@@ -515,20 +541,16 @@ export default function QuoteForm({
                                   role="radio"
                                   aria-checked={selected}
                                   onClick={() => chooseInterest(interest)}
-                                  // an odd one out at the end takes the whole row
-                                  className={`flex min-h-9 cursor-pointer items-center justify-center rounded-control px-2 py-1.5 text-center text-small leading-tight font-semibold transition-colors last:odd:col-span-2 focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/40 ${
-                                    selected
-                                      ? "bg-forest-950 text-white shadow-sm"
-                                      : "text-ink-muted hover:text-content"
-                                  }`}
+                                  className={choiceClass(selected, !!errors.interest)}
                                 >
-                                  {t(`interests.${interest}`)}
+                                  <span className="flex-1">{t(`interests.${interest}`)}</span>
+                                  <ChoiceMark selected={selected} />
                                 </button>
                               );
                             })}
                           </div>
                           {err("interest") && (
-                            <p role="alert" className="text-caption font-medium text-red-600">
+                            <p role="alert" className={errorClass}>
                               {err("interest")}
                             </p>
                           )}
@@ -536,7 +558,7 @@ export default function QuoteForm({
                       </div>
                     )}
                     {form.interest === "lawn-mowing" && (
-                      <div className="col-span-2">
+                      <div>
                         <Field id={fieldId("areaM2")} label={t("areaLabel")} error={err("areaM2")}>
                           <div className="relative">
                             <input
@@ -557,7 +579,7 @@ export default function QuoteForm({
                     )}
                     {form.interest === "pudu-delivery" && (
                       <>
-                        <div className="col-span-2">
+                        <div>
                           <Field id={fieldId("venue")} label={t("venueLabel")} error={err("venue")}>
                             <div className="relative">
                               <select
@@ -581,6 +603,8 @@ export default function QuoteForm({
                             </div>
                           </Field>
                         </div>
+                        {/* two short numbers: these still fit side by side */}
+                        <div className="grid grid-cols-2 gap-3">
                         <Field
                           id={fieldId("servingCount")}
                           label={t("servingLabel")}
@@ -607,10 +631,11 @@ export default function QuoteForm({
                             className={inputClass(!!errors.floors)}
                           />
                         </Field>
+                        </div>
                       </>
                     )}
                     {/* last, and optional: whatever else is on their mind */}
-                    <div className="col-span-2">
+                    <div>
                       <Field id={fieldId("note")} label={t("noteLabel")} optional={tc("optional")}>
                         <textarea
                           id={fieldId("note")}
@@ -620,7 +645,7 @@ export default function QuoteForm({
                           placeholder={t("notePlaceholder")}
                           value={form.note}
                           onChange={setField("note")}
-                          className="min-h-[4.5rem] w-full resize-y rounded-control border border-forest-100 bg-surface px-3 py-2 text-small leading-relaxed text-content transition-colors placeholder:text-forest-300 focus-visible:border-accent-600 focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/25"
+                          className={`${fieldAreaClass} resize-y`}
                         />
                       </Field>
                     </div>
@@ -635,7 +660,7 @@ export default function QuoteForm({
                   <button
                     type="submit"
                     disabled={busy}
-                    className="mt-4 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-accent-gradient text-small font-bold focus-visible:outline-none! focus-visible:ring-2 focus-visible:ring-accent/50 disabled:cursor-not-allowed disabled:opacity-60"
+                    className={buttonClass({ size: "lg", fullWidth: true, className: "mt-5 gap-2" })}
                   >
                     {busy ? (
                       <>
