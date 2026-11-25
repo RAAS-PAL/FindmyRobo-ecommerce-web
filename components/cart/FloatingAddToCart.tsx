@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
-import CartIcon from "@/components/cart/CartIcon";
+import { buttonClass } from "@/components/ui/Button";
 import { useCart } from "@/components/cart/CartProvider";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
@@ -77,7 +77,10 @@ export default function FloatingAddToCart({
   return (
     <div
       aria-hidden={!visible}
-      className={`fixed inset-x-0 bottom-0 z-40 border-t border-forest-100 bg-surface/95 backdrop-blur-lg transition-all duration-300 ease-out ${
+      // A solid bar: a light translucent layer over a light page only blurs
+      // the text under it. It leaves the way it came (down), and with reduced
+      // motion it just fades.
+      className={`fixed inset-x-0 bottom-0 z-40 border-t border-forest-100 bg-surface transition-[translate,opacity] duration-300 ease-out motion-reduce:translate-y-0 motion-reduce:transition-opacity ${
         visible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-full opacity-0"
@@ -86,31 +89,29 @@ export default function FloatingAddToCart({
     >
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[13px] font-bold text-content sm:text-sm">
-            {name}
-          </p>
+          <p className="truncate text-small font-semibold text-content">{name}</p>
           <PriceOrQuote
             amount={price}
-            className="block font-mono text-sm font-semibold tabular-nums text-content"
-            quoteClassName="block text-[12.5px] font-semibold text-accent-600"
+            className="block text-small font-semibold tabular-nums text-content"
+            quoteClassName="block text-caption font-medium text-ink-muted"
           />
         </div>
+        {/* the storefront's one button, not a pill with a glow and a zoom */}
         <button
           type="button"
           onClick={handleClick}
           tabIndex={visible ? 0 : -1}
-          className="flex min-h-[48px] shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-accent px-6 text-[14px] font-bold text-on-accent transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_32px_-6px_rgb(var(--accent-rgb)/0.7)] sm:px-8"
+          className={buttonClass({ size: "lg", className: "shrink-0 gap-2" })}
         >
           {added ? (
             <>
               <Check className="h-4.5 w-4.5" aria-hidden="true" />
               {t("added")}
             </>
+          ) : siteConfig.cartEnabled ? (
+            t("addToCart")
           ) : (
-            <>
-              <CartIcon className="h-4.5 w-4.5" />
-              {siteConfig.cartEnabled ? t("addToCart") : tq("requestCta")}
-            </>
+            tq("requestCta")
           )}
         </button>
       </div>

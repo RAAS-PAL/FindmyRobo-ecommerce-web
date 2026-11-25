@@ -37,7 +37,7 @@ export default function LanguageSwitcher({
       <div
         role="group"
         aria-label={t("language")}
-        className={`inline-flex items-center gap-1 rounded-full border border-forest-100 p-1 ${className}`}
+        className={`inline-flex items-center gap-1 rounded-control border border-forest-100 p-1 ${className}`}
       >
         <Globe className="mx-2 h-4 w-4 text-ink-muted" aria-hidden="true" />
         {routing.locales.map((l) => {
@@ -49,7 +49,7 @@ export default function LanguageSwitcher({
               locale={l}
               lang={l}
               aria-current={current ? "true" : undefined}
-              className={`flex min-h-10 items-center rounded-full px-4 text-small font-semibold transition-colors ${
+              className={`flex min-h-10 items-center rounded-sm px-4 text-small font-semibold transition-colors ${
                 current ? "bg-accent text-on-accent" : "text-content hover:bg-cloud"
               }`}
             >
