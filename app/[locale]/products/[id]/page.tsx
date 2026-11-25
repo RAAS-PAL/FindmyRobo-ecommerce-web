@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Check, ChevronRight } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Check } from "lucide-react";
 import { routing } from "@/i18n/routing";
+import { categoryHref } from "@/data/categories";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import FloatingAddToCart from "@/components/cart/FloatingAddToCart";
 import CompareToggleButton from "@/components/compare/CompareToggleButton";
@@ -98,6 +99,7 @@ export default async function ProductPage({
   const t = await getTranslations("productDetail");
   const tc = await getTranslations("categories");
   const tq = await getTranslations("quotation");
+  const tm = await getTranslations("modelPage");
 
   const features = product.features[locale as Locale] ?? product.features.en;
   const page = product.page;
@@ -190,24 +192,15 @@ export default async function ProductPage({
     <main className="overflow-x-clip bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {/* breadcrumb */}
-        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-small text-ink-muted">
-          <Link href="/" className="transition-colors hover:text-accent-600">
-            {t("home")}
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <Link href="/shop" className="transition-colors hover:text-accent-600">
-            {t("shop")}
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <Link
-            href={`/shop/${product.category}`}
-            className="transition-colors hover:text-accent-600"
-          >
-            {tc(`${product.category}.name`)}
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <span className="font-medium text-content">{product.name}</span>
-        </nav>
+        <Breadcrumb
+          label={tm("breadcrumb")}
+          items={[
+            { label: t("home"), href: "/" },
+            { label: t("shop"), href: "/shop" },
+            { label: tc(`${product.category}.name`), href: categoryHref(product.category) },
+            { label: product.name },
+          ]}
+        />
 
         {/* top: gallery + info.
             lg:items-start matters — grid children stretch to the row height by

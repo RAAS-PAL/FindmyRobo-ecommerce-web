@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import Badge from "@/components/ui/Badge";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 import Button from "@/components/ui/Button";
 import MetaLine from "@/components/ui/MetaLine";
 import ProductVisual from "@/components/ui/ProductVisual";
@@ -118,6 +118,7 @@ export default function ShowcasePage({
   afterSpecs?: React.ReactNode;
 }) {
   const t = useTranslations("modelPage");
+  const td = useTranslations("productDetail");
   const tc = useTranslations("categories");
   const tcond = useTranslations("condition");
   const locale = useLocale();
@@ -167,20 +168,17 @@ export default function ShowcasePage({
         />
         <div className="relative mx-auto grid max-w-7xl items-center gap-6 px-4 pt-8 pb-14 sm:px-6 lg:min-h-[calc(100svh-var(--nav-h))] lg:max-h-[56rem] lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:px-8 lg:py-12">
           <div className="order-2 lg:order-1">
-            <nav
-              aria-label={t("breadcrumb")}
-              className="mb-6 flex items-center gap-1.5 text-caption text-white/60"
-            >
-              <Link href="/shop" className="hover:text-white">
-                {t("shop")}
-              </Link>
-              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-              <Link href={categoryHref(product.category)} className="hover:text-white">
-                {tc(`${product.category}.name`)}
-              </Link>
-              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="text-white/85">{product.name}</span>
-            </nav>
+            <Breadcrumb
+              onPhoto
+              className="mb-6"
+              label={t("breadcrumb")}
+              items={[
+                { label: td("home"), href: "/" },
+                { label: td("shop"), href: "/shop" },
+                { label: tc(`${product.category}.name`), href: categoryHref(product.category) },
+                { label: product.name },
+              ]}
+            />
             <MetaLine onPhoto>{text(showcase.eyebrow)}</MetaLine>
             {/* the brand and the model in one colour */}
             <h1 className="mt-2 font-display text-display">
