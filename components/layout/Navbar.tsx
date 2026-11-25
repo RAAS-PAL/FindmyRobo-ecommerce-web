@@ -218,7 +218,6 @@ export default function Navbar() {
   const { products } = useProducts();
   const { count, openDrawer } = useCart();
   const { openQuote } = useQuote();
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
   // The desktop menus: which one is open, and which one the panel shows. The
@@ -342,13 +341,6 @@ export default function Navbar() {
     link.category ? [{ slug: link.category, label: link.label }] : []
   );
 
-  // The bar casts a deeper shadow once the page scrolls under it.
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   /* On the homepage the hero has its own way into the quote form (the quote
      strip, marked data-hero-quote). While it is on screen the bar's Get a
@@ -359,10 +351,17 @@ export default function Navbar() {
   useEffect(() => {
     const strip = document.querySelector("[data-hero-quote]");
     if (!strip) return;
+    // "On screen" means a real part of it, not its top edge peeking under the
+    // hero: at 1440×900 that edge alone hid the button, so the first screen
+    // had no Get a quote anywhere.
+    const SHOWN = 0.3;
     const observer = new IntersectionObserver(
-      ([entry]) => setHeroQuoteInView(entry.isIntersecting),
+      ([entry]) => setHeroQuoteInView(entry.intersectionRatio >= SHOWN),
       // the bar covers the top of the screen: under it counts as gone
-      { rootMargin: `-${document.querySelector("header")?.offsetHeight ?? 60}px 0px 0px 0px` }
+      {
+        rootMargin: `-${document.querySelector("header")?.offsetHeight ?? 60}px 0px 0px 0px`,
+        threshold: [0, SHOWN],
+      }
     );
     observer.observe(strip);
     return () => observer.disconnect();
@@ -448,11 +447,7 @@ export default function Navbar() {
           // `nav-scope` re-points the colour tokens, so everything inside that
           // uses them (language switch, profile menu, search) reads in navy on
           // the light blue, and the dropdowns open pale.
-          className={`nav-scope pointer-events-auto relative rounded-b-card text-content ${
-            scrolled
-              ? "shadow-float"
-              : "shadow-float"
-          }`}
+          className="nav-scope pointer-events-auto relative rounded-b-card text-content shadow-float"
           style={{ background: barBackground }}
           onMouseEnter={() => {
             if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -623,11 +618,12 @@ export default function Navbar() {
                 // Cart switched off: the same spot opens the quote form — the
                 // site's one call to action, and the bar's one blue fill; an
                 // arrow nudges on hover; a blue square with the icon on phones.
-                // Folds away (width and fade) while the hero's quote strip is
-                // on screen; the grid column animates from 0fr to 1fr.
+                // Fades away while the hero's quote strip is on screen. It
+                // keeps its width: collapsing it slid all six menus ~55px
+                // sideways each time it came and went.
                 <div
-                  className={`grid transition-[grid-template-columns,opacity,margin] duration-200 ease-out motion-reduce:transition-none ${
-                    hideBarQuote ? "ml-0 grid-cols-[0fr] opacity-0" : "ml-1 grid-cols-[1fr] opacity-100"
+                  className={`ml-1 transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+                    hideBarQuote ? "opacity-0" : "opacity-100"
                   }`}
                   inert={hideBarQuote ? true : undefined}
                   aria-hidden={hideBarQuote ? true : undefined}
