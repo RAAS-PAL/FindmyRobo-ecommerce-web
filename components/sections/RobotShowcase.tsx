@@ -30,6 +30,7 @@ export function FamilyBanner({ family }: { family: RobotFamily }) {
         style={{ objectPosition: family.focus ?? "50% 50%" }}
       />
       <div aria-hidden="true" className="photo-scrim-top absolute inset-0 -z-10" />
+      <div aria-hidden="true" className="photo-scrim-start absolute inset-0 -z-10" />
       <div className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 sm:pt-20 lg:px-8">
         <MetaLine onPhoto>{pick(family.eyebrow, locale)}</MetaLine>
         <h2 className="mt-2 font-display text-display">{pick(family.title, locale)}</h2>
