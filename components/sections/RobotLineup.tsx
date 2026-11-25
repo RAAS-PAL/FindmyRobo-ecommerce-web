@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -54,6 +54,28 @@ export default function RobotLineup() {
   const shown = category ? robots.filter((p) => p.category === category) : robots;
   const [lead, ...rest] = shown;
   const railRef = useRef<HTMLUListElement>(null);
+
+  // Which way the row can still move: an arrow with nowhere to go is
+  // disabled, instead of looking pressable and doing nothing.
+  const [ends, setEnds] = useState({ start: true, end: false });
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const update = () =>
+      setEnds({
+        start: rail.scrollLeft <= 1,
+        end: rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 1,
+      });
+    update();
+    rail.addEventListener("scroll", update, { passive: true });
+    const observer = new ResizeObserver(update);
+    observer.observe(rail);
+    return () => {
+      rail.removeEventListener("scroll", update);
+      observer.disconnect();
+    };
+  }, [category, rest.length]);
+
   if (!lead) return null;
 
   // one robot per press, whatever its width at this breakpoint
@@ -68,10 +90,12 @@ export default function RobotLineup() {
     railRef.current?.scrollTo({ left: 0 });
   };
   const arrowClass =
-    "flex h-11 w-11 cursor-pointer items-center justify-center rounded-control border border-forest-100 text-content transition-[border-color,scale] duration-150 hover:border-content active:scale-[0.97] dark:border-forest-700";
+    "flex h-11 w-11 cursor-pointer items-center justify-center rounded-control border border-forest-100 text-content transition-[border-color,scale,opacity] duration-150 hover:border-content active:scale-[0.97] disabled:pointer-events-none disabled:opacity-35 dark:border-forest-700";
 
   return (
-    <section id="products" className="bg-cloud py-20 sm:py-28">
+    // overflow-x-clip: the row below runs on to the screen's edge, and 100vw
+    // counts the scrollbar, so clip rather than let the page scroll sideways
+    <section id="products" className="overflow-x-clip bg-cloud py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 className="font-display text-title text-content">{t("heading")}</h2>
         {categories.length > 1 && (
@@ -100,24 +124,27 @@ export default function RobotLineup() {
             <MetaLine>
               {lead.brand ?? DEFAULT_BRAND} · {tc(`${lead.category}.nav`)}
             </MetaLine>
-            <h3 className="mt-2 font-display text-display text-content">{productLabel(lead)}</h3>
+            {/* a robot inside the section: no bigger than the section's own
+                heading (it was display size, larger than "Popular robots…") */}
+            <h3 className="mt-2 font-display text-title text-content">{productLabel(lead)}</h3>
             <p className="mt-4 max-w-md text-lead text-ink-muted">{lead.tagline[locale]}</p>
             {specsOf(lead).length > 0 && (
               <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
                 {specsOf(lead).map((key) => (
                   <div key={key} className="flex flex-col-reverse">
                     <dt className="mt-1 text-small text-ink-muted">{td(`specLabels.${key}`)}</dt>
-                    <dd className="font-display text-title text-content tabular-nums">{lead.specs[key]}</dd>
+                    <dd className="font-display text-heading text-content tabular-nums">{lead.specs[key]}</dd>
                   </div>
                 ))}
               </dl>
             )}
+            {/* the same order as every product block: quote filled, view outlined */}
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href={`/products/${lead.id}`} size="lg">
-                {viewLabel(`/products/${lead.id}`)}
-              </Button>
-              <Button size="lg" variant="secondary" onClick={() => openQuote({ productId: lead.id })}>
+              <Button size="lg" onClick={() => openQuote({ productId: lead.id })}>
                 {ts("getQuote")}
+              </Button>
+              <Button href={`/products/${lead.id}`} size="lg" variant="secondary">
+                {viewLabel(`/products/${lead.id}`)}
               </Button>
             </div>
           </div>
@@ -129,16 +156,19 @@ export default function RobotLineup() {
           <>
             {/* the arrows sit with the row they move */}
             <div className="flex justify-end gap-2 pb-4">
-              <button type="button" onClick={() => scrollBy(-1)} aria-label={t("scrollLeft")} className={arrowClass}>
+              <button type="button" onClick={() => scrollBy(-1)} disabled={ends.start} aria-label={t("scrollLeft")} className={arrowClass}>
                 <ChevronLeft className="h-5 w-5" aria-hidden="true" />
               </button>
-              <button type="button" onClick={() => scrollBy(1)} aria-label={t("scrollRight")} className={arrowClass}>
+              <button type="button" onClick={() => scrollBy(1)} disabled={ends.end} aria-label={t("scrollRight")} className={arrowClass}>
                 <ChevronRight className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
+          {/* Runs on past the content edge to the screen's: a robot cut by the
+              screen reads as "more this way"; cut at the column edge it
+              looked broken. */}
           <ul
             ref={railRef}
-            className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto border-y border-forest-100 dark:border-forest-700"
+            className="no-scrollbar -mr-4 flex snap-x snap-mandatory overflow-x-auto border-y border-forest-100 sm:-mr-6 lg:mr-[min(-2rem,calc((80rem-100vw)/2-2rem))] dark:border-forest-700"
           >
             {rest.map((product) => (
               <li

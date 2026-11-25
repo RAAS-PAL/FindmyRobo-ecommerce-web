@@ -32,7 +32,7 @@ export default function ServicePromise({
     <section id="support" className="bg-cloud">
       <div className="grid lg:grid-cols-2">
         <div className="px-4 py-16 sm:px-6 lg:py-28 lg:pr-16 lg:pl-[max(2rem,calc((100vw-80rem)/2+2rem))]">
-          <h2 className="max-w-xl font-display text-display text-content">{heading}</h2>
+          <h2 className="max-w-xl font-display text-title text-content">{heading}</h2>
           <p className="mt-6 max-w-xl text-lead text-ink-muted">{body}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button size="lg" onClick={() => openQuote()}>

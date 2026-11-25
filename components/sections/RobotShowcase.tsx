@@ -70,7 +70,9 @@ export function FamilyRows({ families }: { families: RobotFamily[] }) {
           >
             <div className={`pb-10 lg:pb-24 ${i % 2 === 1 ? "lg:order-2 lg:pl-8" : ""}`}>
               <MetaLine>{pick(family.eyebrow, locale)}</MetaLine>
-              <h2 className="mt-2 font-display text-display text-content">{pick(family.title, locale)}</h2>
+              {/* section size: display is kept for the page's h1 and the
+                  full-photo banner above, which works as a second hero */}
+              <h2 className="mt-2 font-display text-title text-content">{pick(family.title, locale)}</h2>
               <p className="mt-4 max-w-md text-lead text-ink-muted">{pick(family.tagline, locale)}</p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Button size="lg" onClick={() => openQuote({ interest: family.interest, productId: family.productId })}>
