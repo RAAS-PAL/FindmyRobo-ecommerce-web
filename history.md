@@ -2,6 +2,22 @@
 
 Newest first. Current state and open items live in `hot.md`.
 
+## 2026-11-25 — UI/UX polish pass (Impeccable critique + Apple design)
+- Critique (two independent reviews, design + detector): 28/40. Fixed on
+  branch `design/uiux-polish`, one commit per area: the quote drawer form
+  (48px/16px fields, bordered choices, stacked phone/email, shared button,
+  `ink-placeholder` token 4.55:1), floating bar and finder buttons on the
+  one `Button`, first tap opens a robot card (clips only with a hovering
+  mouse), navbar menus no longer slide when Get a quote fades, balanced
+  headings / no lone last words, Phantas banner scrim, 44px text-link
+  targets, shop h1→h2 outline, faster hero copy swap, reduced-motion rail.
+- Left for the owner: LUBA 3 AWD 5000 runtime (215 vs 180 min on one
+  page), the headless staff photo, vendor banners with baked-in English,
+  the stats band and the second promises list on home, one wording for the
+  quote action.
+- Notes are stale on fonts: the site has used Instrument Sans + Anuphan
+  (no IBM Plex Mono) since the 2026-11-19/20 redesign, not Barlow/Prompt.
+
 ## 2026-10-15 — A1-Basic page, and the A1 screens the right way round
 - The owner's Basic screen photo showed Wi-Fi and mode arrows, which the
   model list said belonged to the Youth; the owner checked the real machines
