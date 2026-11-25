@@ -27,7 +27,7 @@ export default function CartDrawer() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={closeDrawer}
-            className="fixed inset-0 z-50 bg-forest-950/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-forest-950/60 backdrop-blur-sm reduced-transparency:bg-forest-950/85 reduced-transparency:backdrop-blur-none"
             aria-hidden="true"
           />
           <motion.aside

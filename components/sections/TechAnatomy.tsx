@@ -121,7 +121,7 @@ export default function TechAnatomy({ model }: { model?: AnatomyModel }) {
                         className={`flex h-full w-full items-center justify-center rounded-full border-2 transition-colors ${
                           isActive
                             ? "border-accent bg-accent text-on-accent"
-                            : "border-accent/70 bg-forest-950/80 text-accent-300 backdrop-blur-sm hover:bg-accent/30"
+                            : "border-accent/70 bg-forest-950/80 text-accent-300 backdrop-blur-sm reduced-transparency:bg-forest-950 reduced-transparency:backdrop-blur-none hover:bg-accent/30"
                         }`}
                       >
                         {index + 1}

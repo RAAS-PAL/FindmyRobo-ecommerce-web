@@ -6,6 +6,11 @@
    OS; the profile menu switches it. `dark:` utilities follow the attribute. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/* For people who turned on "Reduce transparency": blurred, see-through
+   layers (photo controls, drawer backdrops) become near-solid instead.
+   Tailwind ships `contrast-more:`, not this one. */
+@custom-variant reduced-transparency (@media (prefers-reduced-transparency: reduce));
+
 @theme {
   /* Palette: SLATE + STEEL BLUE (2026-10-27, replacing graphite + electric
      blue). The owner found the site too colourful ("like an animation
@@ -141,6 +146,15 @@
     rgb(10 10 11 / 0.35) 32%,
     rgb(10 10 11 / 0) 58%
   );
+  /* "Increase contrast": darker, and further into the photo */
+  @media (prefers-contrast: more) {
+    background-image: linear-gradient(
+      to bottom,
+      rgb(10 10 11 / 0.88) 0%,
+      rgb(10 10 11 / 0.6) 40%,
+      rgb(10 10 11 / 0) 72%
+    );
+  }
 }
 /* Darkens the photo's left side, where the copy and buttons sit: the top
    scrim alone fades out by mid-height, so a button over a bright part of the
@@ -153,6 +167,14 @@
     rgb(7 10 16 / 0.45) 32%,
     rgb(7 10 16 / 0) 58%
   );
+  @media (prefers-contrast: more) {
+    background-image: linear-gradient(
+      100deg,
+      rgb(7 10 16 / 0.88) 0%,
+      rgb(7 10 16 / 0.65) 40%,
+      rgb(7 10 16 / 0) 70%
+    );
+  }
 }
 @utility photo-scrim-bottom {
   background-image: linear-gradient(
@@ -161,6 +183,14 @@
     rgb(10 10 11 / 0.4) 32%,
     rgb(10 10 11 / 0) 58%
   );
+  @media (prefers-contrast: more) {
+    background-image: linear-gradient(
+      to top,
+      rgb(10 10 11 / 0.9) 0%,
+      rgb(10 10 11 / 0.62) 40%,
+      rgb(10 10 11 / 0) 72%
+    );
+  }
 }
 
 /* The accent as bare RGB channels, for glows and translucent shadows:
@@ -226,6 +256,28 @@
   --nav-link: #93b4de;
   --nav-tab-muted: #b3bdcb;
   --nav-tab-faint: #96a2b3;
+}
+
+/* "Increase contrast" (prefers-contrast: more): hairlines, muted text and
+   placeholders step towards the text colour, in both themes. After the dark
+   block, so it wins there too. */
+@media (prefers-contrast: more) {
+  :root:not([data-theme="dark"]) {
+    --color-forest-100: #7d8a9c; /* ≥3:1 on the page and the grey tiles */
+    --color-ink-muted: #334155;
+    --color-ink-placeholder: #475569;
+    --nav-line: rgb(15 23 42 / 0.45);
+    --nav-tab-muted: #334155;
+    --nav-tab-faint: #3b4657;
+  }
+  [data-theme="dark"] {
+    --color-forest-100: #5b6b80;
+    --color-ink-muted: #c8d1dd;
+    --color-ink-placeholder: #9aa6b6;
+    --nav-line: rgb(255 255 255 / 0.45);
+    --nav-tab-muted: #d3dae4;
+    --nav-tab-faint: #b9c3d0;
+  }
 }
 
 /* Accent words set over photos and dark surfaces (product headers, the hero

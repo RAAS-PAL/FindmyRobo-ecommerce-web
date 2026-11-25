@@ -55,7 +55,7 @@ export default function ComparePanel({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-[70] bg-forest-950/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[70] bg-forest-950/50 backdrop-blur-sm reduced-transparency:bg-forest-950/85 reduced-transparency:backdrop-blur-none"
             aria-hidden="true"
           />
           <motion.div

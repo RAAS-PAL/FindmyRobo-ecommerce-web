@@ -723,7 +723,7 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-50 bg-[#0a1a4a]/45 backdrop-blur-sm xl:hidden"
+              className="fixed inset-0 z-50 bg-[#0a1a4a]/45 backdrop-blur-sm xl:hidden reduced-transparency:bg-forest-950/85 reduced-transparency:backdrop-blur-none"
               aria-hidden="true"
             />
             <motion.aside

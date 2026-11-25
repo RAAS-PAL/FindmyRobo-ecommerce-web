@@ -154,7 +154,7 @@ export default function ProductGallery({
               resetZoom();
             }
           }}
-          className="fixed inset-0 z-[100] m-0 h-screen max-h-none w-screen max-w-none overflow-hidden border-0 bg-black/92 p-4 backdrop:bg-black/70 backdrop:backdrop-blur-sm open:flex open:items-center open:justify-center sm:p-8"
+          className="fixed inset-0 z-[100] m-0 h-screen max-h-none w-screen max-w-none overflow-hidden border-0 bg-black/92 p-4 backdrop:bg-black/70 backdrop:backdrop-blur-sm reduced-transparency:backdrop:bg-black/90 reduced-transparency:backdrop:backdrop-blur-none open:flex open:items-center open:justify-center sm:p-8"
         >
           <button
             type="button"
@@ -217,7 +217,7 @@ export default function ProductGallery({
           </div>
 
           {/* zoom controls */}
-          <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-full bg-white/10 p-1 backdrop-blur-sm">
+          <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-full bg-white/10 p-1 backdrop-blur-sm reduced-transparency:bg-forest-950/90 reduced-transparency:backdrop-blur-none">
             <button
               type="button"
               onClick={() => zoomTo(zoom / 1.4, 0, 0)}
@@ -270,7 +270,7 @@ export default function ProductGallery({
                 product={product}
                 className="relative mx-auto h-[400px] max-h-full w-full sm:h-[560px] lg:h-[620px]"
               />
-              <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-control bg-black/55 px-3 py-2 text-caption font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
+              <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-control bg-black/55 px-3 py-2 text-caption font-semibold text-white opacity-0 backdrop-blur-sm reduced-transparency:bg-black/90 reduced-transparency:backdrop-blur-none transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
                 <Maximize2 className="h-4 w-4" aria-hidden="true" />
                 {labels.openFullscreen}
               </span>
@@ -315,7 +315,7 @@ export default function ProductGallery({
             }`}
           />
         ))}
-        <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-control bg-black/55 px-3 py-2 text-caption font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
+        <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-control bg-black/55 px-3 py-2 text-caption font-semibold text-white opacity-0 backdrop-blur-sm reduced-transparency:bg-black/90 reduced-transparency:backdrop-blur-none transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
           <Maximize2 className="h-4 w-4" aria-hidden="true" />
           {labels.openFullscreen}
         </span>
@@ -325,7 +325,7 @@ export default function ProductGallery({
         type="button"
         onClick={() => go(index - 1)}
         aria-label={labels.previous}
-        className={`absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 focus-visible:opacity-100 ${onReveal}`}
+        className={`absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 reduced-transparency:bg-forest-950/90 reduced-transparency:backdrop-blur-none focus-visible:opacity-100 ${onReveal}`}
       >
         <ChevronLeft className="h-5 w-5" aria-hidden="true" />
       </button>
@@ -333,7 +333,7 @@ export default function ProductGallery({
         type="button"
         onClick={() => go(index + 1)}
         aria-label={labels.next}
-        className={`absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 focus-visible:opacity-100 ${onReveal}`}
+        className={`absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 reduced-transparency:bg-forest-950/90 reduced-transparency:backdrop-blur-none focus-visible:opacity-100 ${onReveal}`}
       >
         <ChevronRight className="h-5 w-5" aria-hidden="true" />
       </button>
