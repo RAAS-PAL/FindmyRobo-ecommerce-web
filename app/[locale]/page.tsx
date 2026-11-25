@@ -53,14 +53,13 @@ export default async function Home({
       {phantas && <FamilyBanner family={phantas} />}
       {more.length > 0 && <FamilyRows families={more} />}
       <VideoShowcase />
-      {/* who we are: one section, its facts and promises shared with About */}
+      {/* who we are, then the two ways to act; the facts and promises are on
+          /about only (they repeated the strip under the hero) */}
       <ServicePromise
         heading={pick(home.trustHeading, locale)}
         body={pick(home.trustBody, locale)}
         photo={about.storyImage}
         photoAlt={pick(home.trustHeading, locale)}
-        facts={about.stats.map((stat) => ({ value: stat.value, label: pick(stat.label, locale) }))}
-        promises={about.values.map((value) => ({ title: pick(value.title, locale), body: pick(value.body, locale) }))}
       />
     </main>
   );

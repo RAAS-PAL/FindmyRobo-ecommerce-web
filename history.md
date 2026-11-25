@@ -11,6 +11,10 @@ Newest first. Current state and open items live in `hot.md`.
   mouse), navbar menus no longer slide when Get a quote fades, balanced
   headings / no lone last words, Phantas banner scrim, 44px text-link
   targets, shop h1→h2 outline, faster hero copy swap, reduced-motion rail.
+- Owner decisions the same day: one name per button ("Get a quote" opens,
+  "Send request" sends, "Book a demo"; Thai ส่งคำขอ / จองเดโม are drafts);
+  the home page no longer repeats About's stats row and promise list — its
+  last section is who we are plus Get a quote / Book a demo.
 - Left for the owner: LUBA 3 AWD 5000 runtime (215 vs 180 min on one
   page), the headless staff photo, vendor banners with baked-in English,
   the stats band and the second promises list on home, one wording for the
