@@ -93,9 +93,9 @@ export default async function SearchPage({
             action={<Button href="/shop">{t("browseAll")}</Button>}
           />
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
             {results.map((product) => (
-              <RobotCard key={product.id} product={product} />
+              <RobotCard key={product.id} product={product} dense />
             ))}
           </div>
         )}
