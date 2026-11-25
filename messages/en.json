@@ -7,7 +7,7 @@
     "aboutPartners": "Partners",
     "contact": "Contact",
     "contactSales": "Contact Sales",
-    "contactDemo": "Book a Demo",
+    "contactDemo": "Book a demo",
     "contactLocations": "Location",
     "blog": "Blog",
     "searchPlaceholder": "What are you looking for?",
@@ -744,12 +744,12 @@
   "quotation": {
     "onRequest": "Price on request",
     "note": "Final price is confirmed in your quotation, after we check your property size and installation needs.",
-    "requestCta": "Request a Quotation",
+    "requestCta": "Get a quote",
     "addToList": "Add to quotation",
     "inList": "In your quotation",
     "listTitle": "Quotation list",
     "listEmpty": "Your quotation list is empty",
-    "submitCta": "Request quotation",
+    "submitCta": "Send request",
     "itemCount": "{count, plural, one {# item} other {# items}}",
     "totalPending": "Your quotation will include the full price and any installation costs.",
     "quotedSeparately": "Quoted separately"
@@ -943,7 +943,7 @@
       "delivery-robots": "Delivery"
     },
     "ctaPrimary": "Explore Our Robots",
-    "ctaSecondary": "Book a Demo"
+    "ctaSecondary": "Book a demo"
   },
   "heroQuote": {
     "consultation": {
@@ -1016,7 +1016,7 @@
     "successBody": "Thanks, {name}. We’ll call {phone} within one business day with your quotation.",
     "demoTitle": "Book a demo",
     "demoSub": "A few details, and we’ll call to set a time.",
-    "demoSubmit": "Request a demo",
+    "demoSubmit": "Send request",
     "demoSuccessBody": "Thanks, {name}. We’ll call {phone} within one business day to set a time for the demo.",
     "demoReassure": "No obligation · Reply within 1 business day",
     "sending": "Sending",
@@ -1161,7 +1161,7 @@
     "featuresHeading": "Why you'll love it",
     "moreFeaturesHeading": "More features",
     "relatedHeading": "You may also like",
-    "ctaDemo": "Book a Demo",
+    "ctaDemo": "Book a demo",
     "ctaContact": "Ask Us About This Robot",
     "preorderNote": "Preorder — contact us for delivery timing",
     "returnsNote": "Thai warranty · In-home support",
