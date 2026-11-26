@@ -35,7 +35,7 @@ export const categories: Category[] = [
   {
     slug: "robot-mowers",
     name: "Lawn mowers",
-    description: "Wire-free AWD mowers for every Thai garden",
+    description: "Wire-free robot mowers for every Thai garden",
     available: true,
     nav: true,
   },
