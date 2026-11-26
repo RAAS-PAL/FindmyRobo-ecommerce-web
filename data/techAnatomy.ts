@@ -106,8 +106,8 @@ const luba3: AnatomySet = {
   model: "LUBA 3 AWD",
   views: viewsFrom(LUBA3_URLS, ["frontLeft", "under", "top"]),
   footnote: {
-    en: "Figures are for LUBA 3 AWD 3000 and 5000, quoting the 5000 where the two differ. Specifications are subject to confirmation with the supplier.",
-    th: "ข้อมูลจำเพาะสำหรับรุ่น LUBA 3 AWD 3000 และ 5000 โดยอ้างอิงรุ่น 5000 ในกรณีที่ทั้งสองรุ่นต่างกัน ข้อมูลอยู่ระหว่างการยืนยันกับผู้จัดจำหน่าย",
+    en: "Figures are for LUBA 3 AWD 3000 and 5000, quoting the 5000 where the two differ.",
+    th: "ข้อมูลจำเพาะสำหรับรุ่น LUBA 3 AWD 3000 และ 5000 โดยอ้างอิงรุ่น 5000 ในกรณีที่ทั้งสองรุ่นต่างกัน",
   },
   hotspots: [
     {
