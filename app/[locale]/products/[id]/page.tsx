@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Check } from "lucide-react";
 import { routing } from "@/i18n/routing";
 import { categoryHref } from "@/data/categories";
+import { sameProductIds } from "@/data/productAliases";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import FloatingAddToCart from "@/components/cart/FloatingAddToCart";
@@ -64,7 +65,8 @@ export async function generateMetadata({
   // Admin → Content → SEO. A blank override means "automatic", so a product
   // nobody has touched keeps working exactly as described above.
   const l = locale as Locale;
-  const override = (await getSiteContent()).seo.products[id];
+  const seo = (await getSiteContent()).seo.products;
+  const override = sameProductIds(id).map((key) => seo[key]).find(Boolean);
   const title = override?.title[l] || `${product.name} — FindMyRobo`;
   const description =
     override?.description[l] ||

@@ -1,4 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/service";
+import { sameProductIds } from "@/data/productAliases";
 
 /**
  * Supabase-backed product reviews (see supabase/reviews-schema.sql). Mirrors
@@ -112,13 +113,15 @@ export async function getUserReview(productId: string, userId: string): Promise<
 
 /** True when the user has any order that includes this product (drives "Verified"). */
 export async function hasPurchased(userId: string, productId: string): Promise<boolean> {
+  // an order made before a rename holds the product's old id
+  const ids = sameProductIds(productId);
   const supabase = createServiceClient();
   const { data, error } = await supabase.from("orders").select("items").eq("user_id", userId);
   if (error || !data) return false;
   return data.some(
     (order) =>
       Array.isArray(order.items) &&
-      order.items.some((item: { id?: string }) => item && item.id === productId)
+      order.items.some((item: { id?: string }) => !!item?.id && ids.includes(item.id))
   );
 }
 

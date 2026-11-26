@@ -91,10 +91,12 @@ function sanitize(raw: unknown, getProduct: (id: string) => Product | undefined)
     ) {
       return [];
     }
-    const clean: CartItem = { id: item.id, qty: item.qty };
+    // the product's current id, in case it was renamed since the visit
+    const clean: CartItem = { id: getProduct(item.id)!.id, qty: item.qty };
     // keep the robot association only if that robot still exists
-    if (typeof item.forId === "string" && getProduct(item.forId)) {
-      clean.forId = item.forId;
+    const forProduct = typeof item.forId === "string" ? getProduct(item.forId) : undefined;
+    if (forProduct) {
+      clean.forId = forProduct.id;
     }
     return [clean];
   });
