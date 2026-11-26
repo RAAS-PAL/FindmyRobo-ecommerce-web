@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import ProductVisual from "@/components/ui/ProductVisual";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import { getAllProducts } from "@/lib/productStore";
+import { byProductId } from "@/data/productAliases";
 import PriceOrQuote from "@/components/ui/PriceOrQuote";
 import {
   SERVICE_CATEGORY,
@@ -27,13 +28,13 @@ async function resolveRobots(idsParam: string | undefined): Promise<Product[]> {
   if (requested.length === 0) return [];
   // Storefront read — hidden products and services can never be compared.
   const catalog = await getAllProducts();
-  const byId = new Map(catalog.map((p) => [p.id, p]));
-  return requested
-    .flatMap((id) => {
-      const p = byId.get(id);
-      return p && p.category !== SERVICE_CATEGORY ? [p] : [];
-    })
-    .slice(0, MAX);
+  // a renamed robot is found by its old id too, and listed once
+  const byId = byProductId(catalog);
+  const robots = requested.flatMap((id) => {
+    const p = byId.get(id);
+    return p && p.category !== SERVICE_CATEGORY ? [p] : [];
+  });
+  return [...new Map(robots.map((p) => [p.id, p])).values()].slice(0, MAX);
 }
 
 export async function generateMetadata({

@@ -20,3 +20,16 @@ export function sameProductIds(id: string): string[] {
   }
   return [...ids];
 }
+
+/** A by-id map of products that also answers to a renamed product's other
+ *  id, so a page built before a rename (or an old link) still finds it. */
+export function byProductId<T extends { id: string }>(products: T[]): Map<string, T> {
+  const map = new Map(products.map((p) => [p.id, p]));
+  for (const [oldId, newId] of Object.entries(RENAMED_PRODUCTS)) {
+    const product = map.get(newId) ?? map.get(oldId);
+    if (!product) continue;
+    if (!map.has(oldId)) map.set(oldId, product);
+    if (!map.has(newId)) map.set(newId, product);
+  }
+  return map;
+}
