@@ -11,6 +11,7 @@ import {
   type QuoteRequest,
 } from "@/lib/quoteRequest";
 import { getAllProducts } from "@/lib/productStore";
+import { byProductId } from "@/data/productAliases";
 import { enforce, MINUTE } from "@/lib/rateLimit";
 
 const esc = (value: string) =>
@@ -102,12 +103,13 @@ export async function POST(request: Request) {
   let product: Product | undefined;
   let forProduct: Product | undefined;
   if (quote.productId) {
-    const byId = new Map((await getAllProducts()).map((p) => [p.id, p]));
+    // a page built before a product was renamed still sends its old id
+    const byId = byProductId(await getAllProducts());
     product = byId.get(quote.productId);
     forProduct = quote.forId ? byId.get(quote.forId) : undefined;
   }
-  if (!product) quote.productId = "";
-  if (!forProduct) quote.forId = "";
+  quote.productId = product?.id ?? "";
+  quote.forId = forProduct?.id ?? "";
   // The form sends the robot's type with it; fill it in if it didn't, so the
   // email always says what kind of robot it is.
   if (product && !quote.interest) quote.interest = CATEGORY_INTEREST[product.category] ?? "";

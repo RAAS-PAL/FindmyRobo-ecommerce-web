@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createOrder } from "@/lib/orderStore";
 import { notifyNewOrder } from "@/lib/notifications";
 import { getAllProductsWithPrices } from "@/lib/productStore";
+import { byProductId } from "@/data/productAliases";
 import { enforce, MINUTE } from "@/lib/rateLimit";
 import {
   asShipping,
@@ -74,7 +75,7 @@ export async function POST(request: Request) {
 
   // Price every line from the catalog — the client's numbers are never read.
   const catalog = await getAllProductsWithPrices();
-  const byId = new Map(catalog.map((p) => [p.id, p]));
+  const byId = byProductId(catalog);
 
   const items: OrderLine[] = [];
   for (const item of requested) {
