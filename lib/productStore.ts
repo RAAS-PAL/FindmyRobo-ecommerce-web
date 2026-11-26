@@ -4,6 +4,7 @@ import type { AnatomyModel, Product, ProductPage, RobotFit } from "@/data/produc
 import { isStockCondition } from "@/data/conditions";
 import { rebaseMedia } from "@/lib/media";
 import { siteConfig } from "@/data/siteConfig";
+import { sameProductIds } from "@/data/productAliases";
 
 /**
  * Supabase-backed product store — the single read/write path for product
@@ -244,16 +245,17 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 }
 
 /** One product with its real price, hidden or not — for the admin edit form,
- *  which would otherwise save the withheld null over the price. */
+ *  which would otherwise save the withheld null over the price. A renamed
+ *  product is found by its old or new id (data/productAliases.ts). */
 export async function getProductByIdForAdmin(id: string): Promise<Product | undefined> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from(TABLE)
     .select("*")
-    .eq("id", id)
-    .maybeSingle();
+    .in("id", sameProductIds(id));
   if (error) throw new Error(`Failed to load product "${id}": ${error.message}`);
-  return data ? rowToProduct(data) : undefined;
+  const row = data?.find((r) => r.id === id) ?? data?.[0];
+  return row ? rowToProduct(row) : undefined;
 }
 
 export async function getProductsByCategory(

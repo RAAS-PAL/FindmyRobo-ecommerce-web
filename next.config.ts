@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { mediaBaseUrl } from "./lib/media";
+import { RENAMED_PRODUCTS } from "./data/productAliases";
 import { withPayload } from "@payloadcms/next/withPayload";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
@@ -22,6 +23,14 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: media.protocol.replace(":", "") as "https" | "http", hostname: media.hostname, pathname: "/**" },
     ],
+  },
+  // A renamed product's old address moves for good to the new one
+  // (data/productAliases.ts). Thai has no prefix, English is under /en.
+  async redirects() {
+    return Object.entries(RENAMED_PRODUCTS).flatMap(([oldId, newId]) => [
+      { source: `/products/${oldId}`, destination: `/products/${newId}`, permanent: true },
+      { source: `/:locale(en|th)/products/${oldId}`, destination: `/:locale/products/${newId}`, permanent: true },
+    ]);
   },
   async headers() {
     return [

@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useMemo } from "react";
 import type { Product } from "@/data/products";
+import { sameProductIds } from "@/data/productAliases";
 
 interface ProductsContextValue {
   products: Product[];
@@ -25,7 +26,10 @@ export default function ProductsProvider({
   const value = useMemo<ProductsContextValue>(
     () => ({
       products,
-      getProduct: (id) => products.find((p) => p.id === id),
+      getProduct: (id) => {
+        const ids = sameProductIds(id);
+        return products.find((p) => ids.includes(p.id));
+      },
     }),
     [products]
   );
